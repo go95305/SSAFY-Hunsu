@@ -2,7 +2,7 @@
   <v-app id="app">
     <MainNavBar/>
     <v-app id="content">
-      <!-- <router-view></router-view> -->
+      <router-view />
     </v-app>
     <MainFooter />
   </v-app>
