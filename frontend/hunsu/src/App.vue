@@ -9,14 +9,14 @@
 </template>
 
 <script>
-import MainNavBar from './components/layout/MainNavBar';
-import MainFooter from './components/layout/MainFooter';
+import MainFooter from '@/components/layout/MainFooter'
+import MainNavBar from '@/components/layout/MainNavBar'
 
 export default {
   name: 'App',
   components: {
-    MainNavBar,
     MainFooter,
+    MainNavBar
   },
 
   data: () => ({
