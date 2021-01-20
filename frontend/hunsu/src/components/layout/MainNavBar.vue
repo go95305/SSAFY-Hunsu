@@ -1,24 +1,14 @@
 <template>
   <div>
     <v-app-bar
-      color="grey lighten-5"
+      color="white"
       dense
     >
-      <v-toolbar-title>Hunsu</v-toolbar-title>
+    <v-toolbar-title>
+      <v-img src="@/assets/hunsulogo.png" width="120">
 
-      
-      <v-btn :to="{ name: 'Home' }" text color="black">
-        <span>홈</span>
-      </v-btn>
-      <v-btn :to="{ name: 'LiveChat' }" text color="black">
-        <span>실채훈</span>
-      </v-btn>
-      <v-btn :to="{ name: 'Ootd' }" text color="black">
-        <span>#OOTD</span>
-      </v-btn>
-      <v-btn :to="{ name: 'WhatWear' }" text color="black">
-        <span>뭘입을까</span>
-      </v-btn>
+      </v-img>
+    </v-toolbar-title>
 
 
       <v-spacer></v-spacer>
@@ -48,6 +38,23 @@
         </v-list>
       </v-menu>
     </v-app-bar>
+    <v-tabs
+    fixed-tabs
+    background-color="white"
+    >
+    <v-tab :to="{ name: 'Home' }">
+      홈
+    </v-tab>
+    <v-tab :to="{ name: 'LiveChat' }">
+      실채훈
+    </v-tab>
+    <v-tab :to="{ name: 'Ootd' }">
+      #OOTD
+    </v-tab>
+    <v-tab :to="{ name: 'WhatWear' }">
+      뭘 입을까
+    </v-tab>
+  </v-tabs>
   </div>
 </template>
 
