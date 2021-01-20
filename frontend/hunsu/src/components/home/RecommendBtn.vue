@@ -1,10 +1,13 @@
 <template>
-  <div>
-    <v-btn
-      block
-    >
-    추천서비스</v-btn>
-  </div>
+  <v-container>
+    <v-layout justify-center>
+      <v-btn>
+      추천서비스
+      </v-btn>
+    </v-layout>
+  </v-container>
+
+ 
 </template>
 
 <script>
