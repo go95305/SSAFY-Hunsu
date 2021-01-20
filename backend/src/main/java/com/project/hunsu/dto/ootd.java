@@ -1,7 +1,5 @@
 package com.project.hunsu.dto;
 
-import com.sun.istack.NotNull;
-import com.sun.istack.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,18 +12,14 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class User {
+public class ootd {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "UID")
+    @Column(name = "ootd_idx")
     private Long id;
 
-    private String gender;
-    private String size;
-    private double height;
-
-    @Column(nullable = false)
-    private String nickName;
-
+    @ManyToOne
+    @JoinColumn(name = "ootd_id")
+    private User user;
 }
