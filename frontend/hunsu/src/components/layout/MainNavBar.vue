@@ -23,17 +23,17 @@
 
       <v-spacer></v-spacer>
 
+
+      <v-btn @click="goToLogin()">로그인</v-btn>
       <v-menu
         left
         bottom
       >
         <template v-slot:activator="{ on, attrs }">
           <v-btn
-            icon
             v-bind="attrs"
-            v-on="on"
-          >
-            <v-icon>mdi-dots-vertical</v-icon>
+            v-on="on">
+            유저사진
           </v-btn>
         </template>
 
@@ -41,7 +41,7 @@
           <v-list-item
             v-for="(item, i) in items"
             :key="i"
-            @click="() => {}"
+            @click="goToPage(item)"
           >
             <v-list-item-title>{{ item.text }}</v-list-item-title>
           </v-list-item>
@@ -64,6 +64,17 @@ export default {
           text: 'Logout'
         }
       ]
+    }
+  },
+  methods: {
+    goToPage(item) {
+      // console.log(item.text)
+      if (item.text === 'MyPage') {
+        this.$router.push('/mypage')
+      }
+    },
+    goToLogin() {
+      this.$router.push('/login')
     }
   }
 }

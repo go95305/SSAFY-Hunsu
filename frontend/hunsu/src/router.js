@@ -4,12 +4,14 @@ import Home from "@/views/Home";
 import LiveChat from "@/views/LiveChat";
 import Ootd from "@/views/Ootd";
 import WhatWear from "@/views/WhatWear";
+import MyPage from "@/views/MyPage"
+import Login from "@/views/user/Login"
 
 Vue.use(VueRouter);
 
 const routes = [
   {
-    path: '/home',
+    path: '/',
     name: 'Home',
     component: Home
   },
@@ -27,6 +29,16 @@ const routes = [
     path: '/whatwear',
     name: 'WhatWear',
     component: WhatWear
+  },
+  {
+    path: '/mypage',
+    name: 'MyPage',
+    component: MyPage
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: Login
   },
 
 ]

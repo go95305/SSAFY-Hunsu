@@ -1,16 +1,42 @@
 <template>
-  <div id="card-section">
-  <v-sheet>전후베스트</v-sheet>
-  <v-carousel cycle v-model="model" hide-delimiters width="100vw" height="35vw">
-    <!--  cycle -->
-    <v-carousel-item>
-      <img src="@/assets/test.png" alt="poster1" id="img">
-    </v-carousel-item>
-    <v-carousel-item>
-      <img src="@/assets/test2.png" alt="poster2" id="img">
-    </v-carousel-item>
-  </v-carousel>
-</div>
+  <v-card
+    elevation="24"
+    max-width="344"
+    class="mx-auto"
+  >
+    <v-system-bar lights-out></v-system-bar>
+    <v-carousel
+      :continuous="false"
+      :cycle="cycle"
+      :show-arrows="false"
+      hide-delimiter-background
+      delimiter-icon="mdi-minus"
+      height="300"
+    >
+      <v-carousel-item
+        v-for="(slide, i) in slides"
+        :key="i"
+      >
+        <v-sheet
+          :color="colors[i]"
+          height="100%"
+          tile
+        >
+          <v-row
+            class="fill-height"
+            align="center"
+            justify="center"
+          >
+            <div class="display-3">
+              {{ slide }} Slide
+            </div>
+          </v-row>
+        </v-sheet>
+      </v-carousel-item>
+    </v-carousel>
+    <v-list two-line>
+    </v-list>
+  </v-card>
 </template>
 
 <script>
@@ -18,18 +44,20 @@ export default {
   name: "BestBeforeAfter",
   data() {
       return {
-        model: 0,
+        colors: [
+          'green',
+          'secondary',
+        ],
+        cycle: true,
+        slides: [
+          'First',
+          'Second',
+        ],
       }
   }
 }
 </script>
 
 <style>
-#img {
-  height: 100%;
-  width: auto;
-  vertical-align: middle;
-  box-shadow: 0px 0px 100px #000;
-  background-position: -100% 10% !important;
-}
+
 </style>
