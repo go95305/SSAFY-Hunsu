@@ -1,6 +1,6 @@
 <template>
 <div>
-  <v-text>패션왕사진</v-text>
+  <v-sheet>패션왕사진</v-sheet>
   <v-card class="mx-auto" max-width="344">
       <v-img src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg"
       height="200px">
