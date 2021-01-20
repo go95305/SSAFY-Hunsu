@@ -1,6 +1,6 @@
 <template>
   <div id="card-section">
-  <v-text>전후베스트</v-text>
+  <v-sheet>전후베스트</v-sheet>
   <v-carousel cycle v-model="model" hide-delimiters width="100vw" height="35vw">
     <!--  cycle -->
     <v-carousel-item>
