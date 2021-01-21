@@ -6,6 +6,7 @@ import Ootd from "@/views/Ootd";
 import WhatWear from "@/views/WhatWear";
 import MyPage from "@/views/MyPage"
 import Login from "@/views/user/Login"
+import OotdDetail from "@/views/OotdDetail"
 
 Vue.use(VueRouter);
 
@@ -23,7 +24,13 @@ const routes = [
   {
     path: '/ootd',
     name: 'Ootd',
-    component: Ootd
+    component: Ootd,
+    children: [
+      {
+        path: 'detail',
+        component: OotdDetail
+      }
+    ]
   },
   {
     path: '/whatwear',
