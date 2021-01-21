@@ -1,12 +1,13 @@
 <template>
   <v-container fluid>
+  <router-view></router-view>
       <v-row dense>
         <v-col
           v-for="card in cards"
           :key="card.title"
           :cols="card.flex"
         >
-          <v-card>
+          <v-card @click="goToOotdDetail">
             <v-img
               :src="card.src"
               class="white--text align-end"
@@ -46,6 +47,11 @@
         { title: 'Best airlines', src: 'https://cdn.vuetifyjs.com/images/cards/plane.jpg', flex: 6 },
       ],
     }),
+    methods: {
+      goToOotdDetail() {
+        this.$router.push('/ootd/detail')
+      }
+    }
   }
 </script>
 
