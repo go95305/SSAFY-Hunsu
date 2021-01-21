@@ -4,4 +4,8 @@
 
 feature/test
 branchtest1
+<<<<<<< HEAD
 branchtest1/hong
+=======
+      test2
+>>>>>>> b2411c6df6b000bf4ea20a3edd42a84ff10ae229
