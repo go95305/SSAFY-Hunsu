@@ -6,6 +6,7 @@ import Ootd from "@/views/Ootd";
 import WhatWear from "@/views/WhatWear";
 import MyPage from "@/views/MyPage"
 import Login from "@/views/user/Login"
+import WhatWearDetail from '@/views/WhatWearDetail'
 
 Vue.use(VueRouter);
 
@@ -28,7 +29,7 @@ const routes = [
   {
     path: '/whatwear',
     name: 'WhatWear',
-    component: WhatWear
+    component: WhatWear,
   },
   {
     path: '/mypage',
@@ -40,6 +41,11 @@ const routes = [
     name: 'Login',
     component: Login
   },
+  {
+    path: '/whatwear/detail',
+    name: "WhatWearDetail",
+    component: WhatWearDetail,
+  }
 
 ]
 

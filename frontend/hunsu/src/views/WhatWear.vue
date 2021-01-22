@@ -1,12 +1,21 @@
 <template>
   <div>
     <h1>뭘입을까</h1>
+    <WhatWearWrite />
+    <WhatWearList />
   </div>
 </template>
 
 <script>
+import WhatWearList from "@/components/whatwear/WhatWearList"
+import WhatWearWrite from "@/components/whatwear/WhatWearWrite"
+
 export default {
-  name: "WhatWear"
+  name: "WhatWear",
+  components: {
+    WhatWearList,
+    WhatWearWrite,
+  }
 }
 </script>
 
