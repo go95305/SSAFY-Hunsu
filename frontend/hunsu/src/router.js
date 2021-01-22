@@ -1,11 +1,14 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "@/views/Home";
-import LiveChat from "@/views/LiveChat";
+import Live from "@/views/Live";
 import Ootd from "@/views/Ootd";
 import WhatWear from "@/views/WhatWear";
+import WhatWearDetail from "@/views/WhatWearDetail";
 import MyPage from "@/views/MyPage"
 import Login from "@/views/user/Login"
+import OotdDetail from "@/views/OotdDetail"
+import LiveDetail from "@/views/LiveDetail"
 
 Vue.use(VueRouter);
 
@@ -16,19 +19,31 @@ const routes = [
     component: Home
   },
   {
-    path: '/livechat',
-    name: 'LiveChat',
-    component: LiveChat
+    path: '/live',
+    name: 'Live',
+    component: Live,
+    children: [
+      {
+        path: 'detail',
+        component: LiveDetail
+      }
+    ]
   },
   {
     path: '/ootd',
     name: 'Ootd',
-    component: Ootd
+    component: Ootd,
+    children: [
+      {
+        path: 'detail',
+        component: OotdDetail
+      }
+    ]
   },
   {
     path: '/whatwear',
     name: 'WhatWear',
-    component: WhatWear
+    component: WhatWear,
   },
   {
     path: '/mypage',
@@ -40,6 +55,11 @@ const routes = [
     name: 'Login',
     component: Login
   },
+  {
+    path: '/whatwear/detail',
+    name: "WhatWearDetail",
+    component: WhatWearDetail,
+  }
 
 ]
 

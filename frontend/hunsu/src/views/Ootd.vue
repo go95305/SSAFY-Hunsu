@@ -4,7 +4,7 @@
     <h1>#OOTD</h1>
     <OotdFilter />
     <OotdSearchBtn />
-    <OotdWriteBtn />
+    <OotdWritePage />
     <OotdIList />
     
 
@@ -14,7 +14,7 @@
 <script>
 import OotdIList from '@/components/ootd/OotdIList'
 import OotdSearchBtn from '@/components/ootd/OotdSearchBtn'
-import OotdWriteBtn from '@/components/ootd/OotdWriteBtn'
+import OotdWritePage from '@/components/ootd/OotdWritePage'
 import OotdFilter from '@/components/ootd/OotdFilter'
 
 
@@ -23,7 +23,7 @@ export default {
   components: {
     OotdIList,
     OotdSearchBtn,
-    OotdWriteBtn,
+    OotdWritePage,
     OotdFilter,
 
   }
