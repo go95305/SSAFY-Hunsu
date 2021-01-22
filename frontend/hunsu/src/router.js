@@ -42,7 +42,7 @@ const routes = [
   {
     path: '/whatwear',
     name: 'WhatWear',
-    component: WhatWear
+    component: WhatWear,
   },
   {
     path: '/mypage',
@@ -54,6 +54,11 @@ const routes = [
     name: 'Login',
     component: Login
   },
+  {
+    path: '/whatwear/detail',
+    name: "WhatWearDetail",
+    component: WhatWearDetail,
+  }
 
 ]
 
