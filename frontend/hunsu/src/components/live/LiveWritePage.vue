@@ -10,12 +10,10 @@
         <v-btn
           color="primary"
           dark
-          small
-          fab
           v-bind="attrs"
           v-on="on"
         >
-          <v-icon>mdi-pencil</v-icon>
+          Open Live
         </v-btn>
       </template>
       <v-card>
@@ -30,7 +28,7 @@
           >
             <v-icon>mdi-close</v-icon>
           </v-btn>
-          <v-toolbar-title>OOTD 작성</v-toolbar-title>
+          <v-toolbar-title>라이브 개설</v-toolbar-title>
           <v-spacer></v-spacer>
           <v-toolbar-items>
             <v-btn
@@ -59,7 +57,7 @@
           three-line
           subheader
         >
-          <v-subheader>OOTD 설명</v-subheader>
+          <v-subheader>라이브 설명</v-subheader>
             <div>
               <v-text-field
                 label="설명 추가"
@@ -67,6 +65,7 @@
                 hide-details="auto"
                 class="px-5"
               ></v-text-field>
+              <v-text-field label="고정댓글 설정" class="px-5"></v-text-field>
               <v-text-field label="해시태그 추가" class="px-5"></v-text-field>
             </div>
         </v-list>
@@ -77,7 +76,7 @@
 
 <script>
   export default {
-    name: "OotdWritePage",
+    name: "LiveWritePage",
     data () {
       return {
         dialog: false,

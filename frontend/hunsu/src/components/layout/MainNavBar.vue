@@ -51,7 +51,7 @@
     <v-tab :to="{ name: 'Home' }" class="px-2" >
       홈
     </v-tab>
-    <v-tab :to="{ name: 'LiveChat' }" class="px-2">
+    <v-tab :to="{ name: 'Live' }" class="px-2">
       실시간
     </v-tab>
     <v-tab :to="{ name: 'Ootd' }" class="px-2">
