@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -15,11 +16,20 @@ import javax.persistence.*;
 public class ootd {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ootd_idx")
-    private Long id;
+    private Long idx;
 
     @ManyToOne
-    @JoinColumn(name = "ootd_id")
+    @JoinColumn(name = "nickname")
     private User user;
+
+    private String content;
+
+    @Column(name = "is_updated")
+    private boolean isupdated;
+
+    @Column(name = "write_date")
+    private LocalDateTime writeDate;
+
+    private int count;
 }
