@@ -4,6 +4,7 @@ import Home from "@/views/Home";
 import Live from "@/views/Live";
 import Ootd from "@/views/Ootd";
 import WhatWear from "@/views/WhatWear";
+import WhatWearDetail from "@/views/WhatWearDetail";
 import MyPage from "@/views/MyPage"
 import Login from "@/views/user/Login"
 import OotdDetail from "@/views/OotdDetail"
