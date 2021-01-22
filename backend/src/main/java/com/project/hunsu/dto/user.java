@@ -14,10 +14,10 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class User {
+public class user {
 
     @Id
-    @Column(name = "nick_name")
+    @Column(name = "nickname")
     private String nickname;
 
     @Column(unique = true)

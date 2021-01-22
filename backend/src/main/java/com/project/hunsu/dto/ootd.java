@@ -16,17 +16,17 @@ import java.time.LocalDateTime;
 public class ootd {
 
     @Id
-    @Column(name = "ootd_idx")
+    @Column(name = "idx")
     private Long idx;
 
     @ManyToOne
     @JoinColumn(name = "nickname")
-    private User user;
+    private com.project.hunsu.dto.user user;
 
     private String content;
 
     @Column(name = "is_updated")
-    private boolean isupdated;
+    private boolean isUpdated;
 
     @Column(name = "write_date")
     private LocalDateTime writeDate;
