@@ -6,30 +6,24 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ootd {
+public class OotdLike {
 
     @Id
-    @Column(name = "ootd_idx")
+    @Column(name = "like_idx")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idx;
+
+    @ManyToOne
+    @JoinColumn(name = "ootd_idx")
+    private Ootd ootd;
 
     @ManyToOne
     @JoinColumn(name = "nickname")
     private User user;
-
-    private String content;
-
-    @Column(name = "is_updated")
-    private boolean isupdated;
-
-    @Column(name = "write_date")
-    private LocalDateTime writeDate;
-
-    private int count;
 }

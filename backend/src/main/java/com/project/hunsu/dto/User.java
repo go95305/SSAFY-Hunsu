@@ -17,7 +17,7 @@ import javax.persistence.*;
 public class User {
 
     @Id
-    @Column(name = "nick_name")
+    @Column(name = "nickname")
     private String nickname;
 
     @Column(unique = true)
