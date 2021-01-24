@@ -3,6 +3,7 @@
     <v-app-bar
       color="white"
       dense
+      height="80"
     >
     <v-toolbar-title>
       <v-img src="@/assets/hunsulogo.png" width="120">
@@ -20,11 +21,15 @@
         bottom
       >
         <template v-slot:activator="{ on, attrs }">
-          <v-btn
-            v-bind="attrs"
-            v-on="on">
-            유저사진
-          </v-btn>
+          <v-avatar
+          v-bind="attrs"
+          v-on="on"
+          >
+            <img
+              src="https://cdn.vuetifyjs.com/images/john.jpg"
+              alt="John"
+            >
+          </v-avatar>
         </template>
 
         <v-list>
@@ -41,17 +46,18 @@
     <v-tabs
     fixed-tabs
     background-color="white"
+    height="38"
     >
-    <v-tab :to="{ name: 'Home' }">
+    <v-tab :to="{ name: 'Home' }" class="px-2" >
       홈
     </v-tab>
-    <v-tab :to="{ name: 'LiveChat' }">
-      실채훈
+    <v-tab :to="{ name: 'Live' }" class="px-2">
+      실시간
     </v-tab>
-    <v-tab :to="{ name: 'Ootd' }">
+    <v-tab :to="{ name: 'Ootd' }" class="px-2">
       #OOTD
     </v-tab>
-    <v-tab :to="{ name: 'WhatWear' }">
+    <v-tab :to="{ name: 'WhatWear' }" class="px-2">
       뭘 입을까
     </v-tab>
   </v-tabs>
