@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 public class Wear {
 
     @Id
+
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "wear_idx")
     private Long idx;
@@ -26,8 +27,12 @@ public class Wear {
 
     private String title;
     private String content;
-    private LocalDateTime write_date;
+
+
+    @Column(name = "write_date")
+    private LocalDateTime writeDate;
 
     @Column(name = "is_updated")
     private boolean isUpdated;
+
 }
