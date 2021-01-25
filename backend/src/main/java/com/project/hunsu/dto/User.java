@@ -17,15 +17,18 @@ import javax.persistence.*;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "UID")
+    @Column(name = "nickname")
+    private String nickname;
+
+    @Column(unique = true)
     private Long id;
-
     private String gender;
-    private String size;
+
+    @Column(name = "access_token")
+    private String accessToken;
+
+
+    private String age;
     private double height;
-
-    @Column(nullable = false)
-    private String nickName;
-
+    private String size;
 }

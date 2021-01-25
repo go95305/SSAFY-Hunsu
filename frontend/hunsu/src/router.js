@@ -9,6 +9,7 @@ import MyPage from "@/views/MyPage"
 import Login from "@/views/user/Login"
 import OotdDetail from "@/views/OotdDetail"
 import LiveDetail from "@/views/LiveDetail"
+import Auth from "@/views/user/Auth"
 
 Vue.use(VueRouter);
 
@@ -59,6 +60,11 @@ const routes = [
     path: '/whatwear/detail',
     name: "WhatWearDetail",
     component: WhatWearDetail,
+  },
+  {
+    path : '/auth',
+    name : "Auth",
+    component: Auth,
   }
 
 ]
