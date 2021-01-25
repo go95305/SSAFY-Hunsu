@@ -11,11 +11,8 @@
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
     "vue": "^2.6.11",
-<<<<<<< HEAD
     "vue-axios": "^3.2.2",
     "vue-cookies": "^1.7.4",
-=======
->>>>>>> c9003c9b25d4f4ceee915df00dc35a195e5d18e1
     "vue-kakao-login": "^1.0.5",
     "vue-router": "^3.4.9",
     "vuetify": "^2.2.11",
