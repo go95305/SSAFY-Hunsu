@@ -37,7 +37,7 @@ public class Ootd {
     @Column(name = "is_updated")
     private boolean isUpdated;
 
-    @Column(name = "write_date")
+    @Column(name = "write_date",insertable = false, updatable = false)
     private LocalDateTime writeDate;
 
     private int count;

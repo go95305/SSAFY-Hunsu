@@ -25,10 +25,10 @@ public class Vote {
 
     private String title;
 
-    @Column(name = "start_time")
+    @Column(name = "start_time",insertable = false, updatable = false)
     private LocalDateTime startTime;
 
-    @Column(name = "end_time")
+    @Column(name = "end_time",insertable = false, updatable = false)
     private LocalDateTime endTime;
 
     @Column(name = "is_activated")

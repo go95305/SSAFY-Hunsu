@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 
@@ -34,6 +35,10 @@ public class Reply {
     @ManyToOne
     @JoinColumn(name = "reply_idx",insertable = false,updatable = false)
     private Reply reply;
+
+    @Column(columnDefinition = "bigint default 0 ")
+    private Long parent_idx;
+
 
 
 
