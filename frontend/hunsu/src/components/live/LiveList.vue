@@ -1,6 +1,5 @@
 <template>
 <div>
-  <router-view></router-view>
   <v-card @click="goToLiveDetail">
     <v-img
       src="https://picsum.photos/350/165?random"
@@ -12,7 +11,7 @@
       한시간 뒤에 소개팅가요 ㅠㅠ 도와주세요
     </v-card-title>
     <v-card-title class="title text-body-1">
-      작성자 해시태그 접속자수
+      작성자 접속자수
     </v-card-title>
   </v-card>
 </div>
