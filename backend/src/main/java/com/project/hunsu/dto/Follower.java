@@ -12,14 +12,14 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ootd {
-
+public class Follower {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "ootd_idx")
-    private Long id;
+    @Column(name = "follower_idx")
+    private Long idx;
 
     @ManyToOne
-    @JoinColumn(name = "ootd_id")
+    @JoinColumn(name= "nickname")
     private User user;
+
 }
