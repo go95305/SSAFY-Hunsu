@@ -8,8 +8,19 @@
     </v-img>
   </div>
 </template>
-
+ 
 <script>
+import KakaoLogin from 'vue-kakao-login'
+ 
+let onSuccess = (data) => {
+  console.log(data)
+  console.log("success")
+}
+let onFailure = (data) => {
+  console.log(data)
+  console.log("failure")
+}
+ 
 export default {
   name: "Login",
   methods: {
@@ -22,7 +33,6 @@ export default {
   }
 }
 </script>
-
+ 
 <style>
-
 </style>
