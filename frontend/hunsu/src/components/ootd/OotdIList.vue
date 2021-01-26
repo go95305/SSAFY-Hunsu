@@ -1,84 +1,52 @@
 <template>
-<div>
-  <router-view></router-view>
-  <v-card
-    elevation="24"
-    max-width="450"
-    class="mx-auto"
-    @click="goToOotdDetail"
-  >
-    <v-system-bar lights-out></v-system-bar>
-    <v-carousel
-      :continuous="false"
-      :cycle="cycle"
-      :show-arrows="false"
-      hide-delimiter-background
-      delimiter-icon="mdi-minus"
-      height="400"
-    >
-      <v-carousel-item
-        v-for="(slide, i) in slides"
-        :key="i"
-      >
-        <v-sheet
-          :color="colors[i]"
-          height="100%"
-          tile
+  <v-container fluid>
+      <v-row dense>
+        <v-col
+          v-for="card in cards"
+          :key="card.title"
+          :cols="card.flex"
         >
-          <v-row
-            class="fill-height"
-            align="center"
-            justify="center"
-          >
-            <div class="display-3">
-              {{ slide }} Slide
-            </div>
-          </v-row>
-        </v-sheet>
-      </v-carousel-item>
-    </v-carousel>
-    <v-list two-line>
-      <v-list-item>
-        <v-list-item-avatar>
-          <v-img src="https://cdn.vuetifyjs.com/images/john.png"></v-img>
-        </v-list-item-avatar>
-        <v-list-item-content>
-          <v-list-item-title>John Leider</v-list-item-title>
-          <v-list-item-subtitle>Author</v-list-item-subtitle>
-        </v-list-item-content>
-        <v-list-item-action>
-          <v-btn icon>
-            <v-icon>mdi-heart</v-icon>
-          </v-btn>
-        </v-list-item-action>
-      </v-list-item>
-    </v-list>
-  </v-card>
-  </div>
+          <v-card @click="goToOotdDetail">
+            <v-img
+              :src="card.src"
+              class="white--text align-end"
+              gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
+              height="200px"
+            >
+              <v-card-title v-text="card.title"></v-card-title>
+            </v-img>
+
+            <v-card-actions>
+              <v-spacer></v-spacer>
+
+              <v-btn text color="black">
+                <span>작성자</span>
+              </v-btn>
+              <v-spacer></v-spacer>
+              <v-spacer></v-spacer>
+
+              <v-btn icon>
+                <v-icon>mdi-heart</v-icon>
+              </v-btn>
+
+            </v-card-actions>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-container>
 </template>
 
 <script>
   export default {
     name: "OotdIList",
-    data () {
-          return {
-            colors: [
-              'green',
-              'secondary',
-              'yellow darken-4',
-              'red lighten-2',
-              'orange darken-1',
-            ],
-            cycle: false,
-            slides: [
-              'First',
-              'Second',
-              'Third',
-              'Fourth',
-              'Fifth',
-            ],
-          }
-        },
+    data: () => ({
+      cards: [
+        { title: 'Pre-fab homes', src: 'https://cdn.vuetifyjs.com/images/cards/house.jpg', flex: 6 },
+        { title: 'Favorite road trips', src: 'https://cdn.vuetifyjs.com/images/cards/road.jpg', flex: 6 },
+        { title: 'Best airlines', src: 'https://cdn.vuetifyjs.com/images/cards/plane.jpg', flex: 6 },
+      ],
+    }),
+
     methods: {
       goToOotdDetail() {
         this.$router.push('/ootd/detail')
@@ -86,3 +54,9 @@
     }
   }
 </script>
+
+
+<style>
+
+</style>
+
