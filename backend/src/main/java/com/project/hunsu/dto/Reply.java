@@ -21,16 +21,16 @@ public class Reply {
     @Column(name = "reply_idx")
     private Long idx;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ootd_idx")
     private Ootd ootd;
 
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "wear_idx")
     private Wear wear;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "nickname")
     private User user;
 
