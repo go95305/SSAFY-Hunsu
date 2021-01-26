@@ -5,11 +5,12 @@ import Live from "@/views/live/Live";
 import Ootd from "@/views/ootd/Ootd";
 import WhatWear from "@/views/whatwear/WhatWear";
 import WhatWearDetail from "@/views/whatwear/WhatWearDetail";
-import MyPage from "@/views/MyPage"
+import MyPage from "@/views/user/MyPage"
 import Login from "@/views/user/Login"
 import OotdDetail from "@/views/ootd/OotdDetail"
 import LiveDetail from "@/views/live/LiveDetail"
 import Auth from "@/views/user/Auth"
+
 
 Vue.use(VueRouter);
 
@@ -64,8 +65,7 @@ const routes = [
     path : '/auth',
     name : "Auth",
     component: Auth,
-  }
-
+  },
 ]
 
 
