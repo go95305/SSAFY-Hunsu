@@ -32,9 +32,6 @@ public class Reply {
     @JoinColumn(name = "nickname")
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "reply_idx",insertable = false,updatable = false)
-    private Reply reply;
 
     @Column(columnDefinition = "bigint default 0 ")
     private Long parent_idx;

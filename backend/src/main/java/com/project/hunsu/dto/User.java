@@ -2,17 +2,14 @@ package com.project.hunsu.dto;
 
 import com.sun.istack.NotNull;
 import com.sun.istack.Nullable;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 public class User {
 
@@ -21,14 +18,23 @@ public class User {
     private String nickname;
 
     @Column(unique = true)
-    private Long id;
+    private String oauthId;
     private String gender;
 
     @Column(name = "access_token")
     private String accessToken;
 
-
+    @Column
+    private String providerName;
     private String age;
     private double height;
     private String size;
+
+    public User(String oauthId, String nickname, String providerName, String accessToken) {
+
+        this.oauthId = oauthId;
+        this.nickname = nickname;
+        this.providerName = providerName;
+        this.accessToken = accessToken;
+    }
 }
