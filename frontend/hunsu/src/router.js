@@ -1,14 +1,15 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "@/views/Home";
-import Live from "@/views/Live";
-import Ootd from "@/views/Ootd";
-import WhatWear from "@/views/WhatWear";
-import WhatWearDetail from "@/views/WhatWearDetail";
+import Live from "@/views/live/Live";
+import Ootd from "@/views/ootd/Ootd";
+import WhatWear from "@/views/whatwear/WhatWear";
+import WhatWearDetail from "@/views/whatwear/WhatWearDetail";
 import MyPage from "@/views/MyPage"
 import Login from "@/views/user/Login"
-import OotdDetail from "@/views/OotdDetail"
-import LiveDetail from "@/views/LiveDetail"
+import OotdDetail from "@/views/ootd/OotdDetail"
+import LiveDetail from "@/views/live/LiveDetail"
+import Auth from "@/views/user/Auth"
 
 Vue.use(VueRouter);
 
@@ -22,12 +23,11 @@ const routes = [
     path: '/live',
     name: 'Live',
     component: Live,
-    children: [
-      {
-        path: 'detail',
-        component: LiveDetail
-      }
-    ]
+  },
+  {
+    path: '/live/detail',
+    name: 'LiveDetail',
+    component: LiveDetail
   },
   {
     path: '/ootd',
@@ -59,6 +59,11 @@ const routes = [
     path: '/whatwear/detail',
     name: "WhatWearDetail",
     component: WhatWearDetail,
+  },
+  {
+    path : '/auth',
+    name : "Auth",
+    component: Auth,
   }
 
 ]
