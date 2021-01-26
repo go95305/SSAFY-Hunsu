@@ -135,7 +135,7 @@
           </v-dialog>
 
           <!--설정아이콘-->
-          <v-icon class="ml-10">mdi-cog-outline</v-icon>
+          <ProfileSetting />
         </div>
 
 
@@ -186,8 +186,13 @@
 
 </template>
 <script>
+import ProfileSetting from "@/components/Mypage/ProfileSetting"
+
 export default {
   name: "Profile",
+  components: {
+    ProfileSetting,
+  },
   data() {
     return {
       tab: null,
@@ -215,7 +220,7 @@ export default {
         },
       ]
     }
-  }
+  },
 }
 </script>
 
