@@ -3,9 +3,11 @@
     <v-layout justify-center>
       <v-card
       width="800"
-      height="180">
-      <div class="flex">
+      height="100%"
+      >
+        <div class="d-flex">
           <!--프로필이미지-->
+          <!--웹 전체화면일때-->
           <v-avatar
           width="100"
           height="100"
@@ -15,6 +17,7 @@
               alt="John"
             >
           </v-avatar>
+          <!--모바일-->
           <v-avatar
           width="80"
           height="80"
@@ -24,22 +27,131 @@
               alt="John"
             >
           </v-avatar>
+          <!--유저닉네임-->
+          <p class="font-weight-black text-h5 hidden-sm-and-down" style="margin: 60px 20px">닉네임</p>
+          <p class="font-weight-black subtitle-1 hidden-sm-and-up" style="margin: 40px 10px">닉네임</p>
+
+          <!--팔로우버튼, 팔로우목록 dialog-->
+          <v-dialog
+            transition="dialog-top-transition"
+            max-width="600"
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                color="primary"
+                v-bind="attrs"
+                v-on="on"
+                class="mt-16 ml-8 hidden-sm-and-down"
+              >팔로워</v-btn>
+              <v-btn
+                color="primary"
+                v-bind="attrs"
+                v-on="on"
+                class="mt-16 mr-2 hidden-sm-and-up"
+              >팔로워</v-btn>
+            </template>
+            <template v-slot:default="dialog">
+              <v-card>
+                <v-toolbar
+                  color="dark"
+                  dark
+                >팔로워</v-toolbar>
+                <v-list subheader>
+                    <v-list-item
+                      v-for="chat in recent"
+                      :key="chat.title"
+                    >
+                      <v-list-item-avatar>
+                        <v-img
+                          :alt="`${chat.title} avatar`"
+                          :src="chat.avatar"
+                        ></v-img>
+                      </v-list-item-avatar>
+
+                      <v-list-item-content>
+                        <v-list-item-title v-text="chat.title"></v-list-item-title>
+                      </v-list-item-content>
+                    </v-list-item>
+                  </v-list>
+                <v-card-actions class="justify-end">
+                  <v-btn
+                    text
+                    @click="dialog.value = false"
+                  >Close</v-btn>
+                </v-card-actions>
+              </v-card>
+            </template>
+          </v-dialog>
+          <!--팔로잉버튼, 팔로잉목록dialog-->
+          <v-dialog
+            transition="dialog-top-transition"
+            max-width="600"
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                color="primary"
+                v-bind="attrs"
+                v-on="on"
+                class="mt-16 ml-5 hidden-sm-and-down"
+              >팔로잉</v-btn>
+              <v-btn
+                color="primary"
+                v-bind="attrs"
+                v-on="on"
+                class="mt-16 hidden-sm-and-up"
+              >팔로잉</v-btn>
+            </template>
+            <template v-slot:default="dialog">
+              <v-card>
+                <v-toolbar
+                  color="dark"
+                  dark
+                >팔로잉</v-toolbar>
+                  <v-list subheader>
+                      <v-list-item
+                        v-for="chat in recent"
+                        :key="chat.title"
+                      >
+                        <v-list-item-avatar>
+                          <v-img
+                            :alt="`${chat.title} avatar`"
+                            :src="chat.avatar"
+                          ></v-img>
+                        </v-list-item-avatar>
+
+                        <v-list-item-content>
+                          <v-list-item-title v-text="chat.title"></v-list-item-title>
+                        </v-list-item-content>
+                      </v-list-item>
+                    </v-list>
+                <v-card-actions class="justify-end">
+                  <v-btn
+                    text
+                    @click="dialog.value = false"
+                  >Close</v-btn>
+                </v-card-actions>
+              </v-card>
+            </template>
+          </v-dialog>
+
           <!--설정아이콘-->
-          <v-icon>mdi-cog-outline</v-icon>
-      </div>
-      <v-tabs
-        v-model="tab"
-        background-color="white"
-        color="blue"
-        grow
-      >
-        <v-tab
-          v-for="item in items"
-          :key="item"
+          <v-icon class="ml-10">mdi-cog-outline</v-icon>
+        </div>
+
+
+        <v-tabs
+          v-model="tab"
+          background-color="white"
+          color="blue"
+          grow
         >
-          {{ item }}
-        </v-tab>
-      </v-tabs>
+          <v-tab
+            v-for="item in items"
+            :key="item"
+          >
+            {{ item }}
+          </v-tab>
+        </v-tabs>
         <v-tabs-items v-model="tab">
           <v-tab-item
             v-for="item in items"
@@ -48,7 +160,7 @@
             <v-container class="white">
               <v-row no-gutters>
                 <v-col
-                  v-for="i in 6"
+                  v-for="i in 9"
                   :key="i"
                   cols="12"
                   sm="4"
@@ -80,8 +192,28 @@ export default {
     return {
       tab: null,
       items: [
-        'OOTD', '좋아요', '팔로워', '팔로잉',
+        'OOTD', '좋아요',
       ],
+      recent: [
+        {
+          active: true,
+          avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',
+          title: 'Jason Oner',
+        },
+        {
+          active: true,
+          avatar: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
+          title: 'Mike Carlson',
+        },
+        {
+          avatar: 'https://cdn.vuetifyjs.com/images/lists/3.jpg',
+          title: 'Cindy Baker',
+        },
+        {
+          avatar: 'https://cdn.vuetifyjs.com/images/lists/4.jpg',
+          title: 'Ali Connors',
+        },
+      ]
     }
   }
 }
