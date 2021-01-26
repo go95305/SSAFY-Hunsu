@@ -1,19 +1,25 @@
 <template>
   <v-card
-    max-width="400"
+    class="mx-auto mt-10"
+    max-width="600px"
+    @click="goToWhatWearDetail()"
   >
-    <v-img
-      src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg"
-      height="200px"
-      @click="goToWhatWearDetail()"
-    >    
-    </v-img>
-    <v-card-title>
-      제목
-    </v-card-title>
-    <v-card-subtitle>
-      내용
-    </v-card-subtitle>
+  <div class="d-flex">
+    <v-avatar
+  v-bind="attrs"
+  v-on="on"
+  class="mt-2 ml-4"
+  >
+    <img
+      src="https://cdn.vuetifyjs.com/images/john.jpg"
+      alt="John"
+    >
+  </v-avatar>
+  <v-card-title>
+    제목
+  </v-card-title>
+
+  </div>
   </v-card>
 </template>
 
