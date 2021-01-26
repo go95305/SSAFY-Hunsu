@@ -44,30 +44,30 @@
           three-line
           subheader
         >
-          <v-subheader>사진 등록</v-subheader>
-          <input ref="imageInput" type="file" hidden @change="onChangeImages">
-          <v-btn type="button" @click="onClickImageUpload">사진 업로드</v-btn>
-          <v-img
-              v-if="imageUrl" :src="imageUrl" width="100"
-          ></v-img>
-
-        </v-list>
-        <v-divider></v-divider>
-        <v-list
-          three-line
-          subheader
-        >
           <v-subheader>라이브 설명</v-subheader>
             <div>
               <v-text-field
-                label="설명 추가"
+                label="제목 입력"
                 :rules="rules"
                 hide-details="auto"
                 class="px-5"
               ></v-text-field>
               <v-text-field label="고정댓글 설정" class="px-5"></v-text-field>
-              <v-text-field label="해시태그 추가" class="px-5"></v-text-field>
             </div>
+        </v-list>
+        <v-divider></v-divider>
+
+        <v-list
+          three-line
+          subheader
+        >
+          <v-subheader>사진 등록</v-subheader>
+          <input ref="imageInput" type="file" hidden @change="onChangeImages">
+          <v-btn class="mx-5" type="button" @click="onClickImageUpload">사진 업로드</v-btn>
+          <v-img
+              class="mx-5 my-5" v-if="imageUrl" :src="imageUrl" width="100"
+          ></v-img>
+
         </v-list>
       </v-card>
     </v-dialog>
