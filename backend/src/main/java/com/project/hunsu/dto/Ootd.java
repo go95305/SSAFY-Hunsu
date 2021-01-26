@@ -25,12 +25,12 @@ public class Ootd {
     @ManyToOne
     @JoinColumn(name = "nickname")
     private User user;
-    @OneToMany(mappedBy = "ootd",cascade = CascadeType.ALL)
-    private List<Hashtag> hashtagList = new ArrayList<>();
-    public void addHashtag(Hashtag hashtag){
-        hashtagList.add(hashtag);
-        hashtag.setOotd(this);
-    }
+//    @OneToMany(mappedBy = "ootd",cascade = CascadeType.ALL)
+//    private List<Hashtag> hashtagList = new ArrayList<>();
+//    public void addHashtag(Hashtag hashtag){
+//        hashtagList.add(hashtag);
+//        hashtag.setOotd(this);
+//    }
 
     private String content;
 

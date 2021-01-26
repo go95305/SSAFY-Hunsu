@@ -1,6 +1,9 @@
 <template>
   <v-container fluid>
+<<<<<<< HEAD:frontend/hunsu/src/components/ootd/하다가 실패한 파일/OotdIList.vue
   <router-view></router-view>
+=======
+>>>>>>> e64ad85b678ed0432ab5f5df924d9ccddd5f7dff:frontend/hunsu/src/components/ootd/OotdIList.vue
       <v-row dense>
         <v-col
           v-for="card in cards"

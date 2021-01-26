@@ -22,4 +22,5 @@ public class Follower {
     @JoinColumn(name= "nickname")
     private User user;
 
+
 }

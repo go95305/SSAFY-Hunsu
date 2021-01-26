@@ -46,18 +46,19 @@
     <v-tabs
     fixed-tabs
     background-color="white"
-    height="38"
+
     >
-    <v-tab :to="{ name: 'Home' }" class="px-2" >
+    <v-tab :to="{ name: 'Home' }">
       홈
     </v-tab>
-    <v-tab :to="{ name: 'Live' }" class="px-2">
-      실시간
+    <v-tab :to="{ name: 'LiveChat' }">
+      실채훈
     </v-tab>
-    <v-tab :to="{ name: 'Ootd' }" class="px-2">
+    <v-tab :to="{ name: 'Ootd' }">
       #OOTD
     </v-tab>
-    <v-tab :to="{ name: 'WhatWear' }" class="px-2">
+    <v-tab :to="{ name: 'WhatWear' }">
+
       뭘 입을까
     </v-tab>
   </v-tabs>
