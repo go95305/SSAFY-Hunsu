@@ -57,7 +57,7 @@
 
 <script>
   export default {
-    name: "OotdDetailComment",
+    name: "DetailComment",
     data: () => ({
       items: [
         { header: '댓글' },

@@ -11,7 +11,7 @@
       :show-arrows="false"
       hide-delimiter-background
       delimiter-icon="mdi-minus"
-      height="400"
+      height="330"
     >
       <v-carousel-item
         v-for="(slide, i) in slides"
@@ -50,15 +50,15 @@
         </v-list-item-action>
       </v-list-item>
     </v-list>
-    <OotdDetailComment />
+    <DetailComment />
   </v-card>
 </template>
 
 <script>
-import OotdDetailComment from '@/components/ootd/OotdDetailComment'
+import DetailComment from '@/components/DetailComment'
   export default {
     components: {
-      OotdDetailComment
+      DetailComment
     },
     data () {
       return {

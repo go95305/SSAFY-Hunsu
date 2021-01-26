@@ -1,6 +1,5 @@
 <template>
   <v-card
-    class="mx-auto mt-10"
     max-width="400"
   >
     <v-img
