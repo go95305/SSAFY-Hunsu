@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -24,6 +25,7 @@ public class Reply {
     @JoinColumn(name = "ootd_idx")
     private Ootd ootd;
 
+
     @ManyToOne
     @JoinColumn(name = "wear_idx")
     private Wear wear;
@@ -32,13 +34,14 @@ public class Reply {
     @JoinColumn(name = "nickname")
     private User user;
 
-
     @Column(columnDefinition = "bigint default 0 ")
-    private Long parent_idx;
+    private Long depth;
 
-
-
+    @Column(name = "write_date")
+    private LocalDateTime writeDate;
 
     private String content;
-    private int count;
+
+    @Column(name = "group_num")
+    private int groupNum;
 }

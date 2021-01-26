@@ -12,6 +12,8 @@ public class KakaoController {
 
     @GetMapping
     public String getMyAuthenticationFromSession(@AuthenticationPrincipal OAuth2User oAuth2User) {
+        String tmp = oAuth2User.toString();
+        System.out.println(tmp);
         return oAuth2User.toString();
     }
 
