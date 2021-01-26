@@ -5,7 +5,7 @@
     <OotdFilter />
     <OotdSearchBtn />
     <OotdWritePage />
-    <OotdIList />
+    <OotdIList style="margin: 20px" />
     
 
   </div>

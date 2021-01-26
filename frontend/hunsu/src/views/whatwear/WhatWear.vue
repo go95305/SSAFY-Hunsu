@@ -2,7 +2,7 @@
   <div>
     <h1>뭘입을까</h1>
     <WhatWearWrite />
-    <WhatWearList />
+    <WhatWearList style="margin: 20px" />
   </div>
 </template>
 

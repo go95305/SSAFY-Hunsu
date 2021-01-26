@@ -1,10 +1,19 @@
 <template>
-  <v-switch
-    v-model="cycle"
-    label="정렬"
-    inset
-    class="d-inline-block"
-  ></v-switch>
+
+      <v-btn-toggle
+        v-model="text"
+        tile
+        color="deep-purple accent-3"
+        group
+      >
+        <v-btn value="left">
+          최신순
+        </v-btn>
+
+        <v-btn value="center">
+          인기순
+        </v-btn>
+      </v-btn-toggle>
 </template>
 
 <script>
