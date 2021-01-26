@@ -19,7 +19,7 @@ public class VoteItemChoice {
     private Long idx;
 
     @ManyToOne
-    @JoinColumn(name = "voteItem_idx")
+    @JoinColumn(name = "voteItem_idx", nullable = false)
     private VoteItem voteItem;
 
     @ManyToOne

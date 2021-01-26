@@ -19,7 +19,7 @@ public class Hashtag {
     private Long idx;
 
     @ManyToOne
-    @JoinColumn(name = "ootd_idx")
+    @JoinColumn(name = "ootd_idx",nullable = false)
     private Ootd ootd;
 
     private String hashtag;
