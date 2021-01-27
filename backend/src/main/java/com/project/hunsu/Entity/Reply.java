@@ -24,10 +24,11 @@ public class Reply {
     @JoinColumn(name = "ootd_idx")
     private Ootd ootd;
 
-    @Column(columnDefinition = "boolean default 1")
-    private boolean ootdActive;
-    @Column(columnDefinition = "boolean default 1")
-    private boolean wearActive;
+
+
+    @ManyToOne
+    @JoinColumn(name = "nickname")
+    private User user;
 
     @ManyToOne
     @JoinColumn(name = "wear_idx")

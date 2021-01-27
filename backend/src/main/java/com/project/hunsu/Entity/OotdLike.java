@@ -19,11 +19,11 @@ public class OotdLike {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idx;
 
-    @ManyToOne
-    @JoinColumn(name = "ootd_idx")
-    private Ootd ootd;
+    @Column(name = "ootd_idx")
+    private Long ootdIdx;
 
-    @ManyToOne
-    @JoinColumn(name = "nickname")
-    private User user;
+    @Column(name = "nickname")
+    private String nickname;
+
+
 }

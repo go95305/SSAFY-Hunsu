@@ -22,7 +22,7 @@ public class Hashtag {
     @JoinColumn(name = "ootd_idx")
     private Ootd ootd;
 
-    private String hashtag;
+    private String content;
     private boolean type;
 
 }
