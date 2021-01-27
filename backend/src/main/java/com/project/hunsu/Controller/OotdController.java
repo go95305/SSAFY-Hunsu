@@ -1,51 +1,52 @@
 package com.project.hunsu.Controller;
 
+import com.project.hunsu.Dto.OotdDetail;
+import com.project.hunsu.Dto.OotdLikeCount;
+import com.project.hunsu.Dto.OotdMain;
 import com.project.hunsu.Entity.Hashtag;
 import com.project.hunsu.Entity.Ootd;
 import com.project.hunsu.Dto.OotdFix;
 import com.project.hunsu.Entity.Reply;
-import com.project.hunsu.kakao.Repository.OotdRepository;
+import com.project.hunsu.Service.OotdService;
+import io.swagger.annotations.ApiOperation;
+import lombok.ToString;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
+
 
 @RestController
 public class OotdController {
+    private final OotdService ootdService;
 
-    private final OotdRepository ootdRepository;
-
-    public OotdController(OotdRepository ootdRepository) {
-        this.ootdRepository = ootdRepository;
+    public OotdController(OotdService ootdService) {
+        this.ootdService = ootdService;
     }
 
     @PersistenceContext    // EntityManagerFactory가 DI 할 수 있도록 어노테이션 설정
     private EntityManager entityManager;
 
     @GetMapping("/ootd/{sort}")  //ootd_idx, 닉네임, 글내용, 해시태그, 좋아요 개수
-    public List<Ootd> ootdMain(@PathVariable int sort) {
-        List<Ootd> ootdList = new ArrayList<>();
-        if (sort == 0) {
-            //최신순
-            ootdList = ootdRepository.findOotdByOrderByWriteDate();
-        } else {
-            //인기순
-            ootdList = ootdRepository.findOotdByOrderByCountDesc();
-        }
+    @ApiOperation(value = "Ootd 메인페이지")
+    public List<OotdMain> ootdSortedList(@PathVariable int sort) {
+        System.out.println(sort);
+        List<OotdMain> ootdList=ootdService.SortByRecentOrPopularity(sort);
+
         for (int i = 0; i < ootdList.size(); i++) {
-            System.out.println(ootdList.get(i).getIdx());
+            System.out.println(ootdList.get(i));
         }
         return ootdList;
     }
 
-    @GetMapping("/ootd/detail/{idx}") // 에러.. 찾아보자
-    public Ootd detailOotd(@PathVariable Long idx) {
-        Ootd ootdDetail = ootdRepository.findByIdx(idx);
+    @GetMapping("/ootd/detail/{ootdIdx}") // 에러.. 찾아보자 // ootd_idx,content,count,is_updated,write_date,nickname
+    @ApiOperation(value = "Ootd 상세페이지")
+    public OotdDetail detailOotd(@PathVariable("ootdIdx") Long ootdIdx) {
+//        Ootd ootdDetail = ootdRepository.findByIdx(ootdidx);
+        OotdDetail ootdDetail = ootdService.SpecificOotd(ootdIdx);
         System.out.println(ootdDetail);
         return ootdDetail;
     }
@@ -53,7 +54,8 @@ public class OotdController {
 
     @PutMapping("/ootd")
     @Transactional
-    public void updateOotd(@Valid @RequestBody OotdFix ootdFix){
+    @ApiOperation(value = "Ootd 글수정")
+    public void updateOotd(@Valid @RequestBody OotdFix ootdFix) {
         Hashtag hashtag = entityManager.find(Hashtag.class, ootdFix.getOotdIdx());
         hashtag.setHashtag(ootdFix.getHashtag());
         Ootd ootd = hashtag.getOotd();
@@ -64,18 +66,25 @@ public class OotdController {
 
     @DeleteMapping("/ootd")
     @Transactional
-    public void deleteOotd(@RequestParam(required = true) Long idx){
+    @ApiOperation(value = "Ootd 글삭제")
+    public void deleteOotd(@RequestParam(required = true) Long idx) {
         Reply reply = entityManager.find(Reply.class, idx);
         reply.setOotdActive(false);
         reply.setWearActive(false);
-        ootdRepository.deleteByIdx(idx);
+//        ootdRepository.deleteByIdx(idx);
     }
 
     @PutMapping("/ootd/like")
-    public void ootdLike(@RequestParam(required = true) Long idx){
-        Ootd ootd = ootdRepository.findByIdx(idx);
-        ootd.setCount(ootd.getCount()+1);
-        ootdRepository.save(ootd);
+    @Transactional
+    @ApiOperation(value = "Ootd글 좋아요")
+    public void ootdLike(@Valid @RequestBody OotdLikeCount ootdLikeCount) {
+        Ootd ootd = entityManager.find(Ootd.class, ootdLikeCount.getOotd_idx());
+        if (ootdLikeCount.getChk()) {//좋아요 +1
+            ootd.setCount(ootd.getCount() + 1);
+        } else {// 좋아요 -1
+            ootd.setCount(ootd.getCount() - 1);
+        }
+//        ootdRepository.save(ootd);
     }
 
 }
