@@ -1,7 +1,7 @@
 package com.project.hunsu.kakao.oauth;
 
 import com.project.hunsu.kakao.Repository.KakaoRepository;
-import com.project.hunsu.dto.User;
+import com.project.hunsu.Entity.User;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;

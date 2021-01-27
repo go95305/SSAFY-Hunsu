@@ -1,4 +1,4 @@
-package com.project.hunsu.dto;
+package com.project.hunsu.Entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,11 +22,13 @@ public class Ootd {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idx;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "nickname")
     private User user;
-//    @OneToMany(mappedBy = "ootd",cascade = CascadeType.ALL)
-//    private List<Hashtag> hashtagList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "ootd",cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<Hashtag> hashtagList = new ArrayList<>();
+
 //    public void addHashtag(Hashtag hashtag){
 //        hashtagList.add(hashtag);
 //        hashtag.setOotd(this);

@@ -1,10 +1,9 @@
-package com.project.hunsu.dto;
+package com.project.hunsu.Entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -21,18 +20,18 @@ public class Reply {
     @Column(name = "reply_idx")
     private Long idx;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "ootd_idx")
     private Ootd ootd;
 
+    @Column(columnDefinition = "boolean default 1")
+    private boolean ootdActive;
+    @Column(columnDefinition = "boolean default 1")
+    private boolean wearActive;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "wear_idx")
     private Wear wear;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "nickname")
-    private User user;
 
     @Column(columnDefinition = "bigint default 0 ")
     private Long depth;
