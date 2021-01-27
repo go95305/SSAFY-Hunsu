@@ -2,8 +2,13 @@
   <v-container
   id="whatwear"> 
     <WhatWearWrite />
+<<<<<<< HEAD
     <WhatWearList />
   </v-container>
+=======
+    <WhatWearList style="margin: 20px" />
+  </div>
+>>>>>>> 493447e4a67de6e18fd74d4e78bc257f2d265b3d
 </template>
 
 <script>
