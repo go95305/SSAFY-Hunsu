@@ -24,14 +24,13 @@ public class Reply {
     @JoinColumn(name = "ootd_idx")
     private Ootd ootd;
 
-    @Column(columnDefinition = "boolean default 1")
-    private boolean ootdActive;
-    @Column(columnDefinition = "boolean default 1")
-    private boolean wearActive;
-
     @ManyToOne
     @JoinColumn(name = "wear_idx")
     private Wear wear;
+
+    @ManyToOne
+    @JoinColumn(name = "nickname")
+    private User user;
 
     @Column(columnDefinition = "bigint default 0 ")
     private Long depth;
@@ -42,5 +41,5 @@ public class Reply {
     private String content;
 
     @Column(name = "group_num")
-    private int groupNum;
+    private Long groupNum;
 }

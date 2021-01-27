@@ -7,8 +7,9 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class WearMain {
-    private Long wear_idx;
+public class WearValue {
+    private Integer num;
     private String nickname;
     private String title;
+    private String content;
 }
