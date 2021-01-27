@@ -12,11 +12,12 @@ import java.util.List;
 public interface OotdRepository extends JpaRepository<Ootd,Long> {
 
 
-    OotdDetail findByIdx(Long idx);
+    Ootd findByIdx(Long idx);
 
     void deleteByIdx(Long idx);
 
     List<Ootd> findAllByOrderByWriteDateAsc();
 
     List<Ootd> findAllByOrderByCountDesc();
+
 }
