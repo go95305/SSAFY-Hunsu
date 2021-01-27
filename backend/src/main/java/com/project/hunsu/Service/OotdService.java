@@ -1,5 +1,6 @@
 package com.project.hunsu.Service;
 
+import com.mysema.commons.lang.Assert;
 import com.project.hunsu.Dto.OotdDetail;
 import com.project.hunsu.Dto.OotdMain;
 import com.project.hunsu.Entity.*;
@@ -8,10 +9,14 @@ import com.project.hunsu.kakao.Repository.OotdLikeRepository;
 import com.project.hunsu.kakao.Repository.OotdRepository;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -23,11 +28,13 @@ public class OotdService {
     private final HashtagRepository hashtagRepository;
     private final OotdLikeRepository ootdLikeRepository;
 
+
     public OotdService(OotdRepository ootdRepository, HashtagRepository hashtagRepository, OotdLikeRepository ootdLikeRepository) {
         this.ootdRepository = ootdRepository;
         this.hashtagRepository = hashtagRepository;
         this.ootdLikeRepository = ootdLikeRepository;
     }
+
 
     public List<OotdMain> SortByRecentOrPopularity(int sort) {
         List<OotdMain> ootdMainList;
@@ -35,37 +42,18 @@ public class OotdService {
         QHashtag hashtag = QHashtag.hashtag;
         JPAQueryFactory jpaQueryFactory = new JPAQueryFactory(entityManager);
         if (sort == 0) {
-            ootdMainList = jpaQueryFactory.select(Projections.fields(OotdMain.class, hashtag.ootd.idx, hashtag.ootd.content.as("ootdContent"), hashtag.ootd.count, hashtag.content.as("hashtagContent")))
-                    .from(hashtag)
-                    .leftJoin(ootd).on(hashtag.ootd.eq(ootd))
+            ootdMainList = jpaQueryFactory.select(Projections.fields(OotdMain.class, ootd.idx.as("ootdIdx"), ootd.content.as("ootdContent"), hashtag.content.as("hashtagContent"), ootd.count.as("ootdLike")))
+                    .from(ootd)
+                    .leftJoin(hashtag).on(ootd.eq(hashtag.ootd))
                     .orderBy(ootd.writeDate.asc())
                     .fetch();
         } else {
-            ootdMainList = jpaQueryFactory.select(Projections.fields(OotdMain.class, hashtag.ootd.idx, hashtag.ootd.content.as("ootdContent"), hashtag.ootd.count, hashtag.content.as("hashtagContent")))
-                    .from(hashtag)
-                    .leftJoin(ootd).on(hashtag.ootd.eq(ootd))
+            ootdMainList = jpaQueryFactory.select(Projections.fields(OotdMain.class, ootd.idx.as("ootdIdx"), ootd.content.as("ootdContent"), hashtag.content.as("hashtagContent"), ootd.count.as("ootdLike")))
+                    .from(ootd)
+                    .leftJoin(hashtag).on(ootd.eq(hashtag.ootd))
                     .orderBy(ootd.count.desc())
                     .fetch();
         }
-////        List<OotdMain> ootdMainList = new ArrayList<>();
-////        List<Ootd> ootdList;
-////        List<Hashtag> hashtag = hashtagRepository.findAll();
-//        if (sort == 0)
-////            ootdList = ootdRepository.findAllByOrderByWriteDateAsc();
-//        else
-////            ootdList = ootdRepository.findAllByOrderByCountDesc();
-//        for (Ootd ootd : ootdList) {
-//            OotdMain ootdMain = new OotdMain();
-//
-////            OotdMain ootdMain = new OotdMain();
-////            ootdMain.setOotdIdx(ootd.getIdx());
-////            ootdMain.setContent(ootd.getContent());
-////            ootdMain.setNickname(ootd.getUser().getNickname());
-////            if (hashtag != null)
-////                ootdMain.setHashtag(hashtag.getHashtag());
-////            ootdMainList.add(ootdMain);
-
-//        }
         return ootdMainList;
     }
 
@@ -80,8 +68,8 @@ public class OotdService {
         ootdRepository.deleteByIdx(idx);
     }
 
-    public void likeDown(Long ootdIdx, String nickname) {
-        ootdLikeRepository.deleteByIdxAndNickname(ootdIdx,nickname);
-
+    public void likedown(Long ootdIdx, String nickName) {
+        String query = "delete from OotdLike m where m.ootd.idx= :ootdIdx and m.user.nickname = :nickName";
+        int result = entityManager.createQuery(query).setParameter("ootdIdx", ootdIdx).setParameter("nickName", nickName).executeUpdate();
     }
 }

@@ -9,18 +9,21 @@ import lombok.ToString;
 @Setter
 @ToString
 public class OotdMain {
-    private Long ootdIdx;
-    private String nickname;
-    private String ootdContent;
-    private String hashtagContent;
-    private int ootdLike;
+    private Long ootdIdx; //ootd에서 가져오기
+    private String nickname; //ootd에서 가져오기
+    private String ootdContent; //ootd에서 가져오기
+    private String hashtagContent; //hashtag에서 가져오기
+    private int ootdLike;//ootd에서 가져오기
 
-    @QueryProjection
-    public OotdMain(Long ootdIdx, String nickname, String ootdContent, String hashtagContent, int ootdLike) {
-        this.ootdIdx = ootdIdx;
-        this.nickname = nickname;
-        this.ootdContent = ootdContent;
-        this.hashtagContent = hashtagContent;
-        this.ootdLike = ootdLike;
+//    @QueryProjection
+//    public OotdMain(Long ootdIdx, String nickname, String ootdContent, String hashtagContent, int ootdLike) {
+//        this.ootdIdx = ootdIdx;
+//        this.nickname = nickname;
+//        this.ootdContent = ootdContent;
+//        this.hashtagContent = hashtagContent;
+//        this.ootdLike = ootdLike;
+//    }
+
+    public OotdMain() {
     }
 }

@@ -18,9 +18,12 @@ public class Hashtag {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idx;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "ootd_idx")
     private Ootd ootd;
+
+//
+
 
     private String content;
     private boolean type;

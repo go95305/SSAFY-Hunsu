@@ -1,9 +1,6 @@
 package com.project.hunsu.Entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -15,6 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@ToString
 public class Ootd {
 
     @Id
@@ -22,12 +20,12 @@ public class Ootd {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idx;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "nickname")
     private User user;
 
-    @OneToMany(mappedBy = "ootd")
-    private List<Hashtag> hashtagList = new ArrayList<>();
+//    @OneToMany(mappedBy = "ootd")
+//    private Hashtag hashtag;
 
 //    public void addHashtag(Hashtag hashtag){
 //        hashtagList.add(hashtag);
@@ -43,4 +41,6 @@ public class Ootd {
     private LocalDateTime writeDate;
 
     private int count;
+
+
 }

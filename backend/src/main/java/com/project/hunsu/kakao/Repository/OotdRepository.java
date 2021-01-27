@@ -16,8 +16,7 @@ public interface OotdRepository extends JpaRepository<Ootd,Long> {
 
     void deleteByIdx(Long idx);
 
-    List<Ootd> findAllByOrderByWriteDateAsc();
+    List<Ootd> findOotdByOrderByWriteDateAsc();
 
-    List<Ootd> findAllByOrderByCountDesc();
-
+    List<Ootd> findOotdByOrderByCountDesc();
 }

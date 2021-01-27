@@ -3,11 +3,8 @@ package com.project.hunsu.Controller;
 import com.project.hunsu.Dto.OotdDetail;
 import com.project.hunsu.Dto.OotdLikeCount;
 import com.project.hunsu.Dto.OotdMain;
-import com.project.hunsu.Entity.Hashtag;
-import com.project.hunsu.Entity.Ootd;
+import com.project.hunsu.Entity.*;
 import com.project.hunsu.Dto.OotdUpdate;
-import com.project.hunsu.Entity.OotdLike;
-import com.project.hunsu.Entity.Reply;
 import com.project.hunsu.Service.OotdService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
@@ -34,12 +31,8 @@ public class OotdController {
     @ApiOperation(value = "Ootd 메인페이지")//안됨
     public List<OotdMain> ootdSortedList(@PathVariable int sort) {
         System.out.println(sort);
-        List<OotdMain> ootdList = ootdService.SortByRecentOrPopularity(sort);
-
-        for (int i = 0; i < ootdList.size(); i++) {
-            System.out.println(ootdList.get(i));
-        }
-        return ootdList;
+        List<OotdMain> ootdMainList = ootdService.SortByRecentOrPopularity(sort);
+        return ootdMainList;
     }
 
     @GetMapping("/ootd/detail/{ootdIdx}") // 에러.. 찾아보자 // ootd_idx,content,count,is_updated,write_date,nickname
@@ -57,7 +50,6 @@ public class OotdController {
     @ApiOperation(value = "Ootd 글수정")//이건 된다.
     public void updateOotd(@Valid @RequestBody OotdUpdate ootdUpdate) {
         Hashtag hashtag = entityManager.find(Hashtag.class, ootdUpdate.getOotdIdx());
-
         if (hashtag != null) {
             hashtag.setContent(ootdUpdate.getHashtag());
         }
@@ -72,25 +64,25 @@ public class OotdController {
     @ApiOperation(value = "Ootd 글삭제")//안됨
     public void deleteOotd(@PathVariable Long idx) {
         ootdService.delete(idx);
-
     }
 
     @PutMapping("/ootd/like")
     @Transactional
-    @ApiOperation(value = "Ootd글 좋아요")
+    @ApiOperation(value = "Ootd글 좋아요") // 성공
     public void ootdLike(@Valid @RequestBody OotdLikeCount ootdLikeCount) {
         Ootd ootd = entityManager.find(Ootd.class, ootdLikeCount.getOotdIdx());
+        User user = entityManager.find(User.class, ootdLikeCount.getNickname());
         if (ootdLikeCount.getChk()) {//좋아요 +1
             ootd.setCount(ootd.getCount() + 1);
             OotdLike ootdLike = new OotdLike();
-            ootdLike.setOotdIdx(ootdLikeCount.getOotdIdx());
-            ootdLike.setNickname(ootdLikeCount.getNickname());
+            ootdLike.setOotd(ootd);
+            ootdLike.setUser(user);
             entityManager.persist(ootdLike);
         } else {// 좋아요 -1
             ootd.setCount(ootd.getCount() - 1);
-            ootdService.likeDown(ootdLikeCount.getOotdIdx(),ootdLikeCount.getNickname());
+            ootdService.likedown(ootd.getIdx(), user.getNickname());
+
         }
-//        ootdRepository.save(ootd);
     }
 
 }
