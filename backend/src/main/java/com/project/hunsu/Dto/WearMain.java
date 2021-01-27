@@ -1,12 +1,10 @@
-package com.project.hunsu.Dto;
+package com.project.hunsu.dto;
 
 import lombok.Getter;
-import lombok.Setter;
 
 @Getter
-public class OotdMain {
-    private Long ootd_idx;
+public class WearMain {
+    private Long wear_idx;
     private String nickname;
-    private String content;
-    private String hashtag;
+    private String title;
 }
