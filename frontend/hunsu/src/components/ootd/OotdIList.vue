@@ -1,5 +1,6 @@
 <template>
 <<<<<<< HEAD
+<<<<<<< HEAD
 <div>
   <router-view></router-view>
   <v-card
@@ -26,13 +27,46 @@
           height="100%"
           tile
 =======
+=======
+<<<<<<< .merge_file_a03688
+>>>>>>> 521532e9a1ed79b73e4f9a876a3d240364777729
   <v-container fluid>
       <v-row dense>
         <v-col
           v-for="card in cards"
           :key="card.title"
           :cols="card.flex"
+<<<<<<< HEAD
 >>>>>>> 7f40a4edad481f6e4b56b106c52831a7ae870ae2
+=======
+=======
+<div>
+  <router-view></router-view>
+  <v-card
+    elevation="24"
+    max-width="450"
+    class="mx-auto"
+    @click="goToOotdDetail"
+  >
+    <v-system-bar lights-out></v-system-bar>
+    <v-carousel
+      :continuous="false"
+      :cycle="cycle"
+      :show-arrows="false"
+      hide-delimiter-background
+      delimiter-icon="mdi-minus"
+      height="330"
+    >
+      <v-carousel-item
+        v-for="(slide, i) in slides"
+        :key="i"
+      >
+        <v-sheet
+          :color="colors[i]"
+          height="100%"
+          tile
+>>>>>>> .merge_file_a06820
+>>>>>>> 521532e9a1ed79b73e4f9a876a3d240364777729
         >
           <v-card @click="goToOotdDetail">
             <v-img

@@ -1,4 +1,4 @@
-package com.project.hunsu.dto;
+package com.project.hunsu.Entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
