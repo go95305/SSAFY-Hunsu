@@ -1,4 +1,5 @@
 <template>
+<<<<<<< .merge_file_a05112
   <v-menu transition="slide-y-transition">
     <template v-slot:activator="{ on, attrs }">
       <v-btn
@@ -20,6 +21,23 @@
       </v-list-item>
     </v-list>
   </v-menu>
+=======
+
+      <v-btn-toggle
+        v-model="text"
+        tile
+        color="deep-purple accent-3"
+        group
+      >
+        <v-btn value="left">
+          최신순
+        </v-btn>
+
+        <v-btn value="center">
+          인기순
+        </v-btn>
+      </v-btn-toggle>
+>>>>>>> .merge_file_a10956
 </template>
 
 <script>

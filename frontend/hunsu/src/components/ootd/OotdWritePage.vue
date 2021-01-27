@@ -48,9 +48,9 @@
         >
           <v-subheader>사진 등록</v-subheader>
           <input ref="imageInput" type="file" hidden @change="onChangeImages">
-          <v-btn type="button" @click="onClickImageUpload">사진 업로드</v-btn>
+          <v-btn class="mx-5" type="button" @click="onClickImageUpload">사진 업로드</v-btn>
           <v-img
-              v-if="imageUrl" :src="imageUrl" width="100"
+              class="mx-5 my-5" v-if="imageUrl" :src="imageUrl" width="100"
           ></v-img>
 
         </v-list>

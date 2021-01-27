@@ -1,10 +1,38 @@
 <template>
+<<<<<<< .merge_file_a03688
   <v-container fluid>
       <v-row dense>
         <v-col
           v-for="card in cards"
           :key="card.title"
           :cols="card.flex"
+=======
+<div>
+  <router-view></router-view>
+  <v-card
+    elevation="24"
+    max-width="450"
+    class="mx-auto"
+    @click="goToOotdDetail"
+  >
+    <v-system-bar lights-out></v-system-bar>
+    <v-carousel
+      :continuous="false"
+      :cycle="cycle"
+      :show-arrows="false"
+      hide-delimiter-background
+      delimiter-icon="mdi-minus"
+      height="330"
+    >
+      <v-carousel-item
+        v-for="(slide, i) in slides"
+        :key="i"
+      >
+        <v-sheet
+          :color="colors[i]"
+          height="100%"
+          tile
+>>>>>>> .merge_file_a06820
         >
           <v-card @click="goToOotdDetail">
             <v-img
