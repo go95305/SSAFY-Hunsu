@@ -46,7 +46,6 @@
             outlined
             rows="3"
             row-height="25"
-            shaped
           ></v-textarea>
         </v-col>
 

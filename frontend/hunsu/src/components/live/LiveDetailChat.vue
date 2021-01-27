@@ -34,6 +34,7 @@
         </template>
       </v-list>
     </v-card>
+    
     <v-container fluid>
       <v-row>
         <v-col
@@ -46,7 +47,6 @@
             outlined
             rows="3"
             row-height="25"
-            shaped
           ></v-textarea>
         </v-col>
 
