@@ -1,15 +1,17 @@
 package com.project.hunsu.Dto;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Getter
+@Setter
 public class OotdDetail {
-    private Long ootd_idx;
+    private Long ootdIdx;
     private String content;
     private int count;
-    private Boolean is_updated;
-    private LocalDateTime write_date;
+    private Boolean isUpdated;
+    private LocalDateTime writeDate;
     private String nickname;
 }

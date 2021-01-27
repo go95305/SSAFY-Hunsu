@@ -5,6 +5,6 @@ import lombok.Getter;
 @Getter
 public class OotdLikeCount {
    String nickname;
-   Long ootd_idx;
+   Long ootdIdx;
    Boolean chk;
 }
