@@ -1,6 +1,6 @@
 package com.project.hunsu.kakao.Repository;
 
-import com.project.hunsu.dto.Wear;
+import com.project.hunsu.Entity.Wear;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -10,8 +10,7 @@ import java.util.List;
 public interface WearRepository extends JpaRepository<Wear,Long> {
 
     List<Wear> findWearByOrderByWriteDate();
-    List<Wear> findWearByOrderByCountDesc();
-
+    void deleteWearByIdx(Long idx);
     Wear findWearByIdx(Long idx);
 
 }
