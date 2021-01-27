@@ -32,7 +32,7 @@ public class Wear {
     @Column(name = "write_date",insertable = false, updatable = false)
     private LocalDateTime writeDate;
 
-    @Column(name = "is_updated")
-    private boolean isUpdated;
+    @Column(name = "vote_activated")
+    private boolean voteActivated;
 
 }

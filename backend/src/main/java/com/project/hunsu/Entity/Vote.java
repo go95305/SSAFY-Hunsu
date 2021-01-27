@@ -23,8 +23,6 @@ public class Vote {
     @JoinColumn(name = "wear_idx")
     private Wear wear;
 
-    private String title;
-
     @Column(name = "start_time",insertable = false, updatable = false)
     private LocalDateTime startTime;
 

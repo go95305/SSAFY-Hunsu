@@ -26,7 +26,7 @@ public class Ootd {
     @JoinColumn(name = "nickname")
     private User user;
 
-    @OneToMany(mappedBy = "ootd",cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToMany(mappedBy = "ootd")
     private List<Hashtag> hashtagList = new ArrayList<>();
 
 //    public void addHashtag(Hashtag hashtag){
