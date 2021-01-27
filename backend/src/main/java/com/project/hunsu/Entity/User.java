@@ -1,7 +1,5 @@
-package com.project.hunsu.dto;
+package com.project.hunsu.Entity;
 
-import com.sun.istack.NotNull;
-import com.sun.istack.Nullable;
 import lombok.*;
 
 import javax.persistence.*;

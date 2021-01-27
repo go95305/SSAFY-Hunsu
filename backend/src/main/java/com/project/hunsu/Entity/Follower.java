@@ -1,4 +1,4 @@
-package com.project.hunsu.dto;
+package com.project.hunsu.Entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,17 +12,15 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Hashtag {
-
+public class Follower {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "follower_idx")
     private Long idx;
 
     @ManyToOne
-    @JoinColumn(name = "ootd_idx",nullable = false)
-    private Ootd ootd;
+    @JoinColumn(name= "nickname")
+    private User user;
 
-    private String hashtag;
-    private boolean type;
 
 }

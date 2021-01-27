@@ -1,4 +1,4 @@
-package com.project.hunsu.dto;
+package com.project.hunsu.Entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,17 +12,17 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ReplyLike {
+public class VoteItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "replyLike_idx")
+    @Column(name = "voteItem_idx")
     private Long idx;
 
     @ManyToOne
-    @JoinColumn(name = "reply_idx")
-    private Reply reply;
+    @JoinColumn(name = "vote_idx")
+    private Vote vote;
 
-    @ManyToOne
-    @JoinColumn(name = "nickname")
-    private User user;
+    private int count;
+    private String item;
+
 }

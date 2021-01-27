@@ -1,4 +1,4 @@
-package com.project.hunsu.dto;
+package com.project.hunsu.Entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,17 +12,17 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class VoteItem {
+public class Hashtag {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "voteItem_idx")
     private Long idx;
 
-    @ManyToOne
-    @JoinColumn(name = "vote_idx")
-    private Vote vote;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ootd_idx")
+    private Ootd ootd;
 
-    private int count;
-    private String item;
+    private String hashtag;
+    private boolean type;
 
 }
