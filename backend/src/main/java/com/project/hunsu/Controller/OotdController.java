@@ -5,11 +5,10 @@ import com.project.hunsu.Dto.OotdLikeCount;
 import com.project.hunsu.Dto.OotdMain;
 import com.project.hunsu.Entity.Hashtag;
 import com.project.hunsu.Entity.Ootd;
-import com.project.hunsu.Dto.OotdFix;
+import com.project.hunsu.Dto.OotdUpdate;
 import com.project.hunsu.Entity.Reply;
 import com.project.hunsu.Service.OotdService;
 import io.swagger.annotations.ApiOperation;
-import lombok.ToString;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityManager;
@@ -55,11 +54,11 @@ public class OotdController {
     @PutMapping("/ootd")
     @Transactional
     @ApiOperation(value = "Ootd 글수정")
-    public void updateOotd(@Valid @RequestBody OotdFix ootdFix) {
-        Hashtag hashtag = entityManager.find(Hashtag.class, ootdFix.getOotdIdx());
-        hashtag.setHashtag(ootdFix.getHashtag());
+    public void updateOotd(@Valid @RequestBody OotdUpdate ootdUpdate) {
+        Hashtag hashtag = entityManager.find(Hashtag.class, ootdUpdate.getOotdIdx());
+        hashtag.setHashtag(ootdUpdate.getHashtag());
         Ootd ootd = hashtag.getOotd();
-        ootd.setContent(ootdFix.getContent());
+        ootd.setContent(ootdUpdate.getContent());
         ootd.setUpdated(true);
     }
 

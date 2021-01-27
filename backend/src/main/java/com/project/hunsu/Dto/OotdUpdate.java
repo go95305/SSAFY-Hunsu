@@ -11,7 +11,7 @@ import javax.validation.Valid;
 @Setter
 @Valid
 @ToString
-public class OotdFix {
+public class OotdUpdate {
     Long ootdIdx;
     String hashtag;
     String content;

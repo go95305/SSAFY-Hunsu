@@ -12,7 +12,7 @@ public class OotdMain {
     private String nickname;
     private String content;
     private String hashtag;
-
+    private int ootdLike;
 
 
 }
