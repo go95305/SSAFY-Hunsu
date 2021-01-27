@@ -69,7 +69,7 @@ public class OotdController {
     @PutMapping("/ootd/like")
     @Transactional
     @ApiOperation(value = "Ootd글 좋아요") // 성공
-    public void ootdLike(@Valid @RequestBody OotdLikeCount ootdLikeCount) {
+    public int ootdLike(@Valid @RequestBody OotdLikeCount ootdLikeCount) {
         Ootd ootd = entityManager.find(Ootd.class, ootdLikeCount.getOotdIdx());
         User user = entityManager.find(User.class, ootdLikeCount.getNickname());
         if (ootdLikeCount.getChk()) {//좋아요 +1
@@ -81,8 +81,7 @@ public class OotdController {
         } else {// 좋아요 -1
             ootd.setCount(ootd.getCount() - 1);
             ootdService.likedown(ootd.getIdx(), user.getNickname());
-
         }
+        return ootd.getCount();
     }
-
 }

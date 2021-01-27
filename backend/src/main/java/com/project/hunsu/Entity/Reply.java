@@ -25,7 +25,6 @@ public class Reply {
     private Ootd ootd;
 
 
-
     @ManyToOne
     @JoinColumn(name = "nickname")
     private User user;
