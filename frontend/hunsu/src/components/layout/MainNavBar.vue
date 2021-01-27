@@ -47,6 +47,7 @@
     fixed-tabs
     background-color="white"
     height="38"
+    color="dark"
     >
     <v-tab :to="{ name: 'Home' }" class="px-2" >
       홈

@@ -1,5 +1,5 @@
 <template>
-  <v-row justify="center">
+  <v-layout justify-end>
     <v-dialog
       v-model="dialog"
       fullscreen
@@ -7,14 +7,19 @@
       transition="dialog-bottom-transition"
     >
       <template v-slot:activator="{ on, attrs }">
+        <div id="whatwear_writebtn">
+
         <v-btn
-          color="black"
+          color="red accent-3"
           dark
+          small
+          fab
           v-bind="attrs"
           v-on="on"
         >
           <v-icon>mdi-pencil</v-icon>
         </v-btn>
+        </div>
       </template>
       
       <v-card>
@@ -154,7 +159,7 @@
         </div>
       </v-card>
     </v-dialog>
-  </v-row>
+  </v-layout>
 </template>
 
 <script>
@@ -184,5 +189,6 @@ export default {
 </script>
 
 <style>
+
 
 </style>

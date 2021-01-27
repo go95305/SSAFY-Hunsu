@@ -11,33 +11,11 @@
         ></v-radio>
       </v-radio-group>
       <!--투표결과그래프-->
-      <v-progress-linear
-        color="light-blue"
-        height="10"
-        value="10"
-        striped
-      ></v-progress-linear>
-      <br>
-      <v-progress-linear
-        color="light-green darken-4"
-        height="10"
-        value="20"
-        striped
-      ></v-progress-linear>
-      <br>
-      <v-progress-linear
-        height="10"
-        value="45"
-        striped
-        color="lime"
-      ></v-progress-linear>
-      <br>
-      <v-progress-linear
-        value="60"
-        height="10"
-        striped
-        color="deep-orange"
-      ></v-progress-linear>
+    <chartjs-doughnut
+      :labels="labels"
+      :datasets="datasets"
+      :option="option"
+    ></chartjs-doughnut>
     </div>
   </v-layout>
 </template>
@@ -48,9 +26,24 @@ export default {
   data() {
     return {
       radioGroup: '',
+      labels: ["1", "2", "3"],
+      datasets: [
+        {
+          data: [20, 30, 50],
+          backgroundColor: ["Red", "Yellow", "Purple"]
+        }
+      ],
+      option: {
+        title: {
+          display: true,
+          position: "bottom",
+          text: "test"
+        }
+      }
     }
-  }
+  },
 }
+
 </script>
 
 <style>
