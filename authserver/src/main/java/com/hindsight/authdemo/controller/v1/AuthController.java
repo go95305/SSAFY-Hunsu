@@ -47,7 +47,7 @@ public class AuthController {
     @Value("${spring.social.kakao.redirect}")
     private String kakaoRedirect;
 
-    @ApiOperation(value="소셜 로그인", notes="소셜 로그인을 한다.")
+    @ApiOperation(value="소셜 로그인 (O)", notes="소셜 로그인을 한다.")
     @PostMapping(value="/signin/{provider}")
     public Map<String, String> signinByProvider(
             @ApiParam(value = "서비스 제공자 provider", required=true) @PathVariable String provider,
@@ -68,7 +68,7 @@ public class AuthController {
     }
 
 
-    @ApiOperation(value="소셜 계정 가입", notes="소셜 계정 회원가입을 한다.")
+    @ApiOperation(value="소셜 계정 가입 (O)", notes="소셜 계정 회원가입을 한다.")
     @PostMapping(value ="/signup")
     public CommonResult signupProvider(@ApiParam("소셜 회원가입 객체") @RequestBody SocialSignUp form){
         KakaoProfile profile = kakaoService.getKakaoProfile(form.getAccessToken());
@@ -89,6 +89,7 @@ public class AuthController {
         return responseService.getSuccessResult();
     }
 
+    @ApiOperation(value="kakao 로그인 테스트 URL (O)")
     @GetMapping(value="/url")
     public String socialLogin(){
         StringBuilder loginUrl = new StringBuilder()
@@ -107,7 +108,7 @@ public class AuthController {
         return kakaoService.getKakaoTokenInfo(code);
     }
 
-    @ApiOperation(value="토큰 재발급", notes="리프레시 토큰으로 액세스 토큰을 재발급 한다.")
+    @ApiOperation(value="토큰 재발급 (~)", notes="리프레시 토큰으로 액세스 토큰을 재발급 한다.")
     @GetMapping("/newtoken/{refreshToken}")
     public SingleResult<String> getTokenFromRefreshToken(@PathVariable String refreshToken){
         String accessToken = null;
