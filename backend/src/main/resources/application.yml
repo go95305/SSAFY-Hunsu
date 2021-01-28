@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/hunsu?serverTimezone=Asia/Seoul
-    username: ssafy
-    password: ssafy
+    url: jdbc:mysql://i4C102.p.ssafy.io:3306/hunsu?serverTimezone=Asia/Seoul
+    username: ssafyC102
+    password: durtlrhdbckd135
     driver-class-name: com.mysql.cj.jdbc.Driver
 
 

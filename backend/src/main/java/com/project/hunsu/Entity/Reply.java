@@ -24,9 +24,12 @@ public class Reply {
     @JoinColumn(name = "ootd_idx")
     private Ootd ootd;
 
+<<<<<<< HEAD
     @ManyToOne
     @JoinColumn(name = "wear_idx")
     private Wear wear;
+=======
+>>>>>>> 7a923d1ddb8773537fed84617573b8a37d3a7fb4
 
     @ManyToOne
     @JoinColumn(name = "nickname")
