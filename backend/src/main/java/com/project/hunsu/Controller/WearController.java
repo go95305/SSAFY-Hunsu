@@ -59,7 +59,7 @@ public class WearController {
     //wear_idx 필요
     @DeleteMapping(value = "/wear/{wear_idx}")
     @Transactional
-    @ApiOperation(value = "뭘 입을까 삭제")
+    @ApiOperation(value = "뭘 입을까 삭제", notes = "hi")
     public void deleteWear(@PathVariable Long wear_idx) {
         wearService.DeleteWear(wear_idx);
     }
