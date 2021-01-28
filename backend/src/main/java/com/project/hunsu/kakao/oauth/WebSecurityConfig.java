@@ -34,11 +34,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
         // authenticate
         http.authorizeRequests()
-                .antMatchers("/my").permitAll()
-                .antMatchers("/").permitAll()
-                .antMatchers("/oauth2/**").permitAll()
-                .antMatchers("/login/**").permitAll()
-                .anyRequest().authenticated()
+//                .antMatchers("/my").permitAll()
+//                .antMatchers("/").permitAll()
+//                .antMatchers("/oauth2/**").permitAll()
+//                .antMatchers("/login/**").permitAll()
+//
+//                .anyRequest().authenticated()
+                .antMatchers("/**").permitAll()
                 .and()
                 .oauth2Login();
 //                .userInfoEndpoint()
