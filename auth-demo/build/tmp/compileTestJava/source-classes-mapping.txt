@@ -1,0 +1,6 @@
+com/hindsight/authdemo/AuthDemoApplicationTests.java
+ com.hindsight.authdemo.AuthDemoApplicationTests
+com/hindsight/authdemo/controller/v1/UserControllerTest.java
+ com.hindsight.authdemo.controller.v1.UserControllerTest
+com/hindsight/authdemo/repository/UserJpaRepoTest.java
+ com.hindsight.authdemo.repository.UserJpaRepoTest
