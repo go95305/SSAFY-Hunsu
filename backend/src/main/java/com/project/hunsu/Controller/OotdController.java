@@ -1,19 +1,20 @@
 package com.project.hunsu.Controller;
 
-import com.project.hunsu.Dto.OotdDetail;
-import com.project.hunsu.Dto.OotdLikeCount;
-import com.project.hunsu.Dto.OotdMain;
+import com.project.hunsu.Dto.*;
 import com.project.hunsu.Entity.*;
-import com.project.hunsu.Dto.OotdUpdate;
 import com.project.hunsu.Service.OotdService;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -83,5 +84,28 @@ public class OotdController {
             ootdService.likedown(ootd.getIdx(), user.getNickname());
         }
         return ootd.getCount();
+    }
+
+    @GetMapping("/ootd/hashtag/{hashtag}") // 해결
+    @ApiOperation(value = "Ootd 해시태그기반 검색")
+    public List<Ootd> hashtagSearch(@PathVariable String hashtag) {
+        List<Ootd> ootdList = ootdService.searchByHashtag(hashtag);
+        return ootdList;
+    }
+
+    @PostMapping("/ootd")
+    @ApiOperation(value = "Ootd글 작성")
+    public ResponseEntity<Map<String,Object>> writeOotd(@Valid @RequestBody OotdWrite ootdWrite){
+        ResponseEntity<Map<String, Object>> resEntity = null;
+        Map<String, Object> map = new HashMap<String, Object>();
+        try {
+            ootdService.write(ootdWrite);
+            map.put("msg","success");
+            resEntity= new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+        }catch (Exception e){
+            map.put("msg","fail");
+            resEntity= new ResponseEntity<Map<String,Object>>(map, HttpStatus.FORBIDDEN);
+        }
+        return resEntity;
     }
 }

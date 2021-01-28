@@ -22,10 +22,6 @@ public class Hashtag {
     @JoinColumn(name = "ootd_idx")
     private Ootd ootd;
 
-//
-
-
     private String content;
-    private boolean type;
 
 }

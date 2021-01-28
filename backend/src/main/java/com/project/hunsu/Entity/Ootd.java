@@ -1,6 +1,7 @@
 package com.project.hunsu.Entity;
 
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -37,7 +38,8 @@ public class Ootd {
     @Column(name = "is_updated")
     private boolean isUpdated;
 
-    @Column(name = "write_date",insertable = false, updatable = false)
+    @CreationTimestamp
+    @Column(name = "write_date")
     private LocalDateTime writeDate;
 
     private int count;
