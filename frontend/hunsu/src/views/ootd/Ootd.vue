@@ -1,18 +1,22 @@
 <template>
-  <div>
-
-    <h1>#OOTD</h1>
+<div>
     <OotdFilter />
-    <OotdSearchBtn />
+  <div class="d-flex flex-row-reverse">
+    <div class="d-inline-block mx-5 mt-4">
     <OotdWritePage />
-    <OotdIList style="margin: 20px" />
+    </div>
+    <div class="d-inline-block">
+    <OotdSearchBtn />
+    </div>
+  </div>
+    <OotdList style="margin: 20px" />
     
 
-  </div>
+</div>
 </template>
 
 <script>
-import OotdIList from '@/components/ootd/OotdIList'
+import OotdList from '@/components/ootd/OotdList'
 import OotdSearchBtn from '@/components/ootd/OotdSearchBtn'
 import OotdWritePage from '@/components/ootd/OotdWritePage'
 import OotdFilter from '@/components/ootd/OotdFilter'
@@ -21,7 +25,7 @@ import OotdFilter from '@/components/ootd/OotdFilter'
 export default {
   name: "Ootd",
   components: {
-    OotdIList,
+    OotdList,
     OotdSearchBtn,
     OotdWritePage,
     OotdFilter,

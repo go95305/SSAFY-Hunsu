@@ -1,6 +1,8 @@
 <template>
+<!-- 회원가입 후 추가정보 입력할 컴포넌트 -->
 <div>
   <h2>회원가입 추가정보 컴포넌트</h2>
+  <!-- 프로필 사진 -->
   <v-avatar>
     <img
       src="https://cdn.vuetifyjs.com/images/john.jpg"
@@ -11,6 +13,7 @@
     align="center"
     justify="space-around"
   >
+  <!-- 프로필 사진 변경 버튼 -->
     <v-btn
       tile
       color="success"
@@ -18,6 +21,7 @@
       Edit
     </v-btn>
   </v-row>
+  <!-- 닉네임 입력 -->
   <v-text-field
     label="닉네임을 입력해주세요(필수)"
     :rules="rules"
@@ -27,6 +31,7 @@
 
   <h3>추가정보(선택)</h3>
   추천 서비스제공에 사용되는 정보입니다.
+  <!-- 키 입력, 사이즈 선택 -->
     <v-text-field
     label="키(cm)"
     hide-details="auto"

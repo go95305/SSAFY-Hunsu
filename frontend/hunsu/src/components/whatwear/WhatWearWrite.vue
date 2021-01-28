@@ -1,5 +1,6 @@
 <template>
-  <v-row justify="center">
+<!-- WHATWEAR 작성 페이지 (연필모양 버튼 포함) -->
+  <v-row justify="end" class="mx-5 mt-5">
     <v-dialog
       v-model="dialog"
       fullscreen
@@ -7,9 +8,12 @@
       transition="dialog-bottom-transition"
     >
       <template v-slot:activator="{ on, attrs }">
+        <!-- 연필모양 버튼 클릭하면 이 작성페이지가 뜸 -->
         <v-btn
-          color="black"
+          color="red accent-3"
           dark
+          small
+          fab
           v-bind="attrs"
           v-on="on"
         >

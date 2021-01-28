@@ -1,4 +1,5 @@
 <template>
+<!-- WHATWEAR 디테일의 투표 윗부분 -->
   <v-layout justify-center>
     <v-carousel id="detailcard" v-model="model" height="350px">
       <v-carousel-item

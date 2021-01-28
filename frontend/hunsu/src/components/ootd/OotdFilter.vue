@@ -1,9 +1,9 @@
 <template>
-
+<!-- 정렬 버튼 -->
       <v-btn-toggle
         v-model="text"
         tile
-        color="deep-purple accent-3"
+        color="red accent-3"
         group
       >
         <v-btn value="left">

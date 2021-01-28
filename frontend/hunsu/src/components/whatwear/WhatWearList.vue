@@ -1,4 +1,5 @@
 <template>
+<!-- WHATWEAR 메인 페이지 -->
   <v-card
     class="mx-auto mt-10"
     max-width="600px"
