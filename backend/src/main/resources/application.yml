@@ -23,8 +23,3 @@ spring:
     hiddenmethod:
       filter:
         enabled: true
-
-oauth2:
-  kakao:
-    client-id: 6ab2b1fa25ea8dc7edf27eb1c42fcd4c
-    client-secret: 7leAsgMurNqMLpi0cABJ7AhdP0oIqqPb

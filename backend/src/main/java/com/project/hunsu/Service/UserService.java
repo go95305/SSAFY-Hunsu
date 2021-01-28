@@ -1,17 +1,12 @@
 package com.project.hunsu.Service;
 
 import com.project.hunsu.Entity.Follower;
-import com.project.hunsu.Entity.Ootd;
-import com.project.hunsu.Entity.QFollower;
 import com.project.hunsu.Entity.User;
-import com.project.hunsu.kakao.Repository.UserRepository;
-import com.querydsl.jpa.impl.JPAQuery;
-import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.project.hunsu.Repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 
 @Service

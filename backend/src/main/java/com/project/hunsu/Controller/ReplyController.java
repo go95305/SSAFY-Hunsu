@@ -2,8 +2,9 @@ package com.project.hunsu.Controller;
 
 import com.project.hunsu.Dto.ReplyValue;
 import com.project.hunsu.Service.ReplyService;
-import com.project.hunsu.kakao.Repository.ReplyRepository;
 import io.swagger.annotations.ApiOperation;
+import com.project.hunsu.Entity.Reply;
+import com.project.hunsu.Repository.ReplyRepository;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;

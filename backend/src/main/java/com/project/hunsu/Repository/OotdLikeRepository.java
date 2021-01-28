@@ -1,4 +1,4 @@
-package com.project.hunsu.kakao.Repository;
+package com.project.hunsu.Repository;
 
 import com.project.hunsu.Entity.Ootd;
 import com.project.hunsu.Entity.OotdLike;

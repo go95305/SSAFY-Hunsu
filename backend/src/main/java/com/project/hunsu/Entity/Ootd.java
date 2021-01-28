@@ -42,6 +42,7 @@ public class Ootd {
     @Column(name = "write_date")
     private LocalDateTime writeDate;
 
+    //likeCount로 바꾸기
     private int count;
 
 
