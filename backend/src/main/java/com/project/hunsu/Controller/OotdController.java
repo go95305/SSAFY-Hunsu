@@ -1,22 +1,20 @@
 package com.project.hunsu.Controller;
 
-import com.project.hunsu.Dto.OotdDetail;
-import com.project.hunsu.Dto.OotdLikeCount;
-import com.project.hunsu.Dto.OotdMain;
-import com.project.hunsu.Entity.Hashtag;
-import com.project.hunsu.Entity.Ootd;
-import com.project.hunsu.Dto.OotdUpdate;
-import com.project.hunsu.Entity.OotdLike;
-import com.project.hunsu.Entity.Reply;
+import com.project.hunsu.Dto.*;
+import com.project.hunsu.Entity.*;
 import com.project.hunsu.Service.OotdService;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -31,66 +29,86 @@ public class OotdController {
     private EntityManager entityManager;
 
     @GetMapping("/ootd/{sort}")  //ootd_idx, 닉네임, 글내용, 해시태그, 좋아요 개수
-    @ApiOperation(value = "Ootd 메인페이지")//안됨
-    public List<OotdMain> ootdSortedList(@PathVariable int sort) {
+    @ApiOperation(value = "Ootd 메인페이지",notes = "[#Ootd메인 페이지] 0 혹은 1값을 보내면 0:최신순 1: 인기순으로 리턴해준다(ootdIdx,닉네임,글내용,해시태그,좋아요 개수)")//안됨
+    public List<OotdMainDTO> ootdSortedList(@PathVariable int sort) {
         System.out.println(sort);
-        List<OotdMain> ootdList = ootdService.SortByRecentOrPopularity(sort);
-
-        for (int i = 0; i < ootdList.size(); i++) {
-            System.out.println(ootdList.get(i));
-        }
-        return ootdList;
+        List<OotdMainDTO> ootdMainDTOList = ootdService.SortByRecentOrPopularity(sort);
+        return ootdMainDTOList;
     }
 
-    @GetMapping("/ootd/detail/{ootdIdx}") // 에러.. 찾아보자 // ootd_idx,content,count,is_updated,write_date,nickname
-    @ApiOperation(value = "Ootd 상세페이지") // 이것도 jpql 아니면 querydSL써야함
-    public OotdDetail detailOotd(@PathVariable("ootdIdx") Long ootdIdx) {
+    @GetMapping("/ootd/detail/{ootdIdx}") // ootd_idx,content,count,is_updated,write_date,nickname
+    @ApiOperation(value = "Ootd 상세페이지",notes = "Ootd글에 대한 상세페이지, ootd메인페이지에서 특정 글을 클릭시" +
+            "해당 글에 대한 상세정보를 보여준다. 글의 ootdidx를 통해 연관된 hashtag,좋아요,댓글, 대댓글을 전부 리턴해준다.") // 이것도 jpql 아니면 querydSL써야함
+    public OotdDetailDTO detailOotd(@PathVariable("ootdIdx") Long ootdIdx) {
 //        Ootd ootdDetail = ootdRepository.findByIdx(ootdidx);
-        OotdDetail ootdDetail = ootdService.SpecificOotd(ootdIdx);
-        System.out.println(ootdDetail);
-        return ootdDetail;
+        OotdDetailDTO ootdDetailDTO = ootdService.SpecificOotd(ootdIdx);
+        System.out.println(ootdDetailDTO);
+        return ootdDetailDTO;
     }
 
 
     @PutMapping("/ootd")
     @Transactional
-    @ApiOperation(value = "Ootd 글수정")//이건 된다.
-    public void updateOotd(@Valid @RequestBody OotdUpdate ootdUpdate) {
-        Hashtag hashtag = entityManager.find(Hashtag.class, ootdUpdate.getOotdIdx());
-
+    @ApiOperation(value = "Ootd 글수정",notes = "Ootd상세 페이지에서 글 수정.수정할 글의 ootdidx, 해시태그, 글 제목(내용)을 넘겨주면 수정한다.")//이건 된다.
+    public void updateOotd(@Valid @RequestBody OotdUpdateDTO ootdUpdateDTO) {
+        Hashtag hashtag = entityManager.find(Hashtag.class, ootdUpdateDTO.getOotdIdx());
         if (hashtag != null) {
-            hashtag.setContent(ootdUpdate.getHashtag());
+            hashtag.setContent(ootdUpdateDTO.getHashtag());
         }
         Ootd ootd = hashtag.getOotd();
-        ootd.setContent(ootdUpdate.getContent());
+        ootd.setContent(ootdUpdateDTO.getContent());
         ootd.setUpdated(true);
     }
 
 
     @DeleteMapping("/ootd/{idx}")
     @Transactional
-    @ApiOperation(value = "Ootd 글삭제")//안됨
+    @ApiOperation(value = "Ootd 글삭제",notes = "해당 글의 ootdidx를 통해 해당글을 삭제. 연관매핑이 되어있으므로 " +
+            "연관된 테이블에 정보를 우선적으로 지우고나서 해당 글을 삭제")
     public void deleteOotd(@PathVariable Long idx) {
         ootdService.delete(idx);
-
     }
 
     @PutMapping("/ootd/like")
     @Transactional
-    @ApiOperation(value = "Ootd글 좋아요")
-    public void ootdLike(@Valid @RequestBody OotdLikeCount ootdLikeCount) {
-        Ootd ootd = entityManager.find(Ootd.class, ootdLikeCount.getOotdIdx());
-        if (ootdLikeCount.getChk()) {//좋아요 +1
+    @ApiOperation(value = "Ootd글 좋아요",notes = "nickname,ootdidx,boolean값을 받는다. boolean 값이 true: 좋아요+1 false: 좋아요-1을해준다." +
+            "Ootdlike테이블에서 누가 좋아요 했는지도 저장(nickname과 ootdidx를 저장 ") // 성공
+    public int ootdLike(@Valid @RequestBody OotdLikeCountDTO ootdLikeCountDTO) {
+        Ootd ootd = entityManager.find(Ootd.class, ootdLikeCountDTO.getOotdIdx());
+        User user = entityManager.find(User.class, ootdLikeCountDTO.getNickname());
+        if (ootdLikeCountDTO.getChk()) {//좋아요 +1
             ootd.setCount(ootd.getCount() + 1);
             OotdLike ootdLike = new OotdLike();
-            ootdLike.setOotdIdx(ootdLikeCount.getOotdIdx());
-            ootdLike.setNickname(ootdLikeCount.getNickname());
+            ootdLike.setOotd(ootd);
+            ootdLike.setUser(user);
             entityManager.persist(ootdLike);
         } else {// 좋아요 -1
             ootd.setCount(ootd.getCount() - 1);
-            ootdService.likeDown(ootdLikeCount.getOotdIdx(),ootdLikeCount.getNickname());
+            ootdService.likedown(ootd.getIdx(), user.getNickname());
         }
-//        ootdRepository.save(ootd);
+        return ootd.getCount();
     }
 
+    @GetMapping("/ootd/hashtag/{hashtag}") // 해결
+    @ApiOperation(value = "Ootd 해시태그기반 검색",notes = "ootd상세글 혹은 검색에서 해시태그를 클릭 혹은 입력시 해당 해시태그가 포함된 글을 전부 리턴해준다.")
+    public List<OotdMainDTO> hashtagSearch(@PathVariable String hashtag) {
+        List<OotdMainDTO> ootdMainDTOList = ootdService.searchByHashtag(hashtag);
+        return ootdMainDTOList;
+    }
+
+    @PostMapping("/ootd")
+    @ApiOperation(value = "Ootd글 작성",notes = "ootd글작성에 필요한 데이터를 받아와서 글 작성한다. 리턴값으로 responseEntity를 보내서 작성에 성공했으면 success, 실패했으면 fail을 리턴")
+    public ResponseEntity<Map<String,Object>> writeOotd(@Valid @RequestBody OotdWriteDTO ootdWriteDTO){
+        ResponseEntity<Map<String, Object>> resEntity = null;
+        Map<String, Object> map = new HashMap<String, Object>();
+        try {
+            ootdService.write(ootdWriteDTO);
+            map.put("msg","success");
+            resEntity= new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+        }catch (Exception e){
+            map.put("msg","fail");
+            resEntity= new ResponseEntity<Map<String,Object>>(map, HttpStatus.FORBIDDEN);
+        }
+        return resEntity;
+    }
 }

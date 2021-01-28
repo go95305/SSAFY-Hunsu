@@ -1,10 +1,15 @@
 package com.project.hunsu.kakao.Repository;
 
+import com.project.hunsu.Entity.Ootd;
 import com.project.hunsu.Entity.OotdLike;
+import com.project.hunsu.Entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface OotdLikeRepository extends JpaRepository<OotdLike,Long> {
+import java.util.List;
 
-    void deleteByIdxAndNickname(Long ootdIdx, String nickname);
+@Repository
+public interface OotdLikeRepository extends JpaRepository<OotdLike, Long> {
 
+    List<OotdLike> findOotdLikeByOotdIdx(Long idx);
 }

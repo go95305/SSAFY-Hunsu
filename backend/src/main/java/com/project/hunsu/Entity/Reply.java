@@ -24,24 +24,27 @@ public class Reply {
     @JoinColumn(name = "ootd_idx")
     private Ootd ootd;
 
-
+<<<<<<< HEAD
+    @ManyToOne
+    @JoinColumn(name = "wear_idx")
+    private Wear wear;
+=======
+>>>>>>> 7a923d1ddb8773537fed84617573b8a37d3a7fb4
 
     @ManyToOne
     @JoinColumn(name = "nickname")
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "wear_idx")
-    private Wear wear;
-
     @Column(columnDefinition = "bigint default 0 ")
     private Long depth;
 
-    @Column(name = "write_date")
+    @Column(columnDefinition = "timestamp not null default now()", name = "write_date",insertable = false, updatable = false)
     private LocalDateTime writeDate;
 
     private String content;
 
     @Column(name = "group_num")
-    private int groupNum;
+    private Long groupNum;
+
+    private int count;
 }
