@@ -34,12 +34,11 @@ const routes = [
     path: '/ootd',
     name: 'Ootd',
     component: Ootd,
-    children: [
-      {
-        path: 'detail',
-        component: OotdDetail
-      }
-    ]
+  },
+  {
+    path: '/ootd/detail',
+    name: 'OotdDetail',
+    component: OotdDetail
   },
   {
     path: '/whatwear',

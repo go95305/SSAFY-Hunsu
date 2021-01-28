@@ -1,4 +1,5 @@
 <template>
+<!-- 네비게이션 바 고정 -->
   <div>
     <v-app-bar
       color="white"
@@ -47,18 +48,18 @@
     fixed-tabs
     background-color="white"
     height="38"
-    color="light-green accent-3"
+    color="red accent-3"
     >
-    <v-tab :to="{ name: 'Home' }" class="px-2" >
+    <v-tab :to="{ name: 'Home' }" class="px-2" style="color: black">
       홈
     </v-tab>
-    <v-tab :to="{ name: 'Live' }" class="px-2">
+    <v-tab :to="{ name: 'Live' }" class="px-2" style="color: black">
       실시간
     </v-tab>
-    <v-tab :to="{ name: 'Ootd' }" class="px-2">
+    <v-tab :to="{ name: 'Ootd' }" class="px-2" style="color: black">
       #OOTD
     </v-tab>
-    <v-tab :to="{ name: 'WhatWear' }" class="px-2">
+    <v-tab :to="{ name: 'WhatWear' }" class="px-2" style="color: black">
       뭘 입을까
     </v-tab>
   </v-tabs>

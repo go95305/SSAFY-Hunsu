@@ -1,4 +1,5 @@
 <template>
+<!-- OOTD, WHATWEAR 공통 댓글창 -->
   <div>
     <v-card
       max-width="450"

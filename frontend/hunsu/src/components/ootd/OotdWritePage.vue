@@ -1,4 +1,5 @@
 <template>
+<!-- OOTD 작성 페이지 (연필모양 버튼 포함) -->
   <v-row justify="center" class="d-inline-block">
     <v-dialog
       v-model="dialog"
@@ -7,6 +8,7 @@
       transition="dialog-bottom-transition"
     >
       <template v-slot:activator="{ on, attrs }">
+        <!-- 연필모양 버튼 (클릭하면 이 페이지가 뜸) -->
         <v-btn
           color="red accent-3"
           dark
@@ -33,6 +35,7 @@
           <v-toolbar-title>OOTD 작성</v-toolbar-title>
           <v-spacer></v-spacer>
           <v-toolbar-items>
+            <!-- 작성완료 버튼 -->
             <v-btn
               dark
               text

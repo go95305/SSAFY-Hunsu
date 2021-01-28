@@ -1,4 +1,5 @@
 <template>
+<!-- 패션왕 -->
   <v-container justify-center>
     <v-layout>
      <v-card class="mx-auto" max-width="344">

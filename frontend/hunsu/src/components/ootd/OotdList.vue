@@ -1,6 +1,8 @@
 <template>
+<!-- OOTD 메인 페이지 -->
 <div>
-  <router-view></router-view>
+  <!-- OOTD 하나 클릭하면 디테일페이지 뜨는 섹션 -->
+  <!-- <router-view></router-view> -->
   <v-card
     elevation="24"
     max-width="450"
@@ -8,6 +10,7 @@
     @click="goToOotdDetail"
   >
     <v-system-bar lights-out></v-system-bar>
+    <!-- OOTD 사진 -->
     <v-carousel
       :continuous="false"
       :cycle="cycle"
@@ -39,6 +42,7 @@
     </v-carousel>
     <v-list two-line>
       <v-list-item>
+        <!-- 작성자 프로필 -->
         <v-list-item-avatar>
           <v-img src="https://cdn.vuetifyjs.com/images/john.png"></v-img>
         </v-list-item-avatar>
@@ -47,6 +51,7 @@
           <v-list-item-subtitle>Author</v-list-item-subtitle>
         </v-list-item-content>
         <v-list-item-action>
+          <!-- 좋아요 버튼 -->
           <v-btn icon>
             <v-icon>mdi-heart</v-icon>
           </v-btn>
@@ -59,7 +64,7 @@
 
 <script>
   export default {
-    name: "OotdIList",
+    name: "OotdList",
     data () {
           return {
             colors: [

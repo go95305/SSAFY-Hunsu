@@ -1,4 +1,5 @@
 <template>
+<!-- 라이브 개설 페이지 (OPEN LIVE버튼 포함) -->
   <v-row justify="center" class="d-inline-block">
     <v-dialog
       v-model="dialog"

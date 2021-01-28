@@ -1,4 +1,5 @@
 <template>
+<!-- FOOTER 고정 -->
   <v-footer
     dark
     padless
