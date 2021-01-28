@@ -1,16 +1,15 @@
-import Vue from "vue";
-import VueRouter from "vue-router";
-import Home from "@/views/Home";
-import Live from "@/views/live/Live";
-import Ootd from "@/views/ootd/Ootd";
-import WhatWear from "@/views/whatwear/WhatWear";
-import WhatWearDetail from "@/views/whatwear/WhatWearDetail";
-import MyPage from "@/views/user/MyPage"
-import Login from "@/views/user/Login"
-import OotdDetail from "@/views/ootd/OotdDetail"
-import LiveDetail from "@/views/live/LiveDetail"
-import Auth from "@/views/user/Auth"
-
+import Vue from 'vue';
+import VueRouter from 'vue-router';
+import Home from '@/views/Home';
+import Live from '@/views/live/Live';
+import Ootd from '@/views/ootd/Ootd';
+import WhatWear from '@/views/whatwear/WhatWear';
+import WhatWearDetail from '@/views/whatwear/WhatWearDetail';
+import MyPage from '@/views/user/MyPage';
+import Login from '@/views/user/Login';
+import OotdDetail from '@/views/ootd/OotdDetail';
+import LiveDetail from '@/views/live/LiveDetail';
+// import Auth from "@/views/user/Auth"
 
 Vue.use(VueRouter);
 
@@ -18,7 +17,7 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: Home
+    component: Home,
   },
   {
     path: '/live',
@@ -28,7 +27,7 @@ const routes = [
   {
     path: '/live/detail',
     name: 'LiveDetail',
-    component: LiveDetail
+    component: LiveDetail,
   },
   {
     path: '/ootd',
@@ -38,7 +37,7 @@ const routes = [
   {
     path: '/ootd/detail',
     name: 'OotdDetail',
-    component: OotdDetail
+    component: OotdDetail,
   },
   {
     path: '/whatwear',
@@ -48,31 +47,28 @@ const routes = [
   {
     path: '/mypage',
     name: 'MyPage',
-    component: MyPage
+    component: MyPage,
   },
   {
     path: '/login',
     name: 'Login',
-    component: Login
+    component: Login,
   },
   {
     path: '/whatwear/detail',
-    name: "WhatWearDetail",
+    name: 'WhatWearDetail',
     component: WhatWearDetail,
   },
-  {
-    path : '/auth',
-    name : "Auth",
-    component: Auth,
-  },
-]
-
-
-
+  // {
+  //   path : '/auth',
+  //   name : "Auth",
+  //   component: Auth,
+  // },
+];
 
 const router = new VueRouter({
-  mode: "history",
+  mode: 'history',
   routes,
-})
+});
 
-export default router
+export default router;
