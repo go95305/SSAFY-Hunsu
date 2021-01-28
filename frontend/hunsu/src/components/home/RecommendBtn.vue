@@ -1,9 +1,8 @@
 <template>
+<!-- 추천서비스 -->
   <v-container>
     <v-layout justify-center>
-      <v-btn
-       color="red accent-3"
-       outlined>
+      <v-btn color="red accent-3" style="color: white">
       추천서비스
       </v-btn>
     </v-layout>

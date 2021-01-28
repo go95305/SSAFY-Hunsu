@@ -1,4 +1,5 @@
 <template>
+<!-- 라이브 채팅창 (아직 구현안돼서 댓글로 대체해놓음)-->
   <div>
     <v-card
       max-width="450"
@@ -34,6 +35,7 @@
         </template>
       </v-list>
     </v-card>
+    
     <v-container fluid>
       <v-row>
         <v-col
@@ -46,7 +48,6 @@
             outlined
             rows="3"
             row-height="25"
-            shaped
           ></v-textarea>
         </v-col>
 

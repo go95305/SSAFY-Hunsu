@@ -1,6 +1,5 @@
 <template>
   <div>
-      <h1>실채훈</h1>
       <LiveSearchBtn />
       <LiveWritePage style="margin: 10px"/> 
       <LiveList style="margin: 20px"/>
