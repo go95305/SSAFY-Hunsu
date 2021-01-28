@@ -1,0 +1,45 @@
+server:
+  port: 9000
+
+spring:
+  datasource:
+    url: jdbc:mysql://i4C102.p.ssafy.io:3306/hunsu?serverTimezone=Asia/Seoul
+    username: ssafyC102
+    password: durtlrhdbckd135
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    database: mysql
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        use_sql_comments: true
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+    generate-ddl: true
+    open-in-view: false
+
+  messages:
+    basename: i18n/exception
+    encoding: UTF-8
+  jwt:
+    secret: wogml23@$0@
+
+  url:
+    base: http://localhost:9000
+
+  social:
+    kakao:
+      client_id: 8e53809b2827c367b5aa27ac70dfd124
+      client_secret: 71TylRM4GB5dWKVAiS7Kf1rsOZZgDWGa
+      redirect: /v1/auth/login/kakao
+      url:
+        login: https://kauth.kakao.com/oauth/authorize
+        token: https://kauth.kakao.com/oauth/token
+        profile: https://kapi.kakao.com/v2/user/me
+
+logging:
+  level:
+    root: info
