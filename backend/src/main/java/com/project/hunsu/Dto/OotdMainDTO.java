@@ -5,10 +5,13 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import javax.validation.Valid;
+
 @Getter
 @Setter
+@Valid
 @ToString
-public class OotdMain {
+public class OotdMainDTO {
     private Long ootdIdx; //ootd에서 가져오기
     private String nickname; //ootd에서 가져오기
     private String ootdContent; //ootd에서 가져오기
@@ -24,6 +27,6 @@ public class OotdMain {
 //        this.ootdLike = ootdLike;
 //    }
 
-    public OotdMain() {
+    public OotdMainDTO() {
     }
 }

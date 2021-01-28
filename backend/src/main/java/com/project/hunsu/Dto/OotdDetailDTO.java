@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-public class OotdDetail {
+public class OotdDetailDTO {
     private Long ootdIdx;
     private String content;
     private int count;
