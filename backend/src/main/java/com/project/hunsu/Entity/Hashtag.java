@@ -12,6 +12,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+//해시태그 여러개면 분리해서 넣자.
 public class Hashtag {
 
     @Id

@@ -1,7 +1,7 @@
 package com.project.hunsu.Controller;
 
 import com.project.hunsu.Entity.Reply;
-import com.project.hunsu.kakao.Repository.ReplyRepository;
+import com.project.hunsu.Repository.ReplyRepository;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 

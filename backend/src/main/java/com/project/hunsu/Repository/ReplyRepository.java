@@ -1,4 +1,4 @@
-package com.project.hunsu.kakao.Repository;
+package com.project.hunsu.Repository;
 
 import com.project.hunsu.Entity.Reply;
 import org.springframework.data.jpa.repository.JpaRepository;

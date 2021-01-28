@@ -32,7 +32,6 @@ public class UserController {
 
     }
 
-    //User메인 페이지 부분 다음에하자!
 //    @GetMapping("/user/ootd/{nickname}")
 //    @ApiOperation(value = "상대 마이페이지로 이동", notes = "상대 이름 클릭시 상대방 정보를 리턴해준다.")
 //    public UserDetail otherUserPage(@PathVariable String nickname) {

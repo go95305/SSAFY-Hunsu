@@ -4,10 +4,10 @@ import com.project.hunsu.Dto.OotdDetailDTO;
 import com.project.hunsu.Dto.OotdMainDTO;
 import com.project.hunsu.Dto.OotdWriteDTO;
 import com.project.hunsu.Entity.*;
-import com.project.hunsu.kakao.Repository.HashtagRepository;
-import com.project.hunsu.kakao.Repository.OotdLikeRepository;
-import com.project.hunsu.kakao.Repository.OotdRepository;
-import com.project.hunsu.kakao.Repository.ReplyRepository;
+import com.project.hunsu.Repository.HashtagRepository;
+import com.project.hunsu.Repository.OotdLikeRepository;
+import com.project.hunsu.Repository.OotdRepository;
+import com.project.hunsu.Repository.ReplyRepository;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Service;
@@ -36,18 +36,19 @@ public class OotdService {
     }
 
 
+    // 최신순 혹은 인기순으로 Ootd값을 정렬해서 가져오는 메소드 QueryDSL을 사용.
     public List<OotdMainDTO> SortByRecentOrPopularity(int sort) {
         List<OotdMainDTO> ootdMainDTOList;
         QOotd ootd = QOotd.ootd;
         QHashtag hashtag = QHashtag.hashtag;
         JPAQueryFactory jpaQueryFactory = new JPAQueryFactory(entityManager);
-        if (sort == 0) {
+        if (sort == 0) {//sort값 이 0이면 최신순으로 정렬
             ootdMainDTOList = jpaQueryFactory.select(Projections.fields(OotdMainDTO.class, ootd.idx.as("ootdIdx"), ootd.content.as("ootdContent"), hashtag.content.as("hashtagContent"), ootd.count.as("ootdLike")))
                     .from(ootd)
                     .leftJoin(hashtag).on(ootd.eq(hashtag.ootd))
                     .orderBy(ootd.writeDate.asc())
                     .fetch();
-        } else {
+        } else {//sort값이 1이면 인기순으로 정렬
             ootdMainDTOList = jpaQueryFactory.select(Projections.fields(OotdMainDTO.class, ootd.idx.as("ootdIdx"), ootd.content.as("ootdContent"), hashtag.content.as("hashtagContent"), ootd.count.as("ootdLike")))
                     .from(ootd)
                     .leftJoin(hashtag).on(ootd.eq(hashtag.ootd))
@@ -58,45 +59,46 @@ public class OotdService {
     }
 
 
+    //Ootd 상세페이지 정보 가져오기
     public OotdDetailDTO SpecificOotd(Long ootdIdx) {
-        Ootd Ootd = ootdRepository.findByIdx(ootdIdx);
+        Ootd Ootd = ootdRepository.findByIdx(ootdIdx);// OotdIdx를 통해 ootd글을 가져오기
         OotdDetailDTO ootdDetailDTO = new OotdDetailDTO();
         return ootdDetailDTO;
     }
 
-    public void delete(Long idx) {
-        //ootd와 관련된 연관관계 매핑 엔티티들과의 연결을 끊는다.
+    //Ootd글 삭제
 
+    public void delete(Long idx) {
+        //ootd와 관련된 연관관계 매핑 엔티티들과의 연결을 끊는다.(연관된 테이블의 레코드들을 전부 삭제) 그 이후에 Ootd테이블의 레코드 삭제
         List<Reply> reply = replyRepository.findReplyByOotdIdx(idx);
         for (Reply repl : reply
         ) {
-//            replyRepository.delete(repl);
-            repl.setOotd(null);
+            replyRepository.delete(repl);
         }
 
         List<Hashtag> hashtagList = hashtagRepository.findHashtagByOotdIdx(idx);
         for (Hashtag hs : hashtagList) {
-//            hashtagRepository.delete(hs);
-            hs.setOotd(null);
+            hashtagRepository.delete(hs);
         }
 
 
         List<OotdLike> ootdLikeList = ootdLikeRepository.findOotdLikeByOotdIdx(idx);
         for (OotdLike ol : ootdLikeList
         ) {
-//            ootdLikeRepository.delete(ol);
-            ol.setOotd(null);
+            ootdLikeRepository.delete(ol);
         }
         Ootd ot = entityManager.find(Ootd.class, idx);
         ootdRepository.delete(ot);
     }
 
 
+    //좋아요 해제 시, 좋아요 테이블에서 좋아요를 누른 사람의 정보 삭제
     public void likedown(Long ootdIdx, String nickName) {
         String query = "delete from OotdLike m where m.ootd.idx= :ootdIdx and m.user.nickname = :nickName";
         int result = entityManager.createQuery(query).setParameter("ootdIdx", ootdIdx).setParameter("nickName", nickName).executeUpdate();
     }
 
+    //검색창에서 해시태그를 검색하거나 해시태그를 눌렀을때 해당해시태그가 포함된 모든 Ootd글들을 가져온다.
     public List<OotdMainDTO> searchByHashtag(String hashtag) {
         //우선 hashtag를 포함하는 모든 해시태그 테이블의 레코드를 가져온다.
         List<Hashtag> hashtagList = hashtagRepository.findByContentContaining(hashtag);
@@ -117,9 +119,10 @@ public class OotdService {
         return ootdMainDTOList;
     }
 
+    //ootd글 생성
     public void write(OotdWriteDTO ootdWriteDTO) {
         Ootd ootd = new Ootd();
-        User user = entityManager.find(User.class, ootdWriteDTO.getNickName());
+        User user = entityManager.find(User.class, ootdWriteDTO.getNickName());//ootd테이블의 닉네임에 맞는 유저정보를 가져온다.
 
         //ootd글 새롭게 생성
         ootd.setUser(user);
@@ -134,9 +137,6 @@ public class OotdService {
 
             query.setParameter("nickname", ootdWriteDTO.getNickName()).setParameter("content", ootdWriteDTO.getContent());
             Ootd ot = query.getSingleResult();
-
-
-            System.out.println(ot.getUser().getNickname());
 
             Hashtag hashtag = new Hashtag();
             hashtag.setContent(ootdWriteDTO.getHashtag());
