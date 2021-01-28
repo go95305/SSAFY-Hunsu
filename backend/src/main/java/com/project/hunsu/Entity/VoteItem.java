@@ -23,6 +23,5 @@ public class VoteItem {
     private Vote vote;
 
     private int count;
-    private String item;
 
 }
