@@ -3,7 +3,7 @@ package com.project.hunsu.Dto;
 import lombok.Getter;
 
 @Getter
-public class OotdLikeCount {
+public class OotdLikeCountDTO {
    String nickname;
    Long ootdIdx;
    Boolean chk;

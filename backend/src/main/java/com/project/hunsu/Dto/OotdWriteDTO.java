@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class OotdWrite {
+public class OotdWriteDTO {
     private String nickName;
     private String content;
     private String hashtag;
