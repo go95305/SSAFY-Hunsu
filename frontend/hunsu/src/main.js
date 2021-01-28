@@ -8,6 +8,11 @@ import axios from 'axios'
 import VueAxios from 'vue-axios';
 import VueCookies from 'vue-cookies'
 
+import 'chart.js'
+import 'hchs-vue-charts'
+
+Vue.use(window.VueCharts)
+
 Vue.use(VueAxios, axios)
 Vue.use(VueCookies)
 Vue.config.productionTip = false

@@ -7,7 +7,7 @@
     <v-card
       flat
       tile
-      class="grey darken-2 white--text text-center"
+      class="dark white--text text-center"
       style="width: 100%"
     >
       <v-card-text>

@@ -1,29 +1,48 @@
 <template>
-<!-- WHATWEAR 디테일의 투표 윗부분 -->
-  <v-layout justify-center>
-    <v-carousel id="detailcard" v-model="model" height="350px">
-      <v-carousel-item
-        v-for="(color, i) in colors"
-        :key="color"
+  <div>
+    <!--프로필사진, 닉네임-->
+    <div id="whatwear_profile">
+      <v-avatar
+      class="mt-5 ml-5"
       >
-        <v-sheet
-          :color="color"
-          height="100%"
-          tile
+      <img
+        src="https://cdn.vuetifyjs.com/images/john.jpg"
+        alt="John"
+      >
+      </v-avatar>
+      <p style="margin:35px 0px 0px 10px;" class="text-subtitle-2 font-weight-bold">닉네임</p>
+    </div>
+    <!--게시글 제목, 글 내용-->
+    <div id="whatwear_title">
+      <p style="margin-bottom: 0" class="text-body-1 font-weight-bold">글제목</p>
+      <p style="margin-bottom: 0" class="text-caption">글내용</p>
+    </div>
+    <!--사진슬라이드-->
+    <v-carousel 
+      v-model="model"
+      hide-delimiter-background>
+        <v-carousel-item
+          v-for="(color, i) in colors"
+          :key="color"
         >
-          <v-row
-            class="fill-height"
-            align="center"
-            justify="center"
+          <v-sheet
+            :color="color"
+            height="100%"
+            tile
           >
-            <div class="display-3">
-              Slide {{ i + 1 }}
-            </div>
-          </v-row>
-        </v-sheet>
-      </v-carousel-item>
-    </v-carousel>
-  </v-layout>
+            <v-row
+              class="fill-height"
+              align="center"
+              justify="center"
+            >
+              <div class="display-3">
+                Slide {{ i + 1 }}
+              </div>
+            </v-row>
+          </v-sheet>
+        </v-carousel-item>
+      </v-carousel>
+  </div>
 </template>
 
 <script>
@@ -36,8 +55,6 @@ export default {
         'primary',
         'secondary',
         'yellow darken-2',
-        'red',
-        'orange',
       ]
     }
   }
@@ -47,5 +64,14 @@ export default {
 <style>
 #detailcard {
   width: 380px;
+}
+
+#whatwear_profile {
+  display: flex;
+}
+
+#whatwear_title {
+  margin-left: 76px;
+  margin-bottom: 10px;
 }
 </style>

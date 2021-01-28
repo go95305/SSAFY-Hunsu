@@ -1,10 +1,8 @@
 <template>
     <v-card
-    elevation="24"
     max-width="450"
-    class="mx-auto"
+    class="mx-auto mt-1"
   >
-    <h1>뭘입을까디테일</h1>
     <WhatWearDetailCard />
     <WhatWearChart />
     <DetailComment />

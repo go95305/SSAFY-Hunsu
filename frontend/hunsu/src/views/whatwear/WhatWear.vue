@@ -1,8 +1,9 @@
 <template>
-  <div>
+  <v-container
+  id="whatwear"> 
     <WhatWearWrite />
-    <WhatWearList style="margin: 20px" />
-  </div>
+    <WhatWearList />
+  </v-container>
 </template>
 
 <script>
@@ -19,5 +20,15 @@ export default {
 </script>
 
 <style>
+@media screen and (min-width: 769px) {
+  #whatwear {
+    width: 40%;
+  }
+}
+@media screen and (max-width: 768px) {
+  #whatwear {
+    width: 100%
+  }
+}
 
 </style>
