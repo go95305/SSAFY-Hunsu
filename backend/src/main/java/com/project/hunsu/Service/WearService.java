@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,14 +23,16 @@ public class WearService {
     private final VoteRepository voteRepository;
     private final VoteItemRepository voteItemRepository;
     private final VoteChoiceRepository voteChoiceRepository;
+    private final ReplyLikeRepository replyLikeRepository;
 
-    public WearService(WearRepository wearRepository, UserRepository userRepository, ReplyRepository replyRepository, VoteRepository voteRepository, VoteItemRepository voteItemRepository, VoteChoiceRepository voteChoiceRepository) {
+    public WearService(ReplyLikeRepository replyLikeRepository, WearRepository wearRepository, UserRepository userRepository, ReplyRepository replyRepository, VoteRepository voteRepository, VoteItemRepository voteItemRepository, VoteChoiceRepository voteChoiceRepository) {
         this.wearRepository = wearRepository;
         this.userRepository = userRepository;
         this.replyRepository = replyRepository;
         this.voteRepository = voteRepository;
         this.voteItemRepository = voteItemRepository;
         this.voteChoiceRepository = voteChoiceRepository;
+        this.replyLikeRepository = replyLikeRepository;
     }
 
     public List<WearMain> SortByRecent() {
@@ -41,6 +45,7 @@ public class WearService {
             wearMain.setTitle(wear.getTitle());
             wearMain.setNickname(wear.getUser().getNickname());
             wearMain.setWear_idx(wear.getIdx());
+            wearMain.setVoteActivated(wear.isVoteActivated());
 
             wearMainList.add(wearMain);
         }
@@ -53,10 +58,11 @@ public class WearService {
 
         user = userRepository.findUserByNickname(request.getNickname());
 
+
         wear.setUser(user);
         wear.setTitle(request.getTitle());
         wear.setContent(request.getContent());
-        wear.setContent(request.getContent());
+        wear.setUser(user);
         if(request.getNum() > 0)
             wear.setVoteActivated(true);
         else
@@ -67,6 +73,8 @@ public class WearService {
         if(request.getNum() > 0){
             Vote vote = new Vote();
             vote.setWear(savedWear);
+            vote.setEndTime(request.getEndtime());
+            //수정 필요
 
             Vote savedVote = voteRepository.save(vote);
             //vote 생성
@@ -101,19 +109,19 @@ public class WearService {
         List<VoteValue> voteValueList = new ArrayList<>();
         List<VoteItem> voteList;
 
-        Vote vote = voteRepository.findVoteByWearIdx(idx);
+        Wear wear = wearRepository.findWearByIdx(idx);
+        Vote vote = voteRepository.findVoteByWear(wear);
         User user = userRepository.findUserByNickname(nickname);
 
-        voteList = voteItemRepository.findVoteItemByWearIdxOrderByIdx(vote.getIdx());
+        voteList = voteItemRepository.findVoteItemByVoteOrderByVote(vote);
 
         for (VoteItem voteItem : voteList) {
             VoteChoice voteChoice;
-            voteChoice = voteChoiceRepository.findVoteChoicByVoteItemIdxAndUser(voteItem.getIdx(), user);
-            /////수정 필요
+            voteChoice = voteChoiceRepository.findVoteChoiceByVoteItemAndUser(voteItem, user);
             VoteValue voteValue = new VoteValue();
             voteValue.setIdx(voteItem.getIdx());
             voteValue.setCount(voteItem.getCount());
-            if(nickname.equals(voteChoice))
+            if(voteChoice != null)
                 voteValue.setChoice(true);
             else
                 voteValue.setChoice(false);
@@ -125,6 +133,21 @@ public class WearService {
     }
 
     public void DeleteWear(long idx) {
+        Wear wear = wearRepository.findWearByIdx(idx);
+        Vote vote = voteRepository.findVoteByWear(wear);
+        List<VoteItem> voteItemList = voteItemRepository.findVoteItemByVoteOrderByVote(vote);
+        List<Reply> replyList = replyRepository.findReplyByWearOrderByWriteDate(wear);
+
+        for (VoteItem voteItem : voteItemList)
+            voteChoiceRepository.deleteVoteChoiceByVoteItem(voteItem);
+
+//        for (Reply reply : replyList)
+//            replyLikeRepository.deleteReplyLikeByIdx(reply.getIdx());
+
+        voteItemRepository.deleteVoteItemByVote(vote);
+        voteRepository.deleteVoteByWear(wear);
+//        replyLikeRepository.deleteReplyLikeByIdx();
+
         wearRepository.deleteWearByIdx(idx);
     }
 
@@ -140,10 +163,11 @@ public class WearService {
         reply.setWear(wear);
         reply.setDepth(request.getDepth());
         reply.setContent(request.getContent());
-
         Reply savedReply = replyRepository.save(reply);
-
-        savedReply.setGroupNum(savedReply.getIdx());
+        if(savedReply.getDepth() == 1)
+            savedReply.setGroupNum(request.getGroupNum());
+        else
+            savedReply.setGroupNum(savedReply.getIdx());
 
         replyRepository.save(savedReply);
     }
@@ -156,8 +180,41 @@ public class WearService {
     }
 
     public void DeleteReply(Long idx) {
-        Reply reply = entityManager.find(Reply.class, idx);
-        replyRepository.deleteReplyByIdx(idx);
+        Reply reply = replyRepository.findReplyByIdx(idx);
+
+        if(reply.getDepth() == 0)
+            replyRepository.deleteReplyByGroupNum(reply.getGroupNum());
+        else
+            replyRepository.deleteReplyByIdx(idx);
+    }
+
+    public void VoteReply(Long idx, String nickname){
+        VoteItem voteItem = voteItemRepository.findVoteItemByIdx(idx);
+        User user = userRepository.findUserByNickname(nickname);
+
+        VoteChoice voteChoice = voteChoiceRepository.findVoteChoiceByVoteItemAndUser(voteItem, user);
+
+        if(voteChoice != null) {
+            voteChoiceRepository.deleteVoteChoiceByIdx(voteChoice.getIdx());
+
+            voteItem.setCount(voteItem.getCount() - 1);
+
+            voteItemRepository.save(voteItem);
+
+        } else {
+            VoteChoice createVoteChoice = new VoteChoice();
+
+            createVoteChoice.setVoteItem(voteItem);
+            createVoteChoice.setUser(user);
+
+            voteChoiceRepository.save(createVoteChoice);
+
+            voteItem.setCount(voteItem.getCount() + 1);
+
+            voteItemRepository.save(voteItem);
+
+        }
+
     }
 
 }

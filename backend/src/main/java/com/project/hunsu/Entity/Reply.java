@@ -35,11 +35,13 @@ public class Reply {
     @Column(columnDefinition = "bigint default 0 ")
     private Long depth;
 
-    @Column(name = "write_date")
+    @Column(columnDefinition = "timestamp not null default now()", name = "write_date",insertable = false, updatable = false)
     private LocalDateTime writeDate;
 
     private String content;
 
     @Column(name = "group_num")
     private Long groupNum;
+
+    private int count;
 }

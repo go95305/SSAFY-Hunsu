@@ -8,6 +8,7 @@ import lombok.ToString;
 @Setter
 @ToString
 public class WearMain {
+    private Boolean voteActivated;
     private Long wear_idx;
     private String nickname;
     private String title;

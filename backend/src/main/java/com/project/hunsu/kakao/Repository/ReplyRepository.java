@@ -1,6 +1,7 @@
 package com.project.hunsu.kakao.Repository;
 
 import com.project.hunsu.Entity.Reply;
+import com.project.hunsu.Entity.Wear;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -8,7 +9,8 @@ import java.util.List;
 public interface ReplyRepository extends JpaRepository<Reply,Long> {
 
     Reply findAllByOotdIdx(Long idx);
-    List<Reply> findReplyByWearIdxOrderByWriteDate(Long idx);
+    List<Reply> findReplyByWearOrderByWriteDate(Wear wear);
     Reply findReplyByIdx(Long idx);
+    void deleteReplyByGroupNum(Long groupnum);
     void deleteReplyByIdx(Long idx);
 }

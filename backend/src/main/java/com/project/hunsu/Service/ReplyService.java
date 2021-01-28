@@ -21,23 +21,26 @@ public class ReplyService {
     private final ReplyRepository replyRepository;
     private final ReplyLikeRepository replyLikeRepository;
     private final UserRepository userRepository;
+    private final WearRepository wearRepository;
 
-    public ReplyService(UserRepository userRepository, ReplyRepository replyRepository, ReplyLikeRepository replyLikeRepository) {
+    public ReplyService(WearRepository wearRepository, UserRepository userRepository, ReplyRepository replyRepository, ReplyLikeRepository replyLikeRepository) {
         this.userRepository = userRepository;
         this.replyRepository = replyRepository;
         this.replyLikeRepository = replyLikeRepository;
+        this.wearRepository = wearRepository;
     }
 
     public List<ReplyValue> ReplyList(Long idx, String nickname) {
         List<ReplyValue> replyValueList = new ArrayList<>();
         List<Reply> replyList = new ArrayList<>();
+        Wear wear = wearRepository.findWearByIdx(idx);
 
-        replyList = replyRepository.findReplyByWearIdxOrderByWriteDate(idx);
+        replyList = replyRepository.findReplyByWearOrderByWriteDate(wear);
         User user = userRepository.findUserByNickname(nickname);
 
         for (Reply reply : replyList) {
             ReplyLike replyLike;
-            replyLike = replyLikeRepository.findReplyLikeByReplyIdxAndUser(reply.getIdx(), user);
+            replyLike = replyLikeRepository.findReplyLikeByReplyAndUser(reply, user);
             /////수정 필요
 
             ReplyValue replyValue = new ReplyValue();
@@ -47,7 +50,8 @@ public class ReplyService {
             replyValue.setWrite_date(reply.getWriteDate());
             replyValue.setContent(reply.getContent());
             replyValue.setGroupNum(reply.getGroupNum());
-            if(nickname.equals(replyLike.getUser().getNickname()))
+            replyValue.setCount(reply.getCount());
+            if(replyLike != null)
                 replyValue.setLike(true);
             else
                 replyValue.setLike(false);
@@ -55,6 +59,35 @@ public class ReplyService {
             replyValueList.add(replyValue);
         }
         return replyValueList;
+    }
+
+    public void ReplyLike(Long idx, String nickname){
+        Reply reply = replyRepository.findReplyByIdx(idx);
+        User user = userRepository.findUserByNickname(nickname);
+
+        ReplyLike replyLike = replyLikeRepository.findReplyLikeByReplyAndUser(reply, user);
+
+        if(replyLike != null){
+            replyLikeRepository.deleteReplyLikeByIdx(replyLike.getIdx());
+
+            reply.setCount(reply.getCount() - 1);
+
+            replyRepository.save(reply);
+
+        } else {
+            ReplyLike createReplyLike = new ReplyLike();
+
+            createReplyLike.setReply(reply);
+            createReplyLike.setUser(user);
+
+            replyLikeRepository.save(createReplyLike);
+
+            reply.setCount(reply.getCount() + 1);
+
+            replyRepository.save(reply);
+
+        }
+
     }
 
 }

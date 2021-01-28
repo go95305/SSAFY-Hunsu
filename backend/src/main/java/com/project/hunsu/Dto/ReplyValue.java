@@ -19,4 +19,5 @@ public class ReplyValue {
     private LocalDateTime write_date;
     private Boolean like;
     private Long groupNum;
+    private Integer count;
 }

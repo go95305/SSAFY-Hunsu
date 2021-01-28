@@ -29,7 +29,7 @@ public class Wear {
     private String content;
 
 
-    @Column(name = "write_date",insertable = false, updatable = false)
+    @Column(columnDefinition = "timestamp not null default now()", name = "write_date",insertable = false, updatable = false)
     private LocalDateTime writeDate;
 
     @Column(name = "vote_activated")

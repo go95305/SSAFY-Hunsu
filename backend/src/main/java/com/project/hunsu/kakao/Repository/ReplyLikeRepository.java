@@ -5,8 +5,7 @@ import com.project.hunsu.Entity.ReplyLike;
 import com.project.hunsu.Entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
-
 public interface ReplyLikeRepository extends JpaRepository<ReplyLike,Long> {
-    ReplyLike findReplyLikeByReplyIdxAndUser(Long idx, User user);
+    ReplyLike findReplyLikeByReplyAndUser(Reply reply, User user);
+    void deleteReplyLikeByIdx(Long idx);
 }
