@@ -23,14 +23,10 @@ public class Vote {
     @JoinColumn(name = "wear_idx")
     private Wear wear;
 
-    @Column(name = "start_time",insertable = false, updatable = false)
+    @Column(columnDefinition = "timestamp not null default now()", name = "start_time",insertable = false, updatable = false)
     private LocalDateTime startTime;
 
     @Column(name = "end_time",insertable = false, updatable = false)
     private LocalDateTime endTime;
-
-    @Column(name = "is_activated")
-    private boolean isActivated;
-
 
 }

@@ -29,7 +29,8 @@ public class WearController {
         return wearList;
     }
 
-    //뭘 입을까 작성(미완성)&&
+    //뭘 입을까 작성
+    //content, nickname, num, title 필요
     @PostMapping("/wear")
     @ApiOperation(value = "뭘 입을까 작성")
     public void insertWear(@RequestBody WearValue request) {
@@ -37,49 +38,66 @@ public class WearController {
     }
 
     //뭘 입을까 디테일
-    @GetMapping("/wear/detail/{idx}")
+    //wear_idx 필요
+    @GetMapping("/wear/detail/{wear_idx}")
     @ApiOperation(value = "뭘 입을까 디테일")
-    public WearDetail detailWear(@PathVariable Long idx) {
-        WearDetail wereDetail = wearService.DetailWear(idx);
+    public WearDetail detailWear(@PathVariable Long wear_idx) {
+        WearDetail wereDetail = wearService.DetailWear(wear_idx);
         return wereDetail;
     }
 
     //뭘 입을까 디테일에 붙은 vote
+    //wear_idx, nickname 필요
     @GetMapping("/wear/detail/vote/{wear_idx}/{nickName}")
+    @ApiOperation(value = "뭘 입을까 디테일 투표")
     public List<VoteValue> detailWearVote(@PathVariable Long wear_idx, @PathVariable String nickName) {
         List<VoteValue> voteValueList = wearService.VoteList(wear_idx, nickName);
         return voteValueList;
     }
 
-    //뭘 입을까 삭제(cascade)&&
-    @DeleteMapping(value = "/wear/{idx}")
+    //뭘 입을까 삭제(cascade)&&미완
+    //wear_idx 필요
+    @DeleteMapping(value = "/wear/{wear_idx}")
     @Transactional
     @ApiOperation(value = "뭘 입을까 삭제")
-    public void deleteWear(@PathVariable Long idx) {
-        wearService.DeleteWear(idx);
+    public void deleteWear(@PathVariable Long wear_idx) {
+        wearService.DeleteWear(wear_idx);
     }
 
     //댓글 작성
+    //content, depth, groupNum, nickname, wear_idx 필요
     @PostMapping(value = "/wear/reply")
     @Transactional
+    @ApiOperation(value = "댓글 작성")
     public void insertReply(@RequestBody ReplyValue request) {
         wearService.InsertReply(request);
     }
 
     //댓글 수정
+    //reply_idx, content 필요
     @PutMapping(value = "/wear/reply")
     @Transactional
+    @ApiOperation(value = "댓글 수정")
     public void updateReply(@RequestBody ReplyValue request) {
         wearService.ModifyReply(request);
     }
 
-    //댓글 삭제(미완성-뎃글 레포지토리 수정)&&
+    //댓글 삭제
+    //reply_idx 필요
     @DeleteMapping(value = "/wear/reply/{idx}")
     @Transactional
+    @ApiOperation(value = "댓글 삭제")
     public void deleteReply(@PathVariable Long idx) {
         wearService.DeleteReply(idx);
     }
 
     //투표
+    //vote_item_idx, nickname 필요
+    @DeleteMapping(value = "/wear/reply/vote/{vote_item_idx}/{nickname}")
+    @Transactional
+    @ApiOperation(value = "투표/투표취소")
+    public void deleteReply(@PathVariable Long vote_item_idx, @PathVariable String nickname) {
+        wearService.VoteReply(vote_item_idx, nickname);
+    }
 
 }
