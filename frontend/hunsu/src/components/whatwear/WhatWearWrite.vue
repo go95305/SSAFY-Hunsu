@@ -189,6 +189,7 @@ export default {
   methods: {
     goToNext() {
       // 첫번째 단계에서 두번째 단계 창 이동 + 진행바 절반채우기
+      // 진행바 클릭하면 반응하는거 막아야함
       // 입력값이 채워졌는지 확인이랑 안채워졌을때 '값을 입력하라는' 알림창기능추가하기
       this.first = false
       this.valueDeterminate = 50
