@@ -1,12 +1,13 @@
 package com.project.hunsu.model.entity;
 
-import com.querydsl.core.types.Path;
-import com.querydsl.core.types.PathMetadata;
+import static com.querydsl.core.types.PathMetadataFactory.*;
+
 import com.querydsl.core.types.dsl.*;
 
+import com.querydsl.core.types.PathMetadata;
 import javax.annotation.Generated;
-
-import static com.querydsl.core.types.PathMetadataFactory.forVariable;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
@@ -15,7 +16,7 @@ import static com.querydsl.core.types.PathMetadataFactory.forVariable;
 @Generated("com.querydsl.codegen.EntitySerializer")
 public class QWear extends EntityPathBase<Wear> {
 
-    private static final long serialVersionUID = 496558749L;
+    private static final long serialVersionUID = -123439816L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 
@@ -25,11 +26,11 @@ public class QWear extends EntityPathBase<Wear> {
 
     public final NumberPath<Long> idx = createNumber("idx", Long.class);
 
-    public final BooleanPath isUpdated = createBoolean("isUpdated");
-
     public final StringPath title = createString("title");
 
     public final QUser user;
+
+    public final BooleanPath voteActivated = createBoolean("voteActivated");
 
     public final DateTimePath<java.time.LocalDateTime> writeDate = createDateTime("writeDate", java.time.LocalDateTime.class);
 

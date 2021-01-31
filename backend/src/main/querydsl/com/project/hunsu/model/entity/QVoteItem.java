@@ -1,15 +1,13 @@
 package com.project.hunsu.model.entity;
 
-import com.querydsl.core.types.Path;
+import static com.querydsl.core.types.PathMetadataFactory.*;
+
+import com.querydsl.core.types.dsl.*;
+
 import com.querydsl.core.types.PathMetadata;
-import com.querydsl.core.types.dsl.EntityPathBase;
-import com.querydsl.core.types.dsl.NumberPath;
-import com.querydsl.core.types.dsl.PathInits;
-import com.querydsl.core.types.dsl.StringPath;
-
 import javax.annotation.Generated;
-
-import static com.querydsl.core.types.PathMetadataFactory.forVariable;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
@@ -18,7 +16,7 @@ import static com.querydsl.core.types.PathMetadataFactory.forVariable;
 @Generated("com.querydsl.codegen.EntitySerializer")
 public class QVoteItem extends EntityPathBase<VoteItem> {
 
-    private static final long serialVersionUID = -739163845L;
+    private static final long serialVersionUID = 1131155030L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 
@@ -27,8 +25,6 @@ public class QVoteItem extends EntityPathBase<VoteItem> {
     public final NumberPath<Integer> count = createNumber("count", Integer.class);
 
     public final NumberPath<Long> idx = createNumber("idx", Long.class);
-
-    public final StringPath item = createString("item");
 
     public final QVote vote;
 

@@ -1,12 +1,13 @@
 package com.project.hunsu.model.entity;
 
-import com.querydsl.core.types.Path;
-import com.querydsl.core.types.PathMetadata;
+import static com.querydsl.core.types.PathMetadataFactory.*;
+
 import com.querydsl.core.types.dsl.*;
 
+import com.querydsl.core.types.PathMetadata;
 import javax.annotation.Generated;
-
-import static com.querydsl.core.types.PathMetadataFactory.forVariable;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
@@ -15,7 +16,7 @@ import static com.querydsl.core.types.PathMetadataFactory.forVariable;
 @Generated("com.querydsl.codegen.EntitySerializer")
 public class QHashtag extends EntityPathBase<Hashtag> {
 
-    private static final long serialVersionUID = 588594158L;
+    private static final long serialVersionUID = -1429282957L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 
@@ -26,8 +27,6 @@ public class QHashtag extends EntityPathBase<Hashtag> {
     public final NumberPath<Long> idx = createNumber("idx", Long.class);
 
     public final QOotd ootd;
-
-    public final BooleanPath type = createBoolean("type");
 
     public QHashtag(String variable) {
         this(Hashtag.class, forVariable(variable), INITS);

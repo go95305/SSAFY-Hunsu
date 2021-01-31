@@ -27,7 +27,7 @@ public class SwaggerConfig {
         return new ApiInfoBuilder()
                 .title("Hunsu API Documnentation")
                 .description(
-                        "Hunsu Resource API 문서입니다!\n\n백엔드 담당자\n OOTD : 고유창\n 뭘입을까 : 박홍균\n" +
+                        "Hunsu Resource API 문서입니다!\n\n백엔드 담당자\n OOTD : 고유창\n 뭘입을까 : 박홍균\n 인증 : 정보현\n"+
                         "**********\n작업 완료(O)\n작업 중(~)\n작업 전(X)\n**********")
                 .version("0.2")
                 .build();

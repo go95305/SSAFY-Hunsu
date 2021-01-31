@@ -34,7 +34,7 @@ public class Ootd {
     private String content;
 
     @Column(name = "is_updated")
-    private boolean isUpdated;
+    private Boolean isUpdated;
 
     @CreationTimestamp
     @Column(name = "write_date")
@@ -42,6 +42,9 @@ public class Ootd {
 
     //likeCount로 바꾸기
     private int count;
+
+    @Column(name = "isActived",columnDefinition = "boolean default false")
+    private Boolean isActivated;
 
 
 }

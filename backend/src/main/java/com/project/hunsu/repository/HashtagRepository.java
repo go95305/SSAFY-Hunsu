@@ -12,4 +12,6 @@ public interface HashtagRepository extends JpaRepository<Hashtag,Long> {
     List<Hashtag> findHashtagByOotdIdx(Long idx);
 
     List<Hashtag> findByContentContaining(String hashtag);
+
+    Hashtag findContentByOotdIdx(Long ootdIdx);
 }

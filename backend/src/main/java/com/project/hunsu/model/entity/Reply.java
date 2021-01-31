@@ -44,4 +44,7 @@ public class Reply {
     private Long groupNum;
 
     private int count;
+
+    @Column(name = "isActivated",columnDefinition = "boolean default false")
+    private Boolean isActivated;
 }

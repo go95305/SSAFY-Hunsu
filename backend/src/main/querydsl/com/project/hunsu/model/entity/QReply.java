@@ -1,12 +1,13 @@
 package com.project.hunsu.model.entity;
 
-import com.querydsl.core.types.Path;
-import com.querydsl.core.types.PathMetadata;
+import static com.querydsl.core.types.PathMetadataFactory.*;
+
 import com.querydsl.core.types.dsl.*;
 
+import com.querydsl.core.types.PathMetadata;
 import javax.annotation.Generated;
-
-import static com.querydsl.core.types.PathMetadataFactory.forVariable;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
@@ -15,7 +16,7 @@ import static com.querydsl.core.types.PathMetadataFactory.forVariable;
 @Generated("com.querydsl.codegen.EntitySerializer")
 public class QReply extends EntityPathBase<Reply> {
 
-    private static final long serialVersionUID = -1791151220L;
+    private static final long serialVersionUID = 463729745L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 
@@ -23,19 +24,21 @@ public class QReply extends EntityPathBase<Reply> {
 
     public final StringPath content = createString("content");
 
+    public final NumberPath<Integer> count = createNumber("count", Integer.class);
+
     public final NumberPath<Long> depth = createNumber("depth", Long.class);
 
-    public final NumberPath<Integer> groupNum = createNumber("groupNum", Integer.class);
+    public final NumberPath<Long> groupNum = createNumber("groupNum", Long.class);
 
     public final NumberPath<Long> idx = createNumber("idx", Long.class);
 
+    public final BooleanPath isActivated = createBoolean("isActivated");
+
     public final QOotd ootd;
 
-    public final BooleanPath ootdActive = createBoolean("ootdActive");
+    public final QUser user;
 
     public final QWear wear;
-
-    public final BooleanPath wearActive = createBoolean("wearActive");
 
     public final DateTimePath<java.time.LocalDateTime> writeDate = createDateTime("writeDate", java.time.LocalDateTime.class);
 
@@ -58,6 +61,7 @@ public class QReply extends EntityPathBase<Reply> {
     public QReply(Class<? extends Reply> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
         this.ootd = inits.isInitialized("ootd") ? new QOotd(forProperty("ootd"), inits.get("ootd")) : null;
+        this.user = inits.isInitialized("user") ? new QUser(forProperty("user")) : null;
         this.wear = inits.isInitialized("wear") ? new QWear(forProperty("wear"), inits.get("wear")) : null;
     }
 

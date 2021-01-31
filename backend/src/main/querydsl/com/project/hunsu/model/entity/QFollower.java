@@ -1,14 +1,13 @@
 package com.project.hunsu.model.entity;
 
-import com.querydsl.core.types.Path;
+import static com.querydsl.core.types.PathMetadataFactory.*;
+
+import com.querydsl.core.types.dsl.*;
+
 import com.querydsl.core.types.PathMetadata;
-import com.querydsl.core.types.dsl.EntityPathBase;
-import com.querydsl.core.types.dsl.NumberPath;
-import com.querydsl.core.types.dsl.PathInits;
-
 import javax.annotation.Generated;
-
-import static com.querydsl.core.types.PathMetadataFactory.forVariable;
+import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
@@ -17,11 +16,13 @@ import static com.querydsl.core.types.PathMetadataFactory.forVariable;
 @Generated("com.querydsl.codegen.EntitySerializer")
 public class QFollower extends EntityPathBase<Follower> {
 
-    private static final long serialVersionUID = 1219208252L;
+    private static final long serialVersionUID = -1205440169L;
 
     private static final PathInits INITS = PathInits.DIRECT2;
 
     public static final QFollower follower = new QFollower("follower");
+
+    public final StringPath followTo = createString("followTo");
 
     public final NumberPath<Long> idx = createNumber("idx", Long.class);
 

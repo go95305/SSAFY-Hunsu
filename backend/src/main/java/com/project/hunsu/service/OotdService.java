@@ -43,15 +43,17 @@ public class OotdService {
         QHashtag hashtag = QHashtag.hashtag;
         JPAQueryFactory jpaQueryFactory = new JPAQueryFactory(entityManager);
         if (sort == 0) {//sort값 이 0이면 최신순으로 정렬
-            ootdMainDTOList = jpaQueryFactory.select(Projections.fields(OotdMainDTO.class, ootd.idx.as("ootdIdx"), ootd.content.as("ootdContent"), hashtag.content.as("hashtagContent"), ootd.count.as("ootdLike")))
+            ootdMainDTOList = jpaQueryFactory.select(Projections.fields(OotdMainDTO.class, ootd.idx.as("ootdIdx"), ootd.user.nickname.as("nickname"), ootd.content.as("ootdContent"), hashtag.content.as("hashtagContent"), ootd.count.as("ootdLike")))
                     .from(ootd)
                     .leftJoin(hashtag).on(ootd.eq(hashtag.ootd))
+                    .where(ootd.isActivated.eq(false))
                     .orderBy(ootd.writeDate.asc())
                     .fetch();
         } else {//sort값이 1이면 인기순으로 정렬
-            ootdMainDTOList = jpaQueryFactory.select(Projections.fields(OotdMainDTO.class, ootd.idx.as("ootdIdx"), ootd.content.as("ootdContent"), hashtag.content.as("hashtagContent"), ootd.count.as("ootdLike")))
+            ootdMainDTOList = jpaQueryFactory.select(Projections.fields(OotdMainDTO.class, ootd.idx.as("ootdIdx"), ootd.user.nickname.as("nickname"), ootd.content.as("ootdContent"), hashtag.content.as("hashtagContent"), ootd.count.as("ootdLike")))
                     .from(ootd)
                     .leftJoin(hashtag).on(ootd.eq(hashtag.ootd))
+                    .where(ootd.isActivated.eq(false))
                     .orderBy(ootd.count.desc())
                     .fetch();
         }
@@ -60,9 +62,18 @@ public class OotdService {
 
 
     //Ootd 상세페이지 정보 가져오기 //수정해
-    public OotdDetailDTO SpecificOotd(Long ootdIdx) {
-        Ootd Ootd = ootdRepository.findByIdx(ootdIdx);// OotdIdx를 통해 ootd글을 가져오기
+    public OotdDetailDTO SpecificOotd(Long ootdIdx) { //NickName, 작성일자, 수정 여부, 사진, 좋아요 카운트, style 해시태그 리스트, product 해시태그 리스트, 댓글, 대댓글
+        Ootd ootd = ootdRepository.findByIdx(ootdIdx);// OotdIdx를 통해 ootd글을 가져오기
+        Hashtag hashtag = hashtagRepository.findContentByOotdIdx(ootdIdx);
+        List<Reply> replyList = replyRepository.findReplyByOotdIdx(ootdIdx);
         OotdDetailDTO ootdDetailDTO = new OotdDetailDTO();
+        ootdDetailDTO.setOotdIdx(ootd.getIdx());
+        ootdDetailDTO.setWriteDate(ootd.getWriteDate());
+        ootdDetailDTO.setIsUpdated(ootd.getIsUpdated());
+        ootdDetailDTO.setCount(ootd.getCount());
+        ootdDetailDTO.setContent(ootd.getContent());
+        ootdDetailDTO.setHashTag(hashtag.getContent());
+        ootdDetailDTO.setReplyList(replyList);
         return ootdDetailDTO;
     }
 
@@ -73,22 +84,11 @@ public class OotdService {
         List<Reply> reply = replyRepository.findReplyByOotdIdx(idx);
         for (Reply repl : reply
         ) {
-            replyRepository.delete(repl);
+            repl.setIsActivated(false); //해당 ootd글과 연관된 모든 댓글들은 전부 비활성화
         }
 
-        List<Hashtag> hashtagList = hashtagRepository.findHashtagByOotdIdx(idx);
-        for (Hashtag hs : hashtagList) {
-            hashtagRepository.delete(hs);
-        }
-
-
-        List<OotdLike> ootdLikeList = ootdLikeRepository.findOotdLikeByOotdIdx(idx);
-        for (OotdLike ol : ootdLikeList
-        ) {
-            ootdLikeRepository.delete(ol);
-        }
         Ootd ot = entityManager.find(Ootd.class, idx);
-        ootdRepository.delete(ot);
+        ot.setIsActivated(false); // 해당 ootd 글 비활성화
     }
 
 
@@ -115,6 +115,7 @@ public class OotdService {
             ootdMainDTO.setHashtagContent(hs.getContent());
             ootdMainDTO.setOotdLike(ootd.getCount());
             ootdMainDTOList.add(ootdMainDTO);
+
         }
         return ootdMainDTOList;
     }
@@ -128,7 +129,7 @@ public class OotdService {
         ootd.setUser(user);
         ootd.setContent(ootdWriteDTO.getContent());
         ootd.setCount(0);
-        ootd.setUpdated(false);
+        ootd.setIsUpdated(false);
         ootdRepository.save(ootd);
 
         //만약 해시태그도 추가했다면 해시태그 테이블에도 레코드 추가해야한다.
