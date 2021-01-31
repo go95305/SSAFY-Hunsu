@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -18,6 +19,9 @@ public class OotdDetailDTO {
     private Boolean isUpdated;
     private LocalDateTime writeDate;
     private String nickname;
-    private String hashTag;
-    private List<Reply> replyList;
+    private List<String> hashTag= new ArrayList<>();
+    public void addHashtag(String hashtag){
+        this.hashTag.add(hashtag);
+    }
+    private List<Reply> replyList=new ArrayList<>();
 }

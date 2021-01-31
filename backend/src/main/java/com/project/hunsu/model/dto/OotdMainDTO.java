@@ -5,6 +5,8 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -14,17 +16,11 @@ public class OotdMainDTO {
     private Long ootdIdx; //ootd에서 가져오기
     private String nickname; //ootd에서 가져오기
     private String ootdContent; //ootd에서 가져오기
-    private String hashtagContent; //hashtag에서 가져오기
+    private List<String> hashtagContent = new ArrayList<>(); //hashtag에서 가져오기
+    public void addHashtag(String hashtag){
+        this.hashtagContent.add(hashtag);
+    }
     private int ootdLike;//ootd에서 가져오기
-
-//    @QueryProjection
-//    public OotdMain(Long ootdIdx, String nickname, String ootdContent, String hashtagContent, int ootdLike) {
-//        this.ootdIdx = ootdIdx;
-//        this.nickname = nickname;
-//        this.ootdContent = ootdContent;
-//        this.hashtagContent = hashtagContent;
-//        this.ootdLike = ootdLike;
-//    }
 
     public OotdMainDTO() {
     }

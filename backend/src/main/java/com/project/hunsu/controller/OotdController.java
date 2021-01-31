@@ -102,7 +102,7 @@ public class OotdController {
 
 
     @GetMapping("/ootd/hashtag/{hashtag}") //
-    @ApiOperation(value = "Ootd 해시태그기반 검색 (X)", notes = "ootd상세글 혹은 검색에서 해시태그를 클릭 혹은 입력시 해당 해시태그가 포함된 글을 전부 리턴해준다.")
+    @ApiOperation(value = "Ootd 해시태그기반 검색 (O)", notes = "ootd상세글 혹은 검색에서 해시태그를 클릭 혹은 입력시 해당 해시태그가 포함된 글을 전부 리턴해준다.")
     public List<OotdMainDTO> hashtagSearch(@PathVariable String hashtag) {
         List<OotdMainDTO> ootdMainDTOList = ootdService.searchByHashtag(hashtag);
         return ootdMainDTOList;

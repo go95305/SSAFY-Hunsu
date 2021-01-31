@@ -38,24 +38,27 @@ public class OotdService {
 
     // 최신순 혹은 인기순으로 Ootd값을 정렬해서 가져오는 메소드 QueryDSL을 사용.
     public List<OotdMainDTO> SortByRecentOrPopularity(int sort) {
-        List<OotdMainDTO> ootdMainDTOList;
-        QOotd ootd = QOotd.ootd;
-        QHashtag hashtag = QHashtag.hashtag;
-        JPAQueryFactory jpaQueryFactory = new JPAQueryFactory(entityManager);
-        if (sort == 0) {//sort값 이 0이면 최신순으로 정렬
-            ootdMainDTOList = jpaQueryFactory.select(Projections.fields(OotdMainDTO.class, ootd.idx.as("ootdIdx"), ootd.user.nickname.as("nickname"), ootd.content.as("ootdContent"), hashtag.content.as("hashtagContent"), ootd.count.as("ootdLike")))
-                    .from(ootd)
-                    .leftJoin(hashtag).on(ootd.eq(hashtag.ootd))
-                    .where(ootd.isActivated.eq(true))
-                    .orderBy(ootd.writeDate.asc())
-                    .fetch();
-        } else {//sort값이 1이면 인기순으로 정렬
-            ootdMainDTOList = jpaQueryFactory.select(Projections.fields(OotdMainDTO.class, ootd.idx.as("ootdIdx"), ootd.user.nickname.as("nickname"), ootd.content.as("ootdContent"), hashtag.content.as("hashtagContent"), ootd.count.as("ootdLike")))
-                    .from(ootd)
-                    .leftJoin(hashtag).on(ootd.eq(hashtag.ootd))
-                    .where(ootd.isActivated.eq(true))
-                    .orderBy(ootd.count.desc())
-                    .fetch();
+        List<OotdMainDTO> ootdMainDTOList = new ArrayList<>();
+        List<Ootd> ootdList = new ArrayList<>();
+        if (sort == 0) {
+            ootdList = ootdRepository.findOotdByOrderByWriteDate();
+        } else {
+            ootdList = ootdRepository.findOotdByOrderByCountDesc();
+        }
+
+        for (int i = 0; i < ootdList.size(); i++) {
+            if (ootdList.get(i).getIsActivated()) {
+                OotdMainDTO ootdMainDTO = new OotdMainDTO();
+                ootdMainDTO.setOotdIdx(ootdList.get(i).getIdx());
+                ootdMainDTO.setNickname(ootdList.get(i).getUser().getNickname());
+                ootdMainDTO.setOotdContent(ootdList.get(i).getContent());
+                List<Hashtag> hashtagList = hashtagRepository.findHashtagByOotdIdx(ootdList.get(i).getIdx());
+                for (int j = 0; j < hashtagList.size(); j++) {
+                    ootdMainDTO.addHashtag(hashtagList.get(j).getContent());
+                }
+                ootdMainDTO.setOotdLike(ootdList.get(i).getCount());
+                ootdMainDTOList.add(ootdMainDTO);
+            }
         }
         return ootdMainDTOList;
     }
@@ -64,15 +67,18 @@ public class OotdService {
     //Ootd 상세페이지 정보 가져오기 //수정해
     public OotdDetailDTO SpecificOotd(Long ootdIdx) { //NickName, 작성일자, 수정 여부, 사진, 좋아요 카운트, style 해시태그 리스트, product 해시태그 리스트, 댓글, 대댓글
         Ootd ootd = ootdRepository.findByIdx(ootdIdx);// OotdIdx를 통해 ootd글을 가져오기
-        Hashtag hashtag = hashtagRepository.findContentByOotdIdx(ootdIdx);
+        List<Hashtag> hashtagList = hashtagRepository.findHashtagByOotdIdx(ootdIdx);
         List<Reply> replyList = replyRepository.findReplyByOotdIdx(ootdIdx);
         OotdDetailDTO ootdDetailDTO = new OotdDetailDTO();
         ootdDetailDTO.setOotdIdx(ootd.getIdx());
+        ootdDetailDTO.setNickname(ootd.getUser().getNickname());
         ootdDetailDTO.setWriteDate(ootd.getWriteDate());
         ootdDetailDTO.setIsUpdated(ootd.getIsUpdated());
         ootdDetailDTO.setCount(ootd.getCount());
         ootdDetailDTO.setContent(ootd.getContent());
-        ootdDetailDTO.setHashTag(hashtag.getContent());
+        for (int i = 0; i < hashtagList.size(); i++) {
+            ootdDetailDTO.addHashtag(hashtagList.get(i).getContent());
+        }
         ootdDetailDTO.setReplyList(replyList);
         return ootdDetailDTO;
     }
@@ -100,22 +106,26 @@ public class OotdService {
     //검색창에서 해시태그를 검색하거나 해시태그를 눌렀을때 해당해시태그가 포함된 모든 Ootd글들을 가져온다.
     public List<OotdMainDTO> searchByHashtag(String hashtag) {
         //우선 hashtag를 포함하는 모든 해시태그 테이블의 레코드를 가져온다.
-        List<Hashtag> hashtagList = hashtagRepository.findByContentContaining(hashtag);
+        List<Hashtag> hashtagList = hashtagRepository.findByContent(hashtag); // 1. 우선 해시태그가 포함된 모든 hashtag 레코드 가져오기
         List<OotdMainDTO> ootdMainDTOList = new ArrayList<>();
-
-        for (Hashtag hs : hashtagList
-        ) {
-            // 각 레코드들의 idx를 통해 ootd레코드를 찾는다.
+        for (int i = 0; i < hashtagList.size(); i++) {
             OotdMainDTO ootdMainDTO = new OotdMainDTO();
-            Ootd ootd = ootdRepository.findByIdx(hs.getOotd().getIdx());
-            ootdMainDTO.setOotdIdx(ootd.getIdx());
-            ootdMainDTO.setNickname(ootd.getUser().getNickname());
-            ootdMainDTO.setOotdContent(ootd.getContent());
-            ootdMainDTO.setHashtagContent(hs.getContent());
-            ootdMainDTO.setOotdLike(ootd.getCount());
-            ootdMainDTOList.add(ootdMainDTO);
-
+            Ootd ootd = ootdRepository.findByIdx(hashtagList.get(i).getOotd().getIdx());
+            if (ootd.getIsActivated()) {
+                ootdMainDTO.setOotdIdx(ootd.getIdx());
+                ootdMainDTO.setNickname(ootd.getUser().getNickname());
+                ootdMainDTO.setOotdContent(ootd.getContent());
+                ootdMainDTO.setOotdLike(ootd.getCount());
+                List<Hashtag> hashtagDTOList = hashtagRepository.findHashtagByOotdIdx(ootd.getIdx());
+                for (int j = 0; j < hashtagDTOList.size(); j++) {
+                    ootdMainDTO.addHashtag(hashtagDTOList.get(j).getContent());
+                }
+                ootdMainDTOList.add(ootdMainDTO);
+            }
         }
+        // 2. 각 레코드들의 ootdidx로 ootd글 가져오기
+        // 3. mainDTO에 저장
+        // 4. 동일한 ootd글이면 넘어간다.
         return ootdMainDTOList;
     }
 
@@ -132,16 +142,19 @@ public class OotdService {
         ootdRepository.save(ootd);
 
         //만약 해시태그도 추가했다면 해시태그 테이블에도 레코드 추가해야한다.
-        if (ootdWriteDTO.getHashtag() != null) {
+        if (ootdWriteDTO.getHashtagList().size() != 0) {
             TypedQuery<Ootd> query = entityManager.createQuery("select o from Ootd o where o.user.nickname = :nickname and o.content = :content", Ootd.class);
 
             query.setParameter("nickname", ootdWriteDTO.getNickName()).setParameter("content", ootdWriteDTO.getContent());
             Ootd ot = query.getSingleResult();
 
-            Hashtag hashtag = new Hashtag();
-            hashtag.setContent(ootdWriteDTO.getHashtag());
-            hashtag.setOotd(ot);
-            hashtagRepository.save(hashtag);
+            List<String> hashtagList = ootdWriteDTO.getHashtagList();
+            for (int i = 0; i < hashtagList.size(); i++) {
+                Hashtag hashtag = new Hashtag();
+                hashtag.setContent(hashtagList.get(i));
+                hashtag.setOotd(ot);
+                hashtagRepository.save(hashtag);
+            }
         }
 
 
