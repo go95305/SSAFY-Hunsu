@@ -5,6 +5,8 @@ import lombok.Setter;
 import lombok.ToString;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -12,6 +14,6 @@ import javax.validation.Valid;
 @ToString
 public class OotdUpdateDTO {
     Long ootdIdx;
-    String hashtag;
+    List<String> hashtagList = new ArrayList<>();
     String content;
 }

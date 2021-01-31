@@ -2,6 +2,7 @@ package com.project.hunsu.service;
 
 import com.project.hunsu.model.dto.OotdDetailDTO;
 import com.project.hunsu.model.dto.OotdMainDTO;
+import com.project.hunsu.model.dto.OotdUpdateDTO;
 import com.project.hunsu.model.dto.OotdWriteDTO;
 import com.project.hunsu.repository.HashtagRepository;
 import com.project.hunsu.repository.OotdLikeRepository;
@@ -10,11 +11,15 @@ import com.project.hunsu.repository.ReplyRepository;
 import com.project.hunsu.model.entity.*;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import javax.transaction.Transactional;
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -158,5 +163,19 @@ public class OotdService {
         }
 
 
+    }
+
+    public void updateHashtag(OotdUpdateDTO ootdUpdateDTO) {
+        // 1. 우선 기존의 해시태그부터 지운다
+        String query = "delete from Hashtag h where h.ootd.idx= :ootdIdx";
+        entityManager.createQuery(query).setParameter("ootdIdx", ootdUpdateDTO.getOotdIdx()).executeUpdate();
+        // 2. 새로운 해시태그 입력
+        for(int i=0;i<ootdUpdateDTO.getHashtagList().size();i++){
+            Hashtag hashtag = new Hashtag();
+            Ootd ootd = ootdRepository.findByIdx(ootdUpdateDTO.getOotdIdx());
+            hashtag.setContent(ootdUpdateDTO.getHashtagList().get(i));
+            hashtag.setOotd(ootd);
+            hashtagRepository.save(hashtag);
+        }
     }
 }

@@ -4,6 +4,7 @@ import com.project.hunsu.model.entity.Hashtag;
 import com.project.hunsu.model.entity.Ootd;
 import com.project.hunsu.model.entity.OotdLike;
 import com.project.hunsu.model.entity.User;
+import com.project.hunsu.repository.OotdRepository;
 import com.project.hunsu.service.OotdService;
 import com.project.hunsu.model.dto.*;
 import io.swagger.annotations.ApiOperation;
@@ -32,7 +33,11 @@ public class OotdController {
     private EntityManager entityManager;
 
     @GetMapping("/ootd/{sort}")  //ootd_idx, 닉네임, 글내용, 해시태그, 좋아요 개수
-    @ApiOperation(value = "Ootd 메인페이지 (O)", notes = "[#Ootd메인 페이지] 0 혹은 1값을 보내면 0:최신순 1: 인기순으로 리턴해준다(ootdIdx,닉네임,글내용,해시태그,좋아요 개수)")
+    @ApiOperation(value = "Ootd 메인페이지 (O)", notes = "0 혹은 1값을 보내면 \n" +
+            "                                           0: 최신순으로 리턴 \n" +
+            "                                           1: 인기순으로 리턴 \n" +
+            "                                           Parameter: 0 or 1\n" +
+            "                                           Response:  ootdIdx,닉네임,글내용,해시태그,좋아요 개수")
 //안됨
     public List<OotdMainDTO> ootdSortedList(@PathVariable int sort) {
         System.out.println(sort);
@@ -41,33 +46,35 @@ public class OotdController {
     }
 
     @GetMapping("/ootd/detail/{ootdIdx}") // ootd_idx,content,count,is_updated,write_date,nickname
-    @ApiOperation(value = "Ootd 상세페이지 (~)", notes = "Ootd글에 대한 상세페이지, ootd메인페이지에서 특정 글을 클릭시\" +\n" +
-            "            \"해당 글에 대한 상세정보를 보여준다. 글의 ootdidx를 통해 연관된 hashtag,좋아요,댓글, 대댓글을 전부 리턴해준다.")
+    @ApiOperation(value = "Ootd 상세페이지 (~)", notes = "ootd글에 대한 상세페이지, ootd메인페이지에서 특정 글을 클릭시\n" +
+            "             해당 글에 대한 상세정보를 보여준다. 글의 ootdidx를 통해 연관된 hashtag,좋아요,댓글, 대댓글을 전부 리턴해준다.\n" +
+            "             Parameter: OotdIdx \n" +
+            "             Response:  ootdIdx, content, count, isUpdated, writeDate, nickname, hashtag(list), reply(list)")
     // 이것도 jpql 아니면 querydSL써야함
     public OotdDetailDTO detailOotd(@PathVariable("ootdIdx") Long ootdIdx) {
 //        Ootd ootdDetail = ootdRepository.findByIdx(ootdidx);
         OotdDetailDTO ootdDetailDTO = ootdService.SpecificOotd(ootdIdx);
-        System.out.println(ootdDetailDTO);
         return ootdDetailDTO;
     }
 
 
     @PutMapping("/ootd")
     @Transactional
-    @ApiOperation(value = "Ootd 글수정 (O)", notes = "Ootd상세 페이지에서 글 수정.수정할 글의 ootdidx, 해시태그, 글 제목(내용)을 넘겨주면 수정한다.")
-    public void updateOotd(@Valid @RequestBody OotdUpdateDTO ootdUpdateDTO) {
-        Hashtag hashtag = entityManager.find(Hashtag.class, ootdUpdateDTO.getOotdIdx());
-        Ootd ootd;
-        if (hashtag != null) {
-            hashtag.setContent(ootdUpdateDTO.getHashtag());
+    @ApiOperation(value = "Ootd 글수정 (O)", notes = "Ootd상세 페이지에서 글 수정\n" +
+            "                                       Parameter: ootdidx, hashtag, content \n" +
+            "                                       response:  success or fail")
+    public ResponseEntity<Map<String, Object>> updateOotd(@Valid @RequestBody OotdUpdateDTO ootdUpdateDTO) {
+        ResponseEntity<Map<String, Object>> resEntity = null;
+        Map<String, Object> map = new HashMap<String, Object>();
+        try {
+            ootdService.updateHashtag(ootdUpdateDTO);
+            map.put("msg", "success");
+            resEntity = new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
+        } catch (Exception e) {
+            map.put("msg", "fail");
+            resEntity = new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
         }
-        ootd = hashtag.getOotd();
-        ootd.setContent(ootdUpdateDTO.getContent());
-        ootd.setIsUpdated(true);
-//        else {
-        // null일 경우 에러메세지 처리해줘야지 싸발 왜 에러처리 하나도안해
-        //에러 처리 부분이 아니니깐 안한거지 싸발
-//        }
+        return resEntity;
     }
 
 
@@ -75,15 +82,28 @@ public class OotdController {
     @DeleteMapping("/ootd/{idx}")
     @Transactional
     @ApiOperation(value = "Ootd 글삭제(비활성화) (O)", notes = "해당 글의 ootdidx를 통해 해당글을 비활성화. 연관매핑이 되어있으므로 " +
-            "연관된 테이블에 정보를 우선적으로 비활성화하고  해당 글을 비활성화")
-    public void deleteOotd(@PathVariable Long idx) {
-        ootdService.delete(idx); //글 비활성화
+            "연관된 테이블에 정보를 우선적으로 비활성화하고  해당 글을 비활성화\n" +
+            "                                               Parameter: ootdidx\n" +
+            "                                               Response: success or fail")
+    public ResponseEntity<Map<String, Object>> deleteOotd(@PathVariable Long idx) {
+        ResponseEntity<Map<String, Object>> resEntity = null;
+        Map<String, Object> map = new HashMap<String, Object>();
+        try {
+            ootdService.delete(idx); //글 비활성화
+            map.put("msg", "success");
+            resEntity = new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
+        } catch (Exception e) {
+            map.put("msg", "fail");
+            resEntity = new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
+        }
+        return resEntity;
     }
 
     @PutMapping("/ootd/like")
     @Transactional
-    @ApiOperation(value = "Ootd글 좋아요 (O)", notes = "nickname,ootdidx,boolean값을 받는다. boolean 값이 true: 좋아요+1 false: 좋아요-1을해준다." +
-            "Ootdlike테이블에서 누가 좋아요 했는지도 저장(nickname과 ootdidx를 저장 ") // 성공
+    @ApiOperation(value = "Ootd글 좋아요 (O)", notes = "ootd글 좋아요 추가 혹은 제거 \n" +
+            "                                          Parameter: nickname,ootdidx,boolean(true: 좋아요+1 false: 좋아요-1)\n" +
+            "                                          Response: 수정된 좋아요 개수(count)") // 성공
     public int ootdLike(@Valid @RequestBody OotdLikeCountDTO ootdLikeCountDTO) {
         Ootd ootd = entityManager.find(Ootd.class, ootdLikeCountDTO.getOotdIdx());
         User user = entityManager.find(User.class, ootdLikeCountDTO.getNickname());
@@ -102,14 +122,17 @@ public class OotdController {
 
 
     @GetMapping("/ootd/hashtag/{hashtag}") //
-    @ApiOperation(value = "Ootd 해시태그기반 검색 (O)", notes = "ootd상세글 혹은 검색에서 해시태그를 클릭 혹은 입력시 해당 해시태그가 포함된 글을 전부 리턴해준다.")
+    @ApiOperation(value = "Ootd 해시태그기반 검색 (O)", notes = "ootd상세글 혹은 검색에서 해시태그를 클릭 혹은 입력시 해당 해시태그가 포함된 글을 전부 리턴해준다.\n" +
+            "                                                Parameter: hashtag\n" +
+            "                                                Response: List<OotdMainDTO>")
     public List<OotdMainDTO> hashtagSearch(@PathVariable String hashtag) {
         List<OotdMainDTO> ootdMainDTOList = ootdService.searchByHashtag(hashtag);
         return ootdMainDTOList;
     }
 
     @PostMapping("/ootd")
-    @ApiOperation(value = "Ootd글 작성 (O)", notes = "ootd글작성에 필요한 데이터를 받아와서 글 작성한다. 리턴값으로 responseEntity를 보내서 작성에 성공했으면 success, 실패했으면 fail을 리턴")
+    @ApiOperation(value = "Ootd글 작성 (O)", notes = "Parameter: nickName, content, hashtag\n" +
+            "                                        Response: success or fail")
     public ResponseEntity<Map<String, Object>> writeOotd(@Valid @RequestBody OotdWriteDTO ootdWriteDTO) {
         ResponseEntity<Map<String, Object>> resEntity = null;
         Map<String, Object> map = new HashMap<String, Object>();
@@ -119,7 +142,7 @@ public class OotdController {
             resEntity = new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
         } catch (Exception e) {
             map.put("msg", "fail");
-            resEntity = new ResponseEntity<Map<String, Object>>(map, HttpStatus.FORBIDDEN);
+            resEntity = new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
         }
         return resEntity;
     }
