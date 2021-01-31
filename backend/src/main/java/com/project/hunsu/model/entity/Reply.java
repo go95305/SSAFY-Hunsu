@@ -45,6 +45,12 @@ public class Reply {
 
     private int count;
 
-    @Column(name = "isActivated",columnDefinition = "boolean default false")
+    @Column(name = "isActivated")
     private Boolean isActivated;
+
+    @PrePersist
+    void preInsert(){
+        if(this.isActivated==null)
+            this.isActivated=true;
+    }
 }

@@ -41,7 +41,7 @@ public class OotdController {
     }
 
     @GetMapping("/ootd/detail/{ootdIdx}") // ootd_idx,content,count,is_updated,write_date,nickname
-    @ApiOperation(value = "Ootd 상세페이지 (O)", notes = "Ootd글에 대한 상세페이지, ootd메인페이지에서 특정 글을 클릭시\" +\n" +
+    @ApiOperation(value = "Ootd 상세페이지 (~)", notes = "Ootd글에 대한 상세페이지, ootd메인페이지에서 특정 글을 클릭시\" +\n" +
             "            \"해당 글에 대한 상세정보를 보여준다. 글의 ootdidx를 통해 연관된 hashtag,좋아요,댓글, 대댓글을 전부 리턴해준다.")
     // 이것도 jpql 아니면 querydSL써야함
     public OotdDetailDTO detailOotd(@PathVariable("ootdIdx") Long ootdIdx) {
@@ -74,7 +74,7 @@ public class OotdController {
     //삭제하지 말고 비활성화 하는것으로 바꾸자.
     @DeleteMapping("/ootd/{idx}")
     @Transactional
-    @ApiOperation(value = "Ootd 글삭제(비활성화) (~)", notes = "해당 글의 ootdidx를 통해 해당글을 비활성화. 연관매핑이 되어있으므로 " +
+    @ApiOperation(value = "Ootd 글삭제(비활성화) (O)", notes = "해당 글의 ootdidx를 통해 해당글을 비활성화. 연관매핑이 되어있으므로 " +
             "연관된 테이블에 정보를 우선적으로 비활성화하고  해당 글을 비활성화")
     public void deleteOotd(@PathVariable Long idx) {
         ootdService.delete(idx); //글 비활성화

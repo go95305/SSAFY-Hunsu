@@ -5,6 +5,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.function.Function;
 
 @Entity
 @Data
@@ -43,8 +44,14 @@ public class Ootd {
     //likeCount로 바꾸기
     private int count;
 
-    @Column(name = "isActived",columnDefinition = "boolean default false")
+    @Column(name = "isActivated")
     private Boolean isActivated;
+
+    @PrePersist
+    void preInsert(){
+        if(this.isActivated==null)
+            this.isActivated=true;
+    }
 
 
 }

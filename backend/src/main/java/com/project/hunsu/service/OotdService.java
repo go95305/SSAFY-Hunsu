@@ -46,14 +46,14 @@ public class OotdService {
             ootdMainDTOList = jpaQueryFactory.select(Projections.fields(OotdMainDTO.class, ootd.idx.as("ootdIdx"), ootd.user.nickname.as("nickname"), ootd.content.as("ootdContent"), hashtag.content.as("hashtagContent"), ootd.count.as("ootdLike")))
                     .from(ootd)
                     .leftJoin(hashtag).on(ootd.eq(hashtag.ootd))
-                    .where(ootd.isActivated.eq(false))
+                    .where(ootd.isActivated.eq(true))
                     .orderBy(ootd.writeDate.asc())
                     .fetch();
         } else {//sort값이 1이면 인기순으로 정렬
             ootdMainDTOList = jpaQueryFactory.select(Projections.fields(OotdMainDTO.class, ootd.idx.as("ootdIdx"), ootd.user.nickname.as("nickname"), ootd.content.as("ootdContent"), hashtag.content.as("hashtagContent"), ootd.count.as("ootdLike")))
                     .from(ootd)
                     .leftJoin(hashtag).on(ootd.eq(hashtag.ootd))
-                    .where(ootd.isActivated.eq(false))
+                    .where(ootd.isActivated.eq(true))
                     .orderBy(ootd.count.desc())
                     .fetch();
         }
@@ -78,7 +78,6 @@ public class OotdService {
     }
 
     //Ootd글 삭제
-
     public void delete(Long idx) {
         //ootd와 관련된 연관관계 매핑 엔티티들과의 연결을 끊는다.(연관된 테이블의 레코드들을 전부 삭제) 그 이후에 Ootd테이블의 레코드 삭제
         List<Reply> reply = replyRepository.findReplyByOotdIdx(idx);
