@@ -1,10 +1,8 @@
 package com.project.hunsu.controller;
 
-import com.project.hunsu.model.entity.Hashtag;
 import com.project.hunsu.model.entity.Ootd;
 import com.project.hunsu.model.entity.OotdLike;
 import com.project.hunsu.model.entity.User;
-import com.project.hunsu.repository.OotdRepository;
 import com.project.hunsu.service.OotdService;
 import com.project.hunsu.model.dto.*;
 import io.swagger.annotations.ApiOperation;
@@ -22,7 +20,7 @@ import java.util.Map;
 
 
 @RestController
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = {"*"})
 public class OotdController {
     private final OotdService ootdService;
 
@@ -147,4 +145,8 @@ public class OotdController {
         }
         return resEntity;
     }
+
+//    @PostMapping
+//    @ApiOperation(value = "Ootd글 댓글 작성")
+//    public List<ReplyDTO>
 }

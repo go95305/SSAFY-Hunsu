@@ -1,6 +1,6 @@
 package com.project.hunsu.service;
 
-import com.project.hunsu.model.dto.ReplyValue;
+import com.project.hunsu.model.dto.ReplyDTO;
 import com.project.hunsu.model.entity.Reply;
 import com.project.hunsu.model.entity.ReplyLike;
 import com.project.hunsu.model.entity.User;
@@ -33,8 +33,8 @@ public class ReplyService {
         this.wearRepository = wearRepository;
     }
 
-    public List<ReplyValue> ReplyList(Long idx, String nickname) {
-        List<ReplyValue> replyValueList = new ArrayList<>();
+    public List<ReplyDTO> ReplyList(Long idx, String nickname) {
+        List<ReplyDTO> replyDTOList = new ArrayList<>();
         List<Reply> replyList = new ArrayList<>();
         Wear wear = wearRepository.findWearByIdx(idx);
 
@@ -46,22 +46,22 @@ public class ReplyService {
             replyLike = replyLikeRepository.findReplyLikeByReplyAndUser(reply, user);
             /////수정 필요
 
-            ReplyValue replyValue = new ReplyValue();
-            replyValue.setIdx(reply.getIdx());
-            replyValue.setNickname(reply.getUser().getNickname());
-            replyValue.setDepth(reply.getDepth());
-            replyValue.setWrite_date(reply.getWriteDate());
-            replyValue.setContent(reply.getContent());
-            replyValue.setGroupNum(reply.getGroupNum());
-            replyValue.setCount(reply.getCount());
+            ReplyDTO replyDTO = new ReplyDTO();
+            replyDTO.setIdx(reply.getIdx());
+            replyDTO.setNickname(reply.getUser().getNickname());
+            replyDTO.setDepth(reply.getDepth());
+            replyDTO.setWrite_date(reply.getWriteDate());
+            replyDTO.setContent(reply.getContent());
+            replyDTO.setGroupNum(reply.getGroupNum());
+            replyDTO.setCount(reply.getCount());
             if(replyLike != null)
-                replyValue.setLike(true);
+                replyDTO.setLike(true);
             else
-                replyValue.setLike(false);
+                replyDTO.setLike(false);
 
-            replyValueList.add(replyValue);
+            replyDTOList.add(replyDTO);
         }
-        return replyValueList;
+        return replyDTOList;
     }
 
     public void ReplyLike(Long idx, String nickname){

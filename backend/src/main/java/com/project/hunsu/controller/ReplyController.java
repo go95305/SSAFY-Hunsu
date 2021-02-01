@@ -1,6 +1,6 @@
 package com.project.hunsu.controller;
 
-import com.project.hunsu.model.dto.ReplyValue;
+import com.project.hunsu.model.dto.ReplyDTO;
 import com.project.hunsu.service.ReplyService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
@@ -9,7 +9,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = {"*"})
 public class ReplyController {
     private final ReplyService replyService;
 
@@ -20,8 +20,8 @@ public class ReplyController {
     //댓글 불러오기(보는사람이 댓글에 대한 좋아요 활성화)
     @GetMapping("/reply/wear/{wear_idx}/{nickname}")
     @ApiOperation(value = "댓글 목록 (O)")
-    public List<ReplyValue> detailReply(@PathVariable Long wear_idx, @PathVariable String nickname){//나중에 리턴어떻게 할건지 생각해보자
-        List<ReplyValue> replyList = replyService.ReplyList(wear_idx, nickname);
+    public List<ReplyDTO> detailReply(@PathVariable Long wear_idx, @PathVariable String nickname){//나중에 리턴어떻게 할건지 생각해보자
+        List<ReplyDTO> replyList = replyService.ReplyList(wear_idx, nickname);
 
         return replyList;
     }

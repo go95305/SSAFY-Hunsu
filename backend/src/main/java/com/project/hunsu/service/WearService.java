@@ -149,7 +149,7 @@ public class WearService {
         wearRepository.deleteWearByIdx(idx);
     }
 
-    public void InsertReply(ReplyValue request) {
+    public void InsertReply(ReplyDTO request) {
         Reply reply = new Reply();
         User user = new User();
         Wear wear = new Wear();
@@ -170,7 +170,7 @@ public class WearService {
         replyRepository.save(savedReply);
     }
 
-    public void ModifyReply(ReplyValue request) {
+    public void ModifyReply(ReplyDTO request) {
         Reply reply = replyRepository.findReplyByIdx(request.getIdx());
         reply.setContent(request.getContent());
 
