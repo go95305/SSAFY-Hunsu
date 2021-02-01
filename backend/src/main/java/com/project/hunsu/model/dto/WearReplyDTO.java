@@ -9,10 +9,9 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @ToString
-public class ReplyDTO {
+public class WearReplyDTO {
     private Long idx;
     private Long wear_idx;
-    private Long ootd_idx;
     private String nickname;
     private String content;
     private Long depth;

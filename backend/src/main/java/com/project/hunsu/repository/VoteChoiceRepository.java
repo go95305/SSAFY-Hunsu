@@ -7,6 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface VoteChoiceRepository extends JpaRepository<VoteChoice,Long> {
     VoteChoice findVoteChoiceByVoteItemAndUser(VoteItem voteItem, User user);
-    void deleteVoteChoiceByIdx(Long idx);
-    void deleteVoteChoiceByVoteItem(VoteItem voteItem);
+
 }
