@@ -39,7 +39,7 @@
             <v-btn
               dark
               text
-              @click="dialog = false"
+              @click="createOotd()"
             >
               Save
             </v-btn>
@@ -67,10 +67,10 @@
               <v-text-field
                 label="설명 추가"
                 :rules="rules"
-                hide-details="auto"
+                v-model="ootd_content"
                 class="px-5"
               ></v-text-field>
-              <v-text-field label="해시태그 추가" class="px-5"></v-text-field>
+              <v-text-field label="해시태그 추가" @keydown.enter="content()" v-model="ootd_hashtag" class="px-5"></v-text-field>
             </div>
         </v-list>
       </v-card>
@@ -79,32 +79,55 @@
 </template>
 
 <script>
-  export default {
-    name: "OotdWritePage",
-    data () {
-      return {
-        dialog: false,
-        notifications: false,
-        sound: true,
-        widgets: false,
-        rules: [
-          value => !!value || 'Required.',
-          value => (value && value.length >= 3) || 'Min 3 characters',
-        ],
-        imageUrl: null,
+import axios from "axios";
+
+export default {
+  name: "OotdWritePage",
+  data () {
+    return {
+      dialog: false,
+      notifications: false,
+      sound: true,
+      widgets: false,
+      rules: [
+        value => !!value || 'Required.',
+        value => (value && value.length >= 3) || 'Min 3 characters',
+      ],
+      imageUrl: null,
+      ootd_content: '',
+      ootd_hashtag: '',
+    }
+  },
+  methods: {
+    onClickImageUpload() {
+        this.$refs.imageInput.click();
+    },
+    onChangeImages(e) {
+        console.log(e.target.files)
+        const file = e.target.files[0];
+        this.imageUrl = URL.createObjectURL(file);
+    },
+    createOotd() {
+      this.dialog = false
+      // const ootd_hashtag_array = []
+      // ootd_hashtag_array.push(this.ootd_hashtag)
+      // console.log(ootd_hashtag_array)
+      const params = {
+        'content' : this.ootd_content,
+        'hashtag' : this.ootd_hashtag,
+        'nickName' : 'test'
       }
-    },
-    methods: {
-        onClickImageUpload() {
-            this.$refs.imageInput.click();
-        },
-        onChangeImages(e) {
-            console.log(e.target.files)
-            const file = e.target.files[0];
-            this.imageUrl = URL.createObjectURL(file);
-        }
-    },
-  }
+      axios.post('http://localhost:8080/ootd', params)
+        .then(() => {
+          console.log('글쓰기성공')
+        })
+        .catch(err => {
+          console.error(err)
+        })
+      
+    }
+  },
+}
 </script>
 
 <style>
