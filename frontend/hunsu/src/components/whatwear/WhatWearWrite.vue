@@ -23,7 +23,6 @@
       </template>
       
       <v-card>
-        <div v-if="first">
         <!--작성창 상단바-->
         <v-toolbar
           dark
@@ -42,19 +41,12 @@
             <v-btn
               dark
               text
-              @click="goToNext()"
-              disabled
+              @click="createWhatWear()"
             >
-              다음
+              완료
             </v-btn>
           </v-toolbar-items>
         </v-toolbar>
-        <!--진행 상태 선, 작성이 다 완료 되었을때 value50으로-->
-        <v-progress-linear 
-          v-model="valueDeterminate"
-          color="red accent-3">
-        </v-progress-linear>
-          <!--1단계 작성폼-->
           <v-list
             three-line
             subheader
@@ -62,11 +54,6 @@
             <v-list-item>
               <v-list-item-content>
                 <v-list-item-title class="text-h6 font-weight-bold mb-2">사진업로드</v-list-item-title>
-                  <v-img
-                    max-height="300"
-                    max-width="400"
-                    src="@/assets/null_photo.png"
-                  ></v-img>
                   <v-file-input
                     accept="image/*"
                     label="File input"
@@ -88,115 +75,64 @@
             </v-list-item>
             <v-list-item-content>
               <v-list-item-title class="text-h6 font-weight-bold mb-2">사진업로드</v-list-item-title>
-                <v-img
-                  max-height="300"
-                  max-width="400"
-                  src="@/assets/null_photo.png"
-                  ></v-img>
                 <v-file-input
                   :disabled="!vote"
                   multiple
                   accept="image/*"
                   label="File input"
                 ></v-file-input>
+                <v-text-field
+                  v-model="whatweartitle"
+                  label="제목"
+                  clearable
+                ></v-text-field>
+                <v-text-field
+                  v-model="content"
+                  label="내용"
+                  clearable
+                ></v-text-field>
             </v-list-item-content>
-          </v-list>
-        </div>
 
-        <!--다음 버튼 눌렀을 때 보여 줄 공간-->
-        <div v-else>
-                  <v-toolbar
-          dark
-          color="black"
-        >
-          <v-btn
-            icon
-            dark
-            @click="dialog = false"
-          >
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-          <v-toolbar-title>뭘입을까 작성</v-toolbar-title>
-          <v-spacer></v-spacer>
-          <v-toolbar-items>
-            <v-btn
-              dark
-              text
-              @click="CreateWhatWear()"
-            >
-              완료
-            </v-btn>
-          </v-toolbar-items>
-        </v-toolbar>
-        <v-progress-linear v-model="valueDeterminate"></v-progress-linear>
-          <v-list
-            three-line
-            subheader
-          >
-            <v-list-item>
-              <v-list-item-content>
-                <v-list-item-title>두번째</v-list-item-title>
-                  <v-file-input
-                    accept="image/*"
-                    label="File input"
-                  ></v-file-input>
-              </v-list-item-content>
-            </v-list-item>
-            <v-list-item>
-            </v-list-item>
           </v-list>
-          <v-divider></v-divider>
-          <v-list
-            three-line
-            subheader
-          >
-            <v-list-item>
-              <v-list-item-action>
-                <v-checkbox v-model="notifications"></v-checkbox>
-              </v-list-item-action>
-              <v-list-item-content>
-                <v-list-item-title class="mt-10">투표기능</v-list-item-title>
-                <v-list-item-subtitle></v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
-            <v-list-item-content>
-              <v-list-item-title>사진업로드</v-list-item-title>
-                <v-file-input
-                  multiple
-                  accept="image/*"
-                  label="File input"
-                ></v-file-input>
-            </v-list-item-content>
-          </v-list>
-        </div>
       </v-card>
     </v-dialog>
   </v-layout>
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "WhatWearWrite",
   data() {
     return {
       dialog: false,
       notifications: false,
-      valueDeterminate: 0,
-      first: true,
+      whatweartitle: '',
+      content: '',
       vote: false,
+      // image_url: '',
+      // vote_image_url: '',
     }
   },
   methods: {
-    goToNext() {
-      // 첫번째 단계에서 두번째 단계 창 이동 + 진행바 절반채우기
-      // 진행바 클릭하면 반응하는거 막아야함
-      // 입력값이 채워졌는지 확인이랑 안채워졌을때 '값을 입력하라는' 알림창기능추가하기
-      this.first = false
-      this.valueDeterminate = 50
-    },
-    CreateWhatWear() {
+    createWhatWear() {
       // dialog창 닫기 + 입력데이터 보내기
+      
       this.dialog = false
+      const params = {
+        'content': this.content,
+        'nickname': 'test',
+        'num': 0,
+        'title': this.whatweartitle,
+      }
+      axios.post('http://localhost:8080/wear', params)
+        .then(() => {
+          console.log('뭘입을까글쓰기성공')
+        })
+        .catch(err => {
+          console.error(err)
+        })
     }
   }
 }
