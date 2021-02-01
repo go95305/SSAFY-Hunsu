@@ -87,15 +87,30 @@ public class WearService {
         }
     }
 
-    //return 값: wear_idx, title, content, nickname, write_date, vote_activated, List<Reply>(reply_idx, nickname, depth, writeDate, content, groupNum, count, like, flag)
+    //return 값: wear_idx, title, content, nickname, write_date, vote_activated, List<Reply>(reply_idx, nickname, depth, writeDate, content, groupNum, count, like, flag), List<vote>(voteItem_idx, count, choice)
     public WearDetailDTO detailWear(long idx, String nickname) {
         WearDetailDTO wearDetailDTO = new WearDetailDTO();
-        Wear wear = new Wear();
+        List<VoteItem> voteList;
+        Wear wear = wearRepository.findWearByIdx(idx);
+        Vote vote = voteRepository.findVoteByWear(wear);
+        User user = userRepository.findUserByNickname(nickname);
+        voteList = voteItemRepository.findVoteItemByVoteOrderByVote(vote);
+        List<WearReplyDTO> replyDTOList = replyList(idx, nickname);
+        List<VoteDTO> voteDTOList = new ArrayList<>();
 
-        wear = wearRepository.findWearByIdx(idx);
-        List<WearReplyDTO> replyDTOList = new ArrayList<>();
+        for (VoteItem voteItem : voteList) {
+            VoteChoice voteChoice = voteChoiceRepository.findVoteChoiceByVoteItemAndUser(voteItem, user);
 
-        replyDTOList = replyList(idx, nickname);
+            VoteDTO voteDTO = new VoteDTO();
+            voteDTO.setIdx(voteItem.getIdx());
+            voteDTO.setCount(voteItem.getCount());
+            if(voteChoice != null)
+                voteDTO.setChoice(true);
+            else
+                voteDTO.setChoice(false);
+
+            voteDTOList.add(voteDTO);
+        }
 
         wearDetailDTO.setWear_idx(wear.getIdx());
         wearDetailDTO.setTitle(wear.getTitle());
@@ -104,6 +119,7 @@ public class WearService {
         wearDetailDTO.setWrite_date(wear.getWriteDate());
         wearDetailDTO.setVote_activated(wear.isVoteActivated());
         wearDetailDTO.setReplyList(replyDTOList);
+        wearDetailDTO.setVoteList(voteDTOList);
 
         return wearDetailDTO;
     }
@@ -290,7 +306,7 @@ public class WearService {
 
         List<WearReplyDTO> replyDTOList = new ArrayList<>();
 
-        replyDTOList = replyList(idx, reply.getUser().getNickname());
+        replyDTOList = replyList(reply.getWear().getIdx(), reply.getUser().getNickname());
 
         return replyDTOList;
 

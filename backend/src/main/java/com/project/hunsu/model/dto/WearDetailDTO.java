@@ -20,4 +20,5 @@ public class WearDetailDTO {
     private LocalDateTime write_date;
     private String nickname;
     private List<WearReplyDTO> replyList=new ArrayList<>();
+    private List<VoteDTO> voteList=new ArrayList<>();
 }
