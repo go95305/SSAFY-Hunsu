@@ -3,15 +3,13 @@ package com.project.hunsu.controller;
 import com.project.hunsu.model.dto.ReplyValue;
 import com.project.hunsu.service.ReplyService;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import java.util.List;
 
 @RestController
+@CrossOrigin(origins = { "http://i4c102.p.ssafy.io:3000/" })
 public class ReplyController {
     private final ReplyService replyService;
 
