@@ -22,6 +22,7 @@ import java.util.Map;
 
 
 @RestController
+@CrossOrigin(origins = { "http://i4c102.p.ssafy.io:3000/" })
 public class OotdController {
     private final OotdService ootdService;
 

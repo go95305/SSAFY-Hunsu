@@ -3,14 +3,12 @@ package com.project.hunsu.controller;
 import com.project.hunsu.model.dto.UserFollowDTO;
 import com.project.hunsu.service.UserService;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
 @RestController
+@CrossOrigin(origins = { "http://i4c102.p.ssafy.io:3000/" })
 public class UserController {
 
     private final UserService userService;
