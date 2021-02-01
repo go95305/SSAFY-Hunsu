@@ -17,40 +17,40 @@ public class WearService {
     EntityManager entityManager;
     private final WearRepository wearRepository;
     private final UserRepository userRepository;
-    private final ReplyRepository replyRepository;
+    private final WearReplyRepository wearReplyRepository;
     private final VoteRepository voteRepository;
     private final VoteItemRepository voteItemRepository;
     private final VoteChoiceRepository voteChoiceRepository;
     private final ReplyLikeRepository replyLikeRepository;
 
-    public WearService(ReplyLikeRepository replyLikeRepository, WearRepository wearRepository, UserRepository userRepository, ReplyRepository replyRepository, VoteRepository voteRepository, VoteItemRepository voteItemRepository, VoteChoiceRepository voteChoiceRepository) {
+    public WearService(ReplyLikeRepository replyLikeRepository, WearRepository wearRepository, UserRepository userRepository, WearReplyRepository wearReplyRepository, VoteRepository voteRepository, VoteItemRepository voteItemRepository, VoteChoiceRepository voteChoiceRepository) {
         this.wearRepository = wearRepository;
         this.userRepository = userRepository;
-        this.replyRepository = replyRepository;
+        this.wearReplyRepository = wearReplyRepository;
         this.voteRepository = voteRepository;
         this.voteItemRepository = voteItemRepository;
         this.voteChoiceRepository = voteChoiceRepository;
         this.replyLikeRepository = replyLikeRepository;
     }
 
-    public List<WearMain> SortByRecent() {
-        List<WearMain> wearMainList = new ArrayList<>();
+    public List<WearMainDTO> SortByRecent() {
+        List<WearMainDTO> wearMainDTOList = new ArrayList<>();
         List<Wear> wearList;
 
         wearList = wearRepository.findWearByOrderByWriteDate();
         for (Wear wear : wearList) {
-            WearMain wearMain = new WearMain();
-            wearMain.setTitle(wear.getTitle());
-            wearMain.setNickname(wear.getUser().getNickname());
-            wearMain.setWear_idx(wear.getIdx());
-            wearMain.setVoteActivated(wear.isVoteActivated());
+            WearMainDTO wearMainDTO = new WearMainDTO();
+            wearMainDTO.setTitle(wear.getTitle());
+            wearMainDTO.setNickname(wear.getUser().getNickname());
+            wearMainDTO.setWear_idx(wear.getIdx());
+            wearMainDTO.setVoteActivated(wear.isVoteActivated());
 
-            wearMainList.add(wearMain);
+            wearMainDTOList.add(wearMainDTO);
         }
-        return wearMainList;
+        return wearMainDTOList;
     }
 
-    public void InsertWear(WearValue request) {
+    public void InsertWear(WearDTO request) {
         Wear wear = new Wear();
         User user = new User();
 
@@ -87,24 +87,27 @@ public class WearService {
         }
     }
 
-    public WearDetail DetailWear(long idx) {
-        WearDetail wearDetail = new WearDetail();
+    //return 값: wear_idx, title, content, nickname, write_date, vote_activated, List<Reply>(
+    public WearDetailDTO DetailWear(long idx, String nickname) {
+        WearDetailDTO wearDetailDTO = new WearDetailDTO();
         Wear wear = new Wear();
 
         wear = wearRepository.findWearByIdx(idx);
+        List<Reply> replyList = wearReplyRepository.findReplyByWearIdxAndIsActivatedOrderByWriteDate(wear, wear.getIsActivated());
 
-        wearDetail.setWear_idx(wear.getIdx());
-        wearDetail.setTitle(wear.getTitle());
-        wearDetail.setContent(wear.getContent());
-        wearDetail.setNickname(wear.getUser().getNickname());
-        wearDetail.setWrite_date(wear.getWriteDate());
-        wearDetail.setVote_activated(wear.isVoteActivated());
+        wearDetailDTO.setWear_idx(wear.getIdx());
+        wearDetailDTO.setTitle(wear.getTitle());
+        wearDetailDTO.setContent(wear.getContent());
+        wearDetailDTO.setNickname(wear.getUser().getNickname());
+        wearDetailDTO.setWrite_date(wear.getWriteDate());
+        wearDetailDTO.setVote_activated(wear.isVoteActivated());
+        wearDetailDTO.setReplyList(replyList);
 
-        return wearDetail;
+        return wearDetailDTO;
     }
 
-    public List<VoteValue> VoteList(Long idx, String nickname) {
-        List<VoteValue> voteValueList = new ArrayList<>();
+    public List<VoteDTO> VoteList(Long idx, String nickname) {
+        List<VoteDTO> voteDTOList = new ArrayList<>();
         List<VoteItem> voteList;
 
         Wear wear = wearRepository.findWearByIdx(idx);
@@ -116,25 +119,25 @@ public class WearService {
         for (VoteItem voteItem : voteList) {
             VoteChoice voteChoice;
             voteChoice = voteChoiceRepository.findVoteChoiceByVoteItemAndUser(voteItem, user);
-            VoteValue voteValue = new VoteValue();
-            voteValue.setIdx(voteItem.getIdx());
-            voteValue.setCount(voteItem.getCount());
+            VoteDTO voteDTO = new VoteDTO();
+            voteDTO.setIdx(voteItem.getIdx());
+            voteDTO.setCount(voteItem.getCount());
             if(voteChoice != null)
-                voteValue.setChoice(true);
+                voteDTO.setChoice(true);
             else
-                voteValue.setChoice(false);
+                voteDTO.setChoice(false);
 
-            voteValueList.add(voteValue);
+            voteDTOList.add(voteDTO);
         }
 
-        return voteValueList;
+        return voteDTOList;
     }
 
     public void DeleteWear(long idx) {
         Wear wear = wearRepository.findWearByIdx(idx);
         Vote vote = voteRepository.findVoteByWear(wear);
         List<VoteItem> voteItemList = voteItemRepository.findVoteItemByVoteOrderByVote(vote);
-        List<Reply> replyList = replyRepository.findReplyByWearOrderByWriteDate(wear);
+        List<Reply> replyList = wearReplyRepository.findReplyByWearOrderByWriteDate(wear);
 
         for (VoteItem voteItem : voteItemList)
             voteChoiceRepository.deleteVoteChoiceByVoteItem(voteItem);
@@ -161,29 +164,29 @@ public class WearService {
         reply.setWear(wear);
         reply.setDepth(request.getDepth());
         reply.setContent(request.getContent());
-        Reply savedReply = replyRepository.save(reply);
+        Reply savedReply = wearReplyRepository.save(reply);
         if(savedReply.getDepth() == 1)
             savedReply.setGroupNum(request.getGroupNum());
         else
             savedReply.setGroupNum(savedReply.getIdx());
 
-        replyRepository.save(savedReply);
+        wearReplyRepository.save(savedReply);
     }
 
     public void ModifyReply(ReplyDTO request) {
-        Reply reply = replyRepository.findReplyByIdx(request.getIdx());
+        Reply reply = wearReplyRepository.findReplyByIdx(request.getIdx());
         reply.setContent(request.getContent());
 
-        replyRepository.save(reply);
+        wearReplyRepository.save(reply);
     }
 
     public void DeleteReply(Long idx) {
-        Reply reply = replyRepository.findReplyByIdx(idx);
+        Reply reply = wearReplyRepository.findReplyByIdx(idx);
 
         if(reply.getDepth() == 0)
-            replyRepository.deleteReplyByGroupNum(reply.getGroupNum());
+            wearReplyRepository.deleteReplyByGroupNum(reply.getGroupNum());
         else
-            replyRepository.deleteReplyByIdx(idx);
+            wearReplyRepository.deleteReplyByIdx(idx);
     }
 
     public void VoteReply(Long idx, String nickname){

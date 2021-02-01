@@ -48,7 +48,7 @@ public class OotdController {
     @ApiOperation(value = "Ootd 상세페이지 (~)", notes = "ootd글에 대한 상세페이지, ootd메인페이지에서 특정 글을 클릭시\n" +
             "             해당 글에 대한 상세정보를 보여준다. 글의 ootdidx를 통해 연관된 hashtag,좋아요,댓글, 대댓글을 전부 리턴해준다.\n" +
             "             Parameter: OotdIdx \n" +
-            "             Response:  ootdIdx, content, count, isUpdated, writeDate, nickname, hashtag(list), reply(list)")
+            "             Response:  ootdIdx, content, count, isUpdated, writeDate, nickname, hashtag(list), ootdReply(list)")
     // 이것도 jpql 아니면 querydSL써야함
     public OotdDetailDTO detailOotd(@PathVariable("ootdIdx") Long ootdIdx) {
 //        Ootd ootdDetail = ootdRepository.findByIdx(ootdidx);
@@ -146,7 +146,12 @@ public class OotdController {
         return resEntity;
     }
 
-//    @PostMapping
-//    @ApiOperation(value = "Ootd글 댓글 작성")
-//    public List<ReplyDTO>
+    @PostMapping("/ootd/reply")
+    @ApiOperation(value = "Ootd글 댓글 작성")
+    public List<ReplyDTO> ootdReplyWrite(@Valid @RequestBody ReplyDTO replyDTO){
+        List<ReplyDTO> replyDTOS = ootdService.writeReply(replyDTO);
+
+
+        return replyDTOS;
+    }
 }

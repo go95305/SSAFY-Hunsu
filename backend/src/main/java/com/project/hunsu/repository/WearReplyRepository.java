@@ -7,13 +7,11 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface ReplyRepository extends JpaRepository<Reply,Long> {
+public interface WearReplyRepository extends JpaRepository<Reply,Long> {
 
-    Reply findAllByOotdIdx(Long idx);
     List<Reply> findReplyByWearIdxAndIsActivatedOrderByWriteDate(Wear wear, Boolean isActivated);
     Reply findReplyByIdx(Long idx);
     void deleteReplyByGroupNum(Long groupnum);
     void deleteReplyByIdx(Long idx);
 
-    List<Reply> findReplyByOotdIdx(Long idx);
 }

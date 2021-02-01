@@ -1,8 +1,6 @@
 package com.project.hunsu.service;
 
 import com.project.hunsu.model.dto.ReplyDTO;
-import com.project.hunsu.model.entity.Reply;
-import com.project.hunsu.model.entity.ReplyLike;
 import com.project.hunsu.model.entity.User;
 import com.project.hunsu.model.entity.Wear;
 import com.project.hunsu.repository.ReplyRepository;

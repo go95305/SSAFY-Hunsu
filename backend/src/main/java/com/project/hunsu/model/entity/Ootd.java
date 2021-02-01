@@ -21,16 +21,8 @@ public class Ootd {
     private Long idx;
 
     @ManyToOne
-    @JoinColumn(name = "nickname")
+    @JoinColumn(name = "nickname",referencedColumnName = "nickname")
     private User user;
-
-//    @OneToMany(mappedBy = "ootd")
-//    private Hashtag hashtag;
-
-//    public void addHashtag(Hashtag hashtag){
-//        hashtagList.add(hashtag);
-//        hashtag.setOotd(this);
-//    }
 
     private String content;
 
@@ -44,13 +36,13 @@ public class Ootd {
     //likeCount로 바꾸기
     private int count;
 
-    @Column(name = "isActivated")
-    private Boolean isActivated;
+    @Column(name = "flag")
+    private Boolean flag;
 
     @PrePersist
     void preInsert(){
-        if(this.isActivated==null)
-            this.isActivated=true;
+        if(this.flag==null)
+            this.flag=true;
     }
 
 

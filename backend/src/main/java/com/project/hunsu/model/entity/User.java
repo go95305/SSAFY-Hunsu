@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
@@ -17,6 +18,9 @@ import javax.persistence.Id;
 public class User {
 
     @Id
+    @Column(name = "uid")
+    private Long uid;
+
     @Column(name = "nickname")
     private String nickname;
 
@@ -32,12 +36,4 @@ public class User {
     private String age;
     private double height;
     private String size;
-
-    public User(String oauthId, String nickname, String providerName, String accessToken) {
-
-        this.oauthId = oauthId;
-        this.nickname = nickname;
-        this.providerName = providerName;
-        this.accessToken = accessToken;
-    }
 }

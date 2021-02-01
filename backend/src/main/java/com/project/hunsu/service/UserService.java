@@ -22,19 +22,20 @@ public class UserService {
 
     @Transactional
     public void followAdd(String myNickname, String yourNickname) {
-        User user = entityManager.find(User.class, myNickname);
+        User member = entityManager.find(User.class, myNickname);
+        User target = entityManager.find(User.class, yourNickname);
         Follower follower = new Follower();
-        follower.setUser(user);
-        follower.setFollowTo(yourNickname);
+        follower.setMemId(member);
+        follower.setTargetId(target);
         entityManager.persist(follower);
     }
 
 
-    @Transactional
-    public void followDelete(String myNickname, String yourNickname) {
-        String query = " delete from Follower where followTo = : yourNickname";
-        int result = entityManager.createQuery(query).setParameter("yourNickname",yourNickname).executeUpdate();
-    }
+//    @Transactional
+//    public void followDelete(String myNickname, String yourNickname) {
+//        String query = " delete from Follower where followTo = : yourNickname";
+//        int result = entityManager.createQuery(query).setParameter("yourNickname",yourNickname).executeUpdate();
+//    }
 
 
 }

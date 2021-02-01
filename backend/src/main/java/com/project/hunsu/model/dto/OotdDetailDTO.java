@@ -1,6 +1,5 @@
 package com.project.hunsu.model.dto;
 
-import com.project.hunsu.model.entity.Reply;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -23,5 +22,4 @@ public class OotdDetailDTO {
     public void addHashtag(String hashtag){
         this.hashTag.add(hashtag);
     }
-    private List<Reply> replyList=new ArrayList<>();
 }

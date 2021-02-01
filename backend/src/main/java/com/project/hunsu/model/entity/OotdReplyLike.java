@@ -12,20 +12,19 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Follower {
+public class OotdReplyLike {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "follower_idx")
+    @Column(name = "replyLike_idx")
     private Long idx;
 
     @ManyToOne
-    @JoinColumn(name= "memId",referencedColumnName = "nickname")
-    private User memId;
-
+    @JoinColumn(name = "reply_idx",referencedColumnName = "nickname")
+    private OotdReply ootdReply;
 
     @ManyToOne
-    @JoinColumn(name= "targetId",referencedColumnName = "nickname")
-    private User targetId;
+    @JoinColumn(name = "nickname",referencedColumnName = "nickname")
+    private User user;
 
     @Column(name = "flag")
     private Boolean flag;

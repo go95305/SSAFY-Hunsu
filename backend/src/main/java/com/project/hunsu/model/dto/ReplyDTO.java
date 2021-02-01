@@ -20,4 +20,5 @@ public class ReplyDTO {
     private Boolean like;
     private Long groupNum;
     private Integer count;
+    private boolean flag;
 }

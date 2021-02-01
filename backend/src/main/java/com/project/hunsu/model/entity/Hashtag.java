@@ -25,4 +25,12 @@ public class Hashtag {
 
     private String content;
 
+    @Column(name = "flag")
+    private Boolean flag;
+    @PrePersist
+    void preInsert(){
+        if(this.flag==null)
+            this.flag=true;
+    }
+
 }

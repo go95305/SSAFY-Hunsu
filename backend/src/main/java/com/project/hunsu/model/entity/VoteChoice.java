@@ -25,4 +25,14 @@ public class VoteChoice {
     @ManyToOne
     @JoinColumn(name = "nickname")
     private User user;
+
+    @Column(name = "flag")
+    private Boolean flag;
+
+    @PrePersist
+    void preInsert(){
+        if(this.flag==null)
+            this.flag=true;
+    }
+
 }

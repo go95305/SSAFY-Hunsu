@@ -1,6 +1,9 @@
 package com.project.hunsu.model.entity;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -10,29 +13,33 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@ToString
-public class Wear {
+public class WearReply {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "wear_idx")
+    @Column(name = "reply_idx")
     private Long idx;
+
+    @ManyToOne
+    @JoinColumn(name = "wear_idx")
+    private Ootd wear;
 
     @ManyToOne
     @JoinColumn(name = "nickname")
     private User user;
 
-    private String title;
-    private String content;
+    @Column(columnDefinition = "bigint default 0 ")
+    private Long depth;
 
     @Column(columnDefinition = "timestamp not null default now()", name = "write_date",insertable = false, updatable = false)
     private LocalDateTime writeDate;
 
-    @Column(name = "is_updated")
-    private Boolean isUpdated;
+    private String content;
 
-    @Column(name = "vote_activated")
-    private boolean voteActivated;
+    @Column(name = "group_num")
+    private Long groupNum;
+
+    private int count;
 
     @Column(name = "flag")
     private Boolean flag;
@@ -42,5 +49,4 @@ public class Wear {
         if(this.flag==null)
             this.flag=true;
     }
-
 }

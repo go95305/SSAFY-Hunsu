@@ -24,12 +24,12 @@ public class UserController {
 
     }
 
-    @DeleteMapping("/user/follow")
-    @ApiOperation(value = "팔로우 삭제 (O)", notes = "팔로우 했단 상대방을 지우는 기능")
-    public void userFollowDelete(@Valid @RequestBody UserFollowDTO userFollowDTO) {
-        userService.followDelete(userFollowDTO.getMyNickname(), userFollowDTO.getYourNickname());
-
-    }
+//    @DeleteMapping("/user/follow")
+//    @ApiOperation(value = "팔로우 삭제 (O)", notes = "팔로우 했단 상대방을 지우는 기능")
+//    public void userFollowDelete(@Valid @RequestBody UserFollowDTO userFollowDTO) {
+//        userService.followDelete(userFollowDTO.getMyNickname(), userFollowDTO.getYourNickname());
+//
+//    }
 
 //    @GetMapping("/user/ootd/{nickname}")
 //    @ApiOperation(value = "상대 마이페이지로 이동", notes = "상대 이름 클릭시 상대방 정보를 리턴해준다.")

@@ -22,11 +22,30 @@ public class WearController {
     @PersistenceContext    // EntityManagerFactory가 DI 할 수 있도록 어노테이션 설정
     private EntityManager entityManager;
 
+    ///////////////수정
+    //댓글 불러오기(보는사람이 댓글에 대한 좋아요 활성화)
+    @GetMapping("/reply/wear/{wear_idx}/{nickname}")
+    @ApiOperation(value = "댓글 목록 (O)")
+    public List<ReplyDTO> detailReply(@PathVariable Long wear_idx, @PathVariable String nickname){//나중에 리턴어떻게 할건지 생각해보자
+        List<ReplyDTO> replyList = replyService.ReplyList(wear_idx, nickname);
+
+        return replyList;
+    }
+
+    //댓글 에 대한 좋아요/취소        --reply_idx, nickname 필요
+    @PutMapping("/reply/like/{reply_idx}/{nickname}")
+    @Transactional
+    @ApiOperation(value = "댓글 좋아요/좋아요취소 (~)")
+    public void likeReply(@PathVariable Long reply_idx, @PathVariable String nickname) {
+        replyService.ReplyLike(reply_idx, nickname);
+    }
+    /////////////////////
+
     //뭘 입을까 목록(최신순 정렬)
     @GetMapping("/wear")
     @ApiOperation(value = "뭘 입을까 메인 (O)")
-    public List<WearMain> wearMain() {
-        List<WearMain> wearList = wearService.SortByRecent();
+    public List<WearMainDTO> wearMain() {
+        List<WearMainDTO> wearList = wearService.SortByRecent();
         return wearList;
     }
 
@@ -34,16 +53,17 @@ public class WearController {
     //content, nickname, num, title 필요
     @PostMapping("/wear")
     @ApiOperation(value = "뭘 입을까 작성 (O)")
-    public void insertWear(@RequestBody WearValue request) {
+    public void insertWear(@RequestBody WearDTO request) {
         wearService.InsertWear(request);
     }
 
+    //수정중
     //뭘 입을까 디테일
-    //wear_idx 필요
-    @GetMapping("/wear/detail/{wear_idx}")
+    //wear_idx, nickname 필요
+    @GetMapping("/wear/detail/{wear_idx}/{nickname}")
     @ApiOperation(value = "뭘 입을까 디테일 (O)")
-    public WearDetail detailWear(@PathVariable Long wear_idx) {
-        WearDetail wereDetail = wearService.DetailWear(wear_idx);
+    public WearDetailDTO detailWear(@PathVariable Long wear_idx, @PathVariable String nickname) {
+        WearDetailDTO wereDetail = wearService.DetailWear(wear_idx, nickname);
         return wereDetail;
     }
 
@@ -51,9 +71,9 @@ public class WearController {
     //wear_idx, nickname 필요
     @GetMapping("/wear/detail/vote/{wear_idx}/{nickName}")
     @ApiOperation(value = "뭘 입을까 디테일 투표 (O)")
-    public List<VoteValue> detailWearVote(@PathVariable Long wear_idx, @PathVariable String nickName) {
-        List<VoteValue> voteValueList = wearService.VoteList(wear_idx, nickName);
-        return voteValueList;
+    public List<VoteDTO> detailWearVote(@PathVariable Long wear_idx, @PathVariable String nickName) {
+        List<VoteDTO> voteDTOList = wearService.VoteList(wear_idx, nickName);
+        return voteDTOList;
     }
 
     //뭘 입을까 삭제(cascade)&&미완

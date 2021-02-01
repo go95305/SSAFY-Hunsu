@@ -12,7 +12,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ReplyLike {
+public class WearReplyLike {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "replyLike_idx")
@@ -25,4 +25,13 @@ public class ReplyLike {
     @ManyToOne
     @JoinColumn(name = "nickname")
     private User user;
+
+    @Column(name = "flag")
+    private Boolean flag;
+
+    @PrePersist
+    void preInsert(){
+        if(this.flag==null)
+            this.flag=true;
+    }
 }

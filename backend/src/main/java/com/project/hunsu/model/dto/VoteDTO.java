@@ -7,7 +7,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class VoteValue {
+public class VoteDTO {
     private Long idx;
     private int count;
     private Boolean choice;

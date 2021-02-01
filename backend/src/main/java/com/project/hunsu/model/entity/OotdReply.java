@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Reply {
+public class OotdReply {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,12 +24,9 @@ public class Reply {
     @JoinColumn(name = "ootd_idx")
     private Ootd ootd;
 
-    @ManyToOne
-    @JoinColumn(name = "wear_idx")
-    private Wear wear;
 
     @ManyToOne
-    @JoinColumn(name = "nickname")
+    @JoinColumn(name = "nickname",referencedColumnName = "nickname")
     private User user;
 
     @Column(columnDefinition = "bigint default 0 ")
@@ -45,12 +42,11 @@ public class Reply {
 
     private int count;
 
-    @Column(name = "isActivated")
-    private Boolean isActivated;
-
+    @Column(name = "flag")
+    private Boolean flag;
     @PrePersist
     void preInsert(){
-        if(this.isActivated==null)
-            this.isActivated=true;
+        if(this.flag==null)
+            this.flag=true;
     }
 }
