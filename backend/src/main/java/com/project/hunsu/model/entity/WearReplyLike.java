@@ -20,7 +20,7 @@ public class WearReplyLike {
 
     @ManyToOne
     @JoinColumn(name = "reply_idx")
-    private Reply reply;
+    private WearReply reply;
 
     @ManyToOne
     @JoinColumn(name = "nickname")

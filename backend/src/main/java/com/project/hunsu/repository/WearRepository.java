@@ -9,8 +9,7 @@ import java.util.List;
 //@Transactional
 public interface WearRepository extends JpaRepository<Wear,Long> {
 
-    List<Wear> findWearByOrderByWriteDate();
-    void deleteWearByIdx(Long idx);
+    List<Wear> findWearByFlagOrderByWriteDate(Boolean flag);
     Wear findWearByIdx(Long idx);
 
 }

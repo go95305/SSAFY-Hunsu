@@ -22,7 +22,7 @@ public class WearReply {
 
     @ManyToOne
     @JoinColumn(name = "wear_idx")
-    private Ootd wear;
+    private Wear wear;
 
     @ManyToOne
     @JoinColumn(name = "nickname")

@@ -19,5 +19,5 @@ public class WearDetailDTO {
     private Boolean vote_activated;
     private LocalDateTime write_date;
     private String nickname;
-    private List<WearReply> replyList=new ArrayList<>();
+    private List<WearReplyDTO> replyList=new ArrayList<>();
 }
