@@ -42,8 +42,8 @@ public class JwtTokenProvider {
     }
 
     //Jwt 토큰 생성
-    public String createToken(String nickname, List<String> roles, long expireTime){
-        Claims claims = Jwts.claims().setSubject(nickname);
+    public String createToken(String Uid, List<String> roles, long expireTime){    //nickname ->Uid
+        Claims claims = Jwts.claims().setSubject(Uid);
         claims.put("roles", roles);
         Date now = new Date();
         return Jwts.builder()
@@ -55,13 +55,13 @@ public class JwtTokenProvider {
     }
 
     // AccessToken 생성
-    public String generateToken (String username, List<String> roles){
-        return createToken(username, roles, TOKEN_VALIDATION_SECOND);
+    public String generateToken (String Uid, List<String> roles){   //username->Uid
+        return createToken(Uid, roles, TOKEN_VALIDATION_SECOND);
     }
 
     // RefreshToken 생성
-    public String generateRefreshToken(String username, List<String> roles){
-        return createToken(username, roles, REFRESH_TOKEN_VALIDATION_SECOND);
+    public String generateRefreshToken(String Uid, List<String> roles){    //username->Uid
+        return createToken(Uid, roles, REFRESH_TOKEN_VALIDATION_SECOND);
     }
     //Jwt 토큰으로 인증정보 조회
     public Authentication getAuthentication(String token){

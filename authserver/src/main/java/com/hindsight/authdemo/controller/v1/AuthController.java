@@ -47,18 +47,23 @@ public class AuthController {
     @Value("${spring.social.kakao.redirect}")
     private String kakaoRedirect;
 
+    // 프론트한테 엑세스 토큰 받는다 -> 엑세스 토큰으로 유저 프로필 받아온다 -> 유저인포를 활용해서 jwt토큰 만들어서 Map으로 리턴 -> 프론트가 받아서 로컬 스토리지 저장
     @ApiOperation(value="소셜 로그인 (O)", notes="소셜 로그인을 한다.")
-    @PostMapping(value="/signin/{provider}")
+    @PostMapping(value="/signin")        //value="/signin/{provider}"
     public Map<String, String> signinByProvider(
-            @ApiParam(value = "서비스 제공자 provider", required=true) @PathVariable String provider,
+//            @ApiParam(value = "서비스 제공자 provider", required=true) @PathVariable String provider,
             @ApiParam(value = "소셜 access_token", required = true) @RequestBody String socialAccessToken){
 
         KakaoProfile profile = kakaoService.getKakaoProfile(socialAccessToken);
-        User user = userJpaRepo.findByOauthIdAndProviderName(String.valueOf(profile.getId()), provider)
-                .orElseThrow(CUserNotFoundException::new);
+//        User user = userJpaRepo.findByOauthIdAndProviderName(String.valueOf(profile.getId()), provider)
+//                .orElseThrow(CUserNotFoundException::new);
+        User user = userJpaRepo.findByUid(String.valueOf(profile.getUid())).orElseThrow(CUserNotFoundException::new);
         //jwt token들 생성
-        String apiAccessToken = jwtTokenProvider.generateToken(String.valueOf(user.getUsername()), user.getRoles());
-        String apiRefreshToken = jwtTokenProvider.generateRefreshToken(String.valueOf(user.getUsername()), user.getRoles());
+        String apiAccessToken = jwtTokenProvider.generateToken(String.valueOf(user.getUID()),user.getRoles());
+        String apiRefreshToken = jwtTokenProvider.generateRefreshToken(String.valueOf(user.getUID()), user.getRoles());
+
+//        String apiAccessToken = jwtTokenProvider.generateToken(String.valueOf(user.getUsername()), user.getRoles());
+//        String apiRefreshToken = jwtTokenProvider.generateRefreshToken(String.valueOf(user.getUsername()), user.getRoles());
 
         Map<String, String> resultMap = new HashMap<>();
         resultMap.put(JwtTokenProvider.ACCESS_TOKEN_NAME, apiAccessToken);
@@ -68,23 +73,36 @@ public class AuthController {
     }
 
 
+    //프론트에서 form 받음 -> form의 accesstoken으로 카카오서버에서 유저info 확인 -> user정보 db에 저장
     @ApiOperation(value="소셜 계정 가입 (O)", notes="소셜 계정 회원가입을 한다.")
     @PostMapping(value ="/signup")
-    public CommonResult signupProvider(@ApiParam("소셜 회원가입 객체") @RequestBody SocialSignUp form){
-        KakaoProfile profile = kakaoService.getKakaoProfile(form.getAccessToken());
+    public CommonResult signupProvider(@ApiParam("소셜 회원가입 객체") @RequestBody SocialSignUp form){ //form 안에 a토큰 r토큰도 함께?
+        KakaoProfile profile = kakaoService.getKakaoProfile(form.getAccess_token());
+
         if(profile == null){
             return responseService.getFailResult(-1100, "카카오 서버에서 일치하 정보를 가져올 수 없음");
         }
-        Optional<User> user = userJpaRepo.findByNicknameAndProviderName(String.valueOf(form.getNickname()), form.getProvider());
+
+//        Optional<User> user = userJpaRepo.findByNicknameAndProviderName(String.valueOf(form.getNickname()), form.getProvider());
+        Optional<User> user = userJpaRepo.findByUid((String.valueOf(profile.getUid())));
         if(user.isPresent())
             throw new CUserExistException();
 
+        String gender = "man";
         userJpaRepo.save(
                 User.builder()
-                        .nickname(String.valueOf(form.getNickname()))
-                        .providerName(form.getProvider())
-                        .oauthId(String.valueOf(profile.getId()))
-                        .roles(Collections.singletonList("ROLE_USER"))
+                        .nickname(String.valueOf(form.getNickname()))   // 로그인 폼
+                        .gender(gender)   //카카오 프로필 프로퍼티 어케가져옴 ㅡㅡ
+                        .access_token(form.getAccess_token())
+                        .age(form.getAge())     // 로그인 폼
+                        .flag(true)             // 이렇게 해도 되나 ??
+                        .size(form.getSize())   // 로그인 폼
+                        .UID(profile.getUid())  //카카오 프로필에서 얻어와야함
+                        .refresh_token(form.getRefresh_token())
+                        .height(form.getHeight())   //로그인 폼
+//                        .providerName(form.getProvider())
+//                        .oauthId(String.valueOf(profile.getId()))
+                        .roles(Collections.singletonList("ROLE_USER"))      //롤 무엇?
                         .build());
         return responseService.getSuccessResult();
     }
@@ -112,10 +130,11 @@ public class AuthController {
     @GetMapping("/newtoken/{refreshToken}")
     public SingleResult<String> getTokenFromRefreshToken(@PathVariable String refreshToken){
         String accessToken = null;
+
         if(jwtTokenProvider.validateToken(refreshToken)){
-            String username = jwtTokenProvider.getUserPk(refreshToken);
+            String Uid = jwtTokenProvider.getUserPk(refreshToken);
             List<String> roles = jwtTokenProvider.getRoles(refreshToken);
-            accessToken = jwtTokenProvider.generateToken(username, roles);
+            accessToken = jwtTokenProvider.generateToken(Uid, roles);
         }
         return responseService.getSingleResult(accessToken);
     }

@@ -20,14 +20,27 @@ import java.util.stream.Collectors;
 @Table(name = "user") // 'user' 테이블과 매핑됨을 명시
 public class User implements UserDetails {
 
-    @Id // pk, 추후 uid로 변경
-    @Column(name ="nickname")
+//    @Id // pk, 추후 uid로 변경
+//    @Column(name ="nickname")
+//    private String nickname;
+//    @Column(length=100)
+//    private String providerName;
+//    @Column(nullable = false, unique = true, length = 30)
+//    private String oauthId;
+//    private String gender;
+//    private String age;
+//    private double height;
+//    private String size;
+
+    @Id //pk
+    @Column(name="UID")
+    private String UID;
+    @Column(name="nickname" , unique=true)
     private String nickname;
-    @Column(length=100)
-    private String providerName;
-    @Column(nullable = false, unique = true, length = 30)
-    private String oauthId;
+    private boolean flag;
     private String gender;
+    private String access_token;
+    private String refresh_token;
     private String age;
     private double height;
     private String size;
