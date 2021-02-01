@@ -1,5 +1,6 @@
 package com.project.hunsu.model.dto;
 
+import com.project.hunsu.model.entity.WearReply;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -18,5 +19,5 @@ public class WearDetailDTO {
     private Boolean vote_activated;
     private LocalDateTime write_date;
     private String nickname;
-    private List<Reply> replyList=new ArrayList<>();
+    private List<WearReply> replyList=new ArrayList<>();
 }

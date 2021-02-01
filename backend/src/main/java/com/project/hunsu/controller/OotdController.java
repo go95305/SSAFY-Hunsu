@@ -88,7 +88,7 @@ public class OotdController {
         ResponseEntity<Map<String, Object>> resEntity = null;
         Map<String, Object> map = new HashMap<String, Object>();
         try {
-            ootdService.delete(idx); //글 비활성화
+            ootdService.deleteOotd(idx); //글 비활성화
             map.put("msg", "success");
             resEntity = new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
         } catch (Exception e) {
@@ -108,9 +108,18 @@ public class OotdController {
         User user = entityManager.find(User.class, ootdLikeCountDTO.getNickname());
         if (ootdLikeCountDTO.getChk()) {//좋아요 +1
             ootd.setCount(ootd.getCount() + 1);
-            OotdLike ootdLike = new OotdLike();
-            ootdLike.setOotd(ootd);
-            ootdLike.setUser(user);
+            //ootdlike테이블에서 기존 좋아요했다가 취소한 적이있으면 가져와서 그것을 true로 해주고, 없으면 새로 만든다.
+            OotdLike ootdLike = entityManager.find(OotdLike.class, ootdLikeCountDTO.getOotdIdx());
+            if (ootdLike == null) {
+                ootdLike.setOotd(ootd);
+                ootdLike.setUser(user);
+                ootdLike.setFlag(true);
+            } else {
+                OotdLike ol = new OotdLike();
+                ol.setFlag(true);
+                ol.setOotd(ootd);
+                ol.setUser(user);
+            }
             entityManager.persist(ootdLike);
         } else {// 좋아요 -1
             ootd.setCount(ootd.getCount() - 1);
@@ -136,7 +145,7 @@ public class OotdController {
         ResponseEntity<Map<String, Object>> resEntity = null;
         Map<String, Object> map = new HashMap<String, Object>();
         try {
-            ootdService.write(ootdWriteDTO);
+            ootdService.writeOotd(ootdWriteDTO);
             map.put("msg", "success");
             resEntity = new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
         } catch (Exception e) {
@@ -148,10 +157,15 @@ public class OotdController {
 
     @PostMapping("/ootd/reply")
     @ApiOperation(value = "Ootd글 댓글 작성")
-    public List<ReplyDTO> ootdReplyWrite(@Valid @RequestBody ReplyDTO replyDTO){
-        List<ReplyDTO> replyDTOS = ootdService.writeReply(replyDTO);
+    public List<OotdReplyDTO> ootdReplyWrite(@Valid @RequestBody OotdReplyDTO ootdreplyDTO) {
+        List<OotdReplyDTO> replyDTOList = ootdService.writeReply(ootdreplyDTO);
+        return replyDTOList;
+    }
 
-
-        return replyDTOS;
+    @PutMapping("/ootd/reply")
+    @ApiOperation(value = "Ootd글 댓글 작성")
+    public List<OotdReplyDTO> ootdReplyUpdate(@Valid @RequestBody OotdReplyUpdateDTO ootdReplyUpdateDTO) {
+        List<OotdReplyDTO> replyDTOList = ootdService.updateReply(ootdReplyUpdateDTO);
+        return replyDTOList;
     }
 }

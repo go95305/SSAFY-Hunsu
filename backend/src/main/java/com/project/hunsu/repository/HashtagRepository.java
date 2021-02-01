@@ -13,5 +13,5 @@ public interface HashtagRepository extends JpaRepository<Hashtag,Long> {
 
     List<Hashtag> findByContent(String hashtag);
 
-    void deleteAllByIdx(Long ootdIdx);
+    Hashtag findByOotdIdx(Long ootdIdx);
 }

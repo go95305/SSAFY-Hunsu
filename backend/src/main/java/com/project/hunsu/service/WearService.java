@@ -21,9 +21,9 @@ public class WearService {
     private final VoteRepository voteRepository;
     private final VoteItemRepository voteItemRepository;
     private final VoteChoiceRepository voteChoiceRepository;
-    private final ReplyLikeRepository replyLikeRepository;
+    private final OotdReplyLikeRepository replyLikeRepository;
 
-    public WearService(ReplyLikeRepository replyLikeRepository, WearRepository wearRepository, UserRepository userRepository, WearReplyRepository wearReplyRepository, VoteRepository voteRepository, VoteItemRepository voteItemRepository, VoteChoiceRepository voteChoiceRepository) {
+    public WearService(OotdReplyLikeRepository replyLikeRepository, WearRepository wearRepository, UserRepository userRepository, WearReplyRepository wearReplyRepository, VoteRepository voteRepository, VoteItemRepository voteItemRepository, VoteChoiceRepository voteChoiceRepository) {
         this.wearRepository = wearRepository;
         this.userRepository = userRepository;
         this.wearReplyRepository = wearReplyRepository;

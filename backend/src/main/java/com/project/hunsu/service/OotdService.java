@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,14 +21,14 @@ public class OotdService {
     private final OotdRepository ootdRepository;
     private final HashtagRepository hashtagRepository;
     private final OotdLikeRepository ootdLikeRepository;
-    private final ReplyRepository replyRepository;
+    private final OotdReplyRepository ootdReplyRepository;
     private final UserRepository userRepository;
 
-    public OotdService(OotdRepository ootdRepository, HashtagRepository hashtagRepository, OotdLikeRepository ootdLikeRepository, ReplyRepository replyRepository, UserRepository userRepository) {
+    public OotdService(OotdRepository ootdRepository, HashtagRepository hashtagRepository, OotdLikeRepository ootdLikeRepository, OotdReplyRepository ootdReplyRepository, UserRepository userRepository) {
         this.ootdRepository = ootdRepository;
         this.hashtagRepository = hashtagRepository;
         this.ootdLikeRepository = ootdLikeRepository;
-        this.replyRepository = replyRepository;
+        this.ootdReplyRepository = ootdReplyRepository;
         this.userRepository = userRepository;
     }
 
@@ -64,6 +65,7 @@ public class OotdService {
     public OotdDetailDTO SpecificOotd(Long ootdIdx) { //NickName, 작성일자, 수정 여부, 사진, 좋아요 카운트, style 해시태그 리스트, product 해시태그 리스트, 댓글, 대댓글
         Ootd ootd = ootdRepository.findByIdx(ootdIdx);// OotdIdx를 통해 ootd글을 가져오기
         List<Hashtag> hashtagList = hashtagRepository.findHashtagByOotdIdx(ootdIdx);
+        List<OotdReply> ootdReplyList = ootdReplyRepository.findOotdReplyByOotdIdx(ootdIdx);
         OotdDetailDTO ootdDetailDTO = new OotdDetailDTO();
         ootdDetailDTO.setOotdIdx(ootd.getIdx());
         ootdDetailDTO.setNickname(ootd.getUser().getNickname());
@@ -74,13 +76,27 @@ public class OotdService {
         for (int i = 0; i < hashtagList.size(); i++) {
             ootdDetailDTO.addHashtag(hashtagList.get(i).getContent());
         }
+        //댓글리스트도 리턴
+        for (int i = 0; i < ootdReplyList.size(); i++) {
+            OotdReplyDTO ootdReplyDTO = new OotdReplyDTO();
+            ootdReplyDTO.setIdx(ootdReplyList.get(i).getIdx());
+            ootdReplyDTO.setOotd_idx(ootdReplyList.get(i).getOotd().getIdx());
+            ootdReplyDTO.setNickname(ootdReplyList.get(i).getUser().getNickname());
+            ootdReplyDTO.setContent(ootdReplyList.get(i).getContent());
+            ootdReplyDTO.setDepth(ootdReplyList.get(i).getDepth());
+            ootdReplyDTO.setWrite_date(ootdReplyList.get(i).getWriteDate());
+            ootdReplyDTO.setCount(ootdReplyList.get(i).getCount());
+            ootdReplyDTO.setGroupNum(ootdReplyList.get(i).getGroupNum());
+            ootdReplyDTO.setFlag(ootdReplyList.get(i).getFlag());
+            ootdDetailDTO.addReply(ootdReplyDTO);
+        }
         return ootdDetailDTO;
     }
 
     //Ootd글 삭제
-    public void delete(Long idx) {
+    public void deleteOotd(Long idx) {
         //ootd와 관련된 연관관계 매핑 엔티티들과의 연결을 끊는다.(연관된 테이블의 레코드들을 전부 삭제) 그 이후에 Ootd테이블의 레코드 삭제
-        List<OotdReply> ootdReply = replyRepository.findReplyByOotdIdx(idx);
+        List<OotdReply> ootdReply = ootdReplyRepository.findReplyByOotdIdx(idx);
         for (OotdReply repl : ootdReply
         ) {
             repl.setFlag(false); //해당 ootd글과 연관된 모든 댓글들은 전부 비활성화
@@ -93,8 +109,8 @@ public class OotdService {
 
     //좋아요 해제 시, 좋아요 테이블에서 좋아요를 누른 사람의 정보 삭제
     public void likedown(Long ootdIdx, String nickName) {
-        String query = "delete from OotdLike m where m.ootd.idx= :ootdIdx and m.user.nickname = :nickName";
-        entityManager.createQuery(query).setParameter("ootdIdx", ootdIdx).setParameter("nickName", nickName).executeUpdate();
+        OotdLike ootdLike = ootdRepository.findOotdLikeByOotdidxAndNickname(ootdIdx, nickName);
+        ootdLike.setFlag(false);
     }
 
     //검색창에서 해시태그를 검색하거나 해시태그를 눌렀을때 해당해시태그가 포함된 모든 Ootd글들을 가져온다.
@@ -124,7 +140,7 @@ public class OotdService {
     }
 
     //ootd글 생성
-    public void write(OotdWriteDTO ootdWriteDTO) {
+    public void writeOotd(OotdWriteDTO ootdWriteDTO) {
         Ootd ootd = new Ootd();
         User user = entityManager.find(User.class, ootdWriteDTO.getNickName());//ootd테이블의 닉네임에 맞는 유저정보를 가져온다.
 
@@ -155,9 +171,11 @@ public class OotdService {
     }
 
     public void updateHashtag(OotdUpdateDTO ootdUpdateDTO) {
-        // 1. 우선 기존의 해시태그부터 지운다
-        String query = "delete from Hashtag h where h.ootd.idx= :ootdIdx";
-        entityManager.createQuery(query).setParameter("ootdIdx", ootdUpdateDTO.getOotdIdx()).executeUpdate();
+        // 1. 우선 기존의 해시태그부터 false시킨다.
+        List<Hashtag> hashtagList = hashtagRepository.findHashtagByOotdIdx(ootdUpdateDTO.getOotdIdx());
+        for (Hashtag hs : hashtagList) {
+            hs.setFlag(true);
+        }
         // 2. 새로운 해시태그 입력
         for (int i = 0; i < ootdUpdateDTO.getHashtagList().size(); i++) {
             Hashtag hashtag = new Hashtag();
@@ -168,38 +186,61 @@ public class OotdService {
         }
     }
 
-    public List<ReplyDTO> writeReply(ReplyDTO replyDTO) {
-        List<ReplyDTO> replyDTOList = new ArrayList<>();
+    public List<OotdReplyDTO> writeReply(OotdReplyDTO ootdReplyDTO) {
+        List<OotdReplyDTO> replyDTOList = new ArrayList<>();
         //1. 우선 댓글을 작성
         OotdReply ootdReply = new OotdReply();
-        User user = userRepository.findUserByNickname(replyDTO.getNickname());
-        Ootd ootd = ootdRepository.findByIdx(replyDTO.getOotd_idx());
+        User user = userRepository.findUserByNickname(ootdReplyDTO.getNickname());
+        Ootd ootd = ootdRepository.findByIdx(ootdReplyDTO.getOotd_idx());
         ootdReply.setOotd(ootd);
         ootdReply.setFlag(true);
-        ootdReply.setContent(replyDTO.getContent());
+        ootdReply.setContent(ootdReplyDTO.getContent());
         ootdReply.setCount(0);
         ootdReply.setDepth((long) 0);
         ootdReply.setGroupNum(ootd.getIdx());
         ootdReply.setWriteDate(LocalDateTime.now());
         ootdReply.setUser(user);
         ootdReply.setCount(0);
-        replyRepository.save(ootdReply);
+        ootdReplyRepository.save(ootdReply);
 
 
         //2. 전체 댓글을 리턴
-        List<OotdReply> ootdReplyList = replyRepository.findReplyByOrderByWriteDate();
+        List<OotdReply> ootdReplyList = ootdReplyRepository.findOotdReplyByOrderByWriteDate();
         for (int i = 0; i < ootdReplyList.size(); i++) {
-            ReplyDTO replDTO = new ReplyDTO();
-            replDTO.setIdx(ootdReplyList.get(i).getIdx());
-            replDTO.setOotd_idx(ootdReplyList.get(i).getOotd().getIdx());
-            replDTO.setNickname(ootdReplyList.get(i).getUser().getNickname());
-            replDTO.setContent(ootdReplyList.get(i).getContent());
-            replDTO.setDepth(ootdReplyList.get(i).getDepth());
-            replDTO.setGroupNum(ootdReplyList.get(i).getGroupNum());
-            replDTO.setWrite_date(ootdReplyList.get(i).getWriteDate());
-            replDTO.setFlag(ootdReplyList.get(i).getFlag());
-            replyDTOList.add(replDTO);
+            OotdReplyDTO ootdreplDTO = new OotdReplyDTO();
+            ootdreplDTO.setIdx(ootdReplyList.get(i).getIdx());
+            ootdreplDTO.setOotd_idx(ootdReplyList.get(i).getOotd().getIdx());
+            ootdreplDTO.setNickname(ootdReplyList.get(i).getUser().getNickname());
+            ootdreplDTO.setContent(ootdReplyList.get(i).getContent());
+            ootdreplDTO.setDepth(ootdReplyList.get(i).getDepth());
+            ootdreplDTO.setGroupNum(ootdReplyList.get(i).getGroupNum());
+            ootdreplDTO.setWrite_date(ootdReplyList.get(i).getWriteDate());
+            ootdreplDTO.setFlag(ootdReplyList.get(i).getFlag());
+            replyDTOList.add(ootdreplDTO);
         }
         return replyDTOList;
+    }
+
+
+    public List<OotdReplyDTO> updateReply(OotdReplyUpdateDTO ootdReplyUpdateDTO) {
+        // 우선 수정부터 해준다.
+        List<OotdReplyDTO> ootdReplyDTOList = new ArrayList<>();
+        OotdReply ootdReply = entityManager.find(OotdReply.class,ootdReplyUpdateDTO.getReplyIdx());
+        ootdReply.setContent(ootdReplyUpdateDTO.getContent());
+        // 전체 댓글 리스트 리턴
+        List<OotdReply> ootdReplyList = ootdReplyRepository.findOotdReplyByOrderByWriteDate();
+        for (int i = 0; i < ootdReplyList.size(); i++) {
+            OotdReplyDTO ootdreplDTO = new OotdReplyDTO();
+            ootdreplDTO.setIdx(ootdReplyList.get(i).getIdx());
+            ootdreplDTO.setOotd_idx(ootdReplyList.get(i).getOotd().getIdx());
+            ootdreplDTO.setNickname(ootdReplyList.get(i).getUser().getNickname());
+            ootdreplDTO.setContent(ootdReplyList.get(i).getContent());
+            ootdreplDTO.setDepth(ootdReplyList.get(i).getDepth());
+            ootdreplDTO.setGroupNum(ootdReplyList.get(i).getGroupNum());
+            ootdreplDTO.setWrite_date(ootdReplyList.get(i).getWriteDate());
+            ootdreplDTO.setFlag(ootdReplyList.get(i).getFlag());
+            ootdReplyDTOList.add(ootdreplDTO);
+        }
+        return ootdReplyDTOList;
     }
 }

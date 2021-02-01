@@ -6,12 +6,12 @@ import lombok.ToString;
 
 import java.time.LocalDateTime;
 
+
 @Getter
 @Setter
 @ToString
-public class ReplyDTO {
+public class OotdReplyDTO {
     private Long idx;
-    private Long wear_idx;
     private Long ootd_idx;
     private String nickname;
     private String content;
