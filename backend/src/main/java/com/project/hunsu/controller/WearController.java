@@ -11,7 +11,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = { "http://i4c102.p.ssafy.io:3000/" })
+@CrossOrigin(origins = "*")
 public class WearController {
     private final WearService wearService;
 
