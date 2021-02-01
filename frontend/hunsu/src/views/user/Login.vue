@@ -29,16 +29,9 @@ let onSuccess = (authObj) => {
   console.log(authObj);
   let accessToken = authObj.access_token;
   console.log("accessTOken", accessToken);
+
   axios
-    .post({
-      url: "http://localhost:8081/v1/auth/signin/kakao",
-      data: {
-        accessToken,
-      },
-      headers: {
-        "Content-type": "application/json",
-      },
-    })
+    .post("http://localhost:8081/v1/auth/signin/kakao", accessToken)
     .then((result) => {
       console.log(result);
       if (result.code === "-1000") {
