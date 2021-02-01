@@ -108,8 +108,12 @@ public class OotdService {
 
 
     //좋아요 해제 시, 좋아요 테이블에서 좋아요를 누른 사람의 정보 삭제
-    public void likedown(Long ootdIdx, String nickName) {
-        OotdLike ootdLike = ootdRepository.findOotdLikeByOotdidxAndNickname(ootdIdx, nickName);
+    public void likedown(Long ootdIdx, String nickname) {
+        TypedQuery<OotdLike> query = entityManager.createQuery("select l from OotdLike l where l.ootd.idx =:ootdIdx and " +
+                "l.user.nickname = :nickname",OotdLike.class);
+        query.setParameter("ootdIdx",ootdIdx).setParameter("nickname",nickname);
+//        OotdLike ootdLike = ootdLikeRepository.findByOotdIdxAndNickname(ootdIdx, nickName);
+        OotdLike ootdLike = query.getSingleResult();
         ootdLike.setFlag(false);
     }
 

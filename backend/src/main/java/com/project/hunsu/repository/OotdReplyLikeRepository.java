@@ -6,6 +6,6 @@ import com.project.hunsu.model.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface OotdReplyLikeRepository extends JpaRepository<OotdReplyLike,Long> {
-    OotdReplyLike findReplyLikeByReplyAndUser(OotdReply reply, User user);
-    void deleteReplyLikeByIdx(Long idx);
+//    OotdReplyLike findReplyLikeByReplyAndUser(OotdReply reply, User user);
+//    void deleteReplyLikeByIdx(Long idx);
 }

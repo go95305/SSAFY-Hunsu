@@ -16,6 +16,4 @@ public interface OotdRepository extends JpaRepository<Ootd,Long> {
     List<Ootd> findOotdByOrderByWriteDate();
 
     List<Ootd> findOotdByOrderByCountDesc();
-
-    OotdLike findOotdLikeByOotdidxAndNickname(Long ootdIdx, String nickName);
 }
