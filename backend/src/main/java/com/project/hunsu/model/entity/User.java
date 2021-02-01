@@ -9,19 +9,21 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.io.Serializable;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class User {
-
+public class User implements Serializable {
+    private static final long serialVersionUID = 1L;
     @Id
+    @GeneratedValue
     @Column(name = "uid")
     private Long uid;
 
-    @Column(name = "nickname")
+    @Column(name = "nickname",unique = true)
     private String nickname;
 
     @Column(unique = true)

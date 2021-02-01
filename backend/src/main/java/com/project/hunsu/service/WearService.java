@@ -36,9 +36,8 @@ public class WearService {
     //return: title, nickname, wear_idx, voteActivated
     public List<WearMainDTO> sortByRecent() {
         List<WearMainDTO> wearMainDTOList = new ArrayList<>();
-        List<Wear> wearList;
+        List<Wear> wearList = wearRepository.findWearByFlagOrderByWriteDate(true);
 
-        wearList = wearRepository.findWearByFlagOrderByWriteDate(true);
         for (Wear wear : wearList) {
             WearMainDTO wearMainDTO = new WearMainDTO();
             wearMainDTO.setTitle(wear.getTitle());
@@ -48,6 +47,7 @@ public class WearService {
 
             wearMainDTOList.add(wearMainDTO);
         }
+
         return wearMainDTOList;
     }
 

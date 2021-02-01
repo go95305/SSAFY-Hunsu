@@ -38,7 +38,6 @@ public class WearController {
         wearService.insertWear(request);
     }
 
-    //수정중
     //뭘 입을까 디테일
     //wear_idx, nickname 필요
     @GetMapping("/wear/detail/{wear_idx}/{nickname}")
