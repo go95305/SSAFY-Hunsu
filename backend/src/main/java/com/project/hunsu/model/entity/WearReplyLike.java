@@ -23,7 +23,7 @@ public class WearReplyLike {
     private WearReply reply;
 
     @ManyToOne
-    @JoinColumn(name = "nickname")
+    @JoinColumn(name = "nickname",referencedColumnName = "nickname")
     private User user;
 
     @Column(name = "flag")

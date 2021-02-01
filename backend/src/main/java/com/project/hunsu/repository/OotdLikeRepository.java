@@ -9,5 +9,7 @@ import java.util.List;
 @Repository
 public interface OotdLikeRepository extends JpaRepository<OotdLike, Long> {
 
-    List<OotdLike> findOotdLikeByOotdIdx(Long idx);
+//    List<OotdLike> findOotdLikeByOotdIdx(Long idx);
+
+//    OotdLike findByOotdIdxAndNickname(Long ootdIdx, String nickName);
 }
