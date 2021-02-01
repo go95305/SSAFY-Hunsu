@@ -30,11 +30,26 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "WhatWearList",
+  created() {
+    // this.getWhatWearList()
+  },
   methods: {
     goToWhatWearDetail() {
       this.$router.push('/whatwear/detail')
+    },
+    getWhatWearList() {
+      axios.get('http://i4c102.p.ssafy.io:8080/api/wear')
+        .then(res => {
+          console.log('get요청성공')
+          console.log(res)
+        })
+        .catch(err => {
+          console.error(err)
+        })
     }
   }
 }

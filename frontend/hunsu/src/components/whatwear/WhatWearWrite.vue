@@ -6,7 +6,7 @@
       hide-overlay
       transition="dialog-bottom-transition"
     >
-      <!--뭘입을까 메인화면에 보이는작성버튼-->
+      <!--뭘입을까 메인화면에 보이는 작성버튼-->
       <template v-slot:activator="{ on, attrs }">
         <div id="whatwear_writebtn">
           <v-btn
@@ -39,7 +39,7 @@
           <v-spacer></v-spacer>
           <v-toolbar-items>
             <v-btn
-              dark
+              
               text
               @click="createWhatWear()"
             >
@@ -53,45 +53,61 @@
           >
             <v-list-item>
               <v-list-item-content>
-                <v-list-item-title class="text-h6 font-weight-bold mb-2">사진업로드</v-list-item-title>
-                  <v-file-input
-                    accept="image/*"
-                    label="File input"
-                    hide-input
-                  ></v-file-input>
+                <v-text-field
+                  v-model="whatwear_title"
+                  label="제목"
+                  clearable
+                ></v-text-field>
+                <v-textarea
+                  v-model="whatwear_content"
+                  clearable
+                  clear-icon="mdi-close-circle"
+                  label="내용"
+                ></v-textarea>
               </v-list-item-content>
             </v-list-item>
           </v-list>
-          <v-divider></v-divider>
           <v-list
             three-line
             subheader
           >
             <v-list-item>
-              <v-list-item-action id="whatwear_input_vote">
-                <v-checkbox v-model="vote"></v-checkbox>
-                <v-list-item-title class="mt-1 ml-1">투표기능</v-list-item-title>
-              </v-list-item-action>
+
+              <v-list-item-content>
+                  <v-list-item-title class="text-h6 font-weight-bold">사진업로드</v-list-item-title>
+                  <v-img
+                    v-if="image" :src="image_url" id="test" contain>
+                  </v-img>
+                  <v-file-input
+                    accept="image/*"
+                    label="File input"
+                    chips
+                    clearable
+                    v-model="image"
+                    @change="previewImage()"
+                  ></v-file-input>
+
+                  <div id="votebtn">
+                  <v-checkbox v-model="vote"></v-checkbox>
+                  <v-list-item-title class="text-h6 font-weight-bold">투표기능</v-list-item-title>
+                  </div>
+                  <v-img 
+                    v-for="(vote_image_url, idx) in vote_image_urls" 
+                    :key="idx" 
+                    :src="vote_image_url">
+                  </v-img>
+                  <v-file-input
+                    :disabled="!vote"
+                    multiple
+                    chips
+                    accept="image/*"
+                    label="File input"
+                    v-model="vote_image"
+                    @change="previewVoteImage()"
+                  ></v-file-input>
+
+              </v-list-item-content>
             </v-list-item>
-            <v-list-item-content>
-              <v-list-item-title class="text-h6 font-weight-bold mb-2">사진업로드</v-list-item-title>
-                <v-file-input
-                  :disabled="!vote"
-                  multiple
-                  accept="image/*"
-                  label="File input"
-                ></v-file-input>
-                <v-text-field
-                  v-model="whatweartitle"
-                  label="제목"
-                  clearable
-                ></v-text-field>
-                <v-text-field
-                  v-model="content"
-                  label="내용"
-                  clearable
-                ></v-text-field>
-            </v-list-item-content>
 
           </v-list>
       </v-card>
@@ -108,39 +124,57 @@ export default {
     return {
       dialog: false,
       notifications: false,
-      whatweartitle: '',
-      content: '',
+      whatwear_title: '',
+      whatwear_content: '',
       vote: false,
-      // image_url: '',
-      // vote_image_url: '',
+      image: null,
+      image_url: null,
+      vote_image: null,
+      vote_image_urls: [],
     }
   },
   methods: {
     createWhatWear() {
       // dialog창 닫기 + 입력데이터 보내기
-      
       this.dialog = false
       const params = {
-        'content': this.content,
-        'nickname': 'test',
+        'content': this.whatwear_content,
+        'nickname': 'wogml23',
         'num': 0,
-        'title': this.whatweartitle,
+        'title': this.whatwear_title,
+        
       }
-      axios.post('http://localhost:8080/wear', params)
+      // 작성폼 초기화
+      this.whatwear_title = '',
+      this.whatwear_content = '',
+      axios.post('http://i4c102.p.ssafy.io:8080/api/wear', params)
         .then(() => {
           console.log('뭘입을까글쓰기성공')
         })
         .catch(err => {
           console.error(err)
         })
+    },
+    previewImage() {
+      // console.log(this.image)
+      // this.image_url = null
+      // if (this.image_url !== null) {
+      //   this.image_url = null
+      // }
+      this.image_url = URL.createObjectURL(this.image)
+    },
+    previewVoteImage() {
+      console.log(this.vote_image)
+      this.vote_image.forEach(e => this.vote_image_urls.push(URL.createObjectURL(e)))
+      console.log(this.vote_image_urls)
     }
   }
 }
 </script>
 
 <style>
-#whatwear_input_vote {
-  display: -webkit-box;
+#votebtn {
+  display: flex;
 }
 
 </style>
