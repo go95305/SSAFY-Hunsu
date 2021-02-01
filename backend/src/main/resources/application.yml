@@ -3,6 +3,9 @@ spring:
     url: jdbc:mysql://i4C102.p.ssafy.io:3306/hunsu?serverTimezone=Asia/Seoul
     username: ssafyC102
     password: durtlrhdbckd135
+#    url: jdbc:mysql://localhost:3306/hunsu?serverTimezone=UTC&useUniCode=yes&characterEncoding=UTF-8
+#    username: ssafy
+#    password: ssafy
     driver-class-name: com.mysql.cj.jdbc.Driver
 
 
@@ -10,7 +13,7 @@ spring:
   jpa:
     database: mysql
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     properties:
       hibernate:
         show_sql: true
@@ -23,8 +26,3 @@ spring:
     hiddenmethod:
       filter:
         enabled: true
-
-oauth2:
-  kakao:
-    client-id: 6ab2b1fa25ea8dc7edf27eb1c42fcd4c
-    client-secret: 7leAsgMurNqMLpi0cABJ7AhdP0oIqqPb
