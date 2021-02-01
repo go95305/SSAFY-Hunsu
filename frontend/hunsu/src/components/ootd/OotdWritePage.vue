@@ -70,7 +70,8 @@
                 v-model="ootd_content"
                 class="px-5"
               ></v-text-field>
-              <v-text-field label="해시태그 추가" @keydown.enter="content()" v-model="ootd_hashtag" class="px-5"></v-text-field>
+              <v-text-field label="해시태그 추가" @keydown.enter="addHashtag()" v-model="ootd_hashtag" class="px-5"></v-text-field>
+              <v-subheader class="d-inline-block" v-for="hashtag in ootd_hashtag_array" :key="hashtag.id">{{hashtag}}</v-subheader>
             </div>
         </v-list>
       </v-card>
@@ -96,6 +97,8 @@ export default {
       imageUrl: null,
       ootd_content: '',
       ootd_hashtag: '',
+      ootd_hashtag_array: []
+
     }
   },
   methods: {
@@ -107,19 +110,23 @@ export default {
         const file = e.target.files[0];
         this.imageUrl = URL.createObjectURL(file);
     },
+    addHashtag() {
+      this.ootd_hashtag_array.push(this.ootd_hashtag)
+      this.ootd_hashtag = ''
+    },
     createOotd() {
       this.dialog = false
-      // const ootd_hashtag_array = []
-      // ootd_hashtag_array.push(this.ootd_hashtag)
-      // console.log(ootd_hashtag_array)
+      console.log(this.ootd_hashtag_array)
       const params = {
         'content' : this.ootd_content,
-        'hashtag' : this.ootd_hashtag,
+        'hashtagList' : this.ootd_hashtag_array,
         'nickName' : 'test'
       }
+
       axios.post('http://localhost:8080/ootd', params)
         .then(() => {
           console.log('글쓰기성공')
+          this.ootd_hashtag_array = []
         })
         .catch(err => {
           console.error(err)
