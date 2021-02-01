@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@CrossOrigin(origins = { "http://i4c102.p.ssafy.io:3000/" })
+@CrossOrigin(origins = "*")
 public class UserController {
 
     private final UserService userService;
