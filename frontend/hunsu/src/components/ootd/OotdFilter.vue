@@ -1,7 +1,6 @@
 <template>
 <!-- 정렬 버튼 -->
       <v-btn-toggle
-        v-model="text"
         tile
         color="red accent-3"
         group
