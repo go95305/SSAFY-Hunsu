@@ -11,7 +11,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = {"*"})
 public class WearController {
     private final WearService wearService;
 
@@ -70,7 +70,7 @@ public class WearController {
     @PostMapping(value = "/wear/reply")
     @Transactional
     @ApiOperation(value = "댓글 작성 (O)")
-    public void insertReply(@RequestBody ReplyValue request) {
+    public void insertReply(@RequestBody ReplyDTO request) {
         wearService.InsertReply(request);
     }
 
@@ -79,7 +79,7 @@ public class WearController {
     @PutMapping(value = "/wear/reply")
     @Transactional
     @ApiOperation(value = "댓글 수정 (X)")
-    public void updateReply(@RequestBody ReplyValue request) {
+    public void updateReply(@RequestBody ReplyDTO request) {
         wearService.ModifyReply(request);
     }
 

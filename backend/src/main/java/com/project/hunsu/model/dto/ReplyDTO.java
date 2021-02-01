@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @ToString
-public class ReplyValue {
+public class ReplyDTO {
     private Long idx;
     private Long wear_idx;
     private Long ootd_idx;
