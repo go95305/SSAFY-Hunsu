@@ -61,14 +61,14 @@ public class WearService {
         wear.setTitle(request.getTitle());
         wear.setContent(request.getContent());
         wear.setUser(user);
-        if(request.getNum() > 0)
+        if (request.getNum() > 0)
             wear.setVoteActivated(true);
         else
             wear.setVoteActivated(false);
 
         Wear savedWear = wearRepository.save(wear);
 
-        if(request.getNum() > 0){
+        if (request.getNum() > 0) {
             Vote vote = new Vote();
             vote.setWear(savedWear);
             vote.setEndTime(request.getEndtime());
@@ -77,7 +77,7 @@ public class WearService {
             Vote savedVote = voteRepository.save(vote);
             //vote 생성
 
-            for (int i = 0; i < request.getNum(); i++){
+            for (int i = 0; i < request.getNum(); i++) {
                 VoteItem voteItem = new VoteItem();
                 voteItem.setVote(savedVote);
 
@@ -104,7 +104,7 @@ public class WearService {
             VoteDTO voteDTO = new VoteDTO();
             voteDTO.setIdx(voteItem.getIdx());
             voteDTO.setCount(voteItem.getCount());
-            if(voteChoice != null)
+            if (voteChoice != null)
                 voteDTO.setChoice(true);
             else
                 voteDTO.setChoice(false);
@@ -141,7 +141,7 @@ public class WearService {
             VoteDTO voteDTO = new VoteDTO();
             voteDTO.setIdx(voteItem.getIdx());
             voteDTO.setCount(voteItem.getCount());
-            if(voteChoice != null)
+            if (voteChoice != null)
                 voteDTO.setChoice(true);
             else
                 voteDTO.setChoice(false);
@@ -174,7 +174,7 @@ public class WearService {
         wearReply.setDepth(request.getDepth());
         wearReply.setContent(request.getContent());
         WearReply savedReply = replyRepository.save(wearReply);
-        if(savedReply.getDepth() == 1)
+        if (savedReply.getDepth() == 1)
             savedReply.setGroupNum(request.getGroupNum());
         else
             savedReply.setGroupNum(savedReply.getIdx());
@@ -220,14 +220,14 @@ public class WearService {
 
     }
 
-    public List<VoteDTO> voteChoice(Long idx, String nickname){
+    public List<VoteDTO> voteChoice(Long idx, String nickname) {
         VoteItem voteItem = voteItemRepository.findVoteItemByIdx(idx);
         User user = userRepository.findUserByNickname(nickname);
 
         VoteChoice voteChoice = voteChoiceRepository.findVoteChoiceByVoteItemAndUser(voteItem, user);
 
-        if(voteChoice != null) {
-            if(voteChoice.getFlag()){
+        if (voteChoice != null) {
+            if (voteChoice.getFlag()) {
 
                 voteChoice.setFlag(false);
 
@@ -265,14 +265,14 @@ public class WearService {
 
     }
 
-    public List<WearReplyDTO> replyLike(Long idx, String nickname){
+    public List<WearReplyDTO> replyLike(Long idx, String nickname) {
         WearReply reply = replyRepository.findReplyByIdx(idx);
         User user = userRepository.findUserByNickname(nickname);
 
         WearReplyLike replyLike = replyLikeRepository.findReplyLikeByReplyAndUser(reply, user);
 
-        if(replyLike != null){
-            if(replyLike.getFlag()){
+        if (replyLike != null) {
+            if (replyLike.getFlag()) {
 
                 replyLike.setFlag(false);
 
@@ -312,7 +312,7 @@ public class WearService {
 
     }
 
-    public List<WearReplyDTO> replyList(Long idx, String nickname){
+    public List<WearReplyDTO> replyList(Long idx, String nickname) {
         List<WearReplyDTO> replyDTOList = new ArrayList<>();
 
         Wear wear = wearRepository.findWearByIdx(idx);
@@ -331,9 +331,12 @@ public class WearService {
             replyDTO.setContent(reply.getContent());
             replyDTO.setGroupNum(reply.getGroupNum());
             replyDTO.setCount(reply.getCount());
-            if(replyLike != null)
-                replyDTO.setLike(true);
-            else
+            if (replyLike != null) {
+                if (replyLike.getFlag())
+                    replyDTO.setLike(true);
+                else
+                    replyDTO.setLike(false);
+            } else
                 replyDTO.setLike(false);
             replyDTO.setFlag(reply.getFlag());
 

@@ -8,8 +8,6 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import javax.transaction.Transactional;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,13 +21,15 @@ public class OotdService {
     private final OotdLikeRepository ootdLikeRepository;
     private final OotdReplyRepository ootdReplyRepository;
     private final UserRepository userRepository;
+    private final OotdReplyLikeRepository ootdReplyLikeRepository;
 
-    public OotdService(OotdRepository ootdRepository, HashtagRepository hashtagRepository, OotdLikeRepository ootdLikeRepository, OotdReplyRepository ootdReplyRepository, UserRepository userRepository) {
+    public OotdService(OotdRepository ootdRepository, HashtagRepository hashtagRepository, OotdLikeRepository ootdLikeRepository, OotdReplyRepository ootdReplyRepository, UserRepository userRepository, OotdReplyLikeRepository ootdReplyLikeRepository) {
         this.ootdRepository = ootdRepository;
         this.hashtagRepository = hashtagRepository;
         this.ootdLikeRepository = ootdLikeRepository;
         this.ootdReplyRepository = ootdReplyRepository;
         this.userRepository = userRepository;
+        this.ootdReplyLikeRepository = ootdReplyLikeRepository;
     }
 
 
@@ -106,17 +106,6 @@ public class OotdService {
         ot.setFlag(false); // 해당 ootd 글 비활성화
     }
 
-
-    //좋아요 해제 시, 좋아요 테이블에서 좋아요를 누른 사람의 정보 삭제
-    public void likedown(Long ootdIdx, String nickname) {
-        TypedQuery<OotdLike> query = entityManager.createQuery("select l from OotdLike l where l.ootd.idx =:ootdIdx and " +
-                "l.user.nickname = :nickname",OotdLike.class);
-        query.setParameter("ootdIdx",ootdIdx).setParameter("nickname",nickname);
-//        OotdLike ootdLike = ootdLikeRepository.findByOotdIdxAndNickname(ootdIdx, nickName);
-        OotdLike ootdLike = query.getSingleResult();
-        ootdLike.setFlag(false);
-    }
-
     //검색창에서 해시태그를 검색하거나 해시태그를 눌렀을때 해당해시태그가 포함된 모든 Ootd글들을 가져온다.
     public List<OotdMainDTO> searchByHashtag(String hashtag) {
         //우선 hashtag를 포함하는 모든 해시태그 테이블의 레코드를 가져온다.
@@ -157,7 +146,7 @@ public class OotdService {
         //만약 해시태그도 추가했다면 해시태그 테이블에도 레코드 추가해야한다.
         if (ootdWriteDTO.getHashtagList().size() != 0) {
             TypedQuery<Ootd> query = entityManager.createQuery("select o from Ootd o where o.user.nickname = :nickname and o.content = :content order by o.idx asc ", Ootd.class);
-            query.setParameter("nickname", ootdWriteDTO.getNickName()).setParameter("content",ootdWriteDTO.getContent());
+            query.setParameter("nickname", ootdWriteDTO.getNickName()).setParameter("content", ootdWriteDTO.getContent());
             Ootd ot = query.getSingleResult();
 
             List<String> hashtagList = ootdWriteDTO.getHashtagList();
@@ -192,20 +181,30 @@ public class OotdService {
     public List<OotdReplyDTO> writeReply(OotdReplyDTO ootdReplyDTO) {
         List<OotdReplyDTO> replyDTOList = new ArrayList<>();
         //1. 우선 댓글을 작성
+        //2. 댓글 그룹은 일단 넣고 나서 업데이트!
         OotdReply ootdReply = new OotdReply();
-        User user = userRepository.findUserByNickname(ootdReplyDTO.getNickname());
-        Ootd ootd = ootdRepository.findByIdx(ootdReplyDTO.getOotd_idx());
-        ootdReply.setOotd(ootd);
-        ootdReply.setFlag(true);
-        ootdReply.setContent(ootdReplyDTO.getContent());
-        ootdReply.setCount(0);
-        ootdReply.setDepth((long) 0);
-        ootdReply.setGroupNum(ootd.getIdx());
-        ootdReply.setWriteDate(LocalDateTime.now());
-        ootdReply.setUser(user);
-        ootdReply.setCount(0);
-        ootdReplyRepository.save(ootdReply);
+        User user = new User();
+        Ootd ootd = new Ootd();
 
+        user = userRepository.findUserByNickname(ootdReplyDTO.getNickname());
+        ootd = ootdRepository.findOotdByIdx(ootdReplyDTO.getOotd_idx());
+
+        ootdReply.setUser(user);
+        ootdReply.setOotd(ootd);
+        ootdReply.setDepth(ootdReplyDTO.getDepth());
+        ootdReply.setContent(ootdReplyDTO.getContent());
+        OotdReply savedReply = ootdReplyRepository.save(ootdReply);
+        if (savedReply.getDepth() == 1)
+            savedReply.setGroupNum(ootdReplyDTO.getGroupNum());
+        else
+            savedReply.setGroupNum(savedReply.getIdx());
+
+        ootdReplyRepository.save(savedReply);
+        ootdReplyRepository.save(savedReply);
+
+//        List<OotdReplyDTO> ootdreplyDTOList = new ArrayList<>();
+//
+//        replyDTOList = replyList(ootdReplyDTO.getOotd_idx(), ootdReplyDTO.getNickname());
 
         //2. 전체 댓글을 리턴
         List<OotdReply> ootdReplyList = ootdReplyRepository.findOotdReplyByOrderByWriteDate();
@@ -221,29 +220,159 @@ public class OotdService {
             ootdreplDTO.setFlag(ootdReplyList.get(i).getFlag());
             replyDTOList.add(ootdreplDTO);
         }
+//        return ootdreplyDTOList;
         return replyDTOList;
     }
-
 
     public List<OotdReplyDTO> updateReply(OotdReplyUpdateDTO ootdReplyUpdateDTO) {
         // 우선 수정부터 해준다.
         List<OotdReplyDTO> ootdReplyDTOList = new ArrayList<>();
-        OotdReply ootdReply = entityManager.find(OotdReply.class,ootdReplyUpdateDTO.getReplyIdx());
+        OotdReply ootdReply = entityManager.find(OotdReply.class, ootdReplyUpdateDTO.getReplyIdx());
         ootdReply.setContent(ootdReplyUpdateDTO.getContent());
         // 전체 댓글 리스트 리턴
-        List<OotdReply> ootdReplyList = ootdReplyRepository.findOotdReplyByOrderByWriteDate();
-        for (int i = 0; i < ootdReplyList.size(); i++) {
-            OotdReplyDTO ootdreplDTO = new OotdReplyDTO();
-            ootdreplDTO.setIdx(ootdReplyList.get(i).getIdx());
-            ootdreplDTO.setOotd_idx(ootdReplyList.get(i).getOotd().getIdx());
-            ootdreplDTO.setNickname(ootdReplyList.get(i).getUser().getNickname());
-            ootdreplDTO.setContent(ootdReplyList.get(i).getContent());
-            ootdreplDTO.setDepth(ootdReplyList.get(i).getDepth());
-            ootdreplDTO.setGroupNum(ootdReplyList.get(i).getGroupNum());
-            ootdreplDTO.setWrite_date(ootdReplyList.get(i).getWriteDate());
-            ootdreplDTO.setFlag(ootdReplyList.get(i).getFlag());
-            ootdReplyDTOList.add(ootdreplDTO);
-        }
+        List<OotdReplyDTO> replyDTOList = new ArrayList<>();
+        replyDTOList = replyList(ootdReply.getOotd().getIdx(), ootdReply.getUser().getNickname());
+//        List<OotdReply> ootdReplyList = ootdReplyRepository.findOotdReplyByOrderByWriteDate();
+//        for (int i = 0; i < ootdReplyList.size(); i++) {
+//            OotdReplyDTO ootdreplDTO = new OotdReplyDTO();
+//            ootdreplDTO.setIdx(ootdReplyList.get(i).getIdx());
+//            ootdreplDTO.setOotd_idx(ootdReplyList.get(i).getOotd().getIdx());
+//            ootdreplDTO.setNickname(ootdReplyList.get(i).getUser().getNickname());
+//            ootdreplDTO.setContent(ootdReplyList.get(i).getContent());
+//            ootdreplDTO.setDepth(ootdReplyList.get(i).getDepth());
+//            ootdreplDTO.setGroupNum(ootdReplyList.get(i).getGroupNum());
+//            ootdreplDTO.setWrite_date(ootdReplyList.get(i).getWriteDate());
+//            ootdreplDTO.setFlag(ootdReplyList.get(i).getFlag());
+//            ootdReplyDTOList.add(ootdreplDTO);
+//        }
         return ootdReplyDTOList;
+    }
+
+    public int ootdLikeCount(OotdLikeCountDTO ootdLikeCountDTO) {
+        //2. 안눌렀을 경우, 좋아요 추가
+
+        //좋아요를 누른 ootd글을 가져온다.
+        Ootd ootd = entityManager.find(Ootd.class, ootdLikeCountDTO.getOotdIdx());
+        //좋아요를 누른 사용자 정보를 가져온다.
+        User user = userRepository.findUserByNickname(ootdLikeCountDTO.getNickname());
+        if (ootdLikeCountDTO.getChk()) {//좋아요 +1
+            ootd.setCount(ootd.getCount() + 1);
+            //ootdlike테이블에 좋아요 한 정보 추가
+            OotdLike ootdLikeFind = ootdLikeRepository.findOotdLikeByOotdIdxAndUser(ootdLikeCountDTO.getOotdIdx(), user);
+            if (ootdLikeFind.equals(null)) {
+                OotdLike ootdLike = new OotdLike();
+                ootdLike.setFlag(true);
+                ootdLike.setOotd(ootd);
+                ootdLike.setUser(user);
+                ootdLikeRepository.save(ootdLike);
+            } else {
+                ootdLikeFind.setFlag(true);
+            }
+        } else {// 좋아요 -1
+            OotdLike ootdLike = ootdLikeRepository.findOotdLikeByOotdIdxAndUser(ootd.getIdx(), user);
+            ootdLike.setFlag(false);
+            ootd.setCount(ootd.getCount() - 1);
+            ootdLikeRepository.save(ootdLike);
+        }
+        return ootd.getCount();
+    }
+
+    public List<OotdReplyDTO> deleteReply(OotdDeleteDTO ootdDeleteDTO) {
+        OotdReply ootdReply = ootdReplyRepository.findReplyByIdx(ootdDeleteDTO.getReply_idx());
+        ootdReply.setFlag(false);
+        List<OotdReplyDTO> replyDTOList = new ArrayList<>();
+        replyDTOList = replyList(ootdReply.getOotd().getIdx(), ootdReply.getUser().getNickname());
+//        List<OotdReplyDTO> ootdReplyDTOList = new ArrayList<>();
+//        List<OotdReply> ootdReplyList = ootdReplyRepository.findOotdReplyByOrderByWriteDate();
+//        for (int i = 0; i < ootdReplyList.size(); i++) {
+//            OotdReplyDTO ootdreplDTO = new OotdReplyDTO();
+//            ootdreplDTO.setIdx(ootdReplyList.get(i).getIdx());
+//            ootdreplDTO.setOotd_idx(ootdReplyList.get(i).getOotd().getIdx());
+//            ootdreplDTO.setNickname(ootdReplyList.get(i).getUser().getNickname());
+//            ootdreplDTO.setContent(ootdReplyList.get(i).getContent());
+//            ootdreplDTO.setDepth(ootdReplyList.get(i).getDepth());
+//            ootdreplDTO.setGroupNum(ootdReplyList.get(i).getGroupNum());
+//            ootdreplDTO.setWrite_date(ootdReplyList.get(i).getWriteDate());
+//            ootdreplDTO.setFlag(ootdReplyList.get(i).getFlag());
+//            ootdReplyDTOList.add(ootdreplDTO);
+//        }
+        return replyDTOList;
+    }
+
+    public List<OotdReplyDTO> ootdReplyLike(Long idx, String nickname) {
+        OotdReply reply = ootdReplyRepository.findOotdReplyByIdx(idx);
+        User user = userRepository.findUserByNickname(nickname);
+
+        OotdReplyLike replyLike = ootdReplyLikeRepository.findOotdReplyLikeByOotdReplyAndUser(reply, user);
+
+        if (replyLike != null) { //누가 좋아요했는지 정보가 있으면
+            if (replyLike.getFlag()) { //
+
+                replyLike.setFlag(false);
+
+                reply.setCount(reply.getCount() - 1);
+
+                ootdReplyRepository.save(reply);
+
+            } else {
+
+                replyLike.setFlag(true);
+
+                reply.setCount(reply.getCount() + 1);
+
+                ootdReplyRepository.save(reply);
+
+            }
+
+        } else {
+            OotdReplyLike createReplyLike = new OotdReplyLike();
+
+            createReplyLike.setOotdReply(reply);
+            createReplyLike.setUser(user);
+
+            ootdReplyLikeRepository.save(createReplyLike);
+
+            reply.setCount(reply.getCount() + 1);
+
+            ootdReplyRepository.save(reply);
+
+        }
+
+        List<OotdReplyDTO> replyDTOList = new ArrayList<>();
+
+        replyDTOList = replyList(reply.getOotd().getIdx(), reply.getUser().getNickname());
+
+        return replyDTOList;
+
+    }
+    public List<OotdReplyDTO> replyList(Long idx, String nickname){
+        List<OotdReplyDTO> replyDTOList = new ArrayList<>();
+
+        Ootd ootd = ootdRepository.findOotdByIdx(idx);
+        List<OotdReply> replyList = ootdReplyRepository.findOotdReplyByOotdOrderByWriteDate(ootd);
+        User user = userRepository.findUserByNickname(nickname);
+
+        for (OotdReply reply : replyList) {
+            OotdReplyLike replyLike;
+            replyLike = ootdReplyLikeRepository.findOotdReplyLikeByOotdReplyAndUser(reply, user);
+
+            OotdReplyDTO replyDTO = new OotdReplyDTO();
+            replyDTO.setIdx(reply.getIdx());
+            replyDTO.setNickname(reply.getUser().getNickname());
+            replyDTO.setDepth(reply.getDepth());
+            replyDTO.setWrite_date(reply.getWriteDate());
+            replyDTO.setContent(reply.getContent());
+            replyDTO.setGroupNum(reply.getGroupNum());
+            replyDTO.setCount(reply.getCount());
+            if(replyLike != null)
+                replyDTO.setLike(true);
+            else
+                replyDTO.setLike(false);
+            replyDTO.setFlag(reply.getFlag());
+
+            replyDTOList.add(replyDTO);
+        }
+
+        return replyDTOList;
     }
 }

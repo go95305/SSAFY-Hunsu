@@ -2,6 +2,7 @@ package com.project.hunsu.controller;
 
 import com.project.hunsu.model.entity.Ootd;
 import com.project.hunsu.model.entity.OotdLike;
+import com.project.hunsu.model.entity.OotdReply;
 import com.project.hunsu.model.entity.User;
 import com.project.hunsu.service.OotdService;
 import com.project.hunsu.model.dto.*;
@@ -104,28 +105,8 @@ public class OotdController {
             "                                          Parameter: nickname,ootdidx,boolean(true: 좋아요+1 false: 좋아요-1)\n" +
             "                                          Response: 수정된 좋아요 개수(count)") // 성공
     public int ootdLike(@Valid @RequestBody OotdLikeCountDTO ootdLikeCountDTO) {
-        Ootd ootd = entityManager.find(Ootd.class, ootdLikeCountDTO.getOotdIdx());
-        User user = entityManager.find(User.class, ootdLikeCountDTO.getNickname());
-        if (ootdLikeCountDTO.getChk()) {//좋아요 +1
-            ootd.setCount(ootd.getCount() + 1);
-            //ootdlike테이블에서 기존 좋아요했다가 취소한 적이있으면 가져와서 그것을 true로 해주고, 없으면 새로 만든다.
-            OotdLike ootdLike = entityManager.find(OotdLike.class, ootdLikeCountDTO.getOotdIdx());
-            if (ootdLike == null) {
-                ootdLike.setOotd(ootd);
-                ootdLike.setUser(user);
-                ootdLike.setFlag(true);
-            } else {
-                OotdLike ol = new OotdLike();
-                ol.setFlag(true);
-                ol.setOotd(ootd);
-                ol.setUser(user);
-            }
-            entityManager.persist(ootdLike);
-        } else {// 좋아요 -1
-            ootd.setCount(ootd.getCount() - 1);
-            ootdService.likedown(ootd.getIdx(), user.getNickname());
-        }
-        return ootd.getCount();
+        int likeCount = ootdService.ootdLikeCount(ootdLikeCountDTO);
+        return likeCount;
     }
 
 
@@ -157,16 +138,37 @@ public class OotdController {
     }
 
     @PostMapping("/ootd/reply")
-    @ApiOperation(value = "Ootd글 댓글 작성")
+    @ApiOperation(value = "Ootd글 댓글 작성 (O)", notes = "Parameter: idx(null),ootd_idx,nickname,content,depth,write_date(null),like(null),groupNum(null),count(0),flag(null) \n" +
+            "                                       Response: 리스트 목록 전체")
     public List<OotdReplyDTO> ootdReplyWrite(@Valid @RequestBody OotdReplyDTO ootdreplyDTO) {
-        List<OotdReplyDTO> replyDTOList = ootdService.writeReply(ootdreplyDTO);
-        return replyDTOList;
+        List<OotdReplyDTO> ootdReplyDTOList = ootdService.writeReply(ootdreplyDTO);
+        return ootdReplyDTOList;
     }
 
     @PutMapping("/ootd/reply")
-    @ApiOperation(value = "Ootd글 댓글 작성")
+    @Transactional
+    @ApiOperation(value = "Ootd글 댓글 수정 (O)", notes = "Parameter: reply_idx,content\n" +
+            "                                           Response: 댓글 목록 전체")
     public List<OotdReplyDTO> ootdReplyUpdate(@Valid @RequestBody OotdReplyUpdateDTO ootdReplyUpdateDTO) {
-        List<OotdReplyDTO> replyDTOList = ootdService.updateReply(ootdReplyUpdateDTO);
-        return replyDTOList;
+        List<OotdReplyDTO> ootdReplyDTOList = ootdService.updateReply(ootdReplyUpdateDTO);
+        return ootdReplyDTOList;
+    }
+
+    @DeleteMapping("/ootd/reply")
+    @Transactional
+    @ApiOperation(value = "Ootd글 댓글 삭제 (O)", notes = "Parameter: reply_idx\n" +
+            "                                           Response: 댓글 목록 전체")
+    public List<OotdReplyDTO> ootdReplyDelete(@Valid @RequestBody OotdDeleteDTO ootdDeleteDTO) {
+        List<OotdReplyDTO> ootdReplyDTOList = ootdService.deleteReply(ootdDeleteDTO);
+        return ootdReplyDTOList;
+    }
+
+    @Transactional
+    @PutMapping("/ootd/reply/like/{reply_idx}/{nickname}")
+    @ApiOperation(value = "Ootd 댓글에 대한 좋아요 설정", notes = "Parameter: reply_idx,nickname\n" +
+            "                                                 Response: 댓글 목록 전체")
+    public List<OotdReplyDTO> ootdReplyLike(@PathVariable Long reply_idx, @PathVariable String nickname) {
+        List<OotdReplyDTO> ootdReplyDTOList = ootdService.ootdReplyLike(reply_idx, nickname);
+        return ootdReplyDTOList;
     }
 }
