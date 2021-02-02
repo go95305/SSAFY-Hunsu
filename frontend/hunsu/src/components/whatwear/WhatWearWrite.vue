@@ -54,12 +54,12 @@
             <v-list-item>
               <v-list-item-content>
                 <v-text-field
-                  v-model="whatwear_title"
+                  v-model="whatwearTitle"
                   label="제목"
                   clearable
                 ></v-text-field>
                 <v-textarea
-                  v-model="whatwear_content"
+                  v-model="whatwearContent"
                   clearable
                   clear-icon="mdi-close-circle"
                   label="내용"
@@ -71,12 +71,12 @@
             three-line
             subheader
           >
-            <v-list-item>
+          <v-list-item>
 
               <v-list-item-content>
                   <v-list-item-title class="text-h6 font-weight-bold">사진업로드</v-list-item-title>
                   <v-img
-                    v-if="image" :src="image_url" id="test" contain>
+                    v-if="image" :src="imageUrl" id="test" contain>
                   </v-img>
                   <v-file-input
                     accept="image/*"
@@ -92,9 +92,9 @@
                   <v-list-item-title class="text-h6 font-weight-bold">투표기능</v-list-item-title>
                   </div>
                   <v-img 
-                    v-for="(vote_image_url, idx) in vote_image_urls" 
+                    v-for="(voteImageUrl, idx) in voteImageUrls" 
                     :key="idx" 
-                    :src="vote_image_url">
+                    :src="voteImageUrl">
                   </v-img>
                   <v-file-input
                     :disabled="!vote"
@@ -102,7 +102,7 @@
                     chips
                     accept="image/*"
                     label="File input"
-                    v-model="vote_image"
+                    v-model="voteImage"
                     @change="previewVoteImage()"
                   ></v-file-input>
 
@@ -124,13 +124,13 @@ export default {
     return {
       dialog: false,
       notifications: false,
-      whatwear_title: '',
-      whatwear_content: '',
+      whatwearTitle: '',
+      whatwearContent: '',
       vote: false,
       image: null,
-      image_url: null,
-      vote_image: null,
-      vote_image_urls: [],
+      imageUrl: null,
+      voteImage: null,
+      voteImageUrls: [],
     }
   },
   methods: {
@@ -138,15 +138,15 @@ export default {
       // dialog창 닫기 + 입력데이터 보내기
       this.dialog = false
       const params = {
-        'content': this.whatwear_content,
+        'content': this.whatwearContent,
         'nickname': 'wogml23',
-        'num': 0,
-        'title': this.whatwear_title,
+        'num': 1,
+        'title': this.whatwearTitle,
         
       }
       // 작성폼 초기화
-      this.whatwear_title = '',
-      this.whatwear_content = '',
+      this.whatwearTitle = '',
+      this.whatwearContent = '',
       axios.post('http://i4c102.p.ssafy.io:8080/api/wear', params)
         .then(() => {
           console.log('뭘입을까글쓰기성공')
@@ -156,17 +156,12 @@ export default {
         })
     },
     previewImage() {
-      // console.log(this.image)
-      // this.image_url = null
-      // if (this.image_url !== null) {
-      //   this.image_url = null
-      // }
-      this.image_url = URL.createObjectURL(this.image)
+      this.imageUrl = URL.createObjectURL(this.image)
     },
     previewVoteImage() {
-      console.log(this.vote_image)
-      this.vote_image.forEach(e => this.vote_image_urls.push(URL.createObjectURL(e)))
-      console.log(this.vote_image_urls)
+      console.log(this.voteImage)
+      this.voteImage.forEach(e => this.voteImageUrls.push(URL.createObjectURL(e)))
+      console.log(this.voteImageUrls)
     }
   }
 }

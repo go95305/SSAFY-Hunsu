@@ -1,32 +1,44 @@
 <template>
 <!-- WHATWEAR 메인 페이지 -->
-  <v-card
-    class="mx-auto mt-10"
-    max-width="600px"
-    height="65px"
-    @click="goToWhatWearDetail()"
-  >
-    <div class="d-flex">
-      <v-avatar
-      class="mt-2 ml-4"
-      >
-      <img
-        src="https://cdn.vuetifyjs.com/images/john.jpg"
-        alt="John"
-      >
-    </v-avatar>
-    <v-card-subtitle
-      class="mt-2 font-weight-bold">
-      겨울맞이 아우터 좀 골라주세요!!
-    </v-card-subtitle> 
-      <v-badge
-        color="red accent-3"
-        content="투표"
-        inline
-        class="mt-6">
-      </v-badge>
-    </div>
-  </v-card>
+  <div> <!--v-for 사용을 위한 최상위 div-->
+    <v-card
+      v-for="(whatwear, idx) in whatwearList"
+      :key="idx"
+      class="mx-auto mt-10"
+      max-width="600px"
+      height="65px"
+      @click="goToWhatWearDetail()"
+    >
+      <div class="d-flex">
+        <!--프로필사진-->
+        <v-avatar
+        class="mt-2 ml-4"
+        >
+        <img
+          src="https://cdn.vuetifyjs.com/images/john.jpg"
+          alt="John"
+        >
+      </v-avatar>
+      <!--유저닉네임-->
+      <v-card-subtitle class="mt-1">
+      {{ whatwear.nickname }}
+      </v-card-subtitle>
+      <!--뭘입을까 글제목-->
+      <v-card-subtitle
+        class="mt-1 font-weight-bold">
+        {{ whatwear.title }}
+      </v-card-subtitle> 
+      <!--투표기능뱃지-->
+        <v-badge
+          v-if="whatwear.voteActivated"
+          color="red accent-3"
+          content="투표"
+          inline
+          class="mt-6">
+        </v-badge>
+      </div>
+    </v-card>
+  </div>
 </template>
 
 <script>
@@ -34,8 +46,13 @@ import axios from "axios";
 
 export default {
   name: "WhatWearList",
+  data() {
+    return {
+      whatwearList: [],
+    }
+  },
   created() {
-    // this.getWhatWearList()
+    this.getWhatWearList()
   },
   methods: {
     goToWhatWearDetail() {
@@ -44,8 +61,7 @@ export default {
     getWhatWearList() {
       axios.get('http://i4c102.p.ssafy.io:8080/api/wear')
         .then(res => {
-          console.log('get요청성공')
-          console.log(res)
+          this.whatwearList = res.data
         })
         .catch(err => {
           console.error(err)
