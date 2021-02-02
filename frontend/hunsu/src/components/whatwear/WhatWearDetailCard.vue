@@ -46,6 +46,8 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "WhatWearDetailCard",
   data() {
@@ -56,6 +58,22 @@ export default {
         'secondary',
         'yellow darken-2',
       ]
+    }
+  },
+  created() {
+    this.getWhatwearDetail()
+  },
+  methods: {
+    getWhatwearDetail() {
+      const wear_idx = this.$route.params.no
+      const nickname = this.$route.params.keyword
+      axios.get(`http://i4c102.p.ssafy.io:8080/api/wear/detail/${wear_idx}/${nickname}`)
+        .then(res => {
+          console.log(res)
+        })
+        .catch(err => {
+          console.error(err)
+        })
     }
   }
 }
