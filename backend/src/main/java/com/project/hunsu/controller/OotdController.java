@@ -147,7 +147,7 @@ public class OotdController {
 
     @PutMapping("/ootd/reply")
     @Transactional
-    @ApiOperation(value = "Ootd글 댓글 수정 (O)", notes = "Parameter: reply_idx,content\n" +
+    @ApiOperation(value = "Ootd글 댓글 수정 (~)", notes = "Parameter: reply_idx,content\n" +
             "                                           Response: 댓글 목록 전체")
     public List<OotdReplyDTO> ootdReplyUpdate(@Valid @RequestBody OotdReplyUpdateDTO ootdReplyUpdateDTO) {
         List<OotdReplyDTO> ootdReplyDTOList = ootdService.updateReply(ootdReplyUpdateDTO);
@@ -156,7 +156,7 @@ public class OotdController {
 
     @DeleteMapping("/ootd/reply")
     @Transactional
-    @ApiOperation(value = "Ootd글 댓글 삭제 (O)", notes = "Parameter: reply_idx\n" +
+    @ApiOperation(value = "Ootd글 댓글 삭제 (~)", notes = "Parameter: reply_idx\n" +
             "                                           Response: 댓글 목록 전체")
     public List<OotdReplyDTO> ootdReplyDelete(@Valid @RequestBody OotdDeleteDTO ootdDeleteDTO) {
         List<OotdReplyDTO> ootdReplyDTOList = ootdService.deleteReply(ootdDeleteDTO);
@@ -165,7 +165,7 @@ public class OotdController {
 
     @Transactional
     @PutMapping("/ootd/reply/like/{reply_idx}/{nickname}")
-    @ApiOperation(value = "Ootd 댓글에 대한 좋아요 설정", notes = "Parameter: reply_idx,nickname\n" +
+    @ApiOperation(value = "Ootd 댓글에 대한 좋아요 설정 (~)", notes = "Parameter: reply_idx,nickname\n" +
             "                                                 Response: 댓글 목록 전체")
     public List<OotdReplyDTO> ootdReplyLike(@PathVariable Long reply_idx, @PathVariable String nickname) {
         List<OotdReplyDTO> ootdReplyDTOList = ootdService.ootdReplyLike(reply_idx, nickname);
