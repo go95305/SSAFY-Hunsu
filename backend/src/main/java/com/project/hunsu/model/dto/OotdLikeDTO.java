@@ -1,10 +1,11 @@
 package com.project.hunsu.model.dto;
 
 import lombok.Getter;
+import lombok.Setter;
 
 @Getter
-public class OotdLikeCountDTO {
+@Setter
+public class OotdLikeDTO {
    String nickname;
    Long ootdIdx;
-   Boolean chk;
 }

@@ -5,10 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
@@ -21,22 +18,20 @@ public class User implements Serializable { //왜 Serializable쓰는지 정리�
     @Id
     @GeneratedValue
     @Column(name = "uid")
-    private Long uid;
-
-
-    @Column(name = "nickname",unique = true)
+    private String uid;
     private String nickname;
 
-    @Column(unique = true)
-    private String oauthId;
+    private Boolean flag;
     private String gender;
 
     @Column(name = "access_token")
     private String accessToken;
+    private String refreshToken;
 
     @Column
-    private String providerName;
     private String age;
     private double height;
     private String size;
+    private String jwtRefresh;
+    private String jwtAccess;
 }

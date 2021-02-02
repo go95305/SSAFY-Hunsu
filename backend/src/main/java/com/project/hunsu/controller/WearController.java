@@ -120,7 +120,7 @@ public class WearController {
 
     //투표
     //vote_item_idx, nickname 필요
-    @DeleteMapping(value = "/wear/reply/vote/{vote_item_idx}/{nickname}")
+    @PutMapping(value = "/wear/reply/vote/{vote_item_idx}/{nickname}")
     @Transactional
     @ApiOperation(value = "투표/투표취소 (O)", notes = "idx(vote_item_idx)의 vote_item을 투표/투표취소 해준다.\n" +
             "                                                Parameter: vote_item_idx(path), nickname(path)\n" +

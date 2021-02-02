@@ -10,8 +10,7 @@ import java.util.List;
 public interface HashtagRepository extends JpaRepository<Hashtag,Long> {
 
     List<Hashtag> findHashtagByOotdIdx(Long idx);
-
     List<Hashtag> findByContent(String hashtag);
+    List<Hashtag> findByContentContaining(String hashtag);
 
-    Hashtag findByOotdIdx(Long ootdIdx);
 }

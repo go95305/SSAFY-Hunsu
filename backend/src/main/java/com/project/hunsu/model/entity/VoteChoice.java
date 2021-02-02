@@ -23,7 +23,7 @@ public class VoteChoice {
     private VoteItem voteItem;
 
     @ManyToOne
-    @JoinColumn(name = "nickname",referencedColumnName = "nickname")
+    @JoinColumn(name = "uid")
     private User user;
 
     @Column(name = "flag")

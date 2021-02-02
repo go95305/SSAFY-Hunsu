@@ -25,7 +25,7 @@ public class WearReply {
     private Wear wear;
 
     @ManyToOne
-    @JoinColumn(name = "nickname",referencedColumnName = "nickname")
+    @JoinColumn(name = "uid")
     private User user;
 
     @Column(columnDefinition = "bigint default 0 ")

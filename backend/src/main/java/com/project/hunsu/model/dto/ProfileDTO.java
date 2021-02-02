@@ -8,7 +8,9 @@ import javax.validation.Valid;
 @Valid
 @Getter
 @Setter
-public class MyPageDTO {
-    private String myNickname;
-    private String clickNickname;
+public class ProfileDTO {
+    private String nickname;
+    private String gender;
+    private Double height;
+    private String size;
 }

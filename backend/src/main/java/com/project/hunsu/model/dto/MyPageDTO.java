@@ -8,7 +8,7 @@ import javax.validation.Valid;
 @Valid
 @Getter
 @Setter
-public class UserFollowDTO {
+public class MyPageDTO {
     private String myNickname;
-    private String yourNickname;
+    private String clickNickname;
 }

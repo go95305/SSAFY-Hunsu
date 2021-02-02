@@ -25,7 +25,7 @@ public class OotdLike {
     private Ootd ootd;
 
     @ManyToOne
-    @JoinColumn(name = "nickname",referencedColumnName = "nickname")
+    @JoinColumn(name = "uid")
     private User user;
 
     @Column(name = "flag")

@@ -24,9 +24,8 @@ public class OotdReply {
     @JoinColumn(name = "ootd_idx")
     private Ootd ootd;
 
-
     @ManyToOne
-    @JoinColumn(name = "nickname",referencedColumnName = "nickname")
+    @JoinColumn(name = "uid")
     private User user;
 
     @Column(columnDefinition = "bigint default 0 ")

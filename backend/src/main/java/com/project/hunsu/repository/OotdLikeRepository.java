@@ -10,8 +10,7 @@ import java.util.List;
 @Repository
 public interface OotdLikeRepository extends JpaRepository<OotdLike, Long> {
     OotdLike findOotdLikeByOotdIdxAndUser(Long idx, User user);
+    List<OotdLike> findOotdLikeByUserAndFlag(User user, boolean b);
+    List<OotdLike> findOotdLikeByUser(User user);
 
-//    List<OotdLike> findOotdLikeByOotdIdx(Long idx);
-
-//    OotdLike findByOotdIdxAndNickname(Long ootdIdx, String nickName);
 }

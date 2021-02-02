@@ -19,12 +19,11 @@ public class Follower {
     private Long idx;
 
     @ManyToOne
-    @JoinColumn(name= "memId",referencedColumnName = "nickname")
+    @JoinColumn(name= "memId")
     private User memId;
 
-
     @ManyToOne
-    @JoinColumn(name= "targetId",referencedColumnName = "nickname")
+    @JoinColumn(name= "targetId")
     private User targetId;
 
     @Column(name = "flag")

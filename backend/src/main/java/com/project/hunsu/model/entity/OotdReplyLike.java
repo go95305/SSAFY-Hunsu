@@ -23,7 +23,7 @@ public class OotdReplyLike {
     private OotdReply ootdReply;
 
     @ManyToOne
-    @JoinColumn(name = "nickname",referencedColumnName = "nickname")
+    @JoinColumn(name = "uid")
     private User user;
 
     @Column(name = "flag")

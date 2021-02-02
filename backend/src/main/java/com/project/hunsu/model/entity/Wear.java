@@ -19,7 +19,7 @@ public class Wear {
     private Long idx;
 
     @ManyToOne
-    @JoinColumn(name = "nickname",referencedColumnName = "nickname")
+    @JoinColumn(name = "uid")
     private User user;
 
     private String title;
