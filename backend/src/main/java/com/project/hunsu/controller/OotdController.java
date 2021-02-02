@@ -138,7 +138,8 @@ public class OotdController {
         return ootdMainDTOList;
     }
 
-    @PostMapping("/ootd")
+    @Transactional
+    @PostMapping("/ootd") // 내용, 닉네임 같은것 입력하면 ootd에만 들어가고 해시태그 안들어가는 오류발생
     @ApiOperation(value = "Ootd글 작성 (O)", notes = "Parameter: nickName, content, hashtag\n" +
             "                                        Response: success or fail")
     public ResponseEntity<Map<String, Object>> writeOotd(@Valid @RequestBody OotdWriteDTO ootdWriteDTO) {

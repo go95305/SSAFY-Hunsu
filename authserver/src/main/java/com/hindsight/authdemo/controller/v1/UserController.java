@@ -9,6 +9,7 @@ import com.hindsight.authdemo.model.social.KakaoProfile;
 import com.hindsight.authdemo.model.social.SocialSignUp;
 import com.hindsight.authdemo.repository.UserJpaRepo;
 import com.hindsight.authdemo.service.ResponseService;
+import com.hindsight.authdemo.service.user.UserService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -27,7 +28,7 @@ public class UserController {
 
     private final UserJpaRepo userJpaRepo;
     private final ResponseService responseService; // 결과를 처리할 Service
-
+    private final UserService userService;
 
     // 회원 추가정보 입력 폼이랑 같다면 그냥 폼으로 받으면 안되나?
 //    @ApiImplicitParams({
@@ -60,18 +61,32 @@ public class UserController {
         return responseService.getSingleResult(userJpaRepo.save(user));
     }
 
-
     @ApiImplicitParams({
             @ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header")
     })
+    @DeleteMapping(value = "/user/{Uid}")
     @ApiOperation(value = "회원 삭제", notes = "Uid로 회원정보를 삭제한다")
-    @DeleteMapping(value = "/user/{Uid}") //msrl ->Uid
-    public CommonResult delete(
-            @ApiParam(value = "회원번호", required = true) @PathVariable String Uid) {
-//        userJpaRepo.
-        // 성공 결과 정보만 필요한경우 getSuccessResult()를 이용하여 결과를 출력한다.
+    public CommonResult delete(@ApiParam(value = "회원번호", required = true) @PathVariable String Uid){
+
+        userService.delete(Uid);
+
         return responseService.getSuccessResult();
     }
+
+
+
+//
+//    @ApiImplicitParams({
+//            @ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header")
+//    })
+//    @ApiOperation(value = "회원 삭제", notes = "Uid로 회원정보를 삭제한다")
+//    @DeleteMapping(value = "/user/{Uid}") //msrl ->Uid
+//    public CommonResult delete(
+//            @ApiParam(value = "회원번호", required = true) @PathVariable String Uid) {
+////        userJpaRepo.
+//        // 성공 결과 정보만 필요한경우 getSuccessResult()를 이용하여 결과를 출력한다.
+//        return responseService.getSuccessResult();
+//    }
 
 //    @ApiImplicitParams({
 //            @ApiImplicitParam(name = "X-AUTH-TOKEN", value = "로그인 성공 후 access_token", required = true, dataType = "String", paramType = "header")

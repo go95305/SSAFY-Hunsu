@@ -146,23 +146,22 @@ public class OotdService {
     //ootd글 생성
     public void writeOotd(OotdWriteDTO ootdWriteDTO) {
         Ootd ootd = new Ootd();
-        User user = entityManager.find(User.class, ootdWriteDTO.getNickName());//ootd테이블의 닉네임에 맞는 유저정보를 가져온다.
-
+        User user = userRepository.findUserByNickname(ootdWriteDTO.getNickName());
         //ootd글 새롭게 생성
         ootd.setUser(user);
         ootd.setContent(ootdWriteDTO.getContent());
         ootd.setCount(0);
         ootd.setIsUpdated(false);
-        ootdRepository.save(ootd);
+        entityManager.persist(ootd);
 
         //만약 해시태그도 추가했다면 해시태그 테이블에도 레코드 추가해야한다.
         if (ootdWriteDTO.getHashtagList().size() != 0) {
-            TypedQuery<Ootd> query = entityManager.createQuery("select o from Ootd o where o.user.nickname = :nickname and o.content = :content", Ootd.class);
-
-            query.setParameter("nickname", ootdWriteDTO.getNickName()).setParameter("content", ootdWriteDTO.getContent());
+            TypedQuery<Ootd> query = entityManager.createQuery("select o from Ootd o where o.user.nickname = :nickname and o.content = :content order by o.idx asc ", Ootd.class);
+            query.setParameter("nickname", ootdWriteDTO.getNickName()).setParameter("content",ootdWriteDTO.getContent());
             Ootd ot = query.getSingleResult();
 
             List<String> hashtagList = ootdWriteDTO.getHashtagList();
+
             for (int i = 0; i < hashtagList.size(); i++) {
                 Hashtag hashtag = new Hashtag();
                 hashtag.setContent(hashtagList.get(i));

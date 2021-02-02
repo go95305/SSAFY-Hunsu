@@ -16,12 +16,13 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class User implements Serializable {
+public class User implements Serializable { //왜 Serializable쓰는지 정리하자! ==> Unique key를 외래키로 받으면 생기는데 왜??
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue
     @Column(name = "uid")
     private Long uid;
+
 
     @Column(name = "nickname",unique = true)
     private String nickname;

@@ -13,8 +13,8 @@ public class CustomUserDetailService implements UserDetailsService {
     private final UserJpaRepo userJpaRepo;
 
     @Override
-    public UserDetails loadUserByUsername(String userPk){
+    public UserDetails loadUserByUsername(String Uid){
 //        return userJpaRepo.findById(Long.valueOf(userPk)).orElseThrow(CUserNotFoundException::new);
-        return userJpaRepo.findByNickname(userPk);
+        return userJpaRepo.findByNickname(Uid);
     }
 }

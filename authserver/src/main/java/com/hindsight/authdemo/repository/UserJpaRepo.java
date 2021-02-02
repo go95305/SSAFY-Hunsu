@@ -11,9 +11,13 @@ public interface UserJpaRepo extends JpaRepository<User, Long> {
 
 //    Optional<User> findByNicknameAndProviderName(String nickname, String provider);
 //    Optional<User> findByOauthIdAndProviderName(String ouathId, String provider);
-//    User findByNickname(String nickname);
+    User findByNickname(String nickname);
 
-    Optional<User> findByUid(String UID);
+    Optional<User> findUserByUid(String Uid);       // User테이블에서 Uid
 
-    UserDetails findByNickname(String nickname);
+    Optional<User> findUserByNickname(String nickname);
+
+
+
+
 }

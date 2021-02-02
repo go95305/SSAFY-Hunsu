@@ -36,7 +36,7 @@ class UserJpaRepoTest {
                     .build());
 
         //when
-        Optional<User> user = userJpaRepo.findByUid(uid);
+        Optional<User> user = userJpaRepo.findUserByUid(uid);
         //then
         assertNotNull(user);
         assertTrue(user.isPresent());

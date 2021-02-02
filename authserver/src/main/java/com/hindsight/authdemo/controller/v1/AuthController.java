@@ -57,11 +57,15 @@ public class AuthController {
         KakaoProfile profile = kakaoService.getKakaoProfile(socialAccessToken);
 //        User user = userJpaRepo.findByOauthIdAndProviderName(String.valueOf(profile.getId()), provider)
 //                .orElseThrow(CUserNotFoundException::new);
-        User user = userJpaRepo.findByUid(String.valueOf(profile.getUid())).orElseThrow(CUserNotFoundException::new);
+        User user = userJpaRepo.findUserByUid(String.valueOf(profile.getUid())).orElseThrow(CUserNotFoundException::new);
+
+//        if(user.isFlag()){
+//            //true면!!!!!!!!
+//
+//        }
         //jwt token들 생성
         String apiAccessToken = jwtTokenProvider.generateToken(String.valueOf(user.getUID()),user.getRoles());
         String apiRefreshToken = jwtTokenProvider.generateRefreshToken(String.valueOf(user.getUID()), user.getRoles());
-
 //        String apiAccessToken = jwtTokenProvider.generateToken(String.valueOf(user.getUsername()), user.getRoles());
 //        String apiRefreshToken = jwtTokenProvider.generateRefreshToken(String.valueOf(user.getUsername()), user.getRoles());
 
@@ -84,7 +88,7 @@ public class AuthController {
         }
 
 //        Optional<User> user = userJpaRepo.findByNicknameAndProviderName(String.valueOf(form.getNickname()), form.getProvider());
-        Optional<User> user = userJpaRepo.findByUid((String.valueOf(profile.getUid())));
+        Optional<User> user = userJpaRepo.findUserByUid((String.valueOf(profile.getUid())));
         if(user.isPresent())
             throw new CUserExistException();
 
