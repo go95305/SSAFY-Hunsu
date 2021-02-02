@@ -82,7 +82,7 @@ export default {
         .get("http://i4c102.p.ssafy.io:8080/api/ootd/0")
         .then((res) => {
           this.ootdList = res.data;
-          console.log("ootd List ", this.ootdList);
+          // console.log("ootd List ", this.ootdList);
         })
         .catch((err) => {
           console.error(err);

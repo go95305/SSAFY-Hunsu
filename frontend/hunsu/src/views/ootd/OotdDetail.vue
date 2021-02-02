@@ -66,7 +66,15 @@
           <!-- 본문 내용 -->
           <v-list-item-title>{{ getOotdInfo.content }}</v-list-item-title>
           <!-- 해쉬태그 -->
-          <v-list-item-subtitle>#ootd #ootd #ootd</v-list-item-subtitle>
+          <v-list-item-subtitle>
+            <!-- 추후 해쉬태그에 검색 링크 걸 예정 -->
+            <pre
+              v-for="(hashtag, i) in getOotdInfo.hashTag"
+              :key="i"
+              style="display: inline"
+              >{{ "#" + hashtag }}</pre
+            >
+          </v-list-item-subtitle>
         </v-list-item-content>
         <v-list-item-action>
           <v-btn icon>
