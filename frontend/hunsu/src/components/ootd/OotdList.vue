@@ -4,10 +4,13 @@
   <!-- OOTD 하나 클릭하면 디테일페이지 뜨는 섹션 -->
   <!-- <router-view></router-view> -->
   <v-card
+    v-for="(ootd, idx) in ootds"
+    :key="idx"
+    :ootd="ootd"
     elevation="24"
     max-width="450"
     class="mx-auto"
-    @click="goToOotdDetail"
+    @click="goToOotdDetail(ootd)"
   >
     <v-system-bar lights-out></v-system-bar>
     <!-- OOTD 사진 -->
@@ -47,8 +50,8 @@
           <v-img src="https://cdn.vuetifyjs.com/images/john.png"></v-img>
         </v-list-item-avatar>
         <v-list-item-content>
-          <v-list-item-title>John Leider</v-list-item-title>
-          <v-list-item-subtitle>Author</v-list-item-subtitle>
+          <v-list-item-title>{{ootd.content}}</v-list-item-title>
+          <v-list-item-subtitle>{{ootd.nickName}}</v-list-item-subtitle>
         </v-list-item-content>
         <v-list-item-action>
           <!-- 좋아요 버튼 -->
@@ -63,30 +66,36 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
   export default {
     name: "OotdList",
     data () {
-          return {
-            colors: [
-              'green',
-              'secondary',
-              'yellow darken-4',
-              'red lighten-2',
-              'orange darken-1',
-            ],
-            cycle: false,
-            slides: [
-              'First',
-              'Second',
-              'Third',
-              'Fourth',
-              'Fifth',
-            ],
-          }
-        },
+      return {
+        colors: [
+          'green',
+          'secondary',
+          'yellow darken-4',
+          'red lighten-2',
+          'orange darken-1',
+        ],
+        cycle: false,
+        slides: [
+          'First',
+          'Second',
+          'Third',
+          'Fourth',
+          'Fifth',
+        ],
+      }
+    },
+    computed: {
+      ...mapState([
+        'ootds',
+      ])
+    },
     methods: {
-      goToOotdDetail() {
-        this.$router.push('/ootd/detail')
+      goToOotdDetail(ootd) {
+        this.$router.push(`ootd/detail/${ootd.idx}`)
       }
     }
   }
