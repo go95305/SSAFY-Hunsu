@@ -6,7 +6,7 @@
       hide-overlay
       transition="dialog-bottom-transition"
     >
-      <!--뭘입을까 메인화면에 보이는작성버튼-->
+      <!--뭘입을까 메인화면에 보이는 작성버튼-->
       <template v-slot:activator="{ on, attrs }">
         <div id="whatwear_writebtn">
           <v-btn
@@ -23,7 +23,6 @@
       </template>
       
       <v-card>
-        <div v-if="first">
         <!--작성창 상단바-->
         <v-toolbar
           dark
@@ -40,170 +39,147 @@
           <v-spacer></v-spacer>
           <v-toolbar-items>
             <v-btn
-              dark
+              
               text
-              @click="goToNext()"
-              disabled
-            >
-              다음
-            </v-btn>
-          </v-toolbar-items>
-        </v-toolbar>
-        <!--진행 상태 선, 작성이 다 완료 되었을때 value50으로-->
-        <v-progress-linear 
-          v-model="valueDeterminate"
-          color="red accent-3">
-        </v-progress-linear>
-          <!--1단계 작성폼-->
-          <v-list
-            three-line
-            subheader
-          >
-            <v-list-item>
-              <v-list-item-content>
-                <v-list-item-title class="text-h6 font-weight-bold mb-2">사진업로드</v-list-item-title>
-                  <v-img
-                    max-height="300"
-                    max-width="400"
-                    src="@/assets/null_photo.png"
-                  ></v-img>
-                  <v-file-input
-                    accept="image/*"
-                    label="File input"
-                    hide-input
-                  ></v-file-input>
-              </v-list-item-content>
-            </v-list-item>
-          </v-list>
-          <v-divider></v-divider>
-          <v-list
-            three-line
-            subheader
-          >
-            <v-list-item>
-              <v-list-item-action id="whatwear_input_vote">
-                <v-checkbox v-model="vote"></v-checkbox>
-                <v-list-item-title class="mt-1 ml-1">투표기능</v-list-item-title>
-              </v-list-item-action>
-            </v-list-item>
-            <v-list-item-content>
-              <v-list-item-title class="text-h6 font-weight-bold mb-2">사진업로드</v-list-item-title>
-                <v-img
-                  max-height="300"
-                  max-width="400"
-                  src="@/assets/null_photo.png"
-                  ></v-img>
-                <v-file-input
-                  :disabled="!vote"
-                  multiple
-                  accept="image/*"
-                  label="File input"
-                ></v-file-input>
-            </v-list-item-content>
-          </v-list>
-        </div>
-
-        <!--다음 버튼 눌렀을 때 보여 줄 공간-->
-        <div v-else>
-                  <v-toolbar
-          dark
-          color="black"
-        >
-          <v-btn
-            icon
-            dark
-            @click="dialog = false"
-          >
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-          <v-toolbar-title>뭘입을까 작성</v-toolbar-title>
-          <v-spacer></v-spacer>
-          <v-toolbar-items>
-            <v-btn
-              dark
-              text
-              @click="CreateWhatWear()"
+              @click="createWhatWear()"
             >
               완료
             </v-btn>
           </v-toolbar-items>
         </v-toolbar>
-        <v-progress-linear v-model="valueDeterminate"></v-progress-linear>
           <v-list
             three-line
             subheader
           >
             <v-list-item>
               <v-list-item-content>
-                <v-list-item-title>두번째</v-list-item-title>
+                <v-text-field
+                  v-model="whatwearTitle"
+                  label="제목"
+                  clearable
+                  counter="30"
+                  :rules="[rules.required, rules.min, rules.titleMax]"
+                ></v-text-field>
+                <v-textarea
+                  v-model="whatwearContent"
+                  clearable
+                  clear-icon="mdi-close-circle"
+                  :rules="[rules.required, rules.min, rules.contentMax]"
+                  counter="300"
+                  label="내용"
+                ></v-textarea>
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
+          <v-list
+            three-line
+            subheader
+          >
+          <v-list-item>
+
+              <v-list-item-content>
+                  <v-list-item-title class="text-h6 font-weight-bold">사진업로드</v-list-item-title>
+                  <v-img
+                    v-if="image" :src="imageUrl" id="test" contain>
+                  </v-img>
                   <v-file-input
                     accept="image/*"
                     label="File input"
+                    chips
+                    clearable
+                    v-model="image"
+                    @change="previewImage()"
                   ></v-file-input>
+
+                  <div id="votebtn">
+                  <v-checkbox v-model="vote"></v-checkbox>
+                  <v-list-item-title class="text-h6 font-weight-bold">투표기능</v-list-item-title>
+                  </div>
+                  <v-img 
+                    v-for="(voteImageUrl, idx) in voteImageUrls" 
+                    :key="idx" 
+                    :src="voteImageUrl">
+                  </v-img>
+                  <v-file-input
+                    :disabled="!vote"
+                    multiple
+                    chips
+                    accept="image/*"
+                    label="File input"
+                    v-model="voteImage"
+                    @change="previewVoteImage()"
+                  ></v-file-input>
+
               </v-list-item-content>
             </v-list-item>
-            <v-list-item>
-            </v-list-item>
+
           </v-list>
-          <v-divider></v-divider>
-          <v-list
-            three-line
-            subheader
-          >
-            <v-list-item>
-              <v-list-item-action>
-                <v-checkbox v-model="notifications"></v-checkbox>
-              </v-list-item-action>
-              <v-list-item-content>
-                <v-list-item-title class="mt-10">투표기능</v-list-item-title>
-                <v-list-item-subtitle></v-list-item-subtitle>
-              </v-list-item-content>
-            </v-list-item>
-            <v-list-item-content>
-              <v-list-item-title>사진업로드</v-list-item-title>
-                <v-file-input
-                  multiple
-                  accept="image/*"
-                  label="File input"
-                ></v-file-input>
-            </v-list-item-content>
-          </v-list>
-        </div>
       </v-card>
     </v-dialog>
   </v-layout>
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "WhatWearWrite",
   data() {
     return {
       dialog: false,
       notifications: false,
-      valueDeterminate: 0,
-      first: true,
+      whatwearTitle: '',
+      whatwearContent: '',
       vote: false,
+      image: null,
+      imageUrl: null,
+      voteImage: null,
+      voteImageUrls: [],
+      rules: {
+        required: v => !!v || "Required",
+        min: v => v.trim().length > 0 || "공백안됨",
+        titleMax: v => v.length <= 30 || "30자이하",
+        contentMax: v => v.length <= 300 || "300자이하",
+      }
     }
   },
   methods: {
-    goToNext() {
-      // 첫번째 단계에서 두번째 단계 창 이동 + 진행바 절반채우기
-      // 입력값이 채워졌는지 확인이랑 안채워졌을때 '값을 입력하라는' 알림창기능추가하기
-      this.first = false
-      this.valueDeterminate = 50
-    },
-    CreateWhatWear() {
+    createWhatWear() {
       // dialog창 닫기 + 입력데이터 보내기
       this.dialog = false
+      const params = {
+        'content': this.whatwearContent,
+        'nickname': 'wogml23',
+        'num': 1,
+        'title': this.whatwearTitle,
+        
+      }
+      // 작성폼 초기화
+      this.whatwearTitle = '',
+      this.whatwearContent = '',
+      axios.post('http://i4c102.p.ssafy.io:8080/api/wear', params)
+        .then(() => {
+          console.log('뭘입을까글쓰기성공')
+        })
+        .catch(err => {
+          console.error(err)
+        })
+    },
+    previewImage() {
+      this.imageUrl = URL.createObjectURL(this.image)
+    },
+    previewVoteImage() {
+      console.log(this.voteImage)
+      this.voteImage.forEach(e => this.voteImageUrls.push(URL.createObjectURL(e)))
+      console.log(this.voteImageUrls)
     }
   }
 }
 </script>
 
 <style>
-#whatwear_input_vote {
-  display: -webkit-box;
+#votebtn {
+  display: flex;
 }
 
 </style>

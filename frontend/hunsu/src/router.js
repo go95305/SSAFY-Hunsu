@@ -35,7 +35,7 @@ const routes = [
     component: Ootd,
   },
   {
-    path: '/ootd/detail',
+    path: '/ootd/detail/:no',
     name: 'OotdDetail',
     component: OotdDetail,
   },
@@ -55,7 +55,7 @@ const routes = [
     component: Login,
   },
   {
-    path: '/whatwear/detail',
+    path: '/whatwear/:no/:keyword',
     name: 'WhatWearDetail',
     component: WhatWearDetail,
   },
