@@ -19,7 +19,7 @@ public class OotdReplyLike {
     private Long idx;
 
     @ManyToOne
-    @JoinColumn(name = "reply_idx",referencedColumnName = "nickname")
+    @JoinColumn(name = "reply_idx")
     private OotdReply ootdReply;
 
     @ManyToOne
