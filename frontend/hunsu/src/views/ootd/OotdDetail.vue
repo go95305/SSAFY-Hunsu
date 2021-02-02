@@ -8,8 +8,21 @@
           <v-img src="https://cdn.vuetifyjs.com/images/john.png"></v-img>
         </v-list-item-avatar>
         <v-list-item-content>
+<<<<<<< HEAD
+          <v-list-item-title class="d-inline-block">{{ootdInfo.nickname}}</v-list-item-title>
+        </v-list-item-content>
+
+      <v-menu
+        bottom
+      >
+        <template v-slot:activator="{ on, attrs }">
+          <v-avatar
+          v-bind="attrs"
+          v-on="on"
+=======
           <v-list-item-title class="d-inline-block"
             >John Leider</v-list-item-title
+>>>>>>> fda25cb19ef3760b99bc659c8954c55e7c369bc6
           >
         </v-list-item-content>
 
@@ -56,7 +69,7 @@
       <v-list-item>
         <!-- 글 내용 -->
         <v-list-item-content>
-          <v-list-item-title>글내용입니다</v-list-item-title>
+          <v-list-item-title>{{ootdInfo.content}}</v-list-item-title>
           <v-list-item-subtitle>#ootd #ootd #ootd</v-list-item-subtitle>
         </v-list-item-content>
         <v-list-item-action>
@@ -72,6 +85,23 @@
 </template>
 
 <script>
+<<<<<<< HEAD
+import DetailComment from '@/components/DetailComment'
+import OotdList from '@/components/ootd/OotdList'
+import axios from "axios";
+
+
+  export default {
+    name: "OotdDetail",
+    components: {
+      DetailComment,
+      OotdList
+    },
+    data () {
+      return {
+        ootdInfo: {},
+        items: [
+=======
 import DetailComment from "@/components/DetailComment";
 import OotdList from "@/components/ootd/OotdList";
 
@@ -89,6 +119,7 @@ export default {
   data() {
     return {
       items: [
+>>>>>>> fda25cb19ef3760b99bc659c8954c55e7c369bc6
         {
           text: "수정",
         },
@@ -96,6 +127,50 @@ export default {
           text: "삭제",
         },
       ],
+<<<<<<< HEAD
+        colors: [
+          'green',
+          'secondary',
+          'yellow darken-4',
+          'red lighten-2',
+          'orange darken-1',
+        ],
+        cycle: false,
+        slides: [
+          'First',
+          'Second',
+          'Third',
+          'Fourth',
+          'Fifth',
+        ],
+      }
+    },
+    created() {
+      this.getOotdDetail()
+    },
+    methods: {
+      goToPage(item) {
+        // console.log(item.text)
+        if (item.text === 'MyPage') {
+          this.$router.push('/mypage')
+        }
+      },
+      goToLogin() {
+        this.$router.push('/login')
+      },
+      getOotdDetail() {
+        const ootdIdx = this.$route.params.no
+        axios.get(`http://i4c102.p.ssafy.io:8080/api/ootd/detail/${ootdIdx}`)
+          .then(res => {
+            this.ootdInfo = res.data
+          })
+          .catch(err => {
+            console.error(err)
+          })
+      }
+  }
+  }
+=======
       colors: [
         "green",
         "secondary",
@@ -119,6 +194,7 @@ export default {
     },
   },
 };
+>>>>>>> fda25cb19ef3760b99bc659c8954c55e7c369bc6
 </script>
 
 <style>

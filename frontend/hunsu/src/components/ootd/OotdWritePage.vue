@@ -62,16 +62,30 @@
           three-line
           subheader
         >
-          <v-subheader>OOTD 설명</v-subheader>
             <div>
-              <v-text-field
-                label="설명 추가"
-                :rules="rules"
-                v-model="ootd_content"
-                class="px-5"
-              ></v-text-field>
+                <v-textarea
+                  v-model="whatwearContent"
+                  clearable
+                  clear-icon="mdi-close-circle"
+                  :rules="[rules.required, rules.min, rules.contentMax]"
+                  counter="300"
+                  label="내용"
+                  class="px-5"
+                ></v-textarea>
               <v-text-field label="해시태그 추가" @keydown.enter="addHashtag()" v-model="ootd_hashtag" class="px-5"></v-text-field>
-              <v-subheader class="d-inline-block" v-for="hashtag in ootd_hashtag_array" :key="hashtag.id">{{hashtag}}</v-subheader>
+              <div>
+                <v-chip
+                  v-for="(hashtag, idx) in ootd_hashtag_array"
+                  :key="idx"
+                  class="ma-2"
+                  close
+                  color="red"
+                  text-color="white"
+                  @click="deleteHashtag(hashtag)"
+                >
+                  {{hashtag}}
+                </v-chip>
+              </div>
             </div>
         </v-list>
       </v-card>
@@ -113,6 +127,10 @@ export default {
     addHashtag() {
       this.ootd_hashtag_array.push(this.ootd_hashtag)
       this.ootd_hashtag = ''
+    },
+    deleteHashtag(hashtag) {
+      const index = this.ootd_hashtag_array.indexOf(hashtag)
+      this.ootd_hashtag_array.splice(index, 1)
     },
     createOotd() {
       this.dialog = false
