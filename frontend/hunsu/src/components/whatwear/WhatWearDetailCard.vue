@@ -13,6 +13,58 @@
       <p style="margin:35px 0px 0px 10px;" class="text-subtitle-2 font-weight-bold">{{ whatwearInfo.nickname }}</p>
       <p>{{ writeDate }}</p>
       <p>{{ writeTime }}</p>
+      <v-menu bottom>
+        <template v-slot:activator="{ on, attrs }">
+          <v-avatar v-bind="attrs" v-on="on">
+            <v-btn color="black" icon class="d-inline-block">
+              <v-icon>mdi-dots-vertical</v-icon>
+            </v-btn>
+          </v-avatar>
+        </template>
+        <v-list>
+          <v-dialog
+            v-model="dialog"
+            persistent
+            max-width="290"
+          >
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                color="primary"
+                dark
+                v-bind="attrs"
+                v-on="on"
+                text
+              >
+              삭제
+              </v-btn>
+            </template>
+            <v-card>
+              <v-card-title class="headline">
+                삭제하기
+              </v-card-title>
+              <v-card-text>게시글을 삭제하시겠어요?</v-card-text>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn
+                    color="blue darken-4"
+                    text
+                    @click="dialog = false"
+                  >
+                    취소
+                  </v-btn>
+                  <v-btn
+                    color="red accent-4"
+                    text
+                    @click="[dialog = false, deleteWhatWear()]"
+                  >
+                    삭제하기
+                  </v-btn>
+                </v-card-actions>
+            </v-card>
+          </v-dialog>
+        </v-list>
+      </v-menu>
+      
     
     </div>
     <!--게시글 제목, 글 내용-->
@@ -64,18 +116,28 @@ export default {
       whatwearInfo: {},
       writeDate: '',
       writeTime: '',
+      dialog: false,
+    }
+  },
+  props: {
+    nickname: {
+      type: String,
+    },
+    wear_idx: {
+      type: Number
     }
   },
   created() {
     this.getWhatwearDetail()
+    console.log(this.nickname)
   },
   methods: {
     getWhatwearDetail() {
-      const wearIdx = this.$route.params.no
-      const nickname = this.$route.params.keyword
+      const wearIdx = this.wear_idx
+      const nickname = this.nickname
       axios.get(`http://i4c102.p.ssafy.io:8080/api/wear/detail/${wearIdx}/${nickname}`)
         .then(res => {
-          console.log(res)  
+          // console.log(res)  
           this.whatwearInfo = res.data
           this.writeDate = this.whatwearInfo.write_date.slice(0, 10)
           this.writeTime = this.whatwearInfo.write_date.slice(12, 16)
@@ -83,7 +145,18 @@ export default {
         .catch(err => {
           console.error(err)
         })
-    }
+    },
+    deleteWhatWear() {
+      const wearIdx = this.wear_idx
+      axios.put(`http://i4c102.p.ssafy.io:8080/api/wear/${wearIdx}`)
+        .then(res => {
+          console.log(res)
+          this.$router.push({name: 'WhatWear'})
+        })
+        .catch(err => {
+          console.error(err)
+        })
+    }   
   }
 }
 </script>

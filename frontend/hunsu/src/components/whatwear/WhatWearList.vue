@@ -52,11 +52,11 @@ export default {
   },
   methods: {
     goToWhatWearDetail(whatwear) {
-      this.$router.push(`/whatwear/${whatwear.wear_idx}/${whatwear.nickname}`);
-      // this.$router.push({name: 'Whatweardetail', params:{
-      //   nickName : whatwear.nickname,
-      //   wear_idx : whater~~
-      // }})
+      // this.$router.push(`/whatwear/${whatwear.wear_idx}/${whatwear.nickname}`);
+      this.$router.push({name: 'WhatWearDetail', params:{
+        nickname: whatwear.nickname,
+        wear_idx: whatwear.wear_idx
+      }})
     },
     getWhatWearList() {
       axios

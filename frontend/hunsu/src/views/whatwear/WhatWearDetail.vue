@@ -3,29 +3,42 @@
     max-width="450"
     class="mx-auto mt-1"
   >
+    <WhatWearDetailCard 
+      :nickname="this.nickname"
+      :wear_idx="this.wear_idx" />
     <WhatWearUpdate />
-    <WhatWearDetailCard />
-    <WhatWearChart />
+    <WhatWearChart 
+      :nickname="this.nickname"
+      :wear_idx="this.wear_idx" />
     <DetailComment />
   </v-card>
-
 </template>
 
+
 <script>
-import WhatWearDetailCard from "@/components/whatwear/WhatWearDetailCard"
 import WhatWearChart from "@/components/whatwear/WhatWearChart"
 import DetailComment from "@/components/DetailComment"
 import WhatWearUpdate from "@/components/whatwear/WhatWearUpdate"
+import WhatWearDetailCard from "@/components/whatwear/WhatWearDetailCard"
 
 export default {
   name: "WhatWearDetail",
   components: {
-    WhatWearDetailCard,
     WhatWearChart,
     DetailComment,
     WhatWearUpdate,
-  }
+    WhatWearDetailCard,
+  },
+  props: {
+    nickname: {
+      type: String,
+    },
+    wear_idx: {
+      type: Number
+    }
+  },
 }
+
 </script>
 
 <style>

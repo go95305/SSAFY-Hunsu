@@ -47,14 +47,22 @@ export default {
       vote_activated: false
     }
   },
+  props: {
+    nickname: {
+      type: String,
+    },
+    wear_idx: {
+      type: Number
+    }
+  },
   created() {
     this.getWhatwearDetail()
   },
   methods: {
     getWhatwearDetail() {
-      const wear_idx = this.$route.params.no
-      const nickname = this.$route.params.keyword
-      axios.get(`http://i4c102.p.ssafy.io:8080/api/wear/detail/${wear_idx}/${nickname}`)
+      const wearIdx = this.wear_idx
+      const nickname = this.nickname
+      axios.get(`http://i4c102.p.ssafy.io:8080/api/wear/detail/${wearIdx}/${nickname}`)
         .then(res => {
           // console.log(res)  
           this.vote_activated = res.data.vote_activated

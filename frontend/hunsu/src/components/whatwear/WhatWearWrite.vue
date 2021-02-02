@@ -38,8 +38,8 @@
           <v-toolbar-title>뭘입을까 작성</v-toolbar-title>
           <v-spacer></v-spacer>
           <v-toolbar-items>
+
             <v-btn
-              
               text
               @click="createWhatWear()"
             >
@@ -227,19 +227,22 @@ export default {
       timeDialog: false,
       dateDialog: false,
       dates: '',
+      isVaild: false,
+      endtime: '',
     }
   },
   methods: {
     createWhatWear() {
       // dialog창 닫기 + 입력데이터 보내기
       this.dialog = false
-      const endtime = this.dates.concat('T0', this.time, ':00.469Z')
-      console.log(endtime)
+      if (this.timeDialog && this.dateDialog) {
+        this.endtime = this.dates.concat('T', this.time, ':00')
+      }
       const params = {
         'content': this.whatwearContent,
-        'endtime': endtime,
-        'nickname': 'wogml23',
-        'num': 1,
+        'endtime': this.endtime,
+        'nickname': 'go',
+        'num': 0,
         'title': this.whatwearTitle,
         
       }
@@ -250,6 +253,7 @@ export default {
         .then(() => {
           console.log('뭘입을까글쓰기성공')
           console.log(params)
+          
         })
         .catch(err => {
           console.error(err)
@@ -269,7 +273,17 @@ export default {
     inputTime(time) {
       this.time = time
     }
-  }
+  },
+  // watch: {
+  //   isVaild: function() {
+  //     if (this.whatwearTitle.trim() > 0 && this.whatwearContent.trim() > 0) {
+  //       this.isVaild = true
+  //     }
+  //     if (this.vote === true && this.voteImage !== null) {
+  //       this.isVaild = true
+  //     }
+  //   }
+  // }
 }
 </script>
 

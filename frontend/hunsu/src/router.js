@@ -56,9 +56,10 @@ const routes = [
     component: Login,
   },
   {
-    path: '/whatwear/:no/:keyword',
+    path: '/whatwear/detail',
     name: 'WhatWearDetail',
     component: WhatWearDetail,
+    props: true,
   },
   // {
   //   path : '/auth',
