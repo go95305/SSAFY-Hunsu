@@ -54,6 +54,8 @@
 
 <script>
 import axios from "axios";
+import { mapActions } from "vuex";
+
 export default {
   name: "OotdList",
   data() {
@@ -74,12 +76,13 @@ export default {
     this.getOotdList();
   },
   methods: {
+    ...mapActions(["getOotdInfoInApi"]),
     getOotdList() {
       axios
         .get("http://i4c102.p.ssafy.io:8080/api/ootd/0")
         .then((res) => {
           this.ootdList = res.data;
-          console.log(this.ootdList);
+          console.log("ootd List ", this.ootdList);
         })
         .catch((err) => {
           console.error(err);
@@ -88,7 +91,12 @@ export default {
     goToOotdDetail(ootd) {
       // console.log(ootd);
       // console.log(ootd.ootdIdx);
-      this.$router.push(`ootd/detail/${ootd.ootdIdx}`);
+      // this.$router.push(`ootd/detail?${ootd.ootdIdx}`);
+
+      //idx 굳이 보여줄 필요 없을것같아서 params로 변경
+      // this.$router.push({ name: "OotdDetail", params: { no: ootd.ootdIdx } });
+      this.getOotdInfoInApi(ootd.ootdIdx);
+      this.$router.push({ name: "OotdDetail" });
     },
   },
 };

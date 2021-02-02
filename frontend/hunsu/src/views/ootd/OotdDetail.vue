@@ -8,8 +8,9 @@
           <v-img src="https://cdn.vuetifyjs.com/images/john.png"></v-img>
         </v-list-item-avatar>
         <v-list-item-content>
+          <!-- 닉네임 -->
           <v-list-item-title class="d-inline-block">{{
-            ootdInfo.nickname
+            getOotdInfo.nickname
           }}</v-list-item-title>
         </v-list-item-content>
 
@@ -21,14 +22,22 @@
               </v-btn>
             </v-avatar>
           </template>
-
+          <!-- 수정 및 삭제 버튼 -->
           <v-list>
-            <v-list-item
+            <!-- <v-list-item
               v-for="(item, i) in items"
               :key="i"
               @click="goToPage(item)"
-            >
-              <v-list-item-title>{{ item.text }}</v-list-item-title>
+            > -->
+            <v-list-item>
+              <v-list-item-title @click="goToPage('update')"
+                >수정</v-list-item-title
+              >
+            </v-list-item>
+            <v-list-item>
+              <v-list-item-title @click="goToPage('delete')"
+                >삭제</v-list-item-title
+              >
             </v-list-item>
           </v-list>
         </v-menu>
@@ -53,9 +62,10 @@
     </v-carousel>
     <v-list two-line>
       <v-list-item>
-        <!-- 글 내용 -->
         <v-list-item-content>
-          <v-list-item-title>{{ ootdInfo.content }}</v-list-item-title>
+          <!-- 본문 내용 -->
+          <v-list-item-title>{{ getOotdInfo.content }}</v-list-item-title>
+          <!-- 해쉬태그 -->
           <v-list-item-subtitle>#ootd #ootd #ootd</v-list-item-subtitle>
         </v-list-item-content>
         <v-list-item-action>
@@ -66,6 +76,7 @@
       </v-list-item>
     </v-list>
     <DetailComment />
+    <OotdUpdate />
     <OotdList />
   </v-card>
 </template>
@@ -73,25 +84,31 @@
 <script>
 import DetailComment from "@/components/DetailComment";
 import OotdList from "@/components/ootd/OotdList";
-import axios from "axios";
+import OotdUpdate from "@/components/ootd/OotdUpdate";
+// import axios from "axios";
+import { mapGetters, mapMutations, mapActions } from "vuex";
 
 export default {
   name: "OotdDetail",
   components: {
     DetailComment,
     OotdList,
+    OotdUpdate,
+  },
+  computed: {
+    ...mapGetters(["getOotdInfo"]),
   },
   data() {
     return {
-      ootdInfo: {},
-      items: [
-        {
-          text: "수정",
-        },
-        {
-          text: "삭제",
-        },
-      ],
+      // ootdInfo: {},
+      // items: [
+      //   {
+      //     text: "수정",
+      //   },
+      //   {
+      //     text: "삭제",
+      //   },
+      // ],
       colors: [
         "green",
         "secondary",
@@ -103,30 +120,43 @@ export default {
       slides: ["First", "Second", "Third", "Fourth", "Fifth"],
     };
   },
-  created() {
-    this.getOotdDetail();
+  mounted() {
+    // this.getOotdInfoInApi(this.$route.params.no);
+    // this.getOotdDetail();
   },
   methods: {
+    ...mapMutations(["setOotdInfo"]),
+    ...mapActions(["getOotdInfoInApi"]),
     goToPage(item) {
-      // console.log(item.text)
+      // 마이페이지, 수정 및 삭제 이동
       if (item.text === "MyPage") {
         this.$router.push("/mypage");
+      } else if (item === "update") {
+        console.log("in 수정", this.getOotdInfo);
+
+        // this.$router.push({
+        //   name: "OotdUpdate",
+        //   params: { ootdInfo: this.ootdInfo },
+        // });
       }
     },
     goToLogin() {
+      // 로그인 페이지로 이동
       this.$router.push("/login");
     },
-    getOotdDetail() {
-      const ootdIdx = this.$route.params.no;
-      axios
-        .get(`http://i4c102.p.ssafy.io:8080/api/ootd/detail/${ootdIdx}`)
-        .then((res) => {
-          this.ootdInfo = res.data;
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-    },
+    // getOotdDetail() {
+    //   // Ootd Idx로 디테일 가져옴
+    //   const ootdIdx = this.$route.params.no;
+    //   axios
+    //     .get(`http://i4c102.p.ssafy.io:8080/api/ootd/detail/${ootdIdx}`)
+    //     .then((res) => {
+    //       // this.ootdInfo = res.data;
+    //       this.setOotdInfo(res.data);
+    //     })
+    //     .catch((err) => {
+    //       console.error(err);
+    //     });
+    // },
   },
 };
 </script>
