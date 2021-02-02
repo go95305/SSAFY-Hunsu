@@ -146,7 +146,7 @@ public class OotdController {
     @PutMapping("/ootd/reply")
     @Transactional
     @ApiOperation(value = "Ootd글 댓글 수정 (O)", notes = "Parameter: reply_idx,content\n" +
-            "                                           Response: 수정한 댓글 정보")
+            "                                           Response: 해당 글의 댓글 리스트 목록 전체")
     public List<OotdReplyDTO> ootdReplyUpdate(@Valid @RequestBody OotdReplyUpdateDTO ootdReplyUpdateDTO) {
         List<OotdReplyDTO> ootdReplyDTOList = ootdService.updateReply(ootdReplyUpdateDTO);
         return ootdReplyDTOList;
@@ -155,7 +155,7 @@ public class OotdController {
     @DeleteMapping("/ootd/reply{idx}")
     @Transactional
     @ApiOperation(value = "Ootd글 댓글 삭제 (O)", notes = "Parameter: reply_idx\n" +
-            "                                           Response: 삭제한(비활성) 댓글")
+            "                                           Response: 해당 글의 댓글 리스트 목록 전체")
     public List<OotdReplyDTO> ootdReplyDelete(@PathVariable Long idx) {
         List<OotdReplyDTO> ootdReplyDTOList = ootdService.deleteReply(idx);
         return ootdReplyDTOList;
