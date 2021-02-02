@@ -53,9 +53,7 @@ public class WearService {
 
     public void insertWear(WearDTO request) {
         Wear wear = new Wear();
-        User user = new User();
-
-        user = userRepository.findUserByNickname(request.getNickname());
+        User user = userRepository.findUserByNickname(request.getNickname());
 
         wear.setUser(user);
         wear.setTitle(request.getTitle());
@@ -72,7 +70,6 @@ public class WearService {
             Vote vote = new Vote();
             vote.setWear(savedWear);
             vote.setEndTime(request.getEndtime());
-            //수정 필요
 
             Vote savedVote = voteRepository.save(vote);
             //vote 생성
@@ -163,11 +160,8 @@ public class WearService {
     //return: List<Reply>(reply_idx, nickname, depth, writeDate, content, groupNum, count, like, flag)
     public List<WearReplyDTO> insertReply(WearReplyDTO request) {
         WearReply wearReply = new WearReply();
-        User user = new User();
-        Wear wear = new Wear();
-
-        user = userRepository.findUserByNickname(request.getNickname());
-        wear = wearRepository.findWearByIdx(request.getWear_idx());
+        User user = userRepository.findUserByNickname(request.getNickname());
+        Wear wear = wearRepository.findWearByIdx(request.getWear_idx());
 
         wearReply.setUser(user);
         wearReply.setWear(wear);

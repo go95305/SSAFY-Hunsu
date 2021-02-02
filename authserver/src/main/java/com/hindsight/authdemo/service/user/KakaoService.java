@@ -1,9 +1,10 @@
 package com.hindsight.authdemo.service.user;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.hindsight.authdemo.advice.exception.CComunicationException;
 import com.hindsight.authdemo.model.social.KakaoProfile;
-import com.hindsight.authdemo.model.social.RetKakaoAuth;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,7 +59,7 @@ public class KakaoService {
     }
 
     public String reKakaoAccessToken(String refreshToken){
-        String accessToken=null;
+
         // HttpHeader 오브젝트 생성
         RestTemplate rt = new RestTemplate();
         HttpHeaders headers =new HttpHeaders();
@@ -80,7 +81,10 @@ public class KakaoService {
                 String.class
         );
 
+        JsonParser parser = new JsonParser();
+        JsonElement element = parser.parse(String.valueOf(response));
 
+        String accessToken = element.getAsJsonObject().get("access_token").getAsString();
 
         return  accessToken;
     }

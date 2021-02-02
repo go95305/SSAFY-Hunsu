@@ -50,8 +50,8 @@ public class UserService {
         User user = userRepository.findUserByNickname(clickNickName);
         List<OotdLike> ootdLikeList = ootdLikeRepository.findOotdLikeByUser(user);
         List<Ootd> ootdList = ootdRepository.findOotdByUser(user);
-        List<Follower> followerList = followerRepository.findFollowerByTargetId(user);
-        List<Follower> followingList = followerRepository.findFollowerByMemId(user);
+        List<Follower> followerList = followerRepository.findFollowerByTargetIdAndFlag(user, true);
+        List<Follower> followingList = followerRepository.findFollowerByMemIdAndFlag(user, true);
         Follower isActivated = followerRepository.findFollowerByMemIdAndTargetId(my, user);
 
         List<Long> ootdLikeIdxList = new ArrayList<>();
@@ -126,8 +126,8 @@ public class UserService {
     //return: isActivated(활성화: true, 비활성화: false)
     @Transactional
     public boolean follow(String myNickname, String yourNickname) {
-        User member = entityManager.find(User.class, myNickname);
-        User target = entityManager.find(User.class, yourNickname);
+        User member = userRepository.findUserByNickname(myNickname);
+        User target = userRepository.findUserByNickname(yourNickname);
         Follower follower = followerRepository.findFollowerByMemIdAndTargetId(member, target);
         boolean isActivated = false;
 

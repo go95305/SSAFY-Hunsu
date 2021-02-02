@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface FollowerRepository extends JpaRepository<Follower,Long> {
     Follower findFollowerByMemIdAndTargetId(User memUser, User targetUser);
-    List<Follower> findFollowerByMemId(User user);
-    List<Follower> findFollowerByTargetId(User user);
+    List<Follower> findFollowerByMemIdAndFlag(User user, Boolean flag);
+    List<Follower> findFollowerByTargetIdAndFlag(User user, Boolean flag);
 
 }

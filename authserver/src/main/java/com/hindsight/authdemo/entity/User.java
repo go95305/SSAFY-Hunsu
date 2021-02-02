@@ -26,9 +26,6 @@ public class User implements UserDetails {
     @GeneratedValue
     @Column(name = "uid")
     private String uid;
-
-
-    @Column(name = "nickname",unique = true)
     private String nickname;
 
     private Boolean flag;

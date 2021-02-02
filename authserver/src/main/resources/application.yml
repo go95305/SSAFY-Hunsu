@@ -31,12 +31,12 @@ spring:
     secret: wogml23@$0@
 
   url:
-    base: http://localhost:9000
+    base: http://localhost:8081
 
   social:
     kakao:
-      client_id: 8e53809b2827c367b5aa27ac70dfd124
-      client_secret: 71TylRM4GB5dWKVAiS7Kf1rsOZZgDWGa
+      client_id: 16ae1e2e85a16538664e419b8e1a468f
+      client_secret: g5Gqw9mULSYEzLQBBmK8PW1pbSRBBvBE
       redirect: /v1/auth/login/kakao
       url:
         login: https://kauth.kakao.com/oauth/authorize

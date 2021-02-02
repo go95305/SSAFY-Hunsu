@@ -1,14 +1,11 @@
 package com.hindsight.authdemo.controller.v1;
 
-import com.hindsight.authdemo.advice.exception.CUserExistException;
-import com.hindsight.authdemo.advice.exception.CUserNotFoundException;
 import com.hindsight.authdemo.config.security.JwtTokenProvider;
 import com.hindsight.authdemo.entity.User;
-import com.hindsight.authdemo.model.response.SingleResult;
-import com.hindsight.authdemo.model.social.SocialSignUp;
 import com.hindsight.authdemo.model.response.CommonResult;
+import com.hindsight.authdemo.model.response.SingleResult;
 import com.hindsight.authdemo.model.social.KakaoProfile;
-import com.hindsight.authdemo.model.social.RetKakaoAuth;
+import com.hindsight.authdemo.model.social.SocialSignUp;
 import com.hindsight.authdemo.repository.UserJpaRepo;
 import com.hindsight.authdemo.service.ResponseService;
 import com.hindsight.authdemo.service.user.KakaoService;
@@ -23,7 +20,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 
 @Api(tags = {"1. Sign"})
 @RequiredArgsConstructor
@@ -84,6 +82,11 @@ public class AuthController {
                 userService.updateAccessToken(user.get().getUid(),kakaoAccess);
                 //jwtRefreshToken을 통해 jwtAccessToken생성 후 프론트에 전달
                 String jwtAccessToken = jwtTokenProvider.generateToken(user.get().getUid(),user.get().getRoles());
+                System.out.println(jwtAccessToken);
+                System.out.println(jwtAccessToken);
+                System.out.println(jwtAccessToken);
+                System.out.println(jwtAccessToken);
+
                 return  jwtAccessToken;
             }
         }else{
@@ -122,10 +125,11 @@ public class AuthController {
                 .append("?client_id=").append(kakaoClientId)
                 .append("&response_type=code")
                 .append("&redirect_uri=").append(baseUrl).append(kakaoRedirect);
-
-
         return loginUrl.toString();
     }
+
+
+
 
 //    @GetMapping(value="/login/kakao")
 //    public RetKakaoAuth redirectKakao(@RequestParam(value="code", required = true) String code){
