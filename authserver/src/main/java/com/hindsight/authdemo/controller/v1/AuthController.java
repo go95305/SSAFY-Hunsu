@@ -27,6 +27,7 @@ import java.util.*;
 @Api(tags = {"1. Sign"})
 @RequiredArgsConstructor
 @RestController
+@CrossOrigin(origins = {"http://localhost:3000"})
 @RequestMapping(value = "/v1/auth")
 public class AuthController {
 

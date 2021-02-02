@@ -1,5 +1,5 @@
 <template>
-  <div id="vote">
+  <div id="vote" v-if="vote_activated">
     <!--투표창-->
     <p style="margin-left: 20px" class="text-body-1 font-weight-black">투표결과</p>
     <v-radio-group v-model="radioGroup" id="vote_input">
@@ -23,6 +23,8 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "WhatWearChart",
   data() {
@@ -41,9 +43,27 @@ export default {
           position: "bottom",
           text: "test"
         }
-      }
+      },
+      vote_activated: false
     }
   },
+  created() {
+    this.getWhatwearDetail()
+  },
+  methods: {
+    getWhatwearDetail() {
+      const wear_idx = this.$route.params.no
+      const nickname = this.$route.params.keyword
+      axios.get(`http://i4c102.p.ssafy.io:8080/api/wear/detail/${wear_idx}/${nickname}`)
+        .then(res => {
+          // console.log(res)  
+          this.vote_activated = res.data.vote_activated
+        })
+        .catch(err => {
+          console.error(err)
+        })
+    }
+  }
 }
 
 </script>
