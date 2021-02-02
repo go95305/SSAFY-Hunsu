@@ -12,7 +12,7 @@
           <v-img src="https://cdn.vuetifyjs.com/images/john.png"></v-img>
         </v-list-item-avatar>
         <v-list-item-content>
-          <v-list-item-title class="d-inline-block">John Leider</v-list-item-title>
+          <v-list-item-title class="d-inline-block">{{ootdInfo.nickname}}</v-list-item-title>
         </v-list-item-content>
 
       <v-menu
@@ -81,7 +81,7 @@
       <v-list-item>
         <!-- 글 내용 -->
         <v-list-item-content>
-          <v-list-item-title>글내용입니다</v-list-item-title>
+          <v-list-item-title>{{ootdInfo.content}}</v-list-item-title>
           <v-list-item-subtitle>#ootd #ootd #ootd</v-list-item-subtitle>
         </v-list-item-content>
         <v-list-item-action>
@@ -99,14 +99,18 @@
 <script>
 import DetailComment from '@/components/DetailComment'
 import OotdList from '@/components/ootd/OotdList'
+import axios from "axios";
+
 
   export default {
+    name: "OotdDetail",
     components: {
       DetailComment,
       OotdList
     },
     data () {
       return {
+        ootdInfo: {},
         items: [
         {
           text: '수정'
@@ -132,16 +136,29 @@ import OotdList from '@/components/ootd/OotdList'
         ],
       }
     },
-    methods: {
-    goToPage(item) {
-      // console.log(item.text)
-      if (item.text === 'MyPage') {
-        this.$router.push('/mypage')
-      }
+    created() {
+      this.getOotdDetail()
     },
-    goToLogin() {
-      this.$router.push('/login')
-    }
+    methods: {
+      goToPage(item) {
+        // console.log(item.text)
+        if (item.text === 'MyPage') {
+          this.$router.push('/mypage')
+        }
+      },
+      goToLogin() {
+        this.$router.push('/login')
+      },
+      getOotdDetail() {
+        const ootdIdx = this.$route.params.no
+        axios.get(`http://i4c102.p.ssafy.io:8080/api/ootd/detail/${ootdIdx}`)
+          .then(res => {
+            this.ootdInfo = res.data
+          })
+          .catch(err => {
+            console.error(err)
+          })
+      }
   }
   }
 </script>

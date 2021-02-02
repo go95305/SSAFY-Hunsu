@@ -62,14 +62,16 @@
           three-line
           subheader
         >
-          <v-subheader>OOTD 설명</v-subheader>
             <div>
-              <v-text-field
-                label="설명 추가"
-                :rules="rules"
-                v-model="ootd_content"
-                class="px-5"
-              ></v-text-field>
+                <v-textarea
+                  v-model="whatwearContent"
+                  clearable
+                  clear-icon="mdi-close-circle"
+                  :rules="[rules.required, rules.min, rules.contentMax]"
+                  counter="300"
+                  label="내용"
+                  class="px-5"
+                ></v-textarea>
               <v-text-field label="해시태그 추가" @keydown.enter="addHashtag()" v-model="ootd_hashtag" class="px-5"></v-text-field>
               <v-subheader class="d-inline-block" v-for="hashtag in ootd_hashtag_array" :key="hashtag.id">{{hashtag}}</v-subheader>
             </div>

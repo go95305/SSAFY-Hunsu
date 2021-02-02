@@ -4,9 +4,8 @@
   <!-- OOTD 하나 클릭하면 디테일페이지 뜨는 섹션 -->
   <!-- <router-view></router-view> -->
   <v-card
-    v-for="(ootd, idx) in ootds"
+    v-for="(ootd, idx) in ootdList"
     :key="idx"
-    :ootd="ootd"
     elevation="24"
     max-width="450"
     class="mx-auto"
@@ -50,8 +49,8 @@
           <v-img src="https://cdn.vuetifyjs.com/images/john.png"></v-img>
         </v-list-item-avatar>
         <v-list-item-content>
-          <v-list-item-title>{{ootd.content}}</v-list-item-title>
-          <v-list-item-subtitle>{{ootd.nickName}}</v-list-item-subtitle>
+          <v-list-item-title>{{ootd.ootdContent}}</v-list-item-title>
+          <v-list-item-subtitle>{{ootd.nickname}}</v-list-item-subtitle>
         </v-list-item-content>
         <v-list-item-action>
           <!-- 좋아요 버튼 -->
@@ -66,11 +65,12 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import axios from "axios";
   export default {
     name: "OotdList",
     data () {
       return {
+        ootdList: [],
         colors: [
           'green',
           'secondary',
@@ -88,14 +88,22 @@ import { mapState } from 'vuex'
         ],
       }
     },
-    computed: {
-      ...mapState([
-        'ootds',
-      ])
+    created() {
+      this.getOotdList()
     },
     methods: {
+      getOotdList() {
+        axios.get('http://i4c102.p.ssafy.io:8080/api/ootd/0')
+          .then(res => {
+            this.ootdList = res.data
+            console.log(this.ootdList)
+          })
+          .catch(err => {
+            console.error(err)
+          })
+      },
       goToOotdDetail(ootd) {
-        this.$router.push(`ootd/detail/${ootd.idx}`)
+        this.$router.push(`ootd/detail/${ootd.ootdIdx}`)
       }
     }
   }
