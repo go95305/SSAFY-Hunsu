@@ -7,7 +7,7 @@
       class="mx-auto mt-10"
       max-width="600px"
       height="65px"
-      @click="goToWhatWearDetail()"
+      @click="goToWhatWearDetail(whatwear)"
     >
       <div class="d-flex">
         <!--프로필사진-->
@@ -55,8 +55,8 @@ export default {
     this.getWhatWearList()
   },
   methods: {
-    goToWhatWearDetail() {
-      this.$router.push('/whatwear/detail')
+    goToWhatWearDetail(whatwear) {
+      this.$router.push(`/whatwear/${whatwear.wear_idx}/${whatwear.nickname}`)
     },
     getWhatWearList() {
       axios.get('http://i4c102.p.ssafy.io:8080/api/wear')

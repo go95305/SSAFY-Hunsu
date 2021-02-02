@@ -57,11 +57,15 @@
                   v-model="whatwearTitle"
                   label="제목"
                   clearable
+                  counter="30"
+                  :rules="[rules.required, rules.min, rules.titleMax]"
                 ></v-text-field>
                 <v-textarea
                   v-model="whatwearContent"
                   clearable
                   clear-icon="mdi-close-circle"
+                  :rules="[rules.required, rules.min, rules.contentMax]"
+                  counter="300"
                   label="내용"
                 ></v-textarea>
               </v-list-item-content>
@@ -131,6 +135,12 @@ export default {
       imageUrl: null,
       voteImage: null,
       voteImageUrls: [],
+      rules: {
+        required: v => !!v || "Required",
+        min: v => v.trim().length > 0 || "공백안됨",
+        titleMax: v => v.length <= 30 || "30자이하",
+        contentMax: v => v.length <= 300 || "300자이하",
+      }
     }
   },
   methods: {
