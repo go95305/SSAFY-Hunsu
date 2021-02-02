@@ -196,12 +196,4 @@ public class UserService {
 
     }
 
-
-//    @Transactional
-//    public void followDelete(String myNickname, String yourNickname) {
-//        String query = " delete from Follower where followTo = : yourNickname";
-//        int result = entityManager.createQuery(query).setParameter("yourNickname",yourNickname).executeUpdate();
-//    }
-
-
 }

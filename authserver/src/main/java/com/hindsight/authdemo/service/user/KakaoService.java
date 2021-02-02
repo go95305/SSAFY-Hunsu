@@ -57,27 +57,33 @@ public class KakaoService {
         throw new CComunicationException();
     }
 
-    //이 부분은 추후 프론트에서 처리할 예정
-    public RetKakaoAuth getKakaoTokenInfo(String code){
-        //header: Content-type: application/x-www-form-urlencoded
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        //set params
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("grant_type", "authorization_code");
-        params.add("client_id", kakaoClientId);
-        params.add("client_secret", kakaoSecret);
-//        params.add("client_id", "8e53809b2827c367b5aa27ac70dfd124");
-        params.add("redirect_uri", baseUrl + kakaoRedirect);
-        params.add("code", code);
-        //set http entity
-        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
-        ResponseEntity<String> response = restTemplate.postForEntity(kakaoTokenUrl, request, String.class);
-        if(response.getStatusCode() == HttpStatus.OK){
-            return gson.fromJson(response.getBody(), RetKakaoAuth.class);
-        }
+    public String reKakaoAccessToken(String refreshToken){
+        String accessToken=null;
+        // HttpHeader 오브젝트 생성
+        RestTemplate rt = new RestTemplate();
+        HttpHeaders headers =new HttpHeaders();
+        headers.add("Content-type","application/x-www-form-urlencoded;charset=utf-8");
+        // HttpBody 오브젝트 생성
+        MultiValueMap<String,String> param = new LinkedMultiValueMap<>();
+        param.add("grant_type","refresh_token");
+        param.add("client_id","8e53809b2827c367b5aa27ac70dfd124");
+        param.add("refresh_token",refreshToken);
 
-        logger.info(response.getStatusCode().toString());
-        return null;
+        // HttpHeader와 HttpBody를 하나의 오브젝트에 담기
+        HttpEntity<MultiValueMap<String,String>> kakaoTokenRequest= new HttpEntity<>(param,headers);
+
+        // Http 요청하기 - Post방식으로
+        ResponseEntity<String> response = rt.exchange(
+                "kauth.kakao.com/oauth/token",
+                HttpMethod.POST,
+                kakaoTokenRequest,
+                String.class
+        );
+
+
+
+        return  accessToken;
     }
+
+
 }

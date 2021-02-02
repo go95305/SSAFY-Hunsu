@@ -72,10 +72,12 @@ public class JwtTokenProvider {
     }
 
     //Jwt 토큰에서 회원 구별 정보 추출
-    // 현재 nickname 으로 리턴됨, 추후 uid로 변경
+    // 현재 nickname 으로 리턴됨, 추후 uid로 변경 (OK)
     public String getUserPk(String token){
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
     }
+
+
 
     //규칙 추출
     public List<String> getRoles(String token){
