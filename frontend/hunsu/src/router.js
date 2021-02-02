@@ -35,9 +35,10 @@ const routes = [
     component: Ootd,
   },
   {
-    path: '/ootd/detail/:no',
+    path: '/ootd/detail/:ootdidx',
     name: 'OotdDetail',
     component: OotdDetail,
+    props: true,
   },
   {
     path: '/whatwear',
