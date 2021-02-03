@@ -1,5 +1,5 @@
 <template>
-<!-- 네비게이션 바 고정 -->
+<!-- 네비게이션 바 스크롤 v-app-bar에 app 코드 추가 -->
   <div>
     <v-app-bar
       color="white"
@@ -7,25 +7,25 @@
       height="50"
       app
     >
-    <!-- <v-app-bar-nav-icon></v-app-bar-nav-icon> -->
+    <!-- <v-app-bar-nav-icon></v-app-bar-nav-icon> 메뉴아이콘-->
+    <!--로고이미지-->
     <v-toolbar-title>
       <v-img src="@/assets/hunsulogo.png" width="80" id="logo">
       </v-img>
-
-
     </v-toolbar-title>
 
 
-      <v-spacer></v-spacer>
+    <v-spacer></v-spacer>
 
-
-        <v-icon class="mr-2" color="black" @click="goToLogin()">mdi-account-outline</v-icon>
-        <v-icon color="black">mdi-bell-outline</v-icon>
-      <v-menu
+    <!--로그인아이콘, 알림아이콘-->
+    <v-icon class="mr-2" color="black" @click="goToLogin()">mdi-account-outline</v-icon>
+    <v-icon color="black">mdi-bell-outline</v-icon>
+      <!--로그인 후 알림아이콘 옆에 표시할 프로필사진 + mypage, logout menu바-->
+      <!-- <v-menu
         left
         bottom
       >
-        <!-- <template v-slot:activator="{ on, attrs }">
+        <template v-slot:activator="{ on, attrs }">
           <v-avatar
           v-bind="attrs"
           v-on="on"
@@ -35,7 +35,7 @@
               alt="John"
             >
           </v-avatar>
-        </template> -->
+        </template> 
 
         <v-list>
           <v-list-item
@@ -46,8 +46,9 @@
             <v-list-item-title>{{ item.text }}</v-list-item-title>
           </v-list-item>
         </v-list>
-      </v-menu>
-        <template v-slot:extension>
+      </v-menu> -->
+      <!--v-app-bar태그 밖에있던 tabs들을 안으로 가져옴 tabs에도 app을 적용하여 스크롤기능 활성화시킴-->
+      <template v-slot:extension>
         <v-tabs
         fixed-tabs
         background-color="white"
@@ -68,10 +69,8 @@
           뭘 입을까
         </v-tab>
       </v-tabs>
-    </template>
+      </template>
     </v-app-bar>
-
-  
   </div>
 </template>
 
