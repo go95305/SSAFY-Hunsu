@@ -15,17 +15,20 @@
       </template>
 
       <v-card>
+        <!-- 카드 상단 -->
         <v-toolbar dark color="black">
+          <!-- 닫힘버튼 -->
           <v-btn icon dark @click="dialog = false">
             <v-icon>mdi-close</v-icon>
           </v-btn>
           <v-toolbar-title>OOTD 수정</v-toolbar-title>
           <v-spacer></v-spacer>
+          <!-- 작성완료 버튼 -->
           <v-toolbar-items>
-            <!-- 작성완료 버튼 -->
             <v-btn dark text @click="updateOotd()"> Save </v-btn>
           </v-toolbar-items>
         </v-toolbar>
+        <!-- 카드 본문 -->
         <v-list three-line subheader>
           <v-subheader>사진 등록</v-subheader>
           <input ref="imageInput" type="file" hidden @change="onChangeImages" />
@@ -42,6 +45,7 @@
         <v-divider></v-divider>
         <v-list three-line subheader>
           <div>
+            <!-- 본문 입력 -->
             <v-textarea
               v-model="ootd_content"
               clearable
@@ -52,6 +56,7 @@
               class="px-5"
               >{{ ootd_content }}</v-textarea
             >
+            <!-- 해쉬태그 입력 -->
             <v-text-field
               label="해시태그 추가"
               @keydown.enter="addHashtag()"
@@ -100,10 +105,11 @@ export default {
       notifications: false,
       sound: true,
       widgets: false,
-      rules: [
-        (value) => !!value || "Required.",
-        (value) => (value && value.length >= 3) || "Min 3 characters",
-      ],
+      rules: {
+        required: (v) => !!v || "Required",
+        min: (v) => v.trim().length > 0 || "공백안됨",
+        contentMax: (v) => v.length <= 300 || "300자이하",
+      },
       imageUrl: null,
       ootd_content: "",
       ootd_hashtag: "",

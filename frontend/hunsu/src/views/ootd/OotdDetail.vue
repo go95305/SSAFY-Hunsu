@@ -60,6 +60,7 @@
         </v-sheet>
       </v-carousel-item>
     </v-carousel>
+    <!-- 이미지 하단 본문 및 해쉬태그 -->
     <v-list two-line>
       <v-list-item>
         <v-list-item-content>
@@ -76,6 +77,7 @@
             >
           </v-list-item-subtitle>
         </v-list-item-content>
+        <!-- 좋아요 버튼 -->
         <v-list-item-action>
           <v-btn icon>
             <v-icon>mdi-heart</v-icon>
@@ -83,8 +85,11 @@
         </v-list-item-action>
       </v-list-item>
     </v-list>
-    <DetailComment />
+
     <OotdUpdate />
+    <!-- 댓글 -->
+    <DetailComment />
+    <!-- 디테일 하단 리스트 -->
     <OotdList />
   </v-card>
 </template>
@@ -108,15 +113,8 @@ export default {
   },
   data() {
     return {
-      // ootdInfo: {},
-      // items: [
-      //   {
-      //     text: "수정",
-      //   },
-      //   {
-      //     text: "삭제",
-      //   },
-      // ],
+      dialog: false,
+      required: false,
       colors: [
         "green",
         "secondary",
@@ -128,10 +126,7 @@ export default {
       slides: ["First", "Second", "Third", "Fourth", "Fifth"],
     };
   },
-  mounted() {
-    // this.getOotdInfoInApi(this.$route.params.no);
-    // this.getOotdDetail();
-  },
+  mounted() {},
   methods: {
     ...mapMutations(["setOotdInfo"]),
     ...mapActions(["getOotdInfoInApi"]),
@@ -141,30 +136,12 @@ export default {
         this.$router.push("/mypage");
       } else if (item === "update") {
         console.log("in 수정", this.getOotdInfo);
-
-        // this.$router.push({
-        //   name: "OotdUpdate",
-        //   params: { ootdInfo: this.ootdInfo },
-        // });
       }
     },
     goToLogin() {
       // 로그인 페이지로 이동
       this.$router.push("/login");
     },
-    // getOotdDetail() {
-    //   // Ootd Idx로 디테일 가져옴
-    //   const ootdIdx = this.$route.params.no;
-    //   axios
-    //     .get(`http://i4c102.p.ssafy.io:8080/api/ootd/detail/${ootdIdx}`)
-    //     .then((res) => {
-    //       // this.ootdInfo = res.data;
-    //       this.setOotdInfo(res.data);
-    //     })
-    //     .catch((err) => {
-    //       console.error(err);
-    //     });
-    // },
   },
 };
 </script>
