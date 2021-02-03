@@ -1,6 +1,6 @@
 <template>
   <!-- OOTD 디테일 -->
-  <v-card elevation="24" max-width="450" class="mx-auto">
+  <v-card elevation="24" class="mx-auto">
     <v-list one-line>
       <v-list-item style="height: 15px">
         <!-- 작성자 정보 -->
@@ -72,16 +72,19 @@
       <v-list-item>
         <v-list-item-content>
           <!-- 본문 내용 -->
-          <v-list-item-title>{{ getOotdInfo.content }}</v-list-item-title>
+          <v-list-item-title style="white-space: normal">{{
+            getOotdInfo.content
+          }}</v-list-item-title>
           <!-- 해쉬태그 -->
           <v-list-item-subtitle>
             <!-- 추후 해쉬태그에 검색 링크 걸 예정 -->
-            <pre
+            <p
               v-for="(hashtag, i) in getOotdInfo.hashTag"
               :key="i"
               style="display: inline"
-              >{{ "#" + hashtag }}</pre
             >
+              {{ "#" + hashtag }}
+            </p>
           </v-list-item-subtitle>
         </v-list-item-content>
         <!-- 좋아요 버튼 -->
@@ -220,8 +223,8 @@ export default {
     };
   },
   mounted() {
-    let ootd = this.getOotdInfo;
-    console.log(ootd);
+    // let ootd = this.getOotdInfo;
+    // console.log(ootd);
     // this.updateOotdContent = ootd.content;
     // this.updateOotdHashtagArray = this.getOotdInfo.hashTag.slice();
   },
@@ -246,7 +249,8 @@ export default {
       // 로그인 페이지로 이동
       this.$router.push("/login");
     },
-    //Update Functions
+
+    //Update 관련 Functions
     onClickImageUpload() {
       this.$refs.imageInput.click();
     },
@@ -256,27 +260,21 @@ export default {
       this.imageUrl = URL.createObjectURL(file);
     },
     addHashtag() {
-      console.log("add", this.updateOotdHashtag);
+      // 태그 입력창 엔터 시 실행
       this.updateOotdHashtagArray.push(this.updateOotdHashtag);
       this.updateOotdHashtag = "";
     },
     deleteHashtag(hashtag) {
-      console.log("delete");
-      console.log(this.updateOotdHashtagArray);
+      // 태그 클릭 시 실행
       const index = this.updateOotdHashtagArray.indexOf(hashtag);
       this.updateOotdHashtagArray.splice(index, 1);
     },
     updateOotd() {
+      // 작성완료 클릭 시 실행
       this.updateDialog = false;
-      // this.setOotdInfo({
-      //   content: this.updateOotdContent,
-      //   hashTag: this.updateOotdHashtagArray,
-      //   ootdIdx: this.getOotdInfo.Idx,
-      // });
-      console.log(this.getOotdInfo.ootdIdx);
       this.updateOotdInfo({
         content: this.updateOotdContent,
-        hashTag: this.updateOotdHashtagArray,
+        hashtagList: this.updateOotdHashtagArray,
         ootdIdx: this.getOotdInfo.ootdIdx,
       });
     },

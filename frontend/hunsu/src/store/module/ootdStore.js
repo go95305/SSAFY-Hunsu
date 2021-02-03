@@ -16,6 +16,7 @@ const actions = {
   getOotdInfoInApi(context, ootdIdx) {
     return axios.get(`http://i4c102.p.ssafy.io:8080/api/ootd/detail/${ootdIdx}`).then((res) => {
       // console.log('Vuex get OOtd ', res);
+      console.log(res.data);
       context.commit('setOotdInfo', res.data);
     });
   },
