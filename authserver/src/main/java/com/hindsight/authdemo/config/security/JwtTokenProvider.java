@@ -1,10 +1,7 @@
 package com.hindsight.authdemo.config.security;
 
 import com.hindsight.authdemo.repository.UserJpaRepo;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -12,6 +9,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
+import sun.security.krb5.internal.crypto.HmacSha1Aes256CksumType;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
@@ -91,8 +89,11 @@ public class JwtTokenProvider {
     //JWT token 유효성, 만료일자 확인
     //추후 유저정보도 확인
     public boolean validateToken(String jwtToken){
+        System.out.println("토큰 확인");
         try{
+
             Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwtToken);
+            System.out.println(claims.getHeader());
             return !claims.getBody().getExpiration().before(new Date()); // 기한이 현재보다 전인지
         }catch(Exception e){
             return false;

@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public class SocialSignUp {
-    private long UID;
+    private long uid;
     private String nickname;
     private boolean flag;
     private double height;

@@ -60,7 +60,8 @@ public class UserService {
 
 
     public void addUserInfo(long Uid, String nickname,double height,String size,String jwtRefresh, String jwtAccess,boolean flag){
-        User user = userJpaRepo.findUserByUid(Uid);
+        User user = userJpaRepo.findUserByUidAndFlag(Uid,false);
+
 
         user.setNickname(nickname);
         user.setHeight(height);
