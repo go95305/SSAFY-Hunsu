@@ -2,7 +2,6 @@
 <!-- 베스트 전후 -->
   <v-card
     elevation="24"
-    max-width="344"
     class="mx-auto"
   >
     <v-system-bar lights-out></v-system-bar>

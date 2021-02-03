@@ -1,14 +1,12 @@
 <template>
 <!-- 패션왕 -->
-  <v-container justify-center>
-    <v-layout>
-     <v-card class="mx-auto" max-width="344">
-        <v-img src="https://cdn.vuetifyjs.com/images/cards/sunshine.jpg"
-        height="300px">
-        </v-img>
-     </v-card>
-    </v-layout>
-  </v-container>
+  <v-card class="mx-auto">
+    <v-img src="@/assets/ootdtest3.png"
+    height="100%"
+    >
+    
+    </v-img>
+  </v-card>
 </template>
 
 <script>
