@@ -35,7 +35,7 @@ const routes = [
     component: Ootd,
   },
   {
-    path: '/ootd/detail/:no',
+    path: '/ootd/detail',
     name: 'OotdDetail',
     component: OotdDetail,
     // props: true,
