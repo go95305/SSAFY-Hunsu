@@ -10,34 +10,56 @@ import java.util.Optional;
 @Service
 public class UserService {
     private  UserJpaRepo userJpaRepo;
+    public UserService(UserJpaRepo userJpaRepo) {
+        this.userJpaRepo = userJpaRepo;
+    }
 
-    public void delete(String Uid) {
+    public void delete(long Uid) {
         User user = userJpaRepo.findUserByUid(Uid);
-
         user.setFlag(false);
         userJpaRepo.save(user);
     }
 
-    public void updateAccessToken(String Uid, String token){
+    public void updateAccessToken(long Uid, String token){
         User user = userJpaRepo.findUserByUid(Uid);
 
         user.setAccessToken(token);
         userJpaRepo.save(user);
     }
 
-    public  void joinUser(String uid, String accessToken, String refreshToken, String gender,boolean flag){
+    public  void joinUser(long uid, String accessToken, String refreshToken,boolean flag){
         User user = new User();
 
         user.setUid(uid);
+        System.out.println("set uid");
         user.setAccessToken(accessToken);
+        System.out.println("set aT");
         user.setRefreshToken(refreshToken);
-        user.setGender(gender);
+        System.out.println("set rT");
+        user.setHeight(0);
+        System.out.println("set He");
+//        user.setGender(gender);
         user.setFlag(flag);
-
-        User saveuser = userJpaRepo.save(user);
+        System.out.println("set flag");
+        userJpaRepo.save(user);
+        System.out.println("save user");
 
     }
-    public void addUserInfo(String Uid, String nickname,double height,String size,String jwtRefresh, String jwtAccess,boolean flag){
+
+    public  void setAllTokens(long Uid, String accessToken, String refreshToken, String jwtToken, String jwtRefresh){
+        User user=userJpaRepo.findUserByUid(Uid);
+
+        user.setAccessToken(accessToken);
+        user.setRefreshToken(refreshToken);
+        user.setJwtAccess(jwtToken);
+        user.setJwtRefresh(jwtRefresh);
+
+        userJpaRepo.save(user);
+    }
+
+
+
+    public void addUserInfo(long Uid, String nickname,double height,String size,String jwtRefresh, String jwtAccess,boolean flag){
         User user = userJpaRepo.findUserByUid(Uid);
 
         user.setNickname(nickname);

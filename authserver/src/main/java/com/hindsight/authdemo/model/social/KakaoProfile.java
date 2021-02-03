@@ -10,10 +10,10 @@ import java.util.Properties;
 @Setter
 @ToString
 public class KakaoProfile {
-    private String Uid;
+    private long Uid;
 //    private Properties properties;
-    private String nickname;
-    private String gender;  //추가함 bh
+//    private String nickname;
+//    private String gender;  //추가함 bh
 //    @Getter
 //    @Setter
 //    @ToString

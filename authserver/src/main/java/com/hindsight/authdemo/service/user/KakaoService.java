@@ -2,6 +2,7 @@ package com.hindsight.authdemo.service.user;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.hindsight.authdemo.advice.exception.CComunicationException;
 import com.hindsight.authdemo.model.social.KakaoProfile;
@@ -46,22 +47,62 @@ public class KakaoService {
     private String kakaoProfileUrl;
 
     public KakaoProfile getKakaoProfile(String accessToken){
-        //header : Content-type: application/x-www-form-urlencoded
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        headers.set("Authorization", "Bearer " + accessToken);
+        //    요청하는 클라이언트마다 가진 정보가 다를 수 있기에 HashMap타입으로 선언
+        KakaoProfile userInfo = new KakaoProfile();
+        String reqURL = "https://kapi.kakao.com/v2/user/me";
+        try {
+            URL url = new URL(reqURL);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("POST");
 
-        //set http entity
-        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(null, headers);
-        try{
-            // Request profile
-            ResponseEntity<String> response = restTemplate.postForEntity(kakaoProfileUrl, request, String.class);
-            if(response.getStatusCode() == HttpStatus.OK)
-                return gson.fromJson(response.getBody(), KakaoProfile.class);
-        }catch(Exception e){
-            throw new CComunicationException();
+            //    요청에 필요한 Header에 포함될 내용
+            conn.setRequestProperty("Authorization", "Bearer " + accessToken);
+
+            int responseCode = conn.getResponseCode();
+            System.out.println("responseCode : " + responseCode);
+
+            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+
+            String line = "";
+            String result = "";
+
+            while ((line = br.readLine()) != null) {
+                result += line;
+            }
+            System.out.println("response body : " + result);
+            JsonParser parser = new JsonParser();
+            JsonElement element = parser.parse(result);
+
+//            JsonObject properties = element.getAsJsonObject().get("properties").getAsJsonObject();
+//            JsonObject kakao_account = element.getAsJsonObject().get("kakao_account").getAsJsonObject();
+
+             long Uid =  element.getAsJsonObject().get("id").getAsLong();
+//            String gender = kakao_account.getAsJsonObject().get("gender").getAsString();
+            System.out.println(Uid);
+//            System.out.println(gender);
+            userInfo.setUid(Uid);
+//            userInfo.setGender(gender);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
-        throw new CComunicationException();
+        return userInfo;
+//        //header : Content-type: application/x-www-form-urlencoded
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+//        headers.set("Authorization", "Bearer " + accessToken);
+//
+//        //set http entity
+//        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(null, headers);
+//        try{
+//            // Request profile
+//            ResponseEntity<String> response = restTemplate.postForEntity(kakaoProfileUrl, request, String.class);
+//            if(response.getStatusCode() == HttpStatus.OK)
+//                return gson.fromJson(response.getBody(), KakaoProfile.class);
+//        }catch(Exception e){
+//            throw new CComunicationException();
+//        }
+//        throw new CComunicationException();
     }
 
     public String reKakaoAccessToken(String refreshToken){
@@ -95,6 +136,8 @@ public class KakaoService {
         return  accessToken;
     }
 
+
+
     // 성공적으로 받아온 code로 사용자 토큰 받기
     public Map<String ,String> getAccessToken (String authorize_code) {
 
@@ -114,8 +157,9 @@ public class KakaoService {
             BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
             StringBuilder sb = new StringBuilder();
             sb.append("grant_type=authorization_code");
-            sb.append("&client_id=16ae1e2e85a16538664e419b8e1a468f");
+            sb.append("&client_id=dea07b77c50fd259ffad8bbe6d94165b");
             sb.append("&redirect_uri=http://localhost:8081/v1/auth/usercheck");
+            sb.append("&client_secret=iCCyLX3QZxCgwF1CSZfQ5fmMDZhkUgaa");
             sb.append("&code=" + authorize_code);
             bw.write(sb.toString());
             bw.flush();
@@ -142,10 +186,7 @@ public class KakaoService {
             String refresh_Token = element.getAsJsonObject().get("refresh_token").getAsString();
 
             map.put("accessToken", access_Token);
-            map.put("refreshToken",refresh_Token)       ;
-
-            System.out.println("access_token : " + access_Token);
-            System.out.println("refresh_token : " + refresh_Token);
+            map.put("refreshToken",refresh_Token);
 
             br.close();
             bw.close();

@@ -21,6 +21,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -62,27 +63,42 @@ public class AuthController {
     }
 
     @ResponseBody
-    @ApiOperation(value="회원 체크 (~)", notes="유저 여부 판단")
+    @ApiOperation(value="회원 체크 (~)", notes="유저 여부 판단, code:1 이면 로그인 (토큰받기), code:-1이면 회원가입 /signup 으로 리다이렉트 ")
     @GetMapping(value="/usercheck")
-    public boolean usercheck(
+    public HashMap<String,String> usercheck(
             @ApiParam(value = "소셜 access_token", required = true) @RequestParam("code") String authorize_code){
-        System.out.println(authorize_code);
+
+        HashMap<String,String> kmap =new HashMap<>();
         Map<String,String> map =kakaoService.getAccessToken(authorize_code);
+        System.out.println("Auth_code: "+authorize_code);
         String accessToken=map.get("accessToken");
+        System.out.println("accessToken:" + accessToken);
         String refreshToken=map.get("refreshToken");
+        System.out.println("refreshToken: " + refreshToken);
 
         // 카카오 서버에서 받은 엑세스 토큰으로 카카오 프로필 가져오기
         KakaoProfile profile = kakaoService.getKakaoProfile(accessToken);
+        System.out.println("profile : " + profile);
         // 프로필의 id로 db에서 사람찾기
-        Optional<User> user = userJpaRepo.findUserByUidAndFlag(String.valueOf(profile.getUid()),true);
-
-        if(user==null) { // 없으면
-            userService.joinUser(profile.getUid(),accessToken,refreshToken,profile.getGender(),false);
-            System.out.println("회원가입!!!");
-            return false;       //회원가입
-        }else{
+        Optional<User> user = userJpaRepo.findUserByUidAndFlag(profile.getUid(),false);
+        System.out.println("User: "+user);
+        if(user.isPresent()) { // 있으면
             System.out.println("로그인!!!");
-            return true;        // 로그인
+            // 토큰 값들 수정 !!
+            String jwtToken=jwtTokenProvider.generateToken(profile.getUid(),user.get().getRoles());
+            String jwtRefresh=jwtTokenProvider.generateRefreshToken(profile.getUid(),user.get().getRoles());
+            userService.setAllTokens(profile.getUid(),accessToken,refreshToken,jwtRefresh,jwtToken);
+            System.out.println("토큰수정완료");
+            kmap.put("code","1");
+            kmap.put("jwtToken",jwtToken);
+            kmap.put("jwtRefresh",jwtRefresh);
+            return kmap;       //로그인
+        }else{
+            System.out.println("회원가입!!!");
+            userService.joinUser(profile.getUid(),accessToken,refreshToken,false);
+            System.out.println("가입완료");
+            kmap.put("code","-1");
+            return kmap;        // 회원가입
         }
     }
 
@@ -150,7 +166,7 @@ public class AuthController {
         String accessToken = null;
 
         if(jwtTokenProvider.validateToken(refreshToken)){
-            String Uid = jwtTokenProvider.getUserPk(refreshToken);
+            long Uid =Long.parseLong(jwtTokenProvider.getUserPk(refreshToken));
             List<String> roles = jwtTokenProvider.getRoles(refreshToken);
             accessToken = jwtTokenProvider.generateToken(Uid, roles);
         }else{

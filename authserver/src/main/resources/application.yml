@@ -35,8 +35,8 @@ spring:
 
   social:
     kakao:
-      client_id: 16ae1e2e85a16538664e419b8e1a468f
-      client_secret: g5Gqw9mULSYEzLQBBmK8PW1pbSRBBvBE
+      client_id: dea07b77c50fd259ffad8bbe6d94165b
+      client_secret: iCCyLX3QZxCgwF1CSZfQ5fmMDZhkUgaa
       redirect: /v1/auth/usercheck
       url:
         login: https://kauth.kakao.com/oauth/authorize

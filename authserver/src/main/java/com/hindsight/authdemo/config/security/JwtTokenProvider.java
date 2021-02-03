@@ -1,6 +1,5 @@
 package com.hindsight.authdemo.config.security;
 
-import com.hindsight.authdemo.entity.User;
 import com.hindsight.authdemo.repository.UserJpaRepo;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
@@ -42,8 +41,8 @@ public class JwtTokenProvider {
     }
 
     //Jwt 토큰 생성
-    public String createToken(String Uid, List<String> roles, long expireTime){    //nickname ->Uid
-        Claims claims = Jwts.claims().setSubject(Uid);
+    public String createToken(long Uid, List<String> roles, long expireTime){    //nickname ->Uid
+        Claims claims = Jwts.claims().setSubject(Uid+"");
         claims.put("roles", roles);
         Date now = new Date();
         return Jwts.builder()
@@ -55,12 +54,12 @@ public class JwtTokenProvider {
     }
 
     // AccessToken 생성
-    public String generateToken (String Uid, List<String> roles){   //username->Uid
+    public String generateToken (long Uid, List<String> roles){   //username->Uid
         return createToken(Uid, roles, TOKEN_VALIDATION_SECOND);
     }
 
     // RefreshToken 생성
-    public String generateRefreshToken(String Uid, List<String> roles){    //username->Uid
+    public String generateRefreshToken(long Uid, List<String> roles){    //username->Uid
         return createToken(Uid, roles, REFRESH_TOKEN_VALIDATION_SECOND);
     }
     //Jwt 토큰으로 인증정보 조회

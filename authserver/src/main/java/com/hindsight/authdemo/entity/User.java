@@ -23,9 +23,8 @@ public class User implements UserDetails {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue
     @Column(name = "uid")
-    private String uid;
+    private long uid;
     private String nickname;
 
     private Boolean flag;
