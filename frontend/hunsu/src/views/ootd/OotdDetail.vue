@@ -42,7 +42,7 @@
               </v-list-item-title>
             </v-list-item>
             <v-list-item>
-              <v-list-item-title @click="goToPage('delete')"
+              <v-list-item-title @click="onoffDeleteDialog()"
                 >삭제</v-list-item-title
               >
             </v-list-item>
@@ -95,6 +95,31 @@
         </v-list-item-action>
       </v-list-item>
     </v-list>
+
+    <!-- ### Delete Dialog -->
+    <v-dialog
+      v-model="deleteDialog"
+      hide-overlay
+      transition="dialog-bottom-transition"
+    >
+      <v-card>
+        <v-toolbar dark color="black">
+          <!-- 닫힘버튼 -->
+          <v-btn icon dark @click="onoffDeleteDialog">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+          <v-toolbar-title>OOTD 삭제</v-toolbar-title>
+          <v-spacer></v-spacer>
+        </v-toolbar>
+        <v-card-title> 정말로 삭제하시겠습니까? </v-card-title>
+        <v-spacer></v-spacer>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="error" text @click="deleteOotd"> 삭제 </v-btn>
+          <v-btn color="primary" text @click="onoffDeleteDialog"> 닫기 </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 
     <!-- ### Update Dialog -->
     <v-dialog
@@ -196,6 +221,7 @@ export default {
     return {
       dialog: false,
       updateDialog: false,
+      deleteDialog: false,
       required: false,
       colors: [
         "green",
@@ -230,12 +256,15 @@ export default {
   },
   methods: {
     ...mapMutations(["setOotdInfo"]),
-    ...mapActions(["getOotdInfoInApi", "updateOotdInfo"]),
+    ...mapActions(["getOotdInfoInApi", "updateOotdInfo", "deleteOotdInfo"]),
     onoffUpdateDialog() {
       console.log("good");
       this.updateDialog = !this.updateDialog;
       this.updateOotdContent = this.getOotdInfo.content;
       this.updateOotdHashtagArray = this.getOotdInfo.hashTag.slice();
+    },
+    onoffDeleteDialog() {
+      this.deleteDialog = !this.deleteDialog;
     },
     goToPage(item) {
       // 마이페이지, 수정 및 삭제 이동
@@ -250,6 +279,15 @@ export default {
       this.$router.push("/login");
     },
 
+    //Delete 관련 Functions
+    deleteOotd() {
+      const result = this.deleteOotdInfo(this.getOotdInfo.ootdIdx);
+      if (result) {
+        this.$router.push("/ootd");
+      } else {
+        console.log("삭제실패");
+      }
+    },
     //Update 관련 Functions
     onClickImageUpload() {
       this.$refs.imageInput.click();

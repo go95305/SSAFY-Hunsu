@@ -32,6 +32,22 @@ const actions = {
       }
     });
   },
+  deleteOotdInfo(context, ootdIdx) {
+    axios
+      .delete(`http://i4c102.p.ssafy.io:8080/api/ootd/${ootdIdx}`)
+      .then((res) => {
+        console.log(res);
+        if (res.data === 'success') {
+          return true;
+        } else {
+          return false;
+        }
+      })
+      .catch((err) => {
+        console.log('delete error', err);
+        return false;
+      });
+  },
 };
 
 export default {
