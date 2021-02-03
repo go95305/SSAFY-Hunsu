@@ -7,12 +7,12 @@
       hide-overlay
       transition="dialog-bottom-transition"
     >
-      <template v-slot:activator="{ on, attrs }">
-        <!-- 연필모양 버튼 (클릭하면 이 페이지가 뜸) -->
-        <v-btn color="red accent-3" dark small fab v-bind="attrs" v-on="on">
+      <!-- <template v-slot:activator="{ on, attrs }"> -->
+      <!-- 연필모양 버튼 (클릭하면 이 페이지가 뜸) -->
+      <!-- <v-btn color="red accent-3" dark small fab v-bind="attrs" v-on="on">
           <v-icon>mdi-pencil</v-icon>
         </v-btn>
-      </template>
+      </template> -->
 
       <v-card>
         <!-- 카드 상단 -->
@@ -25,7 +25,7 @@
           <v-spacer></v-spacer>
           <!-- 작성완료 버튼 -->
           <v-toolbar-items>
-            <v-btn dark text @click="updateOotd()"> Save </v-btn>
+            <v-btn dark text @click="updateOotdInfo()"> Save </v-btn>
           </v-toolbar-items>
         </v-toolbar>
         <!-- 카드 본문 -->
@@ -92,6 +92,7 @@ export default {
   computed: {
     ...mapGetters(["getOotdInfo"]),
   },
+  props: ["dialog"],
   mounted() {
     const ootdInfo = this.getOotdInfo;
     this.ootdContent = ootdInfo.content;
@@ -101,7 +102,7 @@ export default {
   },
   data() {
     return {
-      dialog: false,
+      // dialog: false,
       notifications: false,
       sound: true,
       widgets: false,
@@ -118,6 +119,7 @@ export default {
   },
   methods: {
     ...mapMutations(["setOotdInfo"]),
+    ...mapActions(["updateOotdInfo"]),
     onClickImageUpload() {
       this.$refs.imageInput.click();
     },
@@ -134,25 +136,25 @@ export default {
       const index = this.ootd_hashtag_array.indexOf(hashtag);
       this.ootd_hashtag_array.splice(index, 1);
     },
-    updateOotd() {
-      this.dialog = false;
-      console.log(this.ootd_hashtag_array);
-      const params = {
-        content: this.ootd_content,
-        hashtagList: this.ootd_hashtag_array,
-        nickName: "test",
-      };
+    // updateOotd() {
+    //   this.dialog = false;
+    //   console.log(this.ootd_hashtag_array);
+    //   const params = {
+    //     content: this.ootd_content,
+    //     hashtagList: this.ootd_hashtag_array,
+    //     nickName: "test",
+    //   };
 
-      axios
-        .post("http://localhost:8080/ootd", params)
-        .then(() => {
-          console.log("글쓰기성공");
-          this.ootd_hashtag_array = [];
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-    },
+    //   axios
+    //     .post("http://localhost:8080/ootd", params)
+    //     .then(() => {
+    //       console.log("글쓰기성공");
+    //       this.ootd_hashtag_array = [];
+    //     })
+    //     .catch((err) => {
+    //       console.error(err);
+    //     });
+    // },
   },
 };
 </script>

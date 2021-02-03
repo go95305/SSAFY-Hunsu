@@ -30,9 +30,16 @@
               @click="goToPage(item)"
             > -->
             <v-list-item>
-              <v-list-item-title @click="goToPage('update')"
-                >수정</v-list-item-title
-              >
+              <v-list-item-title @click="onoffUpdateDialog()">
+                수정
+                <!-- <template
+                  v-slot:activator="{ on, attrs }"
+                  v-bind="attrs"
+                  v-on="on"
+                  @click="goToPage('update')"
+                  >수정
+                </template> -->
+              </v-list-item-title>
             </v-list-item>
             <v-list-item>
               <v-list-item-title @click="goToPage('delete')"
@@ -86,7 +93,79 @@
       </v-list-item>
     </v-list>
 
-    <OotdUpdate />
+    <!-- ### Update Dialog -->
+    <v-dialog
+      v-model="updateDialog"
+      fullscreen
+      hide-overlay
+      transition="dialog-bottom-transition"
+    >
+      <v-card>
+        <!-- 카드 상단 -->
+        <v-toolbar dark color="black">
+          <!-- 닫힘버튼 -->
+          <v-btn icon dark @click="onoffUpdateDialog">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+          <v-toolbar-title>OOTD 수정</v-toolbar-title>
+          <v-spacer></v-spacer>
+          <!-- 작성완료 버튼 -->
+          <v-toolbar-items>
+            <v-btn dark text @click="updateOotd()"> 수정 완료 </v-btn>
+          </v-toolbar-items>
+        </v-toolbar>
+        <!-- 카드 본문 -->
+        <v-list three-line subheader>
+          <v-subheader>사진 등록</v-subheader>
+          <input ref="imageInput" type="file" hidden @change="onChangeImages" />
+          <v-btn class="mx-5" type="button" @click="onClickImageUpload"
+            >사진 업로드</v-btn
+          >
+          <v-img
+            class="mx-5 my-5"
+            v-if="imageUrl"
+            :src="imageUrl"
+            width="100"
+          ></v-img>
+        </v-list>
+        <v-divider></v-divider>
+        <v-list three-line subheader>
+          <div>
+            <!-- 본문 입력 -->
+            <v-textarea
+              v-model="updateOotdContent"
+              clearable
+              clear-icon="mdi-close-circle"
+              :rules="[rules.required, rules.min, rules.contentMax]"
+              counter="300"
+              label="내용"
+              class="px-5"
+              >{{ updateOotdContent }}</v-textarea
+            >
+            <!-- 해쉬태그 입력 -->
+            <v-text-field
+              label="해시태그 추가"
+              @keydown.enter="addHashtag()"
+              v-model="updateOotdHashtag"
+              class="px-5"
+            ></v-text-field>
+            <div>
+              <v-chip
+                v-for="(hashtag, idx) in updateOotdHashtagArray"
+                :key="idx"
+                class="ma-2"
+                close
+                color="red"
+                text-color="white"
+                @click="deleteHashtag(hashtag)"
+              >
+                {{ hashtag }}
+              </v-chip>
+            </div>
+          </div>
+        </v-list>
+      </v-card>
+    </v-dialog>
     <!-- 댓글 -->
     <DetailComment />
     <!-- 디테일 하단 리스트 -->
@@ -97,8 +176,7 @@
 <script>
 import DetailComment from "@/components/DetailComment";
 import OotdList from "@/components/ootd/OotdList";
-import OotdUpdate from "@/components/ootd/OotdUpdate";
-// import axios from "axios";
+
 import { mapGetters, mapMutations, mapActions } from "vuex";
 
 export default {
@@ -106,7 +184,7 @@ export default {
   components: {
     DetailComment,
     OotdList,
-    OotdUpdate,
+    // OotdUpdate,
   },
   computed: {
     ...mapGetters(["getOotdInfo"]),
@@ -114,6 +192,7 @@ export default {
   data() {
     return {
       dialog: false,
+      updateDialog: false,
       required: false,
       colors: [
         "green",
@@ -124,12 +203,37 @@ export default {
       ],
       cycle: false,
       slides: ["First", "Second", "Third", "Fourth", "Fifth"],
+      notifications: false,
+      sound: true,
+      widgets: false,
+      rules: {
+        required: (v) => !!v || "Required",
+        min: (v) => v.trim().length > 0 || "공백안됨",
+        contentMax: (v) => v.length <= 300 || "300자이하",
+      },
+      imageUrl: null,
+      // updateOotdContent: this.getOotdInfo.content,
+      updateOotdHashtag: "",
+      // updateOotdHashtagArray: this.getOotdInfo.hashtag,
+      updateOotdContent: "",
+      updateOotdHashtagArray: [],
     };
   },
-  mounted() {},
+  mounted() {
+    let ootd = this.getOotdInfo;
+    console.log(ootd);
+    // this.updateOotdContent = ootd.content;
+    // this.updateOotdHashtagArray = this.getOotdInfo.hashTag.slice();
+  },
   methods: {
     ...mapMutations(["setOotdInfo"]),
-    ...mapActions(["getOotdInfoInApi"]),
+    ...mapActions(["getOotdInfoInApi", "updateOotdInfo"]),
+    onoffUpdateDialog() {
+      console.log("good");
+      this.updateDialog = !this.updateDialog;
+      this.updateOotdContent = this.getOotdInfo.content;
+      this.updateOotdHashtagArray = this.getOotdInfo.hashTag.slice();
+    },
     goToPage(item) {
       // 마이페이지, 수정 및 삭제 이동
       if (item.text === "MyPage") {
@@ -141,6 +245,40 @@ export default {
     goToLogin() {
       // 로그인 페이지로 이동
       this.$router.push("/login");
+    },
+    //Update Functions
+    onClickImageUpload() {
+      this.$refs.imageInput.click();
+    },
+    onChangeImages(e) {
+      console.log(e.target.files);
+      const file = e.target.files[0];
+      this.imageUrl = URL.createObjectURL(file);
+    },
+    addHashtag() {
+      console.log("add", this.updateOotdHashtag);
+      this.updateOotdHashtagArray.push(this.updateOotdHashtag);
+      this.updateOotdHashtag = "";
+    },
+    deleteHashtag(hashtag) {
+      console.log("delete");
+      console.log(this.updateOotdHashtagArray);
+      const index = this.updateOotdHashtagArray.indexOf(hashtag);
+      this.updateOotdHashtagArray.splice(index, 1);
+    },
+    updateOotd() {
+      this.updateDialog = false;
+      // this.setOotdInfo({
+      //   content: this.updateOotdContent,
+      //   hashTag: this.updateOotdHashtagArray,
+      //   ootdIdx: this.getOotdInfo.Idx,
+      // });
+      console.log(this.getOotdInfo.ootdIdx);
+      this.updateOotdInfo({
+        content: this.updateOotdContent,
+        hashTag: this.updateOotdHashtagArray,
+        ootdIdx: this.getOotdInfo.ootdIdx,
+      });
     },
   },
 };

@@ -22,8 +22,10 @@ const actions = {
   updateOotdInfo(context, ootdInfo) {
     return axios.put(`http://i4c102.p.ssafy.io:8080/api/ootd`, ootdInfo).then((res) => {
       console.log('in update', res);
-      if (res.msg === 'success') {
+      if (res.data === 'success') {
         console.log('update 성공');
+        console.log(ootdInfo);
+        context.commit('setOotdInfo', ootdInfo);
       } else {
         console.log('update 실패');
       }
