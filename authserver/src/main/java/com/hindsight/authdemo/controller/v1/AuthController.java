@@ -20,7 +20,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Api(tags = {"1. Sign"})
@@ -47,20 +49,39 @@ public class AuthController {
     @Value("${spring.social.kakao.redirect}")
     private String kakaoRedirect;
 
+
+    @ApiOperation(value="kakao 로그인 테스트 URL (O)")
+    @GetMapping(value="/url")
+    public String socialLogin(){
+        StringBuilder loginUrl = new StringBuilder()
+                .append(env.getProperty("spring.social.kakao.url.login"))
+                .append("?client_id=").append(kakaoClientId)
+                .append("&response_type=code")
+                .append("&redirect_uri=").append(baseUrl).append(kakaoRedirect);
+        return loginUrl.toString();
+    }
+
+    @ResponseBody
     @ApiOperation(value="회원 체크 (~)", notes="유저 여부 판단")
-    @PostMapping(value="/usercheck")
+    @GetMapping(value="/usercheck")
     public boolean usercheck(
-            @ApiParam(value = "소셜 access_token", required = true) @RequestBody String socialAccessToken,String socialRefreshToken){
+            @ApiParam(value = "소셜 access_token", required = true) @RequestParam("code") String authorize_code){
+        System.out.println(authorize_code);
+        Map<String,String> map =kakaoService.getAccessToken(authorize_code);
+        String accessToken=map.get("accessToken");
+        String refreshToken=map.get("refreshToken");
 
         // 카카오 서버에서 받은 엑세스 토큰으로 카카오 프로필 가져오기
-        KakaoProfile profile = kakaoService.getKakaoProfile(socialAccessToken);
+        KakaoProfile profile = kakaoService.getKakaoProfile(accessToken);
         // 프로필의 id로 db에서 사람찾기
         Optional<User> user = userJpaRepo.findUserByUidAndFlag(String.valueOf(profile.getUid()),true);
 
         if(user==null) { // 없으면
-            userService.joinUser(profile.getUid(),socialAccessToken,socialRefreshToken,profile.getGender(),false);
+            userService.joinUser(profile.getUid(),accessToken,refreshToken,profile.getGender(),false);
+            System.out.println("회원가입!!!");
             return false;       //회원가입
         }else{
+            System.out.println("로그인!!!");
             return true;        // 로그인
         }
     }
@@ -116,20 +137,6 @@ public class AuthController {
         }else
             return 0;   // 토큰 재발급으로
     }
-
-    @ApiOperation(value="kakao 로그인 테스트 URL (O)")
-    @GetMapping(value="/url")
-    public String socialLogin(){
-        StringBuilder loginUrl = new StringBuilder()
-                .append(env.getProperty("spring.social.kakao.url.login"))
-                .append("?client_id=").append(kakaoClientId)
-                .append("&response_type=code")
-                .append("&redirect_uri=").append(baseUrl).append(kakaoRedirect);
-        return loginUrl.toString();
-    }
-
-
-
 
 //    @GetMapping(value="/login/kakao")
 //    public RetKakaoAuth redirectKakao(@RequestParam(value="code", required = true) String code){
