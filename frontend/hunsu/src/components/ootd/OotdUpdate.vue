@@ -13,18 +13,22 @@
           <v-icon>mdi-pencil</v-icon>
         </v-btn>
       </template>
+
       <v-card>
+        <!-- 카드 상단 -->
         <v-toolbar dark color="black">
+          <!-- 닫힘버튼 -->
           <v-btn icon dark @click="dialog = false">
             <v-icon>mdi-close</v-icon>
           </v-btn>
-          <v-toolbar-title>OOTD 작성</v-toolbar-title>
+          <v-toolbar-title>OOTD 수정</v-toolbar-title>
           <v-spacer></v-spacer>
+          <!-- 작성완료 버튼 -->
           <v-toolbar-items>
-            <!-- 작성완료 버튼 -->
-            <v-btn dark text @click="createOotd()"> Save </v-btn>
+            <v-btn dark text @click="updateOotd()"> Save </v-btn>
           </v-toolbar-items>
         </v-toolbar>
+        <!-- 카드 본문 -->
         <v-list three-line subheader>
           <v-subheader>사진 등록</v-subheader>
           <input ref="imageInput" type="file" hidden @change="onChangeImages" />
@@ -41,6 +45,7 @@
         <v-divider></v-divider>
         <v-list three-line subheader>
           <div>
+            <!-- 본문 입력 -->
             <v-textarea
               v-model="ootd_content"
               clearable
@@ -49,7 +54,9 @@
               counter="300"
               label="내용"
               class="px-5"
-            ></v-textarea>
+              >{{ ootd_content }}</v-textarea
+            >
+            <!-- 해쉬태그 입력 -->
             <v-text-field
               label="해시태그 추가"
               @keydown.enter="addHashtag()"
@@ -78,10 +85,20 @@
 
 <script>
 import axios from "axios";
-// 작성값 Null 체크
-//
+import { mapGetters, mapMutations } from "vuex";
+
 export default {
-  name: "OotdWritePage",
+  name: "OotdUpdate",
+  computed: {
+    ...mapGetters(["getOotdInfo"]),
+  },
+  mounted() {
+    const ootdInfo = this.getOotdInfo;
+    this.ootdContent = ootdInfo.content;
+    // this.ootdHashtag = ootdInfo.hashTag;
+    this.ootdHashtagArray = ootdInfo.hashTag;
+    console.log("Ootd Update", this.ootdContent);
+  },
   data() {
     return {
       dialog: false,
@@ -100,6 +117,7 @@ export default {
     };
   },
   methods: {
+    ...mapMutations(["setOotdInfo"]),
     onClickImageUpload() {
       this.$refs.imageInput.click();
     },
@@ -116,7 +134,7 @@ export default {
       const index = this.ootd_hashtag_array.indexOf(hashtag);
       this.ootd_hashtag_array.splice(index, 1);
     },
-    createOotd() {
+    updateOotd() {
       this.dialog = false;
       console.log(this.ootd_hashtag_array);
       const params = {
