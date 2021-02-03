@@ -56,15 +56,15 @@
               v-model="ootd_hashtag"
               class="px-5"
             ></v-text-field>
-            <div>
+            <div class="mx-4">
               <v-chip
                 v-for="(hashtag, idx) in ootd_hashtag_array"
                 :key="idx"
-                class="ma-2"
+                class="mx-1 my-1"
                 close
                 color="red"
                 text-color="white"
-                @click="deleteHashtag(hashtag)"
+                @click:close="deleteHashtag(hashtag)"
               >
                 {{ hashtag }}
               </v-chip>

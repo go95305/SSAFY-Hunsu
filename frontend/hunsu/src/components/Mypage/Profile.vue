@@ -20,16 +20,18 @@
           <!--모바일-->
           <v-avatar
           width="80"
-          height="80"
-          class="mt-7 ml-7 hidden-sm-and-up">
+          height="65"
+          class="mt-7 ml-7 hidden-sm-and-up"
+          style="margin: 80px 60px 0px 20px">
+          
             <img
               src="https://cdn.vuetifyjs.com/images/john.jpg"
               alt="John"
             >
           </v-avatar>
           <!--유저닉네임-->
-          <p class="font-weight-black text-h5 hidden-sm-and-down" style="margin: 60px 20px">닉네임</p>
-          <p class="font-weight-black subtitle-1 hidden-sm-and-up" style="margin: 40px 10px">닉네임</p>
+          <!-- <p class="font-weight-black text-h5 hidden-sm-and-down" style="margin: 60px 20px">닉네임</p>
+          <p class="font-weight-black subtitle-1 hidden-sm-and-up" style="margin: 40px 10px">닉네임</p> -->
 
           <!--팔로우버튼, 팔로우목록 dialog-->
           <v-dialog
@@ -42,20 +44,20 @@
                 v-bind="attrs"
                 v-on="on"
                 class="mt-16 ml-8 hidden-sm-and-down"
-              >팔로워</v-btn>
+              >팔로우</v-btn>
               <v-btn
                 color="primary"
                 v-bind="attrs"
                 v-on="on"
                 class="mt-16 mr-2 hidden-sm-and-up"
-              >팔로워</v-btn>
+              >팔로우</v-btn>
             </template>
             <template v-slot:default="dialog">
               <v-card>
                 <v-toolbar
                   color="dark"
                   dark
-                >팔로워</v-toolbar>
+                >팔로우</v-toolbar>
                 <v-list subheader>
                     <v-list-item
                       v-for="chat in recent"
@@ -137,7 +139,11 @@
           <!--설정아이콘-->
           <ProfileSetting />
         </div>
-
+        <div>
+          <!--유저닉네임-->
+          <p class="font-weight-black text-h5 hidden-sm-and-down" style="margin: 10px 30px">닉네임</p>
+          <p class="font-weight-black subtitle-1 hidden-sm-and-up" style="margin: 10px 30px">닉네임</p>
+        </div>
 
         <v-tabs
           v-model="tab"
@@ -162,11 +168,9 @@
                 <v-col
                   v-for="i in 9"
                   :key="i"
-                  cols="12"
-                  sm="4"
+                  cols="4"
                 >
                   <v-card
-                    class="pa-2"
                     outlined
                     tile
                   >
@@ -186,6 +190,7 @@
 
 </template>
 <script>
+import axios from "axios";
 import ProfileSetting from "@/components/Mypage/ProfileSetting"
 
 export default {
@@ -220,6 +225,20 @@ export default {
         },
       ]
     }
+  },
+  created() {
+    this.getProfile();
+  },
+  methods: {
+    getProfile() {
+      axios
+        .get("http://i4c102.p.ssafy.io:8080/api/ootd/")
+        .then(() => {
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    },
   },
 }
 </script>
