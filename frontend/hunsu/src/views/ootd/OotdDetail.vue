@@ -63,11 +63,11 @@
           <v-list-item-title style="white-space: normal">{{
             getOotdInfo.content
           }}</v-list-item-title>
-          <!-- 해쉬태그 -->
+          <!-- ### Hashtag -->
           <v-list-item-subtitle>
             <!-- 추후 해쉬태그에 검색 링크 걸 예정 -->
             <p
-              v-for="(hashtag, i) in getOotdInfo.hashTag"
+              v-for="(hashtag, i) in getOotdInfo.hashTagList"
               :key="i"
               style="display: inline"
             >
@@ -77,9 +77,8 @@
         </v-list-item-content>
         <!-- ### Follow button -->
         <v-list-item-action>
-          <v-btn icon @click="toggleLike(nickName)">
-            <v-icon v-if="getLike">mdi-heart</v-icon>
-            <v-icon v-if="!getLike">mdi-heart-outline</v-icon>
+          <v-btn icon @click="toggleLikeInDetail(nickName)">
+            <v-icon v-model="iconName">{{ iconName }}</v-icon>
           </v-btn>
         </v-list-item-action>
       </v-list-item>
@@ -204,7 +203,7 @@ export default {
     // OotdUpdate,
   },
   computed: {
-    ...mapGetters(["getOotdInfo", "getLike"]),
+    ...mapGetters(["getOotdInfo"]),
   },
   data() {
     return {
@@ -231,18 +230,19 @@ export default {
         contentMax: (v) => v.length <= 300 || "300자이하",
       },
       imageUrl: null,
-      // updateOotdContent: this.getOotdInfo.content,
       updateOotdHashtag: "",
-      // updateOotdHashtagArray: this.getOotdInfo.hashtag,
       updateOotdContent: "",
       updateOotdHashtagArray: [],
+      iconName: "",
     };
   },
   mounted() {
-    // let ootd = this.getOotdInfo;
-    // console.log(ootd);
-    // this.updateOotdContent = ootd.content;
-    // this.updateOotdHashtagArray = this.getOotdInfo.hashTag.slice();
+    console.log("mounted", this.getOotdInfo);
+    if (this.getOotdInfo.likeChk) {
+      this.iconName = "mdi-heart";
+    } else {
+      this.iconName = "mdi-heart-outline";
+    }
   },
   methods: {
     ...mapMutations(["setOotdInfo"]),
@@ -310,6 +310,16 @@ export default {
         hashtagList: this.updateOotdHashtagArray,
         ootdIdx: this.getOotdInfo.ootdIdx,
       });
+    },
+    toggleLikeInDetail(nickname) {
+      if (this.getOotdInfo.likeChk) {
+        // 좋아요 였다가 좋아요 해제로
+        this.iconName = "mdi-heart-outline";
+      } else {
+        // 좋아요 해제였다가 좋아요로
+        this.iconName = "mdi-heart";
+      }
+      this.toggleLike(nickname);
     },
   },
 };
