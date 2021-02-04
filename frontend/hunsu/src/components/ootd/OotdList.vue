@@ -70,24 +70,13 @@ export default {
       slides: ["First", "Second", "Third", "Fourth", "Fifth"],
     };
   },
-  computed: {...mapGetters(["getOotdList"])},
+  computed: { ...mapGetters(["getOotdList"]) },
   created() {
-    this.getOotdListInApi()
-    console.log('되니')
+    this.getOotdListInApi(0);
+    // console.log("되니");
   },
   methods: {
     ...mapActions(["getOotdInfoInApi", "getOotdListInApi"]),
-    // getOotdList() {
-    //   axios
-    //     .get("http://i4c102.p.ssafy.io:8080/api/ootd/0")
-    //     .then((res) => {
-    //       this.ootdList = res.data;
-    //       // console.log("ootd List ", this.ootdList);
-    //     })
-    //     .catch((err) => {
-    //       console.error(err);
-    //     });
-    // },
 
     goToOotdDetail(ootd) {
       // console.log(ootd);

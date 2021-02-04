@@ -8,38 +8,42 @@ const getters = {
     return state.ootdInfo;
   },
   getOotdList(state) {
-    return state.ootdList
-  }
+    return state.ootdList;
+  },
 };
 const mutations = {
   setOotdInfo(state, ootdInfo) {
     state.ootdInfo = ootdInfo;
   },
   setOotdList(state, ootdList) {
-    state.ootdList.push(ootdList)
-  }
-  }
+    state.ootdList = ootdList;
+    // console.log('setOotdList', state.ootdList);
+  },
+};
 
 const actions = {
-  getOotdListInApi({commit}) {
-    axios.get("http://i4c102.p.ssafy.io:8080/api/ootd/0")
-    .then((res) => {
-      commit('setOotdList', res.data)
-      console.log(res.data)
-    })
-    .catch((err) => {
-      console.error(err);
-    });
-  },
-  getPopularOotdListInApi({commit}){
-    axios.get("http://i4c102.p.ssafy.io:8080/api/ootd/1")
-    .then((res) => {
-      commit('setOotdList', res.data)
-      console.log(res.data)
-    })
-    .catch((err) => {
-      console.error(err);
-    });
+  //   getOotdListInApi({ commit }) {
+  //     axios
+  //       .get('http://i4c102.p.ssafy.io:8080/api/ootd/0')
+  //       .then((res) => {
+  //         commit('setOotdList', res.data);
+  //         console.log(res.data);
+  //       })
+  //       .catch((err) => {
+  //         console.error(err);
+  //       });
+  //   },
+  // Ootd 리스트 정렬
+  getOotdListInApi(context, sort) {
+    axios
+      .get(`http://i4c102.p.ssafy.io:8080/api/ootd/${sort}`)
+      .then((res) => {
+        context.commit('setOotdList', res.data);
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   },
   getOotdInfoInApi(context, ootdIdx) {
     return axios.get(`http://i4c102.p.ssafy.io:8080/api/ootd/detail/${ootdIdx}`).then((res) => {
