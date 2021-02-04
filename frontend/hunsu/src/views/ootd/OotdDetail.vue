@@ -78,11 +78,10 @@
         <!-- ### Follow button -->
         <v-list-item-action>
           <v-btn icon @click="toggleLikeInDetail(nickName)">
-            <v-icon v-model="iconName" v-if="iconName === 'mdi-heart'" color="red">{{ iconName }}</v-icon>
-            <v-icon v-model="iconName" v-else>{{ iconName }}</v-icon>
-            <div>{{getOotdInfo.likeCount}}</div>
+            <v-icon v-model="iconName" color="red">{{ iconName }}</v-icon>
+            <!-- <v-icon v-model="iconName" v-else>{{ iconName }}</v-icon> -->
+            <div>{{ getOotdInfo.likeCount }}</div>
           </v-btn>
-
         </v-list-item-action>
       </v-list-item>
     </v-list>
@@ -240,8 +239,18 @@ export default {
       iconName: "", // 좋아요 토글 변수
     };
   },
+  watch: {
+    getOotdInfo: (newData) => {
+      console.log("iconName ", newData);
+      if (newData.likeChk) {
+        return "mdi-heart";
+      } else {
+        return "mdi-heart-outline";
+      }
+    },
+  },
   mounted() {
-    // console.log("mounted", this.getOotdInfo);
+    console.log("mounted");
     if (this.getOotdInfo.likeChk) {
       // 좋아요 초기 설정 부분
       this.iconName = "mdi-heart"; // 꽉찬 하트
@@ -322,11 +331,11 @@ export default {
       if (this.getOotdInfo.likeChk) {
         // 좋아요 였다가 좋아요 해제로
         this.iconName = "mdi-heart-outline";
-        this.getOotdInfo.likeCount -= 1
+        this.getOotdInfo.likeCount -= 1;
       } else {
         // 좋아요 해제였다가 좋아요로
         this.iconName = "mdi-heart";
-        this.getOotdInfo.likeCount += 1
+        this.getOotdInfo.likeCount += 1;
       }
       this.toggleLike(nickname);
     },
