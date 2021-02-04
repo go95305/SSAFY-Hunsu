@@ -26,21 +26,23 @@
           <!-- <v-btn icon @click="deleteWhatwearReply(reply.idx)"><v-icon>mdi-close</v-icon></v-btn> -->
       </v-card>
       <!--대댓글창-->
-      <v-card v-if="reply.depth === 1" flat class="d-flex ml-8">
-        <div>
-          <v-avatar class="mt-5 ml-4" width="30" height="30">
-            <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
-          </v-avatar>
-        </div>
-        <div style="margin: 17px; margin-left: 10px;">
-          <p style="margin-bottom: 0; font-size: 14px">{{ reply.nickname }}</p>
-          <p style="margin-bottom: 0; font-size: 13px">{{ reply.content }}</p>
+      <v-card v-if="reply.depth === 1" flat class="d-flex align-center justify-space-around">
         <div class="d-flex">
-          <!--write_date가 null이라서 바로반영못함-->
-          <!-- <p style="margin-bottom: 0; font-size: 10px">{{ reply.write_date.slice(0, 10) }}</p> -->
-          <p style="margin-bottom: 0; font-size: 10px">좋아요 {{ reply.count }}개</p>
-          <p style="margin-bottom: 0; margin-left: 10px; font-size: 10px" @click="clickWhatwearReReply(reply.nickname, reply.groupNum)">답글하기</p>
-        </div>
+          <div>
+            <v-avatar class="mt-5 ml-4" width="30" height="30">
+              <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
+            </v-avatar>
+          </div>
+          <div style="margin: 17px; margin-left: 10px;">
+            <p style="margin-bottom: 0; font-size: 14px">{{ reply.nickname }}</p>
+            <p style="margin-bottom: 0; font-size: 13px">{{ reply.content }}</p>
+          <div class="d-flex">
+            <!--write_date가 null이라서 바로반영못함-->
+            <!-- <p style="margin-bottom: 0; font-size: 10px">{{ reply.write_date.slice(0, 10) }}</p> -->
+            <p style="margin-bottom: 0; font-size: 10px">좋아요 {{ reply.count }}개</p>
+            <p style="margin-bottom: 0; margin-left: 10px; font-size: 10px" @click="clickWhatwearReReply(reply.nickname, reply.groupNum)">답글하기</p>
+          </div>
+          </div>
         </div>
         <v-btn icon @click="likeWhatwearReply(reply.idx)" :color="reply.like ? 'red' : 'black'"><v-icon>mdi-heart-outline</v-icon></v-btn>
       </v-card>
