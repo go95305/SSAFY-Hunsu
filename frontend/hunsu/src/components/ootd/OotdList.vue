@@ -89,13 +89,12 @@ export default {
         });
     },
     goToOotdDetail(ootd) {
-      // console.log(ootd);
-      // console.log(ootd.ootdIdx);
-      // this.$router.push(`ootd/detail?${ootd.ootdIdx}`);
-
       //idx 굳이 보여줄 필요 없을것같아서 params로 변경
       // this.$router.push({ name: "OotdDetail", params: { no: ootd.ootdIdx } });
-      this.getOotdInfoInApi(ootd.ootdIdx);
+      this.getOotdInfoInApi({
+        ootdIdx: ootd.ootdIdx,
+        nickname: "jin",
+      });
       this.$router.push({ name: "OotdDetail" });
     },
   },

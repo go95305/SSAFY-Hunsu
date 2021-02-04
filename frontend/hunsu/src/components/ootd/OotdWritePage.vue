@@ -77,7 +77,8 @@
 </template>
 
 <script>
-import axios from "axios";
+// import axios from "axios";
+import { mapActions } from "vuex";
 // 작성값 Null 체크
 //
 export default {
@@ -100,6 +101,7 @@ export default {
     };
   },
   methods: {
+    ...mapActions(["createOotdInfo", "getOotdInfoInApi"]),
     onClickImageUpload() {
       this.$refs.imageInput.click();
     },
@@ -118,22 +120,18 @@ export default {
     },
     createOotd() {
       this.dialog = false;
-      console.log(this.ootd_hashtag_array);
+      //   console.log(this.ootd_hashtag_array);
       const params = {
         content: this.ootd_content,
         hashtagList: this.ootd_hashtag_array,
-        nickName: "test",
+        nickName: "go",
       };
-
-      axios
-        .post("http://localhost:8080/ootd", params)
-        .then(() => {
-          console.log("글쓰기성공");
-          this.ootd_hashtag_array = [];
-        })
-        .catch((err) => {
-          console.error(err);
-        });
+      if (this.createOotdInfo(params)) {
+        this.getOotdInfoInApi(0);
+        this.ootd_hastag_array = [];
+      } else {
+        console.log("실패함");
+      }
     },
   },
 };
