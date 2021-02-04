@@ -94,7 +94,7 @@ public class OotdController {
     @Transactional
     @ApiOperation(value = "Ootd글 좋아요 (O)", notes = "ootd글 좋아요 추가 혹은 제거 \n" +
             "                                          Parameter: nickname,ootdidx\n" +
-            "                                          Response: 유저가 좋아요한 글 정보(nickname,ootdIdx)") // 성공
+            "                                          Response: 좋아요 추가 - true  좋아요 해제 - false") // 성공
     public Boolean ootdLike(@Valid @RequestBody OotdLikeDTO ootdLikeDTO) {
         Ootd ootd = entityManager.find(Ootd.class, ootdLikeDTO.getOotdIdx());
         List<OotdLikeDTO> ootdLikeDTOList = null;
