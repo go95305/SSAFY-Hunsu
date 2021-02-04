@@ -78,7 +78,8 @@
 
 <script>
 import axios from "axios";
-
+// 작성값 Null 체크
+//
 export default {
   name: "OotdWritePage",
   data() {
@@ -87,10 +88,11 @@ export default {
       notifications: false,
       sound: true,
       widgets: false,
-      rules: [
-        (value) => !!value || "Required.",
-        (value) => (value && value.length >= 3) || "Min 3 characters",
-      ],
+      rules: {
+        required: (v) => !!v || "Required",
+        min: (v) => v.trim().length > 0 || "공백안됨",
+        contentMax: (v) => v.length <= 300 || "300자이하",
+      },
       imageUrl: null,
       ootd_content: "",
       ootd_hashtag: "",

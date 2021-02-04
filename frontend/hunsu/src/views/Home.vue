@@ -1,11 +1,9 @@
 <template>
   <div>
-    <div>
-      <!--코디추천버튼-->
-      <RecommendBtn />
-    </div>
+    <!--코디추천버튼-->
     <Bestootd />
     <BestBeforeAfter />
+    <RecommendBtn />
   </div>
 </template>
 
