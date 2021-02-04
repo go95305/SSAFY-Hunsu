@@ -18,8 +18,10 @@ public interface UserJpaRepo extends JpaRepository<User, String> {
 
     User findUserByUidAndFlag(long Uid, Boolean flag);       // User테이블에서 Uid
 
+    User findUserByAccessTokenAndFlag(String accessToken, Boolean flag);
 //    Optional<User> findUserByNickname(String nickname);
 
+    Optional<User> findUserByJwtAccessAndUid(String jwtToken,long Uid);
     User findUserByUid(long Uid);
 
 

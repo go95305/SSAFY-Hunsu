@@ -62,7 +62,7 @@ public class JwtTokenProvider {
     }
     //Jwt 토큰으로 인증정보 조회
     public Authentication getAuthentication(String token){
-        UserDetails userDetails = userDetailsService.loadUserByUsername(this.getUserPk(token));
+        UserDetails userDetails = userDetailsService.loadUserByUsername(String.valueOf(this.getUserPk(token)));
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
 //        User user = userJpaRepo.findByNickname(this.getUserPk(token));
 
@@ -70,8 +70,8 @@ public class JwtTokenProvider {
 
     //Jwt 토큰에서 회원 구별 정보 추출
     // 현재 nickname 으로 리턴됨, 추후 uid로 변경 (OK)
-    public String getUserPk(String token){
-        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
+    public long getUserPk(String token){
+        return Long.parseLong(Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject());
     }
 
 

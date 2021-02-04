@@ -20,4 +20,6 @@ public class CommonResult {
     @ApiModelProperty(value="응답메세지")
     private String msg;
 
+
+
 }
