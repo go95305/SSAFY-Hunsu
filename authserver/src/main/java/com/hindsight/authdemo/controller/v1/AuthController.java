@@ -51,7 +51,7 @@ public class AuthController {
     private String kakaoRedirect;
 
 
-    @ApiOperation(value="kakao 로그인 테스트 URL (O)")
+    @ApiOperation(value="kakao 로그인 테스트 URL (O)",notes = "입력해둔 url로 접근")
     @GetMapping(value="/url")
     public String socialLogin(){
         StringBuilder loginUrl = new StringBuilder()
@@ -63,7 +63,11 @@ public class AuthController {
     }
 
     @ResponseBody
-    @ApiOperation(value="회원 체크 (O)", notes="유저 여부 판단, code:1 이면 로그인 (토큰받기), code:-1이면 회원가입 /signup 으로 리다이렉트: ")
+    @ApiOperation(value="회원 체크 (O)", notes="유저 여부 판단\n"
+                                                "Parameter : 카카오 서버에서 제공해주는 인가 코드\n" +
+                                                "Response \n" +
+                                                "-code:1 (HashMap안의 토큰값 받아서 로컬스토리지 저장, 로그인)\n" +
+                                                "- code:-1( 추가정보 입력 후, form을 /signup 으로 리다이렉트 , 회원가입처리) ")
     @GetMapping(value="/usercheck")
     public HashMap<String,String> usercheck(
             @ApiParam(value = "인가 코드", required = true) @RequestParam("code") String authorize_code){
@@ -104,13 +108,13 @@ public class AuthController {
 //        return kmap;
     }
 
-    @ApiOperation(value="소셜 로그인 (~)", notes="jwtAccess 토큰 검증, fail이면 실패 아니면 jwtAccessToken")
+    @ApiOperation(value="소셜 로그인 (~)", notes="(수정중---)jwtAccess 토큰 검증, fail이면 실패 아니면 jwtAccessToken")
     @PostMapping(value="/login")
     public String login(
             @ApiParam(value = "jwtAccessToken", required = true) @RequestParam String jwtToken){
 
         if(jwtTokenProvider.validateToken(jwtToken)){    // jwt리프레시토큰이 유효할 때
-            Optional<User> user = userJpaRepo.findUserByJwtToken(jwtToken);
+            Optional<User> user = userJpaRepo.findUserByJwtAccess(jwtToken);
             System.out.println("USER :" + user.get().getUid());
             String kakaoRefresh=user.get().getRefreshToken();
             // 카카오 리프레시 토큰 활용해서 카카오 엑세스 토큰 요청
@@ -133,7 +137,17 @@ public class AuthController {
     }
 
 
-    @ApiOperation(value="소셜 계정 가입 (O)", notes="추가 정보 form를 받아와 소셜 계정 회원가입을 한다.")
+    @ApiOperation(value="소셜 계정 가입 (O)", notes="추가 정보 form를 받아와 소셜 계정 회원가입을 한다.\n" +
+            "Parameter\n" +
+            "[form]\n" +
+            "- Uid : 유저id\n" +
+            "- nickname\n" +
+            "- height\n" +
+            "- size\n" +
+            "Respnse" +
+            "- sucess : 성공여부\n" +
+            "- code \n" +
+            "- msg")
     @PostMapping(value ="/signup")
     public CommonResult signupProvider(@ApiParam("소셜 회원가입 객체") @RequestBody SocialSignUp form){
         System.out.println("Form uid: "+form.getUid());
@@ -147,19 +161,25 @@ public class AuthController {
         return responseService.getSuccessResult();
     }
 
-    @ApiOperation(value="엑세스 토큰 검증 (O)",notes = "return 1 : 유효, return 0 : 유효하지않음")
+    @ApiOperation(value="엑세스 토큰 검증 (O)",notes = "jwt엑세스토큰 검증\n" +
+            "Parameter : jwtAccessToken\n" +
+            "Response: true(유효)/false(유효하지않음)\n" +
+            "-true : 회원가입검증(~)\n" +
+            "-false: v1/auth/newtoken 으로 jwtrefrehs 보내기")
     @GetMapping(value="/check")
-    public int checkToken(@ApiParam("검증할 jwt엑세스토큰") @RequestParam String jwtToken){
+    public boolean checkToken(@ApiParam("검증할 jwt엑세스토큰") @RequestParam String jwtToken){
         System.out.println("Check Start!!!!!!!!!!");
         if(jwtTokenProvider.validateToken(jwtToken)){
             System.out.println("유효");
-            return 1;
+            return true;
         }else
             System.out.println("유효하지않음");
-            return 0;   // 토큰 재발급으로
+            return false;   // 토큰 재발급으로
     }
 
-    @ApiOperation(value="토큰 재발급 (O)", notes="리프레시 토큰으로 액세스 토큰을 재발급 한다.")
+    @ApiOperation(value="토큰 재발급 (O)", notes="리프레시 토큰으로 액세스 토큰을 재발급 한다.\n" +
+            "Parameter : jwtRefreshToken\n" +
+            "Response : ")
     @GetMapping("/newtoken")
     public SingleResult<String> getTokenFromRefreshToken(@ApiParam("jwtRefrshToken") @RequestParam String jwtRefresh){
         String accessToken = null;
@@ -171,6 +191,7 @@ public class AuthController {
             accessToken = jwtTokenProvider.generateToken(Uid, roles);
 
         }else{
+            System.out.println("재발급불가");
             responseService.getFailResult(-1, "유효한토큰이없습니다.");
         }
         return responseService.getSingleResult(accessToken);
