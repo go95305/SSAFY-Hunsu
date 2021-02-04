@@ -48,7 +48,7 @@ const actions = {
       .get(`http://i4c102.p.ssafy.io:8080/api/ootd/hashtag/search/${hashtag}`)
       .then((res) => {
         context.commit('setOotdList', res.data);
-        console.log(res.data);
+        // console.log(res.data);
       })
       .catch((err) => {
         console.error(err);
@@ -56,7 +56,7 @@ const actions = {
   },
   getOotdInfoInApi(context, info) {
     // ootd 디테일 가져오기
-    console.log(info.ootdIdx, info.nickname);
+    // console.log(info.ootdIdx, info.nickname);
     return axios
       .get(`http://i4c102.p.ssafy.io:8080/api/ootd/detail/${info.ootdIdx}/${info.nickname}`)
       .then((res) => {
@@ -69,7 +69,7 @@ const actions = {
   updateOotdInfo(context, ootdInfo) {
     // ootd 수정
     return axios.put(`http://i4c102.p.ssafy.io:8080/api/ootd`, ootdInfo).then((res) => {
-      console.log('in update', res);
+      //   console.log('in update', res);
       if (res.data === 'success') {
         console.log('update 성공');
         console.log(ootdInfo);
@@ -98,7 +98,7 @@ const actions = {
   },
   toggleLike({ commit, state }, nickname) {
     // 좋아요 토글
-    console.log(nickname);
+    // console.log(nickname);
     axios
       .put(`http://i4c102.p.ssafy.io:8080/api/ootd/like`, {
         nickname,

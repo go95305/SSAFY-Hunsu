@@ -79,7 +79,7 @@ export default {
   computed: { ...mapGetters(["getOotdList"]) },
   created() {
     this.getOotdListInApi(0);
-    console.log(this.getOotdList);
+    // console.log(this.getOotdList);
   },
   methods: {
     ...mapActions(["getOotdInfoInApi", "getOotdListInApi"]),

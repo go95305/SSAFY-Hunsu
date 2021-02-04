@@ -241,7 +241,7 @@ export default {
   },
   watch: {
     getOotdInfo: (newData) => {
-      console.log("iconName ", newData);
+      // console.log("iconName ", newData);
       if (newData.likeChk) {
         return "mdi-heart";
       } else {
@@ -250,7 +250,7 @@ export default {
     },
   },
   mounted() {
-    console.log("mounted");
+    // console.log("mounted");
     if (this.getOotdInfo.likeChk) {
       // 좋아요 초기 설정 부분
       this.iconName = "mdi-heart"; // 꽉찬 하트
