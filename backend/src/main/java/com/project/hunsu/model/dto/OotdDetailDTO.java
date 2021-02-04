@@ -19,10 +19,10 @@ public class OotdDetailDTO {
     private Boolean isUpdated;
     private LocalDateTime writeDate;
     private String nickname;
-    private List<String> hashTag = new ArrayList<>();
+    private List<String> hashTagList = new ArrayList<>();
 
     public void addHashtag(String hashtag) {
-        this.hashTag.add(hashtag);
+        this.hashTagList.add(hashtag);
     }
 
     private List<OotdReplyDTO> ootdReplyDTOList = new ArrayList<>();
