@@ -42,15 +42,15 @@ public class OotdController {
         return ootdMainDTOList;
     }
 
-    @GetMapping("/ootd/detail/{ootdIdx}") // ootd_idx,content,count,is_updated,write_date,nickname
+    @GetMapping("/ootd/detail/{ootdIdx}/{nickname}") // ootd_idx,content,count,is_updated,write_date,nickname
     @ApiOperation(value = "Ootd 상세페이지 (O)", notes = "ootd글에 대한 상세페이지, ootd메인페이지에서 특정 글을 클릭시\n" +
             "             해당 글에 대한 상세정보를 보여준다. 글의 ootdidx를 통해 연관된 hashtag,좋아요,댓글, 대댓글을 전부 리턴해준다.\n" +
-            "             Parameter: OotdIdx \n" +
+            "             Parameter: OotdIdx,nickname \n" +
             "             Response:  ootdIdx, content, count, isUpdated, writeDate, nickname, hashtag(list), ootdReply(list)")
     // 이것도 jpql 아니면 querydSL써야함
-    public OotdDetailDTO detailOotd(@PathVariable("ootdIdx") Long ootdIdx) {
+    public OotdDetailDTO detailOotd(@PathVariable("ootdIdx") Long ootdIdx,@PathVariable String nickname) {
 //        Ootd ootdDetail = ootdRepository.findByIdx(ootdidx);
-        OotdDetailDTO ootdDetailDTO = ootdService.SpecificOotd(ootdIdx);
+        OotdDetailDTO ootdDetailDTO = ootdService.SpecificOotd(ootdIdx,nickname);
         return ootdDetailDTO;
     }
 
@@ -95,13 +95,14 @@ public class OotdController {
     @ApiOperation(value = "Ootd글 좋아요 (O)", notes = "ootd글 좋아요 추가 혹은 제거 \n" +
             "                                          Parameter: nickname,ootdidx\n" +
             "                                          Response: 유저가 좋아요한 글 정보(nickname,ootdIdx)") // 성공
-    public List<OotdLikeDTO> ootdLike(@Valid @RequestBody OotdLikeDTO ootdLikeDTO) {
+    public Boolean ootdLike(@Valid @RequestBody OotdLikeDTO ootdLikeDTO) {
         Ootd ootd = entityManager.find(Ootd.class, ootdLikeDTO.getOotdIdx());
         List<OotdLikeDTO> ootdLikeDTOList = null;
+        boolean chk=false;
         if (ootd != null) {
-            ootdLikeDTOList = ootdService.ootdLike(ootdLikeDTO);
+            chk = ootdService.ootdLike(ootdLikeDTO);
         }
-        return ootdLikeDTOList;
+        return chk;
     }
 
 

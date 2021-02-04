@@ -63,8 +63,10 @@ public class OotdService {
 
 
     //Ootd 상세페이지 정보 가져오기
-    public OotdDetailDTO SpecificOotd(Long ootdIdx) { //NickName, 작성일자, 수정 여부, 사진, 좋아요 카운트, style 해시태그 리스트, product 해시태그 리스트, 댓글, 대댓글
+    public OotdDetailDTO SpecificOotd(Long ootdIdx, String nickname) { //NickName, 작성일자, 수정 여부, 사진, 좋아요 카운트, style 해시태그 리스트, product 해시태그 리스트, 댓글, 대댓글
         Ootd ootd = ootdRepository.findByIdx(ootdIdx);// OotdIdx를 통해 ootd글을 가져오기
+        User user = userRepository.findUserByNickname(nickname);
+        OotdLike ootdLike = ootdLikeRepository.findOotdLikeByOotdIdxAndUser(ootdIdx, user);
         OotdDetailDTO ootdDetailDTO = null;
         if (ootd != null) {
             ootdDetailDTO = new OotdDetailDTO();
@@ -74,26 +76,25 @@ public class OotdService {
             ootdDetailDTO.setNickname(ootd.getUser().getNickname());
             ootdDetailDTO.setWriteDate(ootd.getWriteDate());
             ootdDetailDTO.setIsUpdated(ootd.getIsUpdated());
-            ootdDetailDTO.setCount(ootd.getCount());
+            ootdDetailDTO.setLikeCount(ootd.getCount());
             ootdDetailDTO.setContent(ootd.getContent());
+            if (ootdLike != null) {
+                if (ootdLike.getFlag())
+                    ootdDetailDTO.setLikeChk(true);
+                else
+                    ootdDetailDTO.setLikeChk(false);
+            } else
+                ootdDetailDTO.setLikeChk(false);
+
             for (int i = 0; i < hashtagList.size(); i++) {
                 if (hashtagList.get(i).getFlag())
                     ootdDetailDTO.addHashtag(hashtagList.get(i).getContent());
             }
             //댓글리스트도 리턴
-            for (int i = 0; i < ootdReplyList.size(); i++) {
-                OotdReplyDTO ootdReplyDTO = new OotdReplyDTO();
-                ootdReplyDTO.setIdx(ootdReplyList.get(i).getIdx());
-                ootdReplyDTO.setOotd_idx(ootdReplyList.get(i).getOotd().getIdx());
-                ootdReplyDTO.setNickname(ootdReplyList.get(i).getUser().getNickname());
-                ootdReplyDTO.setContent(ootdReplyList.get(i).getContent());
-                ootdReplyDTO.setDepth(ootdReplyList.get(i).getDepth());
-                ootdReplyDTO.setWrite_date(ootdReplyList.get(i).getWriteDate());
-                ootdReplyDTO.setCount(ootdReplyList.get(i).getCount());
-                ootdReplyDTO.setGroupNum(ootdReplyList.get(i).getGroupNum());
-                ootdReplyDTO.setFlag(ootdReplyList.get(i).getFlag());
-                ootdDetailDTO.addReply(ootdReplyDTO);
-            }
+            OotdReply ootdReply = ootdReplyRepository.findReplyByIdx(ootdIdx);
+            List<OotdReplyDTO> ootdReplyDTOList = new ArrayList<>();
+            ootdReplyDTOList = replyList(ootdReply.getOotd().getIdx(), ootdReply.getUser().getNickname());
+            ootdDetailDTO.setOotdReplyDTOList(ootdReplyDTOList);
         }
         return ootdDetailDTO;
     }
@@ -268,7 +269,8 @@ public class OotdService {
         return ootdReplyDTOList;
     }
 
-    public List<OotdLikeDTO> ootdLike(OotdLikeDTO ootdLikeDTO) {
+    public boolean ootdLike(OotdLikeDTO ootdLikeDTO) {
+        boolean likeOrNot;
         //2. 안눌렀을 경우, 좋아요 추가
 
         //좋아요를 누른 ootd글을 가져온다.
@@ -280,16 +282,19 @@ public class OotdService {
         if (ootdLike != null) {
             if (ootdLike.getFlag()) {
                 ootdLike.setFlag(false);
+                likeOrNot=false;
                 ootd.setCount(ootd.getCount() - 1);
                 ootdRepository.save(ootd);
             } else {
                 ootdLike.setFlag(true);
+                likeOrNot=true;
                 ootd.setCount(ootd.getCount() + 1);
                 ootdRepository.save(ootd);
             }
         } else {
             OotdLike otLike = new OotdLike();
             otLike.setFlag(true);
+            likeOrNot=true;
             otLike.setUser(user);
             otLike.setOotd(ootd);
             ootdLikeRepository.save(otLike);
@@ -305,7 +310,7 @@ public class OotdService {
             otDTO.setOotdIdx(like.getOotd().getIdx());
             ootdLikeDTOList.add(otDTO);
         }
-        return ootdLikeDTOList;
+        return likeOrNot;
     }
 
     public List<OotdReplyDTO> deleteReply(Long idx) {
@@ -364,7 +369,7 @@ public class OotdService {
     }
 
     public List<OotdReplyDTO> replyList(Long idx, String nickname) {
-        System.out.println(nickname+"=============================");
+        System.out.println(nickname + "=============================");
         List<OotdReplyDTO> replyDTOList = new ArrayList<>();
 
         Ootd ootd = ootdRepository.findOotdByIdx(idx);
