@@ -24,21 +24,9 @@
           </template>
           <!-- 수정 및 삭제 버튼 -->
           <v-list>
-            <!-- <v-list-item
-              v-for="(item, i) in items"
-              :key="i"
-              @click="goToPage(item)"
-            > -->
             <v-list-item>
               <v-list-item-title @click="onoffUpdateDialog()">
                 수정
-                <!-- <template
-                  v-slot:activator="{ on, attrs }"
-                  v-bind="attrs"
-                  v-on="on"
-                  @click="goToPage('update')"
-                  >수정
-                </template> -->
               </v-list-item-title>
             </v-list-item>
             <v-list-item>
@@ -87,10 +75,11 @@
             </p>
           </v-list-item-subtitle>
         </v-list-item-content>
-        <!-- 좋아요 버튼 -->
+        <!-- ### Follow button -->
         <v-list-item-action>
-          <v-btn icon>
-            <v-icon>mdi-heart</v-icon>
+          <v-btn icon @click="toggleLike(nickName)">
+            <v-icon v-if="getLike">mdi-heart</v-icon>
+            <v-icon v-if="!getLike">mdi-heart-outline</v-icon>
           </v-btn>
         </v-list-item-action>
       </v-list-item>
@@ -215,10 +204,11 @@ export default {
     // OotdUpdate,
   },
   computed: {
-    ...mapGetters(["getOotdInfo"]),
+    ...mapGetters(["getOotdInfo", "getLike"]),
   },
   data() {
     return {
+      nickName: "jin", // 임시 닉네임
       dialog: false,
       updateDialog: false,
       deleteDialog: false,
@@ -256,7 +246,12 @@ export default {
   },
   methods: {
     ...mapMutations(["setOotdInfo"]),
-    ...mapActions(["getOotdInfoInApi", "updateOotdInfo", "deleteOotdInfo"]),
+    ...mapActions([
+      "getOotdInfoInApi",
+      "updateOotdInfo",
+      "deleteOotdInfo",
+      "toggleLike",
+    ]),
     onoffUpdateDialog() {
       console.log("good");
       this.updateDialog = !this.updateDialog;
