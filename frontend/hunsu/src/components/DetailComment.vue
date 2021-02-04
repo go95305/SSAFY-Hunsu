@@ -36,13 +36,16 @@
           cols="12"
           sm="6"
         >
-          <v-textarea
+          <v-text-field
             label="댓글쓰기"
-            auto-grow
             outlined
             rows="3"
             row-height="25"
-          ></v-textarea>
+            v-model="replyContent"
+            @keydown.enter="createWhatwearReply()"
+            :append-icon="replyContent ? 'mdi-send' : ''"
+            @click:append="createWhatwearReply()"
+          ></v-text-field>
         </v-col>
 
       </v-row>
@@ -51,6 +54,7 @@
 </template>
 
 <script>
+import axios from 'axios'
   export default {
     name: "DetailComment",
     data: () => ({
@@ -85,7 +89,29 @@
           subtitle: '<span class="text--primary">Britta Holt</span> &mdash; We should eat this: Grate, Squash, Corn, and tomatillo Tacos.',
         },
       ],
+      replyContent: '',
     }),
+    methods: {
+      createWhatwearReply() {
+        console.log(this.replyContent)
+        const params = {
+          'content': this.replyContent,
+          'depth': 0,
+          'groupNum:': 0,
+          'nickname': 'lee',
+          'wear_idx': this.$store.state.wear_idx
+        }
+        this.replyContent = '',
+        axios.post('http://i4c102.p.ssafy.io:8080/wear/reply', params)
+          .then(() => {
+            console.log('댓글성공')
+          })
+          .catch(err => {
+            console.error(err)
+          })
+
+      }
+    }
   }
 </script>
 

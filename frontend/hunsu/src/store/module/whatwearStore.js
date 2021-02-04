@@ -2,6 +2,7 @@ import axios from 'axios';
 
 const state = {
   whatwearInfo: {},
+  wear_idx: 0,
   labels: [],
   datasets: [
     {
@@ -24,7 +25,7 @@ const actions = {
   getWhatwearInfoApi(context, wearIdx, nickname) {
     return axios.get(`http://i4c102.p.ssafy.io:8080/api/wear/detail/${wearIdx}/${nickname}`).then((res) => {
       console.log('Vuex get OOtd ', res);
-      // console.log(res.data.voteList.length)
+      state.wear_idx = res.data.wear_idx
       for (var i = 1; i <= res.data.voteList.length; i++ ) {
         state.labels.push(String(i))
       }
