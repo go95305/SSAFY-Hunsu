@@ -4,14 +4,13 @@
     <!-- OOTD 하나 클릭하면 디테일페이지 뜨는 섹션 -->
     <!-- <router-view></router-view> -->
     <v-card
-      v-for="(ootd, idx) in ootdList"
+      v-for="(ootd, idx) in getOotdList"
       :key="idx"
       elevation="24"
       max-width="450"
-      class="mx-auto"
+      class="mx-auto my-5"
       @click="goToOotdDetail(ootd)"
     >
-      <v-system-bar lights-out></v-system-bar>
       <!-- OOTD 사진 -->
       <v-carousel
         :continuous="false"
@@ -53,14 +52,13 @@
 
 
 <script>
-import axios from "axios";
-import { mapActions } from "vuex";
+// import axios from "axios";
+import { mapActions, mapGetters } from "vuex";
 
 export default {
   name: "OotdList",
   data() {
     return {
-      ootdList: [],
       colors: [
         "green",
         "secondary",
@@ -72,22 +70,25 @@ export default {
       slides: ["First", "Second", "Third", "Fourth", "Fifth"],
     };
   },
+  computed: {...mapGetters(["getOotdList"])},
   created() {
-    this.getOotdList();
+    this.getOotdListInApi()
+    console.log('되니')
   },
   methods: {
-    ...mapActions(["getOotdInfoInApi"]),
-    getOotdList() {
-      axios
-        .get("http://i4c102.p.ssafy.io:8080/api/ootd/0")
-        .then((res) => {
-          this.ootdList = res.data;
-          // console.log("ootd List ", this.ootdList);
-        })
-        .catch((err) => {
-          console.error(err);
-        });
-    },
+    ...mapActions(["getOotdInfoInApi", "getOotdListInApi"]),
+    // getOotdList() {
+    //   axios
+    //     .get("http://i4c102.p.ssafy.io:8080/api/ootd/0")
+    //     .then((res) => {
+    //       this.ootdList = res.data;
+    //       // console.log("ootd List ", this.ootdList);
+    //     })
+    //     .catch((err) => {
+    //       console.error(err);
+    //     });
+    // },
+
     goToOotdDetail(ootd) {
       // console.log(ootd);
       // console.log(ootd.ootdIdx);

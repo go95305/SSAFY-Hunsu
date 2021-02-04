@@ -1,16 +1,14 @@
 <template>
-  <v-container>
+  <v-container style="padding: 0px">
     <v-layout justify-center>
       <v-card
-      width="800"
-      height="100%"
       >
+      <!-- width="800"
+      height="100%" -->
         <div class="d-flex">
           <!--프로필이미지-->
           <!--웹 전체화면일때-->
           <v-avatar
-          width="100"
-          height="100"
           class="mt-10 ml-10 mb-8 hidden-sm-and-down">
             <img
               src="https://cdn.vuetifyjs.com/images/john.jpg"
@@ -20,7 +18,7 @@
           <!--모바일-->
           <v-avatar
           width="80"
-          height="65"
+          height="80"
           class="mt-7 ml-7 hidden-sm-and-up"
           style="margin: 80px 60px 0px 20px">
           
@@ -141,8 +139,8 @@
         </div>
         <div>
           <!--유저닉네임-->
-          <p class="font-weight-black text-h5 hidden-sm-and-down" style="margin: 10px 30px">닉네임</p>
-          <p class="font-weight-black subtitle-1 hidden-sm-and-up" style="margin: 10px 30px">닉네임</p>
+          <p class="font-weight-black text-h5 hidden-sm-and-down" style="margin: 10px 30px">nicknamejin</p>
+          <p class="font-weight-black subtitle-1 hidden-sm-and-up" style="margin: 10px 30px">nicknamejin</p>
         </div>
 
         <v-tabs
@@ -163,7 +161,7 @@
             v-for="item in items"
             :key="item"
           >
-            <v-container class="white">
+            <v-container class="white" style="padding: 0px">
               <v-row no-gutters>
                 <v-col
                   v-for="i in 9"

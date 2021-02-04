@@ -5,22 +5,47 @@
         color="red accent-3"
         group
       >
-        <v-btn value="left">
+        <v-btn value="left" @click="getRecentOotdList()">
           최신순
         </v-btn>
 
-        <v-btn value="center">
+        <v-btn value="center" @click="getPopularOotdList()">
           인기순
         </v-btn>
       </v-btn-toggle>
 </template>
 
 <script>
+import axios from "axios";
 export default {
   name: "OotdFilter",
   data() {
     return {
-      cycle: false,
+      ootdList: [],
+    }
+  },
+  methods: {
+    getRecentOotdList() {
+      axios.get("http://i4c102.p.ssafy.io:8080/api/ootd/0")
+        .then((res) => {
+          this.ootdList = []
+          this.ootdList.push(res.data)
+          console.log(this.ootdList)
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    },
+    getPopularOotdList() {
+      axios.get("http://i4c102.p.ssafy.io:8080/api/ootd/1")
+        .then((res) => {
+          this.ootdList = []
+          this.ootdList.push(res.data)
+          console.log(this.ootdList)
+        })
+        .catch((err) => {
+          console.error(err);
+        });
     }
   }
 }
