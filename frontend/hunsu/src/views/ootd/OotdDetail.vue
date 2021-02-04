@@ -67,7 +67,7 @@
           <v-list-item-subtitle>
             <!-- 추후 해쉬태그에 검색 링크 걸 예정 -->
             <p
-              v-for="(hashtag, i) in getOotdInfo.hashTagList"
+              v-for="(hashtag, i) in getOotdInfo.hashtagList"
               :key="i"
               style="display: inline"
             >
@@ -259,7 +259,7 @@ export default {
       // console.log("good");
       this.updateDialog = !this.updateDialog;
       this.updateOotdContent = this.getOotdInfo.content;
-      this.updateOotdHashtagArray = this.getOotdInfo.hashTag.slice();
+      this.updateOotdHashtagArray = this.getOotdInfo.hashtagList.slice();
     },
     onoffDeleteDialog() {
       // 삭제 dialog 활성화

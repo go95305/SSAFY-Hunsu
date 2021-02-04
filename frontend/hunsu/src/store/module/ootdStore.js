@@ -15,6 +15,10 @@ const mutations = {
   setOotdInfo(state, ootdInfo) {
     state.ootdInfo = ootdInfo;
   },
+  updateOotdInfo(state, ootdInfo) {
+    state.ootdInfo.content = ootdInfo.content;
+    state.ootdInfo.hashtagList = ootdInfo.hashtagList;
+  },
   toggleLike(state, flag) {
     state.ootdInfo.likeChk = flag;
   },
@@ -39,7 +43,7 @@ const actions = {
       if (res.data === 'success') {
         console.log('update 성공');
         console.log(ootdInfo);
-        context.commit('setOotdInfo', ootdInfo);
+        context.commit('updateOotdInfo', ootdInfo);
       } else {
         console.log('update 실패');
       }
