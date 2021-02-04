@@ -4,27 +4,28 @@
     <v-card
       flat>
       <v-list three-line>
-        <template v-for="(item, index) in items">
-          <!--댓글-->
           <v-subheader
-            v-if="item.header"
-            :key="index"
-            v-text="item.header"
+            v-text="getWhatwearReplyInfo.data.length"
           ></v-subheader>
-
+          <!--댓글-->
+        <template v-for="(reply, index) in getWhatwearReplyInfo.data">
           <!--댓글출력되는부분-->
           <v-list-item
-            v-else
-            :key="item.title"
+            v-if="reply"
+            :key="index"
           >
           <!--프로필이미지-->
             <v-list-item-avatar>
-              <v-img :src="item.avatar"></v-img>
+              <v-img
+              src="https://cdn.vuetifyjs.com/images/john.jpg"
+              alt="John"
+              width="100"
+              ></v-img>
             </v-list-item-avatar>
             <!--title자리가 댓글, sub가 좋아요 수정 자리-->
             <v-list-item-content>
-              <v-list-item-title v-html="item.title"></v-list-item-title>
-              <v-list-item-subtitle v-html="item.subtitle"></v-list-item-subtitle>
+              <v-list-item-title v-html="reply.content"></v-list-item-title>
+              <!-- <v-list-item-subtitle v-html="item.subtitle"></v-list-item-subtitle> -->
             </v-list-item-content>
           </v-list-item>
         </template>
@@ -42,9 +43,9 @@
             rows="3"
             row-height="25"
             v-model="replyContent"
-            @keydown.enter="createWhatwearReply()"
+            @keydown.enter="createWhatwearReply(getWhatwearInfo.wear_idx)"
             :append-icon="replyContent ? 'mdi-send' : ''"
-            @click:append="createWhatwearReply()"
+            @click:append="createWhatwearReply(getWhatwearInfo.wear_idx)"
           ></v-text-field>
         </v-col>
 
@@ -54,65 +55,36 @@
 </template>
 
 <script>
-import axios from 'axios'
-  export default {
-    name: "DetailComment",
-    data: () => ({
-      items: [
-        { header: '댓글' },
-        {
-          avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',
-          title: 'Brunch this weekend?',
-          subtitle: `<span class="text--primary">Ali Connors</span> &mdash; I'll be in your neighborhood doing errands this weekend. Do you want to hang out?`,
-        },
-        {
-          avatar: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-          title: 'Summer BBQ <span class="grey--text text--lighten-1">4</span>',
-          subtitle: `<span class="text--primary">to Alex, Scott, Jennifer</span> &mdash; Wish I could come, but I'm out of town this weekend.`,
-        },
+import { mapGetters, mapMutations, mapActions } from "vuex";
+// import axios from 'axios'
 
-        {
-          avatar: 'https://cdn.vuetifyjs.com/images/lists/3.jpg',
-          title: 'Oui oui',
-          subtitle: '<span class="text--primary">Sandra Adams</span> &mdash; Do you have Paris recommendations? Have you ever been?',
-        },
-
-        {
-          avatar: 'https://cdn.vuetifyjs.com/images/lists/4.jpg',
-          title: 'Birthday gift',
-          subtitle: '<span class="text--primary">Trevor Hansen</span> &mdash; Have any ideas about what we should get Heidi for her birthday?',
-        },
-
-        {
-          avatar: 'https://cdn.vuetifyjs.com/images/lists/5.jpg',
-          title: 'Recipe to try',
-          subtitle: '<span class="text--primary">Britta Holt</span> &mdash; We should eat this: Grate, Squash, Corn, and tomatillo Tacos.',
-        },
-      ],
-      replyContent: '',
-    }),
-    methods: {
-      createWhatwearReply() {
-        console.log(this.replyContent)
-        const params = {
-          'content': this.replyContent,
-          'depth': 0,
-          'groupNum:': 0,
-          'nickname': 'lee',
-          'wear_idx': this.$store.state.wear_idx
-        }
-        this.replyContent = '',
-        axios.post('http://i4c102.p.ssafy.io:8080/wear/reply', params)
-          .then(() => {
-            console.log('댓글성공')
-          })
-          .catch(err => {
-            console.error(err)
-          })
-
-      }
+export default {
+  name: "DetailComment",
+  data: () => ({
+    items: [
+      { header: '댓글' },
+    ],
+    replyContent: '',
+  }),
+  computed: {
+    ...mapGetters(["getWhatwearInfo","getWhatwearReplyInfo"])
+  },
+  methods: {
+    ...mapMutations(["setWhatwearReplyInfo"]),
+    ...mapActions(["createWhatwearReplyInfo"]),
+    createWhatwearReply(wear_idx) {
+      this.createWhatwearReplyInfo({  
+        content: this.replyContent,
+        depth: 0,
+        groupNum: 0,
+        nickname: 'lee',
+        wear_idx: wear_idx,
+      });
+      this.replyContent = ''
+      console.log(wear_idx)
     }
   }
+}
 </script>
 
 <style>
