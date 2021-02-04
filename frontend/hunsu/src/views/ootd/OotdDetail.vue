@@ -209,8 +209,8 @@ export default {
     return {
       nickName: "jin", // 임시 닉네임
       dialog: false,
-      updateDialog: false,
-      deleteDialog: false,
+      updateDialog: false, // 수정창 dialog 활성화
+      deleteDialog: false, // 삭제창 dialog 활성화
       required: false,
       colors: [
         "green",
@@ -225,23 +225,25 @@ export default {
       sound: true,
       widgets: false,
       rules: {
+        // 입력 창 체크 변수
         required: (v) => !!v || "Required",
         min: (v) => v.trim().length > 0 || "공백안됨",
         contentMax: (v) => v.length <= 300 || "300자이하",
       },
       imageUrl: null,
-      updateOotdHashtag: "",
+      updateOotdHashtag: "", // 수정 관련 변수들
       updateOotdContent: "",
       updateOotdHashtagArray: [],
-      iconName: "",
+      iconName: "", // 좋아요 토글 변수
     };
   },
   mounted() {
-    console.log("mounted", this.getOotdInfo);
+    // console.log("mounted", this.getOotdInfo);
     if (this.getOotdInfo.likeChk) {
-      this.iconName = "mdi-heart";
+      // 좋아요 초기 설정 부분
+      this.iconName = "mdi-heart"; // 꽉찬 하트
     } else {
-      this.iconName = "mdi-heart-outline";
+      this.iconName = "mdi-heart-outline"; // 덜찬 하트
     }
   },
   methods: {
@@ -253,12 +255,14 @@ export default {
       "toggleLike",
     ]),
     onoffUpdateDialog() {
-      console.log("good");
+      // 수정 dialog 활성화
+      // console.log("good");
       this.updateDialog = !this.updateDialog;
       this.updateOotdContent = this.getOotdInfo.content;
       this.updateOotdHashtagArray = this.getOotdInfo.hashTag.slice();
     },
     onoffDeleteDialog() {
+      // 삭제 dialog 활성화
       this.deleteDialog = !this.deleteDialog;
     },
     goToPage(item) {
