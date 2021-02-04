@@ -9,7 +9,6 @@
       elevation="24"
       max-width="450"
       class="mx-auto my-5"
-      @click="goToOotdDetail(ootd)"
     >
       <!-- OOTD 사진 -->
       <v-carousel
@@ -22,7 +21,12 @@
       >
         <v-carousel-item v-for="(slide, i) in slides" :key="i">
           <v-sheet :color="colors[i]" height="100%" tile>
-            <v-row class="fill-height" align="center" justify="center">
+            <v-row
+              class="fill-height"
+              align="center"
+              justify="center"
+              @click="goToOotdDetail(ootd)"
+            >
               <div class="display-3">{{ slide }} Slide</div>
             </v-row>
           </v-sheet>
@@ -38,10 +42,12 @@
             <v-list-item-title>{{ ootd.ootdContent }}</v-list-item-title>
             <v-list-item-subtitle>{{ ootd.nickname }}</v-list-item-subtitle>
           </v-list-item-content>
+          <!-- <v-list-item-content>{{ootd.ootdLike}}개의</v-list-item-content> -->
           <v-list-item-action>
             <!-- 좋아요 버튼 -->
-            <v-btn icon>
-              <v-icon>mdi-heart</v-icon>
+            {{ ootd.ootdLike }}개의
+            <v-btn icon class="mr-1">
+              <v-icon color="red">mdi-heart</v-icon>
             </v-btn>
           </v-list-item-action>
         </v-list-item>
@@ -73,7 +79,7 @@ export default {
   computed: { ...mapGetters(["getOotdList"]) },
   created() {
     this.getOotdListInApi(0);
-    // console.log("되니");
+    console.log(this.getOotdList);
   },
   methods: {
     ...mapActions(["getOotdInfoInApi", "getOotdListInApi"]),
@@ -84,8 +90,9 @@ export default {
       this.getOotdInfoInApi({
         ootdIdx: ootd.ootdIdx,
         nickname: "jin",
+      }).then(() => {
+        this.$router.push({ name: "OotdDetail" });
       });
-      this.$router.push({ name: "OotdDetail" });
     },
   },
 };
