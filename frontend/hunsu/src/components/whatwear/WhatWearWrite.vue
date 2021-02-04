@@ -242,7 +242,7 @@ export default {
         'content': this.whatwearContent,
         'endtime': this.endtime,
         'nickname': 'go',
-        'num': 0,
+        'num': 5,
         'title': this.whatwearTitle,
         
       }
