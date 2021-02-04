@@ -20,7 +20,4 @@ public class CommonResult {
     @ApiModelProperty(value="응답메세지")
     private String msg;
 
-//    //보현추가: 이거 맞아 ?
-//    @ApiModelProperty(value = "토큰값 보내기 : jwtToken, jwtRefresh")
-//    private HashMap<String,String> map;
 }

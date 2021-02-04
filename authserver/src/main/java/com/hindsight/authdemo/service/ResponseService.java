@@ -1,10 +1,11 @@
 package com.hindsight.authdemo.service;
 
 import com.hindsight.authdemo.model.response.CommonResult;
-import com.hindsight.authdemo.model.response.MapResult;
+import com.hindsight.authdemo.model.response.HashmapResult;
 import com.hindsight.authdemo.model.response.SingleResult;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 
 @Service // 해당 Class가 Service임을 명시합니다.
@@ -39,8 +40,16 @@ public class ResponseService {
         return result;
     }
     // 다중건 결과를 처리하는 메소드
-//    public Map<, T> MapResult<T> getMapResult(Map<T, T> map) {
+//    public Map<T> MapResult<T> getMapResult(Map<T, T> map) {
 //        MapResult<T> result = new MapResult<>();
+//        result.setMap(map);
+//        setSuccessResult(result);
+//        return result;
+//    }
+    // 다중건 결과를 처리하는 메소드
+
+//    public <T> HashmapResult<T> geHashmapResult(Map<T,T> map) {
+//        HashmapResult<T> result = new HashmapResult<>();
 //        result.setMap(map);
 //        setSuccessResult(result);
 //        return result;
