@@ -12,35 +12,9 @@
 import { mapActions } from "vuex";
 export default {
   name: "OotdFilter",
-  // data() {
-  //   return {
-  //     ootdList: [],
-  //   };
-  // },
+
   methods: {
     ...mapActions(["getOotdListInApi"]),
-    // getRecentOotdList() {
-    //   axios.get("http://i4c102.p.ssafy.io:8080/api/ootd/0")
-    //     .then((res) => {
-    //       this.ootdList = []
-    //       this.ootdList.push(res.data)
-    //       console.log(this.ootdList)
-    //     })
-    //     .catch((err) => {
-    //       console.error(err);
-    //     });
-    // },
-    // getPopularOotdList() {
-    //   axios.get("http://i4c102.p.ssafy.io:8080/api/ootd/1")
-    //     .then((res) => {
-    //       this.ootdList = []
-    //       this.ootdList.push(res.data)
-    //       console.log(this.ootdList)
-    //     })
-    //     .catch((err) => {
-    //       console.error(err);
-    //     });
-    // }
   },
 };
 </script>

@@ -17,26 +17,24 @@ const mutations = {
   },
   setOotdList(state, ootdList) {
     state.ootdList = ootdList;
-    // console.log('setOotdList', state.ootdList);
   },
 };
 
 const actions = {
-  //   getOotdListInApi({ commit }) {
-  //     axios
-  //       .get('http://i4c102.p.ssafy.io:8080/api/ootd/0')
-  //       .then((res) => {
-  //         commit('setOotdList', res.data);
-  //         console.log(res.data);
-  //       })
-  //       .catch((err) => {
-  //         console.error(err);
-  //       });
-  //   },
   // Ootd 리스트 정렬
   getOotdListInApi(context, sort) {
     axios
       .get(`http://i4c102.p.ssafy.io:8080/api/ootd/${sort}`)
+      .then((res) => {
+        context.commit('setOotdList', res.data);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  },
+  getSearchedListInApi(context, hashtag) {
+    axios
+      .get(`http://i4c102.p.ssafy.io:8080/api/ootd/hashtag/search/${hashtag}`)
       .then((res) => {
         context.commit('setOotdList', res.data);
         console.log(res.data);
@@ -47,7 +45,6 @@ const actions = {
   },
   getOotdInfoInApi(context, ootdIdx) {
     return axios.get(`http://i4c102.p.ssafy.io:8080/api/ootd/detail/${ootdIdx}`).then((res) => {
-      // console.log('Vuex get OOtd ', res);
       console.log(res.data);
       context.commit('setOotdInfo', res.data);
     });
