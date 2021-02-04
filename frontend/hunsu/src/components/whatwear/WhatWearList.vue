@@ -68,6 +68,7 @@ export default {
         .get("http://i4c102.p.ssafy.io:8080/api/wear")
         .then((res) => {
           this.whatwearList = res.data;
+          console.log(res.data);
         })
         .catch((err) => {
           console.error(err);
