@@ -94,7 +94,7 @@
               ></v-file-input>
               <!--투표기능-->
               <div id="votebtn">
-              <v-checkbox v-model="vote"></v-checkbox>
+              <v-checkbox v-model="vote" @click="vote = true"></v-checkbox>
               <v-list-item-title class="text-h6 font-weight-bold">투표기능</v-list-item-title>
               </div>
               <v-img 
@@ -229,6 +229,7 @@ export default {
       dates: '',
       isVaild: false,
       endtime: '',
+      num: 0,
     }
   },
   methods: {
@@ -238,22 +239,26 @@ export default {
       if (this.timeDialog && this.dateDialog) {
         this.endtime = this.dates.concat('T', this.time, ':00')
       }
+      // 원래는 투표이미지 갯수인데 우선 투표체크박스 활성화하면 숫자가 3이 들어가도록 구현함
+      if (this.vote) {
+        this.num = 3
+      }
       const params = {
-        'content': this.whatwearContent,
-        'endtime': this.endtime,
-        'nickname': 'go',
-        'num': 5,
-        'title': this.whatwearTitle,
+        content: this.whatwearContent,
+        endtime: this.endtime,
+        nickname: 'lee',
+        num: this.num,
+        title: this.whatwearTitle,
         
       }
       // 작성폼 초기화
       this.whatwearTitle = '',
       this.whatwearContent = '',
+      this.num = 0
       axios.post('http://i4c102.p.ssafy.io:8080/api/wear', params)
         .then(() => {
-          console.log('뭘입을까글쓰기성공')
-          console.log(params)
-          
+          // console.log('뭘입을까글쓰기성공')
+          console.log(params)          
         })
         .catch(err => {
           console.error(err)
@@ -272,18 +277,8 @@ export default {
     },
     inputTime(time) {
       this.time = time
-    }
+    },
   },
-  // watch: {
-  //   isVaild: function() {
-  //     if (this.whatwearTitle.trim() > 0 && this.whatwearContent.trim() > 0) {
-  //       this.isVaild = true
-  //     }
-  //     if (this.vote === true && this.voteImage !== null) {
-  //       this.isVaild = true
-  //     }
-  //   }
-  // }
 }
 </script>
 

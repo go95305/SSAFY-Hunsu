@@ -12,6 +12,7 @@
     >
       <div class="d-flex">
         <!--프로필사진-->
+        <!-- <div class="mt-2"></div> -->
         <v-avatar class="mt-5 ml-4">
           <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
         </v-avatar>
@@ -32,6 +33,7 @@
           class="mt-9"
         >
         </v-badge>
+        <!-- <div class="mb-2"></div> -->
       </div>
     </v-card>
   </v-card>
@@ -55,11 +57,6 @@ export default {
   methods: {
     ...mapActions(["getWhatwearInfoApi"]),
     goToWhatwearDetail(whatwear) {
-      // this.$router.push(`/whatwear/${whatwear.wear_idx}/${whatwear.nickname}`);
-      // this.$router.push({name: 'WhatWearDetail', params:{
-      //   nickname: whatwear.nickname,
-      //   wear_idx: whatwear.wear_idx
-      // }})
       this.getWhatwearInfoApi(whatwear.wear_idx, whatwear.nickname)
       this.$router.push({ name: "WhatWearDetail" })
     },
