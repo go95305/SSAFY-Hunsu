@@ -1,11 +1,15 @@
 import axios from 'axios';
 const state = {
   ootdInfo: {},
+  ootdList: [],
   like: false,
 };
 const getters = {
   getOotdInfo(state) {
     return state.ootdInfo;
+  },
+  getOotdList(state) {
+    return state.ootdList;
   },
   getLike(state) {
     return state.like;
@@ -15,6 +19,9 @@ const mutations = {
   setOotdInfo(state, ootdInfo) {
     state.ootdInfo = ootdInfo;
   },
+  setOotdList(state, ootdList) {
+    state.ootdList = ootdList;
+  },
   updateOotdInfo(state, ootdInfo) {
     state.ootdInfo.content = ootdInfo.content;
     state.ootdInfo.hashtagList = ootdInfo.hashtagList;
@@ -23,7 +30,30 @@ const mutations = {
     state.ootdInfo.likeChk = flag;
   },
 };
+
 const actions = {
+  // Ootd 리스트 정렬
+  getOotdListInApi(context, sort) {
+    axios
+      .get(`http://i4c102.p.ssafy.io:8080/api/ootd/${sort}`)
+      .then((res) => {
+        context.commit('setOotdList', res.data);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  },
+  getSearchedListInApi(context, hashtag) {
+    axios
+      .get(`http://i4c102.p.ssafy.io:8080/api/ootd/hashtag/search/${hashtag}`)
+      .then((res) => {
+        context.commit('setOotdList', res.data);
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  },
   getOotdInfoInApi(context, info) {
     // ootd 디테일 가져오기
     console.log(info.ootdIdx, info.nickname);

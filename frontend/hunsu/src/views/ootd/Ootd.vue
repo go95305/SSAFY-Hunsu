@@ -10,6 +10,7 @@
     </div>
   </div>
     <OotdList style="margin: 20px" />
+    <!-- <OotdScroll /> -->
     
 
 </div>
@@ -20,6 +21,7 @@ import OotdList from '@/components/ootd/OotdList'
 import OotdSearchBtn from '@/components/ootd/OotdSearchBtn'
 import OotdWritePage from '@/components/ootd/OotdWritePage'
 import OotdFilter from '@/components/ootd/OotdFilter'
+// import OotdScroll from '@/components/ootd/OotdScroll'
 
 
 export default {
@@ -29,6 +31,7 @@ export default {
     OotdSearchBtn,
     OotdWritePage,
     OotdFilter,
+    // OotdScroll
 
   }
 }
