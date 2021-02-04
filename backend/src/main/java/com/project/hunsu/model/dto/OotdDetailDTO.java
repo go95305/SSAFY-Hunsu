@@ -21,7 +21,7 @@ public class OotdDetailDTO {
     private String nickname;
     private List<String> hashTagList = new ArrayList<>();
     private Boolean likeChk;
-    private List<OotdReplyDTO> replyDTOList = new ArrayList<>();
+    //    private List<OotdReplyDTO> replyDTOList = new ArrayList<>();
     public void addHashtag(String hashtag) {
         this.hashTagList.add(hashtag);
     }

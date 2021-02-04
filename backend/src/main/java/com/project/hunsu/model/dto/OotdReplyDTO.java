@@ -11,14 +11,14 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 public class OotdReplyDTO {
-    private Long idx;
-    private Long ootd_idx;
+    private Long replyIdx;
+    private Long ootdIdx;
     private String nickname;
     private String content;
     private Long depth;
     private LocalDateTime write_date;
     private Boolean like;
     private Long groupNum;
-    private Integer count;
-    private boolean flag;
+    private Integer likeCount;
+    private Boolean isDeleted;
 }
