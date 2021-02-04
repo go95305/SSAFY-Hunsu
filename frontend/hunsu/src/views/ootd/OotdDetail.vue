@@ -78,8 +78,11 @@
         <!-- ### Follow button -->
         <v-list-item-action>
           <v-btn icon @click="toggleLikeInDetail(nickName)">
-            <v-icon v-model="iconName">{{ iconName }}</v-icon>
+            <v-icon v-model="iconName" v-if="iconName === 'mdi-heart'" color="red">{{ iconName }}</v-icon>
+            <v-icon v-model="iconName" v-else>{{ iconName }}</v-icon>
+            <div>{{getOotdInfo.likeCount}}</div>
           </v-btn>
+
         </v-list-item-action>
       </v-list-item>
     </v-list>
@@ -319,9 +322,11 @@ export default {
       if (this.getOotdInfo.likeChk) {
         // 좋아요 였다가 좋아요 해제로
         this.iconName = "mdi-heart-outline";
+        this.getOotdInfo.likeCount -= 1
       } else {
         // 좋아요 해제였다가 좋아요로
         this.iconName = "mdi-heart";
+        this.getOotdInfo.likeCount += 1
       }
       this.toggleLike(nickname);
     },

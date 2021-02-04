@@ -42,6 +42,7 @@
         <v-list three-line subheader>
           <div>
             <v-textarea
+              color="deep-purple accent-1"
               v-model="ootd_content"
               clearable
               clear-icon="mdi-close-circle"
@@ -51,6 +52,7 @@
               class="px-5"
             ></v-textarea>
             <v-text-field
+              color="deep-purple accent-1"
               label="해시태그 추가"
               @keydown.enter="addHashtag()"
               v-model="ootd_hashtag"
@@ -62,7 +64,7 @@
                 :key="idx"
                 class="mx-1 my-1"
                 close
-                color="red"
+                color="deep-purple accent-1"
                 text-color="white"
                 @click:close="deleteHashtag(hashtag)"
               >
