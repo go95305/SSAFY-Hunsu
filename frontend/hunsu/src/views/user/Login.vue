@@ -22,32 +22,74 @@
 // import SignupInfo from "@/components/Mypage/SignupInfo";
 import KakaoLogin from "vue-kakao-login";
 import axios from "axios";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: "Login",
+  computed: {
+    ...mapGetters(["getAccessToken, getRefreshToken"]),
+  },
   components: {
     // SignupInfo,
     KakaoLogin,
   },
   methods: {
+    ...mapActions(["userCheck", "signUp"]),
     onSuccess(authObj) {
-      console.log(authObj);
-      let accessToken = authObj.access_token;
-      console.log("accessTOken", accessToken);
-
+      console.log("auth", authObj);
+      let router = this.$router; // 임시방편
       axios
-        .post("http://localhost:8081/v1/auth/signin/kakao", accessToken)
-        .then((result) => {
-          console.log(result);
-          if (result.code === "-1000") {
-            // 일치하는 회원 없음 ( 회원가입 처리 )
-          } else {
-            // 일치하는 회원 있음 ( 로그인 처리 )
-          }
+        .post("http://localhost:8081/v1/auth/usercheck", {
+          accessToken: authObj.access_token,
+          refreshToken: authObj.refresh_token,
         })
-        .catch((e) => {
-          console.log("error : ", e);
+        .then((res) => {
+          console.log(res.data.code);
+          if (res.data.code === -1) {
+            router.push({
+              name: "SignUp",
+              params: {
+                accessToken: authObj.access_token,
+                refreshToken: authObj.refresh_token,
+              },
+            });
+          }
+          //return -1 or 1;
+        })
+        .catch((err) => {
+          console.log("usercheck err : ", err);
         });
+
+      // promise 순서가 지켜지지 않는 이슈
+      // this.userCheck(authObj.access_token, authObj.refresh_token)
+      //   .then((res) => {
+      //     console.log("in userChck", res);
+      //     if (res === -1) {
+      //       router.push({
+      //         name: "SignUp",
+      //         params: {
+      //           accessToken: authObj.access_token,
+      //           refreshToken: authObj.refresh_token,
+      //         },
+      //       });
+      //     }
+      //   })
+      //   .catch((err) => {
+      //     console.log("error in userCheck ", err);
+      //   });
+      // console.log("in login", result);
+      //가입여부체크
+      // if (this.userCheck(authObj.access_token, authObj.refresh_token) == -1) {
+      //   // 회원가입
+      //   console.log("회원가입 넘어가즈아");
+      //   this.$router.push({
+      //     name: "SignUp",
+      //     params: {
+      //       accessToken: authObj.access_token,
+      //       refreshToken: authObj.refresh_token,
+      //     },
+      //   });
+      // }
 
       console.log("success");
     },

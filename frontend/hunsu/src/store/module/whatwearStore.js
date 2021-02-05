@@ -43,10 +43,11 @@ const actions = {
       });
   },
   createWhatwearReplyInfo(context, whatwearReplyInfo) {
+    console.log('create 댓구ㄹ', whatwearReplyInfo);
     axios
       .post('http://i4c102.p.ssafy.io:8080/api/wear/reply', whatwearReplyInfo)
       .then((res) => {
-        // console.log('댓글성공', res.data);
+        console.log('댓글성공', res.data);
         context.commit('setWhatwearReplyInfo', res.data);
       })
       .catch((err) => {
@@ -58,22 +59,22 @@ const actions = {
       .put(`http://i4c102.p.ssafy.io:8080/api/wear/reply/like/${replyIdx}/${nickname}`)
       .then((res) => {
         // console.log('좋아요성공', res.data)
-        context.commit('setWhatwearReplyInfo', res.data)
+        context.commit('setWhatwearReplyInfo', res.data);
       })
       .catch((err) => {
-        console.error(err)
-      })
+        console.error(err);
+      });
   },
   deleteWhatwearReplyInfo(context, replyIdx) {
     axios
-    .put(`http://i4c102.p.ssafy.io:8080/api/wear/reply/${replyIdx}`)
-    .then((res) => {
-      console.log(res)
-    })
-    .catch((err) => {
-      console.error(err)
-    })
-  }
+      .put(`http://i4c102.p.ssafy.io:8080/api/wear/reply/${replyIdx}`)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  },
 };
 
 export default {

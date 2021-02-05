@@ -1,0 +1,78 @@
+import axios from 'axios';
+const state = {
+  accessToken: '',
+  refreshToken: '',
+  nickname: '',
+};
+const getters = {
+  // 모든 토큰은 jwt 의미함
+  getAccessToken(state) {
+    return state.accessToken;
+  },
+  getRefreshToken(state) {
+    return state.refreshToken;
+  },
+  getAllToken(state) {
+    return { accessToken: state.accessToken, refreshToken: state.refreshToken };
+  },
+  getNickname(state) {
+    return state.nickname;
+  },
+};
+const mutations = {
+  //모든 토큰은 jwt 의미함
+  setAccessToken(state, token) {
+    state.accessToken = token;
+  },
+  setRefreshToken(state, token) {
+    state.refreshToken = token;
+  },
+  setAllToken(state, accessToken, refreshToken) {
+    state.accessToken = accessToken;
+    state.refreshTOken = refreshToken;
+  },
+};
+
+const actions = {
+  // 카카오 로그인 후 회원가입이 되어있는지 확인 후 유무에 따라 회원가입 절차 or 로그인 유도
+  userCheck(context, accessToken, refreshToken) {
+    axios
+      .post('http://localhost:8081/v1/auth/usercheck', {
+        accessToken,
+        refreshToken,
+      })
+      .then((res) => {
+        console.log(res.data.code);
+        return res.data.code;
+        //return -1 or 1;
+      })
+      .catch((err) => {
+        console.log('usercheck err : ', err);
+      });
+  },
+  signUpInApi(context, params) {
+    axios
+      // .post("http://i4c102.p.ssafy.io:8081/api/v1/auth/signup", {
+      .post('http://localhost:8081/v1/auth/signup', params)
+      .then((res) => {
+        console.log('in singupinapi', res);
+        context.commit('setAllToken', res.accessToken, res.refreshToken);
+        // this.kakaoLogin(res.accessToken);
+      });
+  },
+  kakaoLogin(context, accessToken) {
+    console.log('in kakaoLogin', accessToken);
+    axios.get('http://localhost:8081/v1/auth/check?jwtToken=' + accessToken).then((res) => {
+      console.log(res);
+    });
+  },
+};
+
+export default {
+  state: {
+    ...state,
+  },
+  getters,
+  mutations,
+  actions,
+};
