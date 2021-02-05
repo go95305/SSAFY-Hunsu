@@ -72,7 +72,6 @@ public class OotdService {
             if (ootd != null) {
                 ootdDetailDTO = new OotdDetailDTO();
                 List<Hashtag> hashtagList = hashtagRepository.findHashtagByOotdIdx(ootdIdx);
-                List<OotdReply> ootdReplyList = ootdReplyRepository.findOotdReplyByOotdIdx(ootdIdx);
                 ootdDetailDTO.setOotdIdx(ootd.getIdx());
                 ootdDetailDTO.setNickname(ootd.getUser().getNickname());
                 ootdDetailDTO.setWriteDate(ootd.getWriteDate());
@@ -81,24 +80,36 @@ public class OotdService {
                 ootdDetailDTO.setContent(ootd.getContent());
                 OotdLike ootdLike = ootdLikeRepository.findOotdLikeByOotdIdxAndUser(ootdIdx, user);
                 if (ootdLike != null) {
-                    if (ootdLike.getFlag())
+                    if (ootdLike.getFlag()) {
                         ootdDetailDTO.setLikeChk(true);
-                    else
+                    }
+                    else {
                         ootdDetailDTO.setLikeChk(false);
-                } else
+                    }
+                } else {
                     ootdDetailDTO.setLikeChk(false);
+                }
 
                 for (int i = 0; i < hashtagList.size(); i++) {
-                    if (hashtagList.get(i).getFlag())
+                    if (hashtagList.get(i).getFlag()) {
                         ootdDetailDTO.addHashtag(hashtagList.get(i).getContent());
+                    }
                 }
-                //댓글리스트도 리턴
-                OotdReply ootdReply = ootdReplyRepository.findReplyByIdx(ootdIdx);
-                if(ootdReply!=null){
-                    List<OotdReplyDTO> ootdReplyDTOList = new ArrayList<>();
-                    ootdReplyDTOList = replyList(ootdReply.getOotd().getIdx(), ootdReply.getUser().getNickname());
-                    ootdDetailDTO.setOotdReplyDTOList(ootdReplyDTOList);
+                //해당 ootd글의 댓글리스트 리턴
+                List<OotdReply> ootdReplyList = ootdReplyRepository.findOotdReplyByOotdIdx(ootdIdx);
+                for (int i = 0; i < ootdReplyList.size(); i++) {
+                    OotdReplyDTO ootdreplDTO = new OotdReplyDTO();
+                    ootdreplDTO.setReplyIdx(ootdReplyList.get(i).getIdx());
+                    ootdreplDTO.setOotdIdx(ootdReplyList.get(i).getOotd().getIdx());
+                    ootdreplDTO.setNickname(ootdReplyList.get(i).getUser().getNickname());
+                    ootdreplDTO.setContent(ootdReplyList.get(i).getContent());
+                    ootdreplDTO.setDepth(ootdReplyList.get(i).getDepth());
+                    ootdreplDTO.setGroupNum(ootdReplyList.get(i).getGroupNum());
+                    ootdreplDTO.setWrite_date(ootdReplyList.get(i).getWriteDate());
+                    ootdreplDTO.setIsDeleted(ootdReplyList.get(i).getFlag());
+                    ootdDetailDTO.addReply(ootdreplDTO);
                 }
+
             }
         }
         return ootdDetailDTO;
@@ -219,7 +230,7 @@ public class OotdService {
     }
 
     public List<OotdReplyDTO> writeReply(OotdReplyDTO ootdReplyDTO) {
-        List<OotdReplyDTO> replyDTOList = new ArrayList<>();
+        List<OotdReplyDTO> ootdReplyDTOList = new ArrayList<>();
         //1. 우선 댓글을 작성
         //2. 댓글 그룹은 일단 넣고 나서 업데이트!
         OotdReply ootdReply = new OotdReply();
@@ -258,10 +269,9 @@ public class OotdService {
             ootdreplDTO.setGroupNum(ootdReplyList.get(i).getGroupNum());
             ootdreplDTO.setWrite_date(ootdReplyList.get(i).getWriteDate());
             ootdreplDTO.setIsDeleted(ootdReplyList.get(i).getFlag());
-            replyDTOList.add(ootdreplDTO);
+            ootdReplyDTOList.add(ootdreplDTO);
         }
-//        return ootdreplyDTOList;
-        return replyDTOList;
+        return ootdReplyDTOList;
     }
 
     public List<OotdReplyDTO> updateReply(OotdReplyUpdateDTO ootdReplyUpdateDTO) {
