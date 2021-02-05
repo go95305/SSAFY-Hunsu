@@ -258,7 +258,7 @@ public class OotdService {
 //        replyDTOList = replyList(ootdReplyDTO.getOotd_idx(), ootdReplyDTO.getNickname());
 
         //2. 전체 댓글을 리턴
-        List<OotdReply> ootdReplyList = ootdReplyRepository.findOotdReplyByOrderByWriteDate();
+        List<OotdReply> ootdReplyList = ootdReplyRepository.findOotdReplyByOotdIdx(ootdReplyDTO.getOotdIdx());
         for (int i = 0; i < ootdReplyList.size(); i++) {
             OotdReplyDTO ootdreplDTO = new OotdReplyDTO();
             ootdreplDTO.setReplyIdx(ootdReplyList.get(i).getIdx());
@@ -271,6 +271,19 @@ public class OotdService {
             ootdreplDTO.setIsDeleted(ootdReplyList.get(i).getFlag());
             ootdReplyDTOList.add(ootdreplDTO);
         }
+//        List<OotdReply> ootdReplyList = ootdReplyRepository.findOotdReplyByOotdIdx(ootdIdx);
+//        for (int i = 0; i < ootdReplyList.size(); i++) {
+//            OotdReplyDTO ootdreplDTO = new OotdReplyDTO();
+//            ootdreplDTO.setReplyIdx(ootdReplyList.get(i).getIdx());
+//            ootdreplDTO.setOotdIdx(ootdReplyList.get(i).getOotd().getIdx());
+//            ootdreplDTO.setNickname(ootdReplyList.get(i).getUser().getNickname());
+//            ootdreplDTO.setContent(ootdReplyList.get(i).getContent());
+//            ootdreplDTO.setDepth(ootdReplyList.get(i).getDepth());
+//            ootdreplDTO.setGroupNum(ootdReplyList.get(i).getGroupNum());
+//            ootdreplDTO.setWrite_date(ootdReplyList.get(i).getWriteDate());
+//            ootdreplDTO.setIsDeleted(ootdReplyList.get(i).getFlag());
+//            ootdDetailDTO.addReply(ootdreplDTO);
+//        }
         return ootdReplyDTOList;
     }
 
