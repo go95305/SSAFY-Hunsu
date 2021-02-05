@@ -95,9 +95,12 @@ public class OotdService {
                 //댓글리스트도 리턴
                 OotdReply ootdReply = ootdReplyRepository.findReplyByIdx(ootdIdx);
                 if(ootdReply!=null){
+                    System.out.println("========================================");
                     List<OotdReplyDTO> ootdReplyDTOList = new ArrayList<>();
                     ootdReplyDTOList = replyList(ootdReply.getOotd().getIdx(), ootdReply.getUser().getNickname());
                     ootdDetailDTO.setOotdReplyDTOList(ootdReplyDTOList);
+                }else{
+                    System.out.println("ooooooooooooooooooooooooooooooooooooooo");
                 }
             }
         }
