@@ -53,7 +53,7 @@ public class WearController {
     @GetMapping("/wear/detail/{wear_idx}/{nickname}")
     @ApiOperation(value = "뭘 입을까 디테일 (O)", notes = "Parameter\n" +
             "-wear_idx(path): 뭘입을까 idx\n" +
-            "-nickname(path): 작성자\n" +
+            "-nickname(path): 현재 내용을 보는 사람의 nickname\n" +
             "Response\n" +
             "-wear_idx: 뭘입을까 idx" +
             "-title: 제목\n" +
