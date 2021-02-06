@@ -17,7 +17,7 @@
             <!-- <p style="margin-bottom: 0; font-size: 10px">{{ reply.write_date.slice(0, 10) }}</p> -->
             <p style="margin-bottom: 0; font-size: 10px">좋아요 {{ reply.likeCount }}개</p>
             <!-- <p style="margin-bottom: 0; margin-left: 10px; font-size: 10px" @click="clickWhatwearReReply(reply.nickname, reply.groupNum)">답글하기</p> -->
-            <p style="margin-bottom: 0; margin-left: 10px; font-size: 10px" @click="clickOotdReply(reply.nickname, reply.groupNum)">수정</p>
+            <p style="margin-bottom: 0; margin-left: 10px; font-size: 10px" @click="updateOotdReply(reply)">수정</p>
             <p style="margin-bottom: 0; margin-left: 10px; font-size: 10px" @click="deleteOotdReply(reply.replyIdx)">삭제</p>
           </div>
           </div>
@@ -64,7 +64,7 @@ export default {
   },
   methods: {
     ...mapMutations(["setOotdReplyInfo"]),
-    ...mapActions(["createOotdReplyInfo", "likeOotdReplyInfo", "deleteOotdReplyInfo"]),
+    ...mapActions(["createOotdReplyInfo", "likeOotdReplyInfo", "deleteOotdReplyInfo", "updateOotdReplyInfo"]),
     // 댓글작성함수
     createOotdReply(ootd_idx) {
       this.createOotdReplyInfo({
@@ -81,8 +81,9 @@ export default {
     },
     // 댓글좋아요 함수
     likeOotdReply(replyIdx) {
-      const nickname = "lee"
+      const nickname = "han"
       this.likeOotdReplyInfo(replyIdx, nickname)
+      console.log(this.getOotdReplyInfo)
     },
 
     deleteOotdReply(replyIdx) {
@@ -93,6 +94,13 @@ export default {
       } else {
         console.log('삭제실패')
       }
+    },
+    updateOotdReply(reply) {
+      this.replyContent = reply.content
+      this.updateOotdReplyInfo({
+        content: this.replyContent,
+        replyIdx: reply.replyIdx,
+      })
     }
   },
 };

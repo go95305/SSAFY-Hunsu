@@ -33,6 +33,9 @@ const mutations = {
     state.ootdInfo.content = ootdInfo.content;
     state.ootdInfo.hashtagList = ootdInfo.hashtagList;
   },
+  updateOotdReplyInfo(state, ootdReplyInfo) {
+    state.ootdReplyInfo.content = ootdReplyInfo.content;
+  },
   toggleLike(state, flag) {
     state.ootdInfo.likeChk = flag;
   },
@@ -149,6 +152,7 @@ const actions = {
     axios
       .put(`http://i4c102.p.ssafy.io:8080/api/ootd/reply/like/${replyIdx}/${nickname}`)
       .then((res) => {
+        console.log(res)
         context.commit('setOotdReplyInfo', res.data)
       })
       .catch((err) => {
@@ -164,8 +168,18 @@ const actions = {
     .catch((err) => {
       console.error(err)
     })
+  },
+  updateOotdReplyInfo(context, replyInfo) {
+    return axios
+    .put('http://i4c102.p.ssafy.io:8080/api/ootd/reply', replyInfo)
+    .then((res) => {
+      console.log('수정완료', res)
+      context.commit('updateOotdReplyInfo', replyInfo)
+    })
+    .catch((err) => {
+      console.error(err)
+    })
   }
-
 };
 
 export default {
