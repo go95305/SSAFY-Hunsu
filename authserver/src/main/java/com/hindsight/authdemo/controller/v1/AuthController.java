@@ -23,11 +23,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Api(tags = {"1. Sign"})
 @RequiredArgsConstructor
+@CrossOrigin(origins = {"*"})
 @RestController
 @RequestMapping(value = "/v1/auth")
 public class AuthController {
@@ -51,20 +54,20 @@ public class AuthController {
     private String kakaoRedirect;
 
 
-//    @ApiOperation(value="kakao 로그인 테스트 URL (O)",notes = "입력해둔 url로 접근\n" +
-//            "\n" +
-//            "Parameter : X\n" +
-//            "\n" +
-//            "Response : String url (카카오 로그인 화면)")
-//    @GetMapping(value="/url")
-//    public String socialLogin(){
-//        StringBuilder loginUrl = new StringBuilder()
-//                .append(env.getProperty("spring.social.kakao.url.login"))
-//                .append("?client_id=").append(kakaoClientId)
-//                .append("&response_type=code")
-//                .append("&redirect_uri=").append(baseUrl).append(kakaoRedirect);
-//        return loginUrl.toString();
-//    }
+    @ApiOperation(value = "kakaoToken",notes = "테스트를 위해 카카오토큰 얻어오기")
+    @PostMapping(value="/test")
+    public KakaoToken test(@ApiParam(value = "소셜 access_token", required = true) @RequestParam("code") String authorize_code){
+        System.out.println(authorize_code);
+        KakaoToken tokens = null;
+        Map<String, String> map = kakaoService.getAccessToken(authorize_code);
+        String accessToken = map.get("accessToken");
+        String refreshToken = map.get("refreshToken");
+        System.out.println(accessToken);
+        System.out.println(refreshToken);
+        tokens.setAccessToken(accessToken);
+        tokens.setRefreshToken(refreshToken);
+        return tokens;
+    }
 
     @ResponseBody
     @ApiOperation(value="회원 체크 (O)", notes="유저 여부 판단(DB에 있는 유저이면 code 1 리턴, 없으면 -1리턴)\n" +
@@ -78,7 +81,7 @@ public class AuthController {
                                                 "- msg\n" +
                                                 "code 값이 1일 때\n" +
                                                 "- jwtAccess : jwt엑세스토큰\n" +
-                                                "- jwtRefrejs : jwt리프레시토큰\n" +
+                                                "- jwtRefresh : jwt리프레시토큰\n" +
                                                 "- nickname : 닉네임")
     @PostMapping(value="/usercheck")
     public TokenResult usercheck(
@@ -107,8 +110,8 @@ public class AuthController {
             result.setSuccess(true);
             result.setCode(1);
             result.setMsg("로그인");
-            result.setAccessToken(jwtToken);
-            result.setRefreshToken(jwtRefresh);
+            result.setJwtToken(jwtToken);
+            result.setJwtRefresh(jwtRefresh);
             result.setNickname(user.get().getNickname());
                   //로그인
         }else{
@@ -127,56 +130,6 @@ public class AuthController {
         return result;
     }
 
-//    @ApiOperation(value="소셜 로그인 (O)", notes="Front에 jwtToken이 있고, 그것이 유효할 때 회원가입을 검증하는 단계\n" +
-//                                                "\n" +
-//                                                "Parameter \n" +
-//                                                "- jwtToken\n" +
-//                                                "\n" +
-//                                                "Response\n" +
-//                                                "- success : 성공여부\n" +
-//                                                "- code : 성공시 1(로그인처리), 실패시 0(카카오 로그인페이지)\n" +
-//                                                "- msg : \n" +
-//                                                "- accessToken : jwtToken\n" +
-//                                                "- refreshToken : jwtRefresh")
-//    @GetMapping(value="/login")
-//    public TokenResult login(
-//            @ApiParam(value = "jwtToken", required = true) @RequestParam String jwtToken){
-//            TokenResult result = new TokenResult();
-//
-//            long uid=jwtTokenProvider.getUserPk(jwtToken); // uid추출
-//            Optional<User> user = userJpaRepo.findUserByJwtAccessAndUid(jwtToken,uid);
-//            if (user.isPresent()){
-//                result.setCode(1);
-//                result.setMsg("로그인");
-//                result.setSuccess(true);
-//                result.setAccessToken(jwtToken);
-//                result.setRefreshToken(user.get().getJwtRefresh());
-//                return result;
-//            }else{
-//                result.setCode(0);
-//                result.setMsg("카카오로그인페이지로");
-//                result.setSuccess(false);
-//                return result;
-//            }
-//    }
-//    @ApiOperation(value="jwtToken 검증 (O)",notes = "jwtAccessToken 검증\n" +
-//            "\n" +
-//            "Parameter \n" +
-//            "- jwtAccessToken\n" +
-//            "\n" +
-//            "Response: true(유효)/false(유효하지않음)\n" +
-//            "- true : 회원가입검증 (/v1/auth/login 으로 go!!)\n" +
-//            "- false: v1/auth/newtoken 으로 jwtRefresh 보내기 (jwtrefreshToken을 활용해서 jwtAccessToken을 갱신하기위해)")
-//    @GetMapping(value="/check")
-//    public boolean checkToken(@ApiParam("jwtToken") @RequestParam String jwtToken){
-//        System.out.println("Check Start!!!!!!!!!!");
-//        if(jwtTokenProvider.validateToken(jwtToken)){
-//            System.out.println("유효");
-//            return true;
-//        }else
-//            System.out.println("유효하지않음");
-//        return false;   // 토큰 재발급으로
-//    }
 
     @ApiOperation(value="jwtToken 로그인 (O)",notes ="로컬에 jwt토큰이 있을 때 로그인 프로세스\n" +
                                                     "\n"+
@@ -189,7 +142,7 @@ public class AuthController {
                                                     "- msg\n" +
                                                     "code 값이 1일 때\n" +
                                                     "- jwtAccess : jwt엑세스토큰\n" +
-                                                    "- jwtRefrejs : jwt리프레시토큰\n" +
+                                                    "- jwtRefresh : jwt리프레시토큰\n" +
                                                     "- nickname : 닉네임")
     @PostMapping(value="/tokenlogin")
     public TokenResult haveJwtToken(@ApiParam("jwtToken") @RequestBody JwtTokenform tokens){
@@ -203,9 +156,11 @@ public class AuthController {
             result.setMsg("자동로그인");
             result.setCode(1);
             result.setSuccess(true);
-            result.setAccessToken(tokens.getJwtToken());
-            result.setRefreshToken(tokens.getJwtRefresh());
+            result.setJwtToken(tokens.getJwtToken());
+            result.setJwtRefresh(tokens.getJwtRefresh());
             result.setNickname(user.getNickname());
+
+            return result;
 
         }else
             System.out.println("jwt토큰유효하지않음");
@@ -216,15 +171,16 @@ public class AuthController {
                 System.out.println("Uid: " + Uid);
                 List<String> roles = jwtTokenProvider.getRoles(tokens.getJwtRefresh());
                 String jwtToken = jwtTokenProvider.generateToken(Uid, roles);
+
                 User user = userJpaRepo.findUserByUid(Uid);
 
-                userService.updateAccessToken(Uid,jwtToken);
+                userService.updatejwtToken(Uid,jwtToken);
 
                 result.setCode(1);
                 result.setMsg("자동로그인(jwt갱신)");
                 result.setSuccess(true);
-                result.setAccessToken(jwtToken);
-                result.setRefreshToken(tokens.getJwtRefresh());
+                result.setJwtToken(jwtToken);
+                result.setJwtRefresh(tokens.getJwtRefresh());
                 result.setNickname(user.getNickname());
                 return result;
 
@@ -252,7 +208,7 @@ public class AuthController {
             "- code :1\n" +
             "- msg\n" +
             "- jwtAccess : jwt엑세스토큰\n" +
-            "- jwtRefrejs : jwt리프레시토큰\n" +
+            "- jwtRefresh : jwt리프레시토큰\n" +
             "- nickname : 닉네임")
     @PostMapping(value ="/signup")
     public TokenResult signup(@ApiParam("회원가입 시 추가입력 form") @RequestBody SocialSignUp form ,@ApiParam("accessToken") @RequestParam String accessToken){
@@ -268,8 +224,8 @@ public class AuthController {
         result.setSuccess(true);
         result.setCode(1);
         result.setMsg("로그인");
-        result.setAccessToken(jwtAccess);
-        result.setRefreshToken(jwtRefresh);
+        result.setJwtToken(jwtAccess);
+        result.setJwtRefresh(jwtRefresh);
         result.setNickname(form.getNickname());
         return result;
     }
@@ -280,6 +236,7 @@ public class AuthController {
             "\n" +
             "Parameter\n" +
             "- String nickname\n" +
+            "\n" +
             "Respnse\n" +
             "- True / False\n" +
             "** true : 닉네임 사용가능 , false : 닉네임 사용불가")
@@ -294,39 +251,5 @@ public class AuthController {
         }
 
     }
-
-
-//    @ApiOperation(value="토큰 재발급 (O)", notes="JWT 리프레시 토큰을 받아 액세스 토큰을 재발급 한다.\n" +
-//            "\n" +
-//            "Parameter\n" +
-//            "- jwtRefresh\n" +
-//            "\n" +
-//            "Response \n" +
-//            " data : { success : 성공여부\n" +
-//            "          code : 0 or -1\n" +
-//            "           msg : 성공하였습니다/유효한토큰이 없습니다.\n" +
-//            "          data : JWTAccessToken\n" +
-//            "\n" +
-//            " ** 입력받은 JWTRefresh토큰이 유효하면 code=0, data 값 확인\n" +
-//            "    유효하지 않으면 code=-1, v1/auth/url로 go (카카로 로그인페이지)")
-//    @GetMapping("/newtoken")
-//    public SingleResult<CommonResult> getTokenFromRefreshToken(@ApiParam("jwtRefresh") @RequestParam String jwtRefresh){
-////        String result = null;
-//        CommonResult res;
-//        System.out.println("RefreshToken을 활용하여 AccessToken 갱신!!");
-//        if(jwtTokenProvider.validateToken(jwtRefresh)){
-//            long Uid =Long.parseLong(String.valueOf(jwtTokenProvider.getUserPk(jwtRefresh))); //Uid type
-//            System.out.println("Uid: " + Uid);
-//            List<String> roles = jwtTokenProvider.getRoles(jwtRefresh);
-//            String result = jwtTokenProvider.generateToken(Uid, roles);
-//            res =responseService.getSingleResult(result);
-//        }else{
-//            System.out.println("재발급불가");
-////            result=null;
-//            res= responseService.getFailResult(-1, "유효한토큰이없습니다.");
-//        }
-//        return responseService.getSingleResult(res);
-//    }
-
 
 }

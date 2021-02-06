@@ -10,10 +10,10 @@ import java.util.Map;
 @Setter
 public class TokenResult<T> extends CommonResult {
     @ApiModelProperty(value="jwtToken")
-    private String accessToken;
+    private String jwtToken;
 
     @ApiModelProperty(value="jwtRefresh")
-    private String refreshToken;
+    private String jwtRefresh;
 
     @ApiModelProperty(value="nickname")
     private String nickname;

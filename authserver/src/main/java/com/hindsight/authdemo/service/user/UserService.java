@@ -22,8 +22,13 @@ public class UserService {
 
     public void updateAccessToken(long Uid, String token){
         User user = userJpaRepo.findUserByUid(Uid);
-
         user.setAccessToken(token);
+        userJpaRepo.save(user);
+    }
+
+    public void updatejwtToken(long Uid, String token){
+        User user = userJpaRepo.findUserByUid(Uid);
+        user.setJwtAccess(token);
         userJpaRepo.save(user);
     }
 
