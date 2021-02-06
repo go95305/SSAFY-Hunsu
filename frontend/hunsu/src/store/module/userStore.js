@@ -27,54 +27,85 @@ const mutations = {
   setRefreshToken(state, token) {
     state.refreshToken = token;
   },
-  setAllToken(state, accessToken, refreshToken) {
+  setAllToken(state, { accessToken, refreshToken }) {
     state.accessToken = accessToken;
-    state.refreshTOken = refreshToken;
+    state.refreshToken = refreshToken;
+    console.log('setAllToken', accessToken, state.accessToken);
+  },
+  setNickname(state, nickname) {
+    state.nickname = nickname;
+  },
+  setAllInfo(state, { accessToken, refreshToken, nickname }) {
+    state.accessToken = accessToken;
+    state.refreshToken = refreshToken;
+    state.nickname = nickname;
   },
 };
 
 const actions = {
   // 카카오 로그인 후 회원가입이 되어있는지 확인 후 유무에 따라 회원가입 절차 or 로그인 유도
-  userCheck(context, accessToken, refreshToken) {
+  userCheck(context, { accessToken, refreshToken }) {
     console.log('in usercheckapi 1', accessToken, refreshToken);
-    return axios
-      .post('http://localhost:8081/v1/auth/usercheck', {
-        accessToken,
-        refreshToken,
-      })
-      .then((res) => {
-        console.log(res.data.code);
-        return res.data.code;
-        //return -1 or 1;
-      })
-      .catch((err) => {
-        console.log('usercheck err : ', err);
-      });
-  },
-  signUpInApi(context, params) {
     return (
       axios
-        // .post("http://i4c102.p.ssafy.io:8081/api/v1/auth/signup", {
-        .post('http://localhost:8081/v1/auth/signup', params)
+        // .post('http://localhost:8081/v1/auth/usercheck', {
+        .post('http://i4c102.p.ssafy.io:8081/api/v1/auth/usercheck', {
+          accessToken,
+          refreshToken,
+        })
         .then((res) => {
-          console.log('in singupinapi 1', res.data);
-          context.commit('setAllToken', res.data.accessToken, res.data.refreshToken);
-          // this.kakaoLogin(res.accessToken);
+          console.log(res.data.code);
+          return res.data.code;
+          //return -1 or 1;
         })
         .catch((err) => {
-          console.log('err in signUpInApi ', err);
+          console.log('usercheck err : ', err);
         })
     );
   },
-  kakaoLogin(context) {
-    console.log('in kakaoLogin 3', context.state.accessToken); //jwtAccessToken
-    // return axios.get('http://localhost:8081/v1/auth/check?jwtToken=' + accessToken).then((res) => {
-    //   console.log(res);
-    // });
+  signUpInApi({ commit }, params) {
+    // 회원가입 api
+    console.log(params);
     return axios
-      .post('http://localhost:8081/v1/auth/login?jwtToken=' + context.state.accessToken)
+      .post('http://i4c102.p.ssafy.io:8081/api/v1/auth/signup?accessToken=' + params.accessToken, {
+        height: params.height,
+        size: params.size,
+        nickname: params.nickname,
+      })
       .then((res) => {
-        console.log('in kakaoLogin 4', res);
+        if (res.data.code === 1) {
+          console.log('in singupinapi 1', res.data);
+          commit('setAllInfo', {
+            accessToken: res.data.jwtToken,
+            refreshToken: res.data.jwtRefresh,
+            nickname: res.data.nickname,
+          });
+        } else {
+          console.log('signup error');
+        }
+      })
+      .catch((err) => {
+        console.log('err in signUpInApi ', err);
+      });
+  },
+  kakaoLogin({ state, commit }) {
+    // 로그인 API
+    console.log('rootState ', state);
+    console.log('in kakaoLogin 3', state.accessToken); //jwtAccessToken
+    console.log('in kakaoLogin 3', state.refreshToken); //jwtAccessToken
+
+    return axios
+      .post('http://i4c102.p.ssafy.io:8081/api/v1/auth/tokenlogin', {
+        jwtToken: state.accessToken,
+        jwtRefresh: state.refreshToken,
+      })
+      .then((res) => {
+        console.log(res);
+        commit('setAllInfo', {
+          accessToken: res.data.jwtToken,
+          refreshToken: res.data.refreshToken,
+          nickname: res.data.nickname,
+        });
       });
   },
 };

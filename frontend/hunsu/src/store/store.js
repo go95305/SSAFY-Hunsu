@@ -11,7 +11,7 @@ export default new Vuex.Store({
   modules: { ootd, whatwear, user },
   plugins: [
     createPersistedState({
-      paths: ['ootd', 'whatwear'],
+      paths: ['ootd', 'whatwear', 'user'],
     }),
   ],
 });

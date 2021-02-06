@@ -120,7 +120,8 @@ export default {
         size: this.size,
       }).then(() => {
         console.log("in signupinfo 2");
-        this.kakaoLogin();
+        this.$router.push("/");
+        // this.kakaoLogin();
       });
     },
   },
