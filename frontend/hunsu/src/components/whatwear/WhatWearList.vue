@@ -1,9 +1,8 @@
 <template>
   <!-- WHATWEAR 메인 페이지 -->
 
-    <!--v-for 사용을 위한 최상위 div-->
-  <v-card 
-    flat>
+  <!--v-for 사용을 위한 최상위 div-->
+  <v-card flat>
     <v-card
       v-for="(whatwear, idx) in whatwearList"
       :key="idx"
@@ -37,12 +36,11 @@
       </div>
     </v-card>
   </v-card>
-
 </template>
 
 <script>
 import axios from "axios";
-import { mapActions } from "vuex"
+import { mapActions } from "vuex";
 
 export default {
   name: "WhatWearList",
@@ -57,8 +55,8 @@ export default {
   methods: {
     ...mapActions(["getWhatwearInfoApi"]),
     goToWhatwearDetail(whatwear) {
-      this.getWhatwearInfoApi(whatwear.wear_idx, whatwear.nickname)
-      this.$router.push({ name: "WhatWearDetail" })
+      this.getWhatwearInfoApi(whatwear.wear_idx, "han"); // 유저정보 닉네임으로 변경, 현재는 글 작성자로 들어감
+      this.$router.push({ name: "WhatWearDetail" });
     },
     getWhatWearList() {
       axios
