@@ -126,8 +126,8 @@ public class WearService {
         List<VoteDTO> voteDTOList = new ArrayList<>();
         List<VoteItem> voteList;
 
-        Wear wear = wearRepository.findWearByIdx(idx);
-        Vote vote = voteRepository.findVoteByWear(wear);
+        VoteItem voteitem = voteItemRepository.findVoteItemByIdx(idx);
+        Vote vote = voteitem.getVote();
         User user = userRepository.findUserByNickname(nickname);
 
         voteList = voteItemRepository.findVoteItemByVoteOrderByVote(vote);
