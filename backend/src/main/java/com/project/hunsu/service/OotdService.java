@@ -82,8 +82,7 @@ public class OotdService {
                 if (ootdLike != null) {
                     if (ootdLike.getFlag()) {
                         ootdDetailDTO.setLikeChk(true);
-                    }
-                    else {
+                    } else {
                         ootdDetailDTO.setLikeChk(false);
                     }
                 } else {
@@ -240,50 +239,38 @@ public class OotdService {
         user = userRepository.findUserByNickname(ootdReplyDTO.getNickname());
         ootd = ootdRepository.findOotdByIdx(ootdReplyDTO.getOotdIdx());
 
-        ootdReply.setUser(user);
-        ootdReply.setOotd(ootd);
-        ootdReply.setDepth(ootdReplyDTO.getDepth());
-        ootdReply.setContent(ootdReplyDTO.getContent());
-        OotdReply savedReply = ootdReplyRepository.save(ootdReply);
-        if (savedReply.getDepth() == 1)
-            savedReply.setGroupNum(ootdReplyDTO.getGroupNum());
-        else
-            savedReply.setGroupNum(savedReply.getIdx());
+        if (user != null && ootd != null) {
+            ootdReply.setUser(user);
+            ootdReply.setOotd(ootd);
+            ootdReply.setDepth(ootdReplyDTO.getDepth());
+            ootdReply.setContent(ootdReplyDTO.getContent());
+            OotdReply savedReply = ootdReplyRepository.save(ootdReply);
+            if (savedReply.getDepth() == 1)
+                savedReply.setGroupNum(ootdReplyDTO.getGroupNum());
+            else
+                savedReply.setGroupNum(savedReply.getIdx());
 
-        ootdReplyRepository.save(savedReply);
-        ootdReplyRepository.save(savedReply);
+            ootdReplyRepository.save(savedReply);
 
 //        List<OotdReplyDTO> ootdreplyDTOList = new ArrayList<>();
 //
 //        replyDTOList = replyList(ootdReplyDTO.getOotd_idx(), ootdReplyDTO.getNickname());
 
-        //2. 전체 댓글을 리턴
-        List<OotdReply> ootdReplyList = ootdReplyRepository.findOotdReplyByOotdIdx(ootdReplyDTO.getOotdIdx());
-        for (int i = 0; i < ootdReplyList.size(); i++) {
-            OotdReplyDTO ootdreplDTO = new OotdReplyDTO();
-            ootdreplDTO.setReplyIdx(ootdReplyList.get(i).getIdx());
-            ootdreplDTO.setOotdIdx(ootdReplyList.get(i).getOotd().getIdx());
-            ootdreplDTO.setNickname(ootdReplyList.get(i).getUser().getNickname());
-            ootdreplDTO.setContent(ootdReplyList.get(i).getContent());
-            ootdreplDTO.setDepth(ootdReplyList.get(i).getDepth());
-            ootdreplDTO.setGroupNum(ootdReplyList.get(i).getGroupNum());
-            ootdreplDTO.setWrite_date(ootdReplyList.get(i).getWriteDate());
-            ootdreplDTO.setIsDeleted(ootdReplyList.get(i).getFlag());
-            ootdReplyDTOList.add(ootdreplDTO);
+            //2. 전체 댓글을 리턴
+            List<OotdReply> ootdReplyList = ootdReplyRepository.findOotdReplyByOotdIdx(ootdReplyDTO.getOotdIdx());
+            for (int i = 0; i < ootdReplyList.size(); i++) {
+                OotdReplyDTO ootdreplDTO = new OotdReplyDTO();
+                ootdreplDTO.setReplyIdx(ootdReplyList.get(i).getIdx());
+                ootdreplDTO.setOotdIdx(ootdReplyList.get(i).getOotd().getIdx());
+                ootdreplDTO.setNickname(ootdReplyList.get(i).getUser().getNickname());
+                ootdreplDTO.setContent(ootdReplyList.get(i).getContent());
+                ootdreplDTO.setDepth(ootdReplyList.get(i).getDepth());
+                ootdreplDTO.setGroupNum(ootdReplyList.get(i).getGroupNum());
+                ootdreplDTO.setWrite_date(ootdReplyList.get(i).getWriteDate());
+                ootdreplDTO.setIsDeleted(ootdReplyList.get(i).getFlag());
+                ootdReplyDTOList.add(ootdreplDTO);
+            }
         }
-//        List<OotdReply> ootdReplyList = ootdReplyRepository.findOotdReplyByOotdIdx(ootdIdx);
-//        for (int i = 0; i < ootdReplyList.size(); i++) {
-//            OotdReplyDTO ootdreplDTO = new OotdReplyDTO();
-//            ootdreplDTO.setReplyIdx(ootdReplyList.get(i).getIdx());
-//            ootdreplDTO.setOotdIdx(ootdReplyList.get(i).getOotd().getIdx());
-//            ootdreplDTO.setNickname(ootdReplyList.get(i).getUser().getNickname());
-//            ootdreplDTO.setContent(ootdReplyList.get(i).getContent());
-//            ootdreplDTO.setDepth(ootdReplyList.get(i).getDepth());
-//            ootdreplDTO.setGroupNum(ootdReplyList.get(i).getGroupNum());
-//            ootdreplDTO.setWrite_date(ootdReplyList.get(i).getWriteDate());
-//            ootdreplDTO.setIsDeleted(ootdReplyList.get(i).getFlag());
-//            ootdDetailDTO.addReply(ootdreplDTO);
-//        }
         return ootdReplyDTOList;
     }
 
@@ -344,7 +331,7 @@ public class OotdService {
 
     public List<OotdReplyDTO> deleteReply(Long idx) {
         List<OotdReplyDTO> ootdReplyDTOList = new ArrayList<>();
-        OotdReply ootdReply = ootdReplyRepository.findReplyByIdx(idx);
+        OotdReply ootdReply = ootdReplyRepository.findOotdReplyByIdx(idx);
         ootdReply.setFlag(false);
         ootdReplyDTOList = replyList(ootdReply.getOotd().getIdx(), ootdReply.getUser().getNickname());
         return ootdReplyDTOList;
@@ -406,8 +393,7 @@ public class OotdService {
         User user = userRepository.findUserByNickname(nickname);
 
         for (OotdReply reply : replyList) {
-            OotdReplyLike replyLike;
-            replyLike = ootdReplyLikeRepository.findOotdReplyLikeByOotdReplyAndUser(reply, user);
+            OotdReplyLike replyLike = ootdReplyLikeRepository.findOotdReplyLikeByOotdReplyAndUser(reply, user);
 
             OotdReplyDTO replyDTO = new OotdReplyDTO();
             replyDTO.setReplyIdx(reply.getIdx());

@@ -60,8 +60,8 @@ public class OotdController {
             "                        -ootdReplyList(해당 글의 댓글 리스트)\n" +
             "                        -likeChk(상세페이지에 들어간 유저가 해당글을 좋아요 눌렀는지 여부)")
 
-    public OotdDetailDTO detailOotd(@PathVariable("ootdIdx") Long ootdIdx,@PathVariable String nickname) {
-        OotdDetailDTO ootdDetailDTO = ootdService.SpecificOotd(ootdIdx,nickname);
+    public OotdDetailDTO detailOotd(@PathVariable("ootdIdx") Long ootdIdx, @PathVariable String nickname) {
+        OotdDetailDTO ootdDetailDTO = ootdService.SpecificOotd(ootdIdx, nickname);
         return ootdDetailDTO;
     }
 
@@ -116,7 +116,7 @@ public class OotdController {
     public Boolean ootdLike(@Valid @RequestBody OotdLikeDTO ootdLikeDTO) {
         Ootd ootd = entityManager.find(Ootd.class, ootdLikeDTO.getOotdIdx());
         List<OotdLikeDTO> ootdLikeDTOList = null;
-        boolean chk=false;
+        boolean chk = false;
         if (ootd != null) {
             chk = ootdService.ootdLike(ootdLikeDTO);
         }
@@ -177,7 +177,8 @@ public class OotdController {
             "                                       Response\n" +
             "                                                       -해당 글의 댓글 리스트 목록 전체")
     public List<OotdReplyDTO> ootdReplyWrite(@Valid @RequestBody OotdReplyDTO ootdreplyDTO) {
-        List<OotdReplyDTO> ootdReplyDTOList = ootdService.writeReply(ootdreplyDTO);
+        List<OotdReplyDTO> ootdReplyDTOList = null;
+        ootdReplyDTOList = ootdService.writeReply(ootdreplyDTO);
         return ootdReplyDTOList;
     }
 
