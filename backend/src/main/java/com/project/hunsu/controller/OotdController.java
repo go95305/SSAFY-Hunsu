@@ -153,13 +153,10 @@ public class OotdController {
             "                                                  -content(작성할 내용)\n" +
             "                                                  -hashtag(작성할 해시태그)\n" +
             "                                        Response\n" +
-            "                                                  -글 작성 성공여부(success or fail)")
-    public String writeOotd(@Valid @RequestBody OotdWriteDTO ootdWriteDTO) {
-        boolean ifSuccess = ootdService.writeOotd(ootdWriteDTO);
-        if (ifSuccess) {
-            return "success";
-        } else
-            return "fail";
+            "                                                  -작성한 ootd글 정보(ootdIdx,hastagList,writeDate,content,nickname,likeChk,likecount)")
+    public OotdDetailDTO writeOotd(@Valid @RequestBody OotdWriteDTO ootdWriteDTO) {
+        OotdDetailDTO ootdDetailDTO = ootdService.writeOotd(ootdWriteDTO);
+        return ootdDetailDTO;
     }
 
     @PostMapping("/ootd/reply")
