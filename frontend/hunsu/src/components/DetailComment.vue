@@ -79,6 +79,8 @@ export default {
     replyContent: "",
     depth: 0,
     groupNum: 0,
+    update: false,
+    updateReplyIdx: 0,
   }),
   computed: {
     ...mapGetters(["getWhatwearInfo", "getWhatwearReplyInfo"]),
@@ -89,13 +91,22 @@ export default {
     ...mapActions(["createWhatwearReplyInfo", "likeWhatwearReplyInfo", "deleteWhatwearReplyInfo", "updateWhatwearReplyInfo"]),
     // 댓글작성함수
     createWhatwearReply(wearIdx) {
-      this.createWhatwearReplyInfo({
-        content: this.replyContent,
-        depth: this.depth,
-        groupNum: this.groupNum,
-        nickname: "han",
-        wear_idx: wearIdx,
-      });
+      if (this.update === true) {
+        this.updateWhatwearReplyInfo({
+          content: this.replyContent,
+          nickname: "lee",
+          idx: this.updateReplyIdx,
+        })
+      }
+      if (this.update === false) {
+        this.createWhatwearReplyInfo({
+          content: this.replyContent,
+          depth: this.depth,
+          groupNum: this.groupNum,
+          nickname: "lee",
+          wear_idx: wearIdx,
+        });
+      }
       this.replyContent = "";
       this.depth = 0
       this.groupNum = 0
@@ -122,10 +133,9 @@ export default {
     },
     updateWhatwearReply(reply) {
       this.replyContent = reply.content
-      this.updateWhatwearReplyInfo({
-        content: this.replyContent,
-        replyIdx: reply.idx,
-      })
+      this.update = true
+      this.updateReplyIdx = reply.idx
+      console.log(reply.idx)
     },
   },
 };

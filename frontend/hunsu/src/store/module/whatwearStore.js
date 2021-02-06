@@ -89,12 +89,13 @@ const actions = {
     .put('http://i4c102.p.ssafy.io:8080/api/wear/reply', replyInfo)
     .then((res) => {
       console.log('수정완료', res)
+      context.commit('setWhatwearReplyInfo', res.data)
     })
     .catch((err) => {
       console.error(err)
     })
   },
-  voteWhatwearInfo(context, voteIdx, nickname) {
+  voteWhatwearInfo(context, { voteIdx, nickname }) {
     axios
     .put(`http://i4c102.p.ssafy.io:8080/api/wear/reply/vote/${voteIdx}/${nickname}`)
     .then((res) => {

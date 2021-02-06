@@ -236,7 +236,7 @@ export default {
     },
     voteWhatwear(voteIdx, nickname) {
       // console.log(voteIdx)
-      this.voteWhatwearInfo(voteIdx, nickname)
+      this.voteWhatwearInfo({voteIdx, nickname})
     }
   }
 }
