@@ -168,7 +168,7 @@
       <div id="vote_chart">
         <chartjs-doughnut
           :labels="getWhatwearChartlabels"
-          :datasets="datasets"
+          :datasets="getWhatwearChartDatasets"
           :option="option"
         ></chartjs-doughnut>
       </div>
