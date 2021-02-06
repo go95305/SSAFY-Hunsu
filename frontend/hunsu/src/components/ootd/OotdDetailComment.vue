@@ -22,7 +22,7 @@
           </div>
           </div>
         </div>
-          <v-btn icon @click="likeOotdReply(reply.replyIdx)" :color="reply.like ? 'red' : 'black'"><v-icon>mdi-heart</v-icon></v-btn>
+          <v-btn icon @click="likeOotdReply(reply.replyIdx)" :color="reply.like ? 'red' : 'black'"><v-icon>mdi-heart-outline</v-icon></v-btn>
           <!-- <v-btn icon @click="deleteWhatwearReply(reply.idx)"><v-icon>mdi-close</v-icon></v-btn> -->
       </v-card>
 
@@ -83,7 +83,6 @@ export default {
     likeOotdReply(replyIdx) {
       const nickname = "lee"
       this.likeOotdReplyInfo(replyIdx, nickname)
-      console.log(this.getOotdReplyInfo)
     },
 
     deleteOotdReply(replyIdx) {
