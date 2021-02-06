@@ -80,11 +80,14 @@
 
 <script>
 // import axios from "axios";
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 // 작성값 Null 체크
 //
 export default {
   name: "OotdWritePage",
+  computed: {
+    ...mapGetters(["getNickname"]),
+  },
   data() {
     return {
       dialog: false,
@@ -100,17 +103,19 @@ export default {
       ootd_content: "",
       ootd_hashtag: "",
       ootd_hashtag_array: [],
+      imageFile: "",
     };
   },
   methods: {
-    ...mapActions(["createOotdInfo", "getOotdInfoInApi"]),
+    ...mapActions(["createOotdInfo", "getOotdInfoInApi", "uploadImage"]),
     onClickImageUpload() {
       this.$refs.imageInput.click();
     },
     onChangeImages(e) {
       console.log(e.target.files);
-      const file = e.target.files[0];
-      this.imageUrl = URL.createObjectURL(file);
+      this.imageFile = e.target.files[0];
+      console.log("onchange", this.imageFile);
+      this.imageUrl = URL.createObjectURL(this.imageFile);
     },
     addHashtag() {
       this.ootd_hashtag_array.push(this.ootd_hashtag);
@@ -122,18 +127,28 @@ export default {
     },
     createOotd() {
       this.dialog = false;
-      //   console.log(this.ootd_hashtag_array);
+      let uploadImage = this.uploadImage;
+      let file = this.imageFile;
+      console.log("before send", file);
+      // Ootd 글 내용들
       const params = {
         content: this.ootd_content,
         hashtagList: this.ootd_hashtag_array,
-        nickName: "go",
+        nickName: this.getNickname,
       };
-      if (this.createOotdInfo(params)) {
-        this.getOotdInfoInApi(0);
-        this.ootd_hastag_array = [];
-      } else {
-        console.log("실패함");
-      }
+      this.createOotdInfo(params).then(() => {
+        // 이미지 업로드
+        console.log("in ootd", file);
+        uploadImage({
+          // key: "/ootd/" + res.data.ootdIdx,
+          key: "ootd/1.png",
+          file: file,
+        }).then((res) => {
+          console.log("imageupload 1", res);
+        });
+      });
+      // 추후 자기가 쓴 페이지로 이동하는 것 수정 요망
+      this.ootd_hastag_array = [];
     },
   },
 };

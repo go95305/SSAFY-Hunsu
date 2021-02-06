@@ -36,7 +36,6 @@ const mutations = {
   toggleLike(state, flag) {
     state.ootdInfo.likeChk = flag;
   },
-
 };
 
 const actions = {
@@ -120,7 +119,7 @@ const actions = {
   },
   createOotdInfo(context, params) {
     // ootd 작성
-    axios
+    return axios
       .post('http://i4c102.p.ssafy.io:8080/api/ootd', params)
       .then((res) => {
         if (res.data === 'success') {
@@ -150,34 +149,34 @@ const actions = {
     axios
       .put(`http://i4c102.p.ssafy.io:8080/api/ootd/reply/like/${replyIdx}/${nickname}`)
       .then((res) => {
-        console.log(res)
-        context.commit('setOotdReplyInfo', res.data)
+        console.log(res);
+        context.commit('setOotdReplyInfo', res.data);
       })
       .catch((err) => {
-        console.error(err)
-      })
+        console.error(err);
+      });
   },
   deleteOotdReplyInfo(context, replyIdx) {
     axios
-    .delete(`http://i4c102.p.ssafy.io:8080/api/ootd/reply/${replyIdx}`)
-    .then((res) => {
-      context.commit('setOotdReplyInfo', res.data)
-    })
-    .catch((err) => {
-      console.error(err)
-    })
+      .delete(`http://i4c102.p.ssafy.io:8080/api/ootd/reply/${replyIdx}`)
+      .then((res) => {
+        context.commit('setOotdReplyInfo', res.data);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   },
   updateOotdReplyInfo(context, replyInfo) {
     axios
-    .put('http://i4c102.p.ssafy.io:8080/api/ootd/reply', replyInfo)
-    .then((res) => {
-      console.log('수정완료', res)
-      context.commit('setOotdReplyInfo', res.data)
-    })
-    .catch((err) => {
-      console.error(err)
-    })
-  }
+      .put('http://i4c102.p.ssafy.io:8080/api/ootd/reply', replyInfo)
+      .then((res) => {
+        console.log('수정완료', res);
+        context.commit('setOotdReplyInfo', res.data);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  },
 };
 
 export default {
