@@ -337,11 +337,11 @@ public class OotdService {
         return ootdReplyDTOList;
     }
 
-    public List<OotdReplyDTO> ootdReplyLike(Long idx, String nickname) {
-        OotdReply reply = ootdReplyRepository.findOotdReplyByIdx(idx);
-        User user = userRepository.findUserByNickname(nickname);
+    public List<OotdReplyDTO> ootdReplyLike(Long idx, String nickname) { // 댓글번호, 누가 좋아요눌렀는지 닉네임
+        OotdReply reply = ootdReplyRepository.findOotdReplyByIdx(idx);//해당 댓글 정보
+        User user = userRepository.findUserByNickname(nickname);// 좋아요 누른 사람 정보
 
-        OotdReplyLike replyLike = ootdReplyLikeRepository.findOotdReplyLikeByOotdReplyAndUser(reply, user);
+        OotdReplyLike replyLike = ootdReplyLikeRepository.findOotdReplyLikeByOotdReplyAndUser(reply, user); //해당 댓글 좋아요 누른 사람의 댓글좋아요 정보
 
         if (replyLike != null) { //누가 좋아요했는지 정보가 있으면
             if (replyLike.getFlag()) { //
@@ -378,21 +378,21 @@ public class OotdService {
 
         List<OotdReplyDTO> replyDTOList = new ArrayList<>();
 
-        replyDTOList = replyList(reply.getOotd().getIdx(), reply.getUser().getNickname());
+        replyDTOList = replyList(reply.getOotd().getIdx(), nickname);// 해당 댓글의 ootdIdx, 좋아요 누른 사람 닉네임
 
         return replyDTOList;
 
     }
 
     public List<OotdReplyDTO> replyList(Long idx, String nickname) {
-        System.out.println(nickname + "=============================");
         List<OotdReplyDTO> replyDTOList = new ArrayList<>();
 
-        Ootd ootd = ootdRepository.findOotdByIdx(idx);
-        List<OotdReply> replyList = ootdReplyRepository.findOotdReplyByOotdOrderByWriteDate(ootd);
-        User user = userRepository.findUserByNickname(nickname);
+        Ootd ootd = ootdRepository.findOotdByIdx(idx);//댓글이 포함된 ootd 글정보
+        List<OotdReply> replyList = ootdReplyRepository.findOotdReplyByOotdOrderByWriteDate(ootd); //ootd글의 모든 댓글들
+        User user = userRepository.findUserByNickname(nickname);//좋아요 누른 사람의 정보
 
-        for (OotdReply reply : replyList) {
+        for (OotdReply reply : replyList) {//댓글들을 순차적으로 돌면서
+            //현재좋아요 누른 유저가 해당 댓글에 좋아요 누른 데이터
             OotdReplyLike replyLike = ootdReplyLikeRepository.findOotdReplyLikeByOotdReplyAndUser(reply, user);
 
             OotdReplyDTO replyDTO = new OotdReplyDTO();
@@ -405,10 +405,10 @@ public class OotdService {
             replyDTO.setGroupNum(reply.getGroupNum());
             replyDTO.setLikeCount(reply.getCount());
             if (replyLike != null) {
-                if (replyLike.getFlag())
-                    replyDTO.setLike(true);
-                else
-                    replyDTO.setLike(false);
+                if (replyLike.getFlag())//이미 좋아요면
+                    replyDTO.setLike(false);//좋아요 취소
+                else//좋아요 취소상태면
+                    replyDTO.setLike(true);// 좋아요 추가
             } else
                 replyDTO.setLike(false);
             replyDTO.setIsDeleted(reply.getFlag());
