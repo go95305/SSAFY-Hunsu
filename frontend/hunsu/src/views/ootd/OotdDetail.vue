@@ -185,14 +185,14 @@
       </v-card>
     </v-dialog>
     <!-- 댓글 -->
-    <DetailComment />
+    <OotdDetailComment />
     <!-- 디테일 하단 리스트 -->
     <OotdList />
   </v-card>
 </template>
 
 <script>
-import DetailComment from "@/components/DetailComment";
+import OotdDetailComment from "@/components/ootd/OotdDetailComment";
 import OotdList from "@/components/ootd/OotdList";
 
 import { mapGetters, mapMutations, mapActions } from "vuex";
@@ -200,7 +200,7 @@ import { mapGetters, mapMutations, mapActions } from "vuex";
 export default {
   name: "OotdDetail",
   components: {
-    DetailComment,
+    OotdDetailComment,
     OotdList,
     // OotdUpdate,
   },

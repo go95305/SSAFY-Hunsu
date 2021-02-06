@@ -1,5 +1,4 @@
 <template>
-  <!-- OOTD, WHATWEAR 공통 댓글창 -->
   <div>
     <div v-for="(reply, groupNum) in getWhatwearReplyInfo" :key="groupNum">
       <!--댓글창-->
@@ -71,7 +70,7 @@
 import { mapGetters, mapMutations, mapActions } from "vuex";
 
 export default {
-  name: "DetailComment",
+  name: "WhatWearDetailComment",
   data: () => ({
     items: [{ header: "댓글" }],
     replyContent: "",
