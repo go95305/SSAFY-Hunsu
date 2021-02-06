@@ -175,7 +175,8 @@ public class OotdService {
     }
 
     //ootd글 생성
-    public boolean writeOotd(OotdWriteDTO ootdWriteDTO) {
+    public OotdDetailDTO writeOotd(OotdWriteDTO ootdWriteDTO) {
+        OotdDetailDTO ootdDetailDTO = null;
         Ootd ootd = new Ootd();
         User user = userRepository.findUserByNickname(ootdWriteDTO.getNickName());
         //ootd글 새롭게 생성
@@ -201,9 +202,18 @@ public class OotdService {
                     hashtagRepository.save(hashtag);
                 }
             }
-            return true;
-        } else
-            return false;
+            List<Hashtag> hashtagList = hashtagRepository.findHashtagByOotdIdx(ootdNew.getIdx());
+            ootdDetailDTO.setOotdIdx(ootdNew.getIdx());
+            for(int i=0;i<hashtagList.size();i++){
+                ootdDetailDTO.addHashtag(hashtagList.get(i).getContent());
+            }
+            ootdDetailDTO.setWriteDate(ootdNew.getWriteDate());
+            ootdDetailDTO.setContent(ootdNew.getContent());
+            ootdDetailDTO.setNickname(ootdNew.getUser().getNickname());
+            ootdDetailDTO.setLikeChk(false);
+            ootdDetailDTO.setLikeCount(0);
+        }
+        return ootdDetailDTO;
 
 
     }
