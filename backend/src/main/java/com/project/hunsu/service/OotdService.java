@@ -3,6 +3,9 @@ package com.project.hunsu.service;
 import com.project.hunsu.model.dto.*;
 import com.project.hunsu.repository.*;
 import com.project.hunsu.model.entity.*;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
@@ -11,8 +14,11 @@ import javax.persistence.TypedQuery;
 import java.util.ArrayList;
 import java.util.List;
 
+
 @Service
 public class OotdService {
+
+    Logger logger = LoggerFactory.getLogger(OotdService.class);
 
     @PersistenceContext
     EntityManager entityManager;
@@ -176,7 +182,7 @@ public class OotdService {
 
     //ootd글 생성
     public OotdDetailDTO writeOotd(OotdWriteDTO ootdWriteDTO) {
-        OotdDetailDTO ootdDetailDTO = null;
+        OotdDetailDTO ootdDetailDTO = new OotdDetailDTO();
         Ootd ootd = new Ootd();
         User user = userRepository.findUserByNickname(ootdWriteDTO.getNickName());
         //ootd글 새롭게 생성
@@ -202,7 +208,9 @@ public class OotdService {
                     hashtagRepository.save(hashtag);
                 }
             }
+
             List<Hashtag> hashtagList = hashtagRepository.findHashtagByOotdIdx(ootdNew.getIdx());
+            assert false;
             ootdDetailDTO.setOotdIdx(ootdNew.getIdx());
             for(int i=0;i<hashtagList.size();i++){
                 ootdDetailDTO.addHashtag(hashtagList.get(i).getContent());
