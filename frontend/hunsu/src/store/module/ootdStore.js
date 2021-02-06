@@ -33,9 +33,6 @@ const mutations = {
     state.ootdInfo.content = ootdInfo.content;
     state.ootdInfo.hashtagList = ootdInfo.hashtagList;
   },
-  updateOotdReplyInfo(state, ootdReplyInfo) {
-    state.ootdReplyInfo.content = ootdReplyInfo.content;
-  },
   toggleLike(state, flag) {
     state.ootdInfo.likeChk = flag;
   },
@@ -75,6 +72,7 @@ const actions = {
         console.log('getOotdInfo', res);
         state.ootdInfo = res.data;
         context.commit('setOotdInfo', res.data);
+        context.commit('setOotdReplyInfo', res.data.ootdReplyDTOList);
       });
   },
   updateOotdInfo(context, ootdInfo) {
@@ -170,11 +168,11 @@ const actions = {
     })
   },
   updateOotdReplyInfo(context, replyInfo) {
-    return axios
+    axios
     .put('http://i4c102.p.ssafy.io:8080/api/ootd/reply', replyInfo)
     .then((res) => {
       console.log('수정완료', res)
-      context.commit('updateOotdReplyInfo', replyInfo)
+      context.commit('setOotdReplyInfo', res.data)
     })
     .catch((err) => {
       console.error(err)

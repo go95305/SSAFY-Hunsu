@@ -57,6 +57,8 @@ export default {
     replyContent: "",
     depth: 0,
     groupNum: 0,
+    update: false,
+    updateReplyIdx: 0,
   }),
   computed: {
     ...mapGetters(["getOotdInfo", "getOotdReplyInfo"]),
@@ -67,21 +69,33 @@ export default {
     ...mapActions(["createOotdReplyInfo", "likeOotdReplyInfo", "deleteOotdReplyInfo", "updateOotdReplyInfo"]),
     // 댓글작성함수
     createOotdReply(ootd_idx) {
-      this.createOotdReplyInfo({
-        content: this.replyContent,
-        depth: this.depth,
-        groupNum: this.groupNum,
-        nickname: "han",
-        ootdIdx: ootd_idx,
-      });
+      if (this.update) {
+        this.updateOotdReplyInfo({
+          content: this.replyContent,
+          replyIdx: this.updateReplyIdx,
+        })
+        console.log('수정성공')
+      }
+      else {
+        this.createOotdReplyInfo({
+          content: this.replyContent,
+          depth: this.depth,
+          groupNum: this.groupNum,
+          nickname: "han",
+          ootdIdx: ootd_idx,
+        });
+        console.log('댓글작성성공')
+      }
+
       this.replyContent = "";
       this.depth = 0
       this.groupNum = 0
+      this.update = false
       console.log(this.getOotdReplyInfo)
     },
     // 댓글좋아요 함수
     likeOotdReply(replyIdx) {
-      const nickname = "han"
+      const nickname = "lee"
       this.likeOotdReplyInfo(replyIdx, nickname)
       console.log(this.getOotdReplyInfo)
     },
@@ -97,10 +111,8 @@ export default {
     },
     updateOotdReply(reply) {
       this.replyContent = reply.content
-      this.updateOotdReplyInfo({
-        content: this.replyContent,
-        replyIdx: reply.replyIdx,
-      })
+      this.update = true
+      this.updateReplyIdx = reply.replyIdx
     }
   },
 };
