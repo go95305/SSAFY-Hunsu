@@ -97,7 +97,7 @@ public class AuthController {
         KakaoProfile profile = kakaoService.getKakaoProfile(tokens.getAccessToken());
         System.out.println("profile : " + profile);
         // 프로필의 id로 db에서 사람찾기
-        Optional<User> user = Optional.ofNullable(userJpaRepo.findUserByUidAndFlag(profile.getUid(), false));
+        Optional<User> user = Optional.ofNullable(userJpaRepo.findUserByUidAndFlag(profile.getUid(), true));
         System.out.println("User: "+user);
         if(user.isPresent()) { // 있으면
             System.out.println("로그인!!!");
