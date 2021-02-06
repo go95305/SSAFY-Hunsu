@@ -41,7 +41,7 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from "vuex";
-import axios from "axios";
+// import axios from "axios";
 
 export default {
   name: "SignupInfo",
@@ -83,45 +83,45 @@ export default {
     ...mapMutations(["setAllToken"]),
     signUp() {
       console.log(this.nickname, this.height, this.size);
-      axios
-        // .post("http://i4c102.p.ssafy.io:8081/api/v1/auth/signup", {
-        .post("http://localhost:8081/v1/auth/signup", {
-          //회원가입
-          accessToken: this.accessToken,
-          height: this.height,
-          nickname: this.nickname,
-          size: this.size,
-        })
-        .then((res) => {
-          console.log("in singupinapi", res);
-          this.setAllToken(res.data.accessToken, res.refreshToken);
-          console.log(res.data.accessToken);
-          axios // 토큰 유효성 검사
-            .get(
-              "http://localhost:8081/v1/auth/check?jwtToken=" +
-                res.data.accessToken
-            )
-            .then((res) => {
-              if (res.data.true) {
-                axios
-                  .post("http://localhost:8081/v1/auth/login", {
-                    jwtToken: res.data.accessToken,
-                  })
-                  .then((res) => {
-                    console.log("in login", res);
-                  });
-              }
-            });
-        });
-      // this.signUpInApi({
-      //   accessToken: this.accessToken,
-      //   height: this.height,
-      //   nickname: this.nickname,
-      //   size: this.size,
-      // }).then(() => {
-      //   console.log("in signupinfo", this.getAccessToken);
-      //   this.kakaoLogin(this.getAccessToken);
-      // });
+      // axios
+      //   // .post("http://i4c102.p.ssafy.io:8081/api/v1/auth/signup", {
+      //   .post("http://localhost:8081/v1/auth/signup", {
+      //     //회원가입
+      //     accessToken: this.accessToken,
+      //     height: this.height,
+      //     nickname: this.nickname,
+      //     size: this.size,
+      //   })
+      //   .then((res) => {
+      //     console.log("in singupinapi", res);
+      //     this.setAllToken(res.data.accessToken, res.refreshToken);
+      //     console.log(res.data.accessToken);
+      //     axios // 토큰 유효성 검사
+      //       .get(
+      //         "http://localhost:8081/v1/auth/check?jwtToken=" +
+      //           res.data.accessToken
+      //       )
+      //       .then((res) => {
+      //         if (res.data.true) {
+      //           axios
+      //             .post("http://localhost:8081/v1/auth/login", {
+      //               jwtToken: res.data.accessToken,
+      //             })
+      //             .then((res) => {
+      //               console.log("in login", res);
+      //             });
+      //         }
+      //       });
+      //   });
+      this.signUpInApi({
+        accessToken: this.accessToken,
+        height: this.height,
+        nickname: this.nickname,
+        size: this.size,
+      }).then(() => {
+        console.log("in signupinfo 2");
+        this.kakaoLogin();
+      });
     },
   },
 };

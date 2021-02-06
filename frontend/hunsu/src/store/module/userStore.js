@@ -36,7 +36,8 @@ const mutations = {
 const actions = {
   // 카카오 로그인 후 회원가입이 되어있는지 확인 후 유무에 따라 회원가입 절차 or 로그인 유도
   userCheck(context, accessToken, refreshToken) {
-    axios
+    console.log('in usercheckapi 1', accessToken, refreshToken);
+    return axios
       .post('http://localhost:8081/v1/auth/usercheck', {
         accessToken,
         refreshToken,
@@ -51,20 +52,30 @@ const actions = {
       });
   },
   signUpInApi(context, params) {
-    axios
-      // .post("http://i4c102.p.ssafy.io:8081/api/v1/auth/signup", {
-      .post('http://localhost:8081/v1/auth/signup', params)
-      .then((res) => {
-        console.log('in singupinapi', res);
-        context.commit('setAllToken', res.accessToken, res.refreshToken);
-        // this.kakaoLogin(res.accessToken);
-      });
+    return (
+      axios
+        // .post("http://i4c102.p.ssafy.io:8081/api/v1/auth/signup", {
+        .post('http://localhost:8081/v1/auth/signup', params)
+        .then((res) => {
+          console.log('in singupinapi 1', res.data);
+          context.commit('setAllToken', res.data.accessToken, res.data.refreshToken);
+          // this.kakaoLogin(res.accessToken);
+        })
+        .catch((err) => {
+          console.log('err in signUpInApi ', err);
+        })
+    );
   },
-  kakaoLogin(context, accessToken) {
-    console.log('in kakaoLogin', accessToken);
-    axios.get('http://localhost:8081/v1/auth/check?jwtToken=' + accessToken).then((res) => {
-      console.log(res);
-    });
+  kakaoLogin(context) {
+    console.log('in kakaoLogin 3', context.state.accessToken); //jwtAccessToken
+    // return axios.get('http://localhost:8081/v1/auth/check?jwtToken=' + accessToken).then((res) => {
+    //   console.log(res);
+    // });
+    return axios
+      .post('http://localhost:8081/v1/auth/login?jwtToken=' + context.state.accessToken)
+      .then((res) => {
+        console.log('in kakaoLogin 4', res);
+      });
   },
 };
 

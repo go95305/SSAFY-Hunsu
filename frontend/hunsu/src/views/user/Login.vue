@@ -21,7 +21,7 @@
 <script>
 // import SignupInfo from "@/components/Mypage/SignupInfo";
 import KakaoLogin from "vue-kakao-login";
-import axios from "axios";
+// import axios from "axios";
 import { mapGetters, mapActions } from "vuex";
 
 export default {
@@ -38,33 +38,14 @@ export default {
     onSuccess(authObj) {
       console.log("auth", authObj);
       let router = this.$router; // 임시방편
-      axios
-        .post("http://localhost:8081/v1/auth/usercheck", {
-          accessToken: authObj.access_token,
-          refreshToken: authObj.refresh_token,
-        })
-        .then((res) => {
-          console.log(res.data.code);
-          if (res.data.code === -1) {
-            router.push({
-              name: "SignUp",
-              params: {
-                accessToken: authObj.access_token,
-                refreshToken: authObj.refresh_token,
-              },
-            });
-          }
-          //return -1 or 1;
-        })
-        .catch((err) => {
-          console.log("usercheck err : ", err);
-        });
-
-      // promise 순서가 지켜지지 않는 이슈
-      // this.userCheck(authObj.access_token, authObj.refresh_token)
+      // axios
+      //   .post("http://localhost:8081/v1/auth/usercheck", {
+      //     accessToken: authObj.access_token,
+      //     refreshToken: authObj.refresh_token,
+      //   })
       //   .then((res) => {
-      //     console.log("in userChck", res);
-      //     if (res === -1) {
+      //     console.log(res.data.code);
+      //     if (res.data.code === -1) {
       //       router.push({
       //         name: "SignUp",
       //         params: {
@@ -73,12 +54,31 @@ export default {
       //         },
       //       });
       //     }
+      //     //return -1 or 1;
       //   })
       //   .catch((err) => {
-      //     console.log("error in userCheck ", err);
+      //     console.log("usercheck err : ", err);
       //   });
+
+      // promise 순서가 지켜지지 않는 이슈
+      this.userCheck(authObj.access_token, authObj.refresh_token)
+        .then((res) => {
+          console.log("return userchk 2", res);
+          if (res === -1) {
+            router.push({
+              name: "SignUp",
+              params: {
+                accessToken: authObj.access_token,
+                refreshToken: authObj.refresh_token,
+              },
+            });
+          }
+        })
+        .catch((err) => {
+          console.log("error in userCheck ", err);
+        });
       // console.log("in login", result);
-      //가입여부체크
+      // 가입여부체크
       // if (this.userCheck(authObj.access_token, authObj.refresh_token) == -1) {
       //   // 회원가입
       //   console.log("회원가입 넘어가즈아");
@@ -91,7 +91,7 @@ export default {
       //   });
       // }
 
-      console.log("success");
+      // console.log("success");
     },
     onFailure(res) {
       console.log(res);
