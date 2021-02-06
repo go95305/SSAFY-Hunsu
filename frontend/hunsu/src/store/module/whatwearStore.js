@@ -68,7 +68,18 @@ const actions = {
     axios
     .put(`http://i4c102.p.ssafy.io:8080/api/wear/reply/${replyIdx}`)
     .then((res) => {
-      console.log(res)
+      console.log('삭제완료', res)
+      context.commit('setWhatwearReplyInfo', res.data)
+    })
+    .catch((err) => {
+      console.error(err)
+    })
+  },
+  updateWhatwearReplyInfo(context, replyInfo) {
+    axios
+    .put('http://i4c102.p.ssafy.io:8080/api/wear/reply', replyInfo)
+    .then((res) => {
+      console.log('수정완료', res)
     })
     .catch((err) => {
       console.error(err)
