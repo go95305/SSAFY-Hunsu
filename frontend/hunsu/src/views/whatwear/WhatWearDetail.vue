@@ -161,12 +161,13 @@
           :key="n"
           :label="`${n}번`"
           :value="n"
+          @click="voteWhatwear(getWhatwearInfo.voteList[n-1].idx, getWhatwearInfo.nickname)"
         ></v-radio>
       </v-radio-group>
       <!--투표결과그래프-->
       <div id="vote_chart">
         <chartjs-doughnut
-          :labels="labels"
+          :labels="getWhatwearChartlabels"
           :datasets="datasets"
           :option="option"
         ></chartjs-doughnut>
@@ -191,7 +192,7 @@ export default {
     DetailComment,
   },
   computed: {
-    ...mapGetters(["getWhatwearInfo", "labels"])
+    ...mapGetters(["getWhatwearInfo", "getWhatwearChartlabels"])
   },
   data() {
     return {
@@ -221,7 +222,7 @@ export default {
   },
   methods: {
     ...mapMutations(["setWhatwearInfo"]),
-    ...mapActions(["getWhatwearInfoApi"]),
+    ...mapActions(["getWhatwearInfoApi", "voteWhatwearInfo"]),
     deleteWhatWear(wear_idx) {
       const wearIdx = wear_idx
       axios.put(`http://i4c102.p.ssafy.io:8080/api/wear/${wearIdx}`)
@@ -233,6 +234,10 @@ export default {
           console.error(err)
         })
     },
+    voteWhatwear(voteIdx, nickname) {
+      // console.log(voteIdx)
+      this.voteWhatwearInfo(voteIdx, nickname)
+    }
   }
 }
 
