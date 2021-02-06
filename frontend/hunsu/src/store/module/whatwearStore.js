@@ -35,9 +35,11 @@ const actions = {
       .then((res) => {
         console.log('Vuex get Whatwear ', res.data);
         state.wear_idx = res.data.wear_idx;
+        const labels = []
         for (var i = 1; i <= res.data.voteList.length; i++) {
-          state.labels.push(String(i));
+          labels.push(String(i));
         }
+        state.labels = labels
         context.commit('setWhatwearInfo', res.data);
         context.commit('setWhatwearReplyInfo', res.data.replyList);
       });
@@ -68,7 +70,18 @@ const actions = {
     axios
     .put(`http://i4c102.p.ssafy.io:8080/api/wear/reply/${replyIdx}`)
     .then((res) => {
-      console.log(res)
+      console.log('삭제완료', res)
+      context.commit('setWhatwearReplyInfo', res.data)
+    })
+    .catch((err) => {
+      console.error(err)
+    })
+  },
+  updateWhatwearReplyInfo(context, replyInfo) {
+    axios
+    .put('http://i4c102.p.ssafy.io:8080/api/wear/reply', replyInfo)
+    .then((res) => {
+      console.log('수정완료', res)
     })
     .catch((err) => {
       console.error(err)

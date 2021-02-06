@@ -166,8 +166,8 @@
       <!--투표결과그래프-->
       <div id="vote_chart">
         <chartjs-doughnut
-          :labels="$store.state.labels"
-          :datasets="$store.state.datasets"
+          :labels="labels"
+          :datasets="datasets"
           :option="option"
         ></chartjs-doughnut>
       </div>
@@ -191,7 +191,7 @@ export default {
     WhatWearDetailComment,
   },
   computed: {
-    ...mapGetters(["getWhatwearInfo"])
+    ...mapGetters(["getWhatwearInfo", "labels"])
   },
   data() {
     return {
@@ -210,7 +210,13 @@ export default {
           text: "test"
         }
       },
-      vote_activated: false
+      vote_activated: false,
+      datasets: [
+        {
+          data: [20, 20, 20, 20, 20],
+          backgroundColor: ['Red', 'Yellow', 'Purple', 'Black', 'Pink'],
+        },
+      ],
     }
   },
   methods: {
@@ -226,7 +232,7 @@ export default {
         .catch(err => {
           console.error(err)
         })
-    }  
+    },
   }
 }
 
