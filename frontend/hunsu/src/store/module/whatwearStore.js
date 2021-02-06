@@ -35,9 +35,11 @@ const actions = {
       .then((res) => {
         console.log('Vuex get Whatwear ', res.data);
         state.wear_idx = res.data.wear_idx;
+        const labels = []
         for (var i = 1; i <= res.data.voteList.length; i++) {
-          state.labels.push(String(i));
+          labels.push(String(i));
         }
+        state.labels = labels
         context.commit('setWhatwearInfo', res.data);
         context.commit('setWhatwearReplyInfo', res.data.replyList);
       });
