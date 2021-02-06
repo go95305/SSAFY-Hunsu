@@ -3,7 +3,7 @@
   <div>
     <div v-for="(reply, groupNum) in getWhatwearReplyInfo" :key="groupNum">
       <!--댓글창-->
-      <v-card v-if="reply.depth === 0" flat class="d-flex align-center justify-space-around">
+      <v-card v-if="reply.depth === 0 && reply.flag" flat class="d-flex align-center justify-space-around">
         <div class="d-flex">
           <div>
             <v-avatar class="mt-5">
@@ -18,15 +18,15 @@
             <!-- <p style="margin-bottom: 0; font-size: 10px">{{ reply.write_date.slice(0, 10) }}</p> -->
             <p style="margin-bottom: 0; font-size: 10px">좋아요 {{ reply.count }}개</p>
             <p style="margin-bottom: 0; margin-left: 10px; font-size: 10px" @click="clickWhatwearReReply(reply.nickname, reply.groupNum)">답글하기</p>
-            <p style="margin-bottom: 0; margin-left: 10px; font-size: 10px" @click="clickWhatwearReReply(reply.nickname, reply.groupNum)">수정</p>
+            <p style="margin-bottom: 0; margin-left: 10px; font-size: 10px" @click="updateWhatwearReply(reply)">수정</p>
           </div>
           </div>
         </div>
           <v-btn icon @click="likeWhatwearReply(reply.idx)" :color="reply.like ? 'red' : 'black'"><v-icon>mdi-heart-outline</v-icon></v-btn>
-          <!-- <v-btn icon @click="deleteWhatwearReply(reply.idx)"><v-icon>mdi-close</v-icon></v-btn> -->
+          <v-btn icon @click="deleteWhatwearReply(reply.idx)"><v-icon>mdi-close</v-icon></v-btn>
       </v-card>
       <!--대댓글창-->
-      <v-card v-if="reply.depth === 1" flat class="d-flex align-center justify-space-around">
+      <v-card v-if="reply.depth === 1 && reply.flag" flat class="d-flex align-center justify-space-around">
         <div class="d-flex">
           <div>
             <v-avatar class="mt-5 ml-4" width="30" height="30">
@@ -41,10 +41,12 @@
             <!-- <p style="margin-bottom: 0; font-size: 10px">{{ reply.write_date.slice(0, 10) }}</p> -->
             <p style="margin-bottom: 0; font-size: 10px">좋아요 {{ reply.count }}개</p>
             <p style="margin-bottom: 0; margin-left: 10px; font-size: 10px" @click="clickWhatwearReReply(reply.nickname, reply.groupNum)">답글하기</p>
-          </div>
+            <p style="margin-bottom: 0; margin-left: 10px; font-size: 10px" @click="updateWhatwearReply(reply)">수정</p>         
+         </div>
           </div>
         </div>
         <v-btn icon @click="likeWhatwearReply(reply.idx)" :color="reply.like ? 'red' : 'black'"><v-icon>mdi-heart-outline</v-icon></v-btn>
+        <v-btn icon @click="deleteWhatwearReply(reply.idx)"><v-icon>mdi-close</v-icon></v-btn> 
       </v-card>
     </div>
 
@@ -84,7 +86,7 @@ export default {
   },
   methods: {
     ...mapMutations(["setWhatwearReplyInfo"]),
-    ...mapActions(["createWhatwearReplyInfo", "likeWhatwearReplyInfo", "deleteWhatwearReplyInfo"]),
+    ...mapActions(["createWhatwearReplyInfo", "likeWhatwearReplyInfo", "deleteWhatwearReplyInfo", "updateWhatwearReplyInfo"]),
     // 댓글작성함수
     createWhatwearReply(wearIdx) {
       this.createWhatwearReplyInfo({
@@ -117,7 +119,14 @@ export default {
       } else {
         console.log('삭제실패')
       }
-    }
+    },
+    updateWhatwearReply(reply) {
+      this.replyContent = reply.content
+      this.updateWhatwearReplyInfo({
+        content: this.replyContent,
+        replyIdx: reply.idx,
+      })
+    },
   },
 };
 </script>
