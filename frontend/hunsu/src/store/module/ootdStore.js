@@ -1,12 +1,16 @@
 import axios from 'axios';
 const state = {
   ootdInfo: {},
+  ootdReplyInfo: {},
   ootdList: [],
   like: false,
 };
 const getters = {
   getOotdInfo(state) {
     return state.ootdInfo;
+  },
+  getOotdReplyInfo(state) {
+    return state.ootdReplyInfo;
   },
   getOotdList(state) {
     return state.ootdList;
@@ -19,6 +23,9 @@ const mutations = {
   setOotdInfo(state, ootdInfo) {
     state.ootdInfo = ootdInfo;
   },
+  setOotdReplyInfo(state, ootdReplyInfo) {
+    state.ootdReplyInfo = ootdReplyInfo;
+  },
   setOotdList(state, ootdList) {
     state.ootdList = ootdList;
   },
@@ -29,6 +36,7 @@ const mutations = {
   toggleLike(state, flag) {
     state.ootdInfo.likeChk = flag;
   },
+
 };
 
 const actions = {
@@ -64,6 +72,7 @@ const actions = {
         console.log('getOotdInfo', res);
         state.ootdInfo = res.data;
         context.commit('setOotdInfo', res.data);
+        context.commit('setOotdReplyInfo', res.data.ootdReplyDTOList);
       });
   },
   updateOotdInfo(context, ootdInfo) {
@@ -125,6 +134,50 @@ const actions = {
         return false;
       });
   },
+
+  // 댓글
+  createOotdReplyInfo(context, OotdReplyInfo) {
+    axios
+      .post('http://i4c102.p.ssafy.io:8080/api/ootd/reply', OotdReplyInfo)
+      .then((res) => {
+        context.commit('setOotdReplyInfo', res.data);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  },
+  likeOotdReplyInfo(context, replyIdx, nickname) {
+    axios
+      .put(`http://i4c102.p.ssafy.io:8080/api/ootd/reply/like/${replyIdx}/${nickname}`)
+      .then((res) => {
+        console.log(res)
+        context.commit('setOotdReplyInfo', res.data)
+      })
+      .catch((err) => {
+        console.error(err)
+      })
+  },
+  deleteOotdReplyInfo(context, replyIdx) {
+    axios
+    .delete(`http://i4c102.p.ssafy.io:8080/api/ootd/reply/${replyIdx}`)
+    .then((res) => {
+      context.commit('setOotdReplyInfo', res.data)
+    })
+    .catch((err) => {
+      console.error(err)
+    })
+  },
+  updateOotdReplyInfo(context, replyInfo) {
+    axios
+    .put('http://i4c102.p.ssafy.io:8080/api/ootd/reply', replyInfo)
+    .then((res) => {
+      console.log('수정완료', res)
+      context.commit('setOotdReplyInfo', res.data)
+    })
+    .catch((err) => {
+      console.error(err)
+    })
+  }
 };
 
 export default {

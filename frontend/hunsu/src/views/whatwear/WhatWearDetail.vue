@@ -173,7 +173,7 @@
         ></chartjs-doughnut>
       </div>
     </div>
-    <DetailComment />
+    <WhatWearDetailComment />
   </v-card>
   
 </template>
@@ -181,7 +181,7 @@
 
 <script>
 
-import DetailComment from "@/components/DetailComment"
+import WhatWearDetailComment from "@/components/whatwear/WhatWearDetailComment"
 import { mapActions, mapGetters, mapMutations } from 'vuex'
 
 import axios from "axios"
@@ -189,7 +189,7 @@ import axios from "axios"
 export default {
   name: "WhatWearDetail",
   components: {
-    DetailComment,
+    WhatWearDetailComment,
   },
   computed: {
     ...mapGetters(["getWhatwearInfo", "getWhatwearChartlabels"])
