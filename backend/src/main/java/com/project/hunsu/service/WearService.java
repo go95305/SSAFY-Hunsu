@@ -192,7 +192,7 @@ public class WearService {
 
         List<WearReplyDTO> replyDTOList = new ArrayList<>();
 
-        replyDTOList = replyList(request.getWear_idx(), request.getNickname());
+        replyDTOList = replyList(reply.getWear().getIdx(), request.getNickname());
 
         return replyDTOList;
 
