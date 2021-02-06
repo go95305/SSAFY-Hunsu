@@ -208,7 +208,7 @@ public class WearService {
 
         List<WearReplyDTO> replyDTOList = new ArrayList<>();
 
-        replyDTOList = replyList(idx, reply.getUser().getNickname());
+        replyDTOList = replyList(reply.getWear().getIdx(), reply.getUser().getNickname());
 
         return replyDTOList;
 
@@ -300,7 +300,7 @@ public class WearService {
 
         List<WearReplyDTO> replyDTOList = new ArrayList<>();
 
-        replyDTOList = replyList(reply.getWear().getIdx(), reply.getUser().getNickname());
+        replyDTOList = replyList(reply.getWear().getIdx(), nickname);
 
         return replyDTOList;
 

@@ -24,107 +24,177 @@ public class WearController {
 
     //뭘 입을까 목록(최신순 정렬)
     @GetMapping("/wear")
-    @ApiOperation(value = "뭘 입을까 메인 (O)", notes = "wear의 최신순 목록을 리턴해준다.\n" +
-            "                                                Parameter: x\n" +
-            "                                                Response: List<wear>(title, nickname, wear_idx, voteActivated)")
+    @ApiOperation(value = "뭘 입을까 메인 (O)", notes = "Parameter(x)\n" +
+            "Response\n" +
+            "-wear_list(wear): 뭘 입을까 리스트\n" +
+            "-----title: 제목\n" +
+            "-----nickname: 작성자\n" +
+            "-----wear_idx: 뭘입을까 idx\n" +
+            "-----voteActivated: 투표 활성화 여부(true or false)\n")
     public List<WearMainDTO> wearMain() {
         List<WearMainDTO> wearList = wearService.sortByRecent();
         return wearList;
     }
 
-    //뭘 입을까 작성
     //content, nickname, num, title 필요
     @PostMapping("/wear")
-    @ApiOperation(value = "뭘 입을까 작성 (O)", notes = "입력된 wear의 값들을 이용해 wear테이블에 값을 입력해준다.\n" +
-            "                                                Parameter: content, nickname, num, title\n" +
-            "                                                Response: x")
+    @ApiOperation(value = "뭘 입을까 작성 (O)", notes = "Parameter\n" +
+            "-content: 내용\n" +
+            "-nickname: 작성자\n" +
+            "-num: 투표용 사진 개수\n" +
+            "-title: 제목\n" +
+            "-endtime: 투표 마감 시간(투표 비활성화(num == 0) 시 선택 필요 없음)\n" +
+            "Response(x)")
     public void insertWear(@RequestBody WearDTO request) {
         wearService.insertWear(request);
     }
 
-    //뭘 입을까 디테일
     //wear_idx, nickname 필요
     @GetMapping("/wear/detail/{wear_idx}/{nickname}")
-    @ApiOperation(value = "뭘 입을까 디테일 (O)", notes = "선택된 wear의 상세글, 댓글 목록, 투표 목록을 전부 리턴해준다.\n" +
-            "                                                Parameter: wear_idx(path), nickname(path)\n" +
-            "                                                Response: wear_idx, title, content, nickname, write_date, vote_activated,\n" +
-            "                                                           List<reply>(reply_idx, nickname, depth, writeDate, content, groupNum, count, like, flag),\n" +
-            "                                                           List<vote>(voteItem_idx, count, choice)")
+    @ApiOperation(value = "뭘 입을까 디테일 (O)", notes = "Parameter\n" +
+            "-wear_idx(path): 뭘입을까 idx\n" +
+            "-nickname(path): 작성자\n" +
+            "Response\n" +
+            "-wear_idx: 뭘입을까 idx" +
+            "-title: 제목\n" +
+            "-content: 내용\n" +
+            "-nickname: 작성자\n" +
+            "-write_date: 작성날짜\n" +
+            "-vote_activated: 투표 활성화 여부(true or false)\n" +
+            "-replyList: 댓글 리스트\n" +
+            "-----idx: 댓글 idx\n" +
+            "-----nickname: 댓글 작성자\n" +
+            "-----depth: 댓글 종류(댓글-0, 대댓글-1)\n" +
+            "-----write_date: 작성 날짜\n" +
+            "-----content: 댓글 내용\n" +
+            "-----groupNum: 댓글 그룹으로 같은 숫자를 가졌으면 해당 idx(=groupNum)에 대한 댓글, 대댓글\n" +
+            "-----count: 해당 댓글에 대한 좋아요 수\n" +
+            "-----like: 좋아요 활성화 여부(true or false)\n" +
+            "-----flag: 댓글이 유효 여부(true or false(삭제))\n" +
+            "-voteList: 투표 리스트\n" +
+            "-----voteItem_idx: 투표 항목 idx\n" +
+            "-----count: 투표 항목의 투표 수\n" +
+            "-----choice: 해당 항목을 선택 했는지 여부(true or false)")
     public WearDetailDTO detailWear(@PathVariable Long wear_idx, @PathVariable String nickname) {
         WearDetailDTO wereDetail = wearService.detailWear(wear_idx, nickname);
         return wereDetail;
     }
 
-    //뭘 입을까 삭제(
     //wear_idx 필요
     @PutMapping(value = "/wear/{wear_idx}")
     @Transactional
-    @ApiOperation(value = "뭘 입을까 삭제 (O)", notes = "wear_idx에 해당하는 글을 삭제(flag false로 변경)해준다.\n" +
-            "                                                Parameter: wear_idx(path)\n" +
-            "                                                Response: x")
+    @ApiOperation(value = "뭘 입을까 삭제 (O)", notes = "Parameter\n" +
+            "-wear_idx(path): \n" +
+            "Response(x)")
     public void deleteWear(@PathVariable Long wear_idx) {
         wearService.deleteWear(wear_idx);
     }
 
-    //댓글 작성
     //content, depth, groupNum, nickname, wear_idx 필요
     @PostMapping(value = "/wear/reply")
     @Transactional
-    @ApiOperation(value = "댓글 작성 (O)", notes = "댓글의 값을 테이블에 입력해준다.\n" +
-            "                                                Parameter: content, depth, groupNum, nickname, wear_idx\n" +
-            "                                                Response: List<Reply>(reply_idx, nickname, depth, writeDate, content, groupNum, count, like, flag)")
+    @ApiOperation(value = "댓글 작성 (O)", notes = "Parameter\n" +
+            "-content: 댓글 내용\n" +
+            "-depth: 댓글 종류(댓글-0, 대댓글-1)\n" +
+            "-groupNum: 댓글 그룹으로 depth가 0이면 0, depth가 1이면 상위댓글의 groupNum\n" +
+            "-nickname: 댓글 작성자\n" +
+            "-wear_idx: 뭘입을까 idx\n" +
+            "Response\n" +
+            "-replyList: 댓글 리스트\n" +
+            "-----idx: 댓글 idx\n" +
+            "-----nickname: 댓글 작성자\n" +
+            "-----depth: 댓글 종류(댓글-0, 대댓글-1)\n" +
+            "-----write_date: 작성 날짜\n" +
+            "-----content: 댓글 내용\n" +
+            "-----groupNum: 댓글 그룹으로 같은 숫자를 가졌으면 해당 idx(=groupNum)에 대한 댓글, 대댓글\n" +
+            "-----count: 해당 댓글에 대한 좋아요 수\n" +
+            "-----like: 좋아요 활성화 여부(true or false)\n" +
+            "-----flag: 댓글이 유효 여부(true or false(삭제))")
     public List<WearReplyDTO> insertReply(@RequestBody WearReplyDTO request) {
         List<WearReplyDTO> replyDTOList = wearService.insertReply(request);
 
         return replyDTOList;
     }
 
-    //댓글 수정
     //reply_idx, content 필요
     @PutMapping(value = "/wear/reply")
     @Transactional
-    @ApiOperation(value = "댓글 수정 (O)", notes = "reply_idx에 해당하는 댓글을 수정해준다.\n" +
-            "                                                Parameter: reply_idx, content\n" +
-            "                                                Response: List<Reply>(reply_idx, nickname, depth, writeDate, content, groupNum, count, like, flag)")
+    @ApiOperation(value = "댓글 수정 (O)", notes = "Parameter\n" +
+            "-reply_idx: 댓글 idx\n" +
+            "-content: 댓글 내용\n" +
+            "Response\n" +
+            "-replyList: 댓글 리스트\n" +
+            "-----idx: 댓글 idx\n" +
+            "-----nickname: 댓글 작성자\n" +
+            "-----depth: 댓글 종류(댓글-0, 대댓글-1)\n" +
+            "-----write_date: 작성 날짜\n" +
+            "-----content: 댓글 내용\n" +
+            "-----groupNum: 댓글 그룹으로 같은 숫자를 가졌으면 해당 idx(=groupNum)에 대한 댓글, 대댓글\n" +
+            "-----count: 해당 댓글에 대한 좋아요 수\n" +
+            "-----like: 좋아요 활성화 여부(true or false)\n" +
+            "-----flag: 댓글이 유효 여부(true or false(삭제))")
     public List<WearReplyDTO> updateReply(@RequestBody WearReplyDTO request) {
         List<WearReplyDTO> replyDTOList = wearService.modifyReply(request);
 
         return replyDTOList;
     }
 
-    //댓글 삭제
     //reply_idx 필요
     @PutMapping(value = "/wear/reply/{idx}")
     @Transactional
-    @ApiOperation(value = "댓글 삭제 (O)", notes = "idx(reply_idx)에 해당하는 댓글을 삭제(flag를 false로 변경)해준다.\n" +
-            "                                                Parameter: reply_idx\n" +
-            "                                                Response: List<Reply>(reply_idx, nickname, depth, writeDate, content, groupNum, count, like, flag)")
+    @ApiOperation(value = "댓글 삭제 (O)", notes = "Parameter\n" +
+            "-idx: 댓글 idx\n" +
+            "Response\n" +
+            "-replyList: 댓글 리스트\n" +
+            "-----idx: 댓글 idx\n" +
+            "-----nickname: 댓글 작성자\n" +
+            "-----depth: 댓글 종류(댓글-0, 대댓글-1)\n" +
+            "-----write_date: 작성 날짜\n" +
+            "-----content: 댓글 내용\n" +
+            "-----groupNum: 댓글 그룹으로 같은 숫자를 가졌으면 해당 idx(=groupNum)에 대한 댓글, 대댓글\n" +
+            "-----count: 해당 댓글에 대한 좋아요 수\n" +
+            "-----like: 좋아요 활성화 여부(true or false)\n" +
+            "-----flag: 댓글이 유효 여부(true or false(삭제))")
     public List<WearReplyDTO> deleteReply(@PathVariable Long idx) {
         List<WearReplyDTO> replyDTOList = wearService.deleteReply(idx);
 
         return replyDTOList;
     }
 
-    //댓글 에 대한 좋아요/취소
     //reply_idx, nickname 필요
     @PutMapping("/wear/reply/like/{reply_idx}/{nickname}")
     @Transactional
-    @ApiOperation(value = "댓글 좋아요/좋아요취소 (O)", notes = "idx(reply_idx)의 댓글에 대한 좋아요를 추가/삭제 해준다.\n" +
-            "                                                Parameter: reply_idx(path), nickname(path)\n" +
-            "                                                Response: List<Reply>(reply_idx, nickname, depth, writeDate, content, groupNum, count, like, flag)")
+    @ApiOperation(value = "댓글 좋아요/좋아요취소 (O)", notes = "Parameter\n" +
+            "-reply_idx(path): 댓글 idx\n" +
+            "-nickname(path): 좋아요 누른 사람의 닉네임\n" +
+            "Response\n" +
+            "-replyList: 댓글 리스트\n" +
+            "-----idx: 댓글 idx\n" +
+            "-----nickname: 댓글 작성자\n" +
+            "-----depth: 댓글 종류(댓글-0, 대댓글-1)\n" +
+            "-----write_date: 작성 날짜\n" +
+            "-----content: 댓글 내용\n" +
+            "-----groupNum: 댓글 그룹으로 같은 숫자를 가졌으면 해당 idx(=groupNum)에 대한 댓글, 대댓글\n" +
+            "-----count: 해당 댓글에 대한 좋아요 수\n" +
+            "-----like: 좋아요 활성화 여부(true or false)\n" +
+            "-----flag: 댓글이 유효 여부(true or false(삭제))")
     public List<WearReplyDTO> likeReply(@PathVariable Long reply_idx, @PathVariable String nickname) {
         List<WearReplyDTO> replyDTOList = wearService.replyLike(reply_idx, nickname);
 
         return replyDTOList;
     }
 
-    //투표
     //vote_item_idx, nickname 필요
     @PutMapping(value = "/wear/reply/vote/{vote_item_idx}/{nickname}")
     @Transactional
-    @ApiOperation(value = "투표/투표취소 (O)", notes = "idx(vote_item_idx)의 vote_item을 투표/투표취소 해준다.\n" +
-            "                                                Parameter: vote_item_idx(path), nickname(path)\n" +
-            "                                                Response: List<vote>(voteItem_idx, count, choice)")
+    @ApiOperation(value = "투표/투표취소 (O)", notes = "Parameter\n" +
+            "-vote_item_idx(path): 투표 항목의 idx\n" +
+            "-nickname(path): 투표 항목을 선택한 사람의 닉네임\n" +
+            "Response\n" +
+            "-voteList: 투표 리스트\n" +
+            "-----idx: 투표 항목의 idx\n" +
+            "-----count: 투표 항목의 투표 수\n" +
+            "-----choice: 해당 항목을 선택 했는지 여부(true or false)")
     public List<VoteDTO> voteChoice(@PathVariable Long vote_item_idx, @PathVariable String nickname) {
         List<VoteDTO> voteDTOList = wearService.voteChoice(vote_item_idx, nickname);
 

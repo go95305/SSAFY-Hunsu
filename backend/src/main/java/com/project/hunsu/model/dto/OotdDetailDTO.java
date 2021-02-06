@@ -15,15 +15,17 @@ import java.util.List;
 public class OotdDetailDTO {
     private Long ootdIdx;
     private String content;
-    private int count;
+    private int likeCount;
     private Boolean isUpdated;
     private LocalDateTime writeDate;
     private String nickname;
-    private List<String> hashTag = new ArrayList<>();
-
+    private List<String> hashtagList = new ArrayList<>();
+    private Boolean likeChk;
+    //    private List<OotdReplyDTO> replyDTOList = new ArrayList<>();
     public void addHashtag(String hashtag) {
-        this.hashTag.add(hashtag);
+        this.hashtagList.add(hashtag);
     }
+
 
     private List<OotdReplyDTO> ootdReplyDTOList = new ArrayList<>();
 

@@ -16,9 +16,8 @@ import java.io.Serializable;
 public class User implements Serializable { //왜 Serializable쓰는지 정리하자! ==> Unique key를 외래키로 받으면 생기는데 왜??
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue
     @Column(name = "uid")
-    private String uid;
+    private long uid;
     private String nickname;
 
     private Boolean flag;
