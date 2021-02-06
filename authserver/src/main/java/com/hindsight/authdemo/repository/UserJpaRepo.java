@@ -24,5 +24,7 @@ public interface UserJpaRepo extends JpaRepository<User, String> {
     Optional<User> findUserByJwtAccessAndUid(String jwtToken,long Uid);
     User findUserByUid(long Uid);
 
+    Optional<User> findUserByNickname(String nickname);
+
 
 }

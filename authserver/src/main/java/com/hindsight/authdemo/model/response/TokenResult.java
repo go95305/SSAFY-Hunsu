@@ -9,10 +9,13 @@ import java.util.Map;
 @Getter
 @Setter
 public class TokenResult<T> extends CommonResult {
-    @ApiModelProperty(value="jwtAccessToken")
+    @ApiModelProperty(value="jwtToken")
     private String accessToken;
 
-    @ApiModelProperty(value="jwtRefreshToken")
+    @ApiModelProperty(value="jwtRefresh")
     private String refreshToken;
+
+    @ApiModelProperty(value="nickname")
+    private String nickname;
 }
 
