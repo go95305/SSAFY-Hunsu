@@ -19,6 +19,9 @@ const getters = {
   getWhatwearReplyInfo(state) {
     return state.whatwearReplyInfo;
   },
+  getWhatwearChartlabels(state) {
+    return state.labels
+  }
 };
 const mutations = {
   setWhatwearInfo(state, whatwearInfo) {
@@ -27,6 +30,9 @@ const mutations = {
   setWhatwearReplyInfo(state, whatwearReplyInfo) {
     state.whatwearReplyInfo = whatwearReplyInfo;
   },
+  setWhatwearChartInfo(state, labels) {
+    state.labels = labels
+  }
 };
 const actions = {
   getWhatwearInfoApi(context, wearIdx, nickname) {
@@ -39,7 +45,8 @@ const actions = {
         for (var i = 1; i <= res.data.voteList.length; i++) {
           labels.push(String(i));
         }
-        state.labels = labels
+        context.commit('setWhatwearChartInfo', labels)
+
         context.commit('setWhatwearInfo', res.data);
         context.commit('setWhatwearReplyInfo', res.data.replyList);
       });
@@ -82,6 +89,18 @@ const actions = {
     .put('http://i4c102.p.ssafy.io:8080/api/wear/reply', replyInfo)
     .then((res) => {
       console.log('수정완료', res)
+      context.commit('setWhatwearReplyInfo', res.data)
+    })
+    .catch((err) => {
+      console.error(err)
+    })
+  },
+  voteWhatwearInfo(context, { voteIdx, nickname }) {
+    axios
+    .put(`http://i4c102.p.ssafy.io:8080/api/wear/reply/vote/${voteIdx}/${nickname}`)
+    .then((res) => {
+      console.log('투표완료', res)
+      console.log(nickname)
     })
     .catch((err) => {
       console.error(err)
