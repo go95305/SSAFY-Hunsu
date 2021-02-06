@@ -40,12 +40,14 @@ export default {
       let router = this.$router; // 임시방편
 
       this.userCheck({
+        //카카오 초기 로그인 시 사용
         accessToken: authObj.access_token,
         refreshToken: authObj.refresh_token,
       })
         .then((res) => {
-          console.log("return userchk 2", res);
+          // console.log("return userchk 2", res);
           if (res === -1) {
+            // 가입정보 없으면 회원가입으로
             router.push({
               name: "SignUp",
               params: {
@@ -54,27 +56,13 @@ export default {
               },
             });
           } else {
-            this.kakaoLogin();
+            // 있으면 로그인 후 홈으로 이동
+            router.push("/");
           }
         })
         .catch((err) => {
           console.log("error in userCheck ", err);
         });
-      // console.log("in login", result);
-      // 가입여부체크
-      // if (this.userCheck(authObj.access_token, authObj.refresh_token) == -1) {
-      //   // 회원가입
-      //   console.log("회원가입 넘어가즈아");
-      //   this.$router.push({
-      //     name: "SignUp",
-      //     params: {
-      //       accessToken: authObj.access_token,
-      //       refreshToken: authObj.refresh_token,
-      //     },
-      //   });
-      // }
-
-      // console.log("success");
     },
     onFailure(res) {
       console.log(res);

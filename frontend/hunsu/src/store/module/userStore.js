@@ -1,8 +1,8 @@
 import axios from 'axios';
 const state = {
-  accessToken: '',
-  refreshToken: '',
-  nickname: '',
+  accessToken: null,
+  refreshToken: null,
+  nickname: null,
 };
 const getters = {
   // 모든 토큰은 jwt 의미함
@@ -44,28 +44,31 @@ const mutations = {
 
 const actions = {
   // 카카오 로그인 후 회원가입이 되어있는지 확인 후 유무에 따라 회원가입 절차 or 로그인 유도
-  userCheck(context, { accessToken, refreshToken }) {
-    console.log('in usercheckapi 1', accessToken, refreshToken);
-    return (
-      axios
-        // .post('http://localhost:8081/v1/auth/usercheck', {
-        .post('http://i4c102.p.ssafy.io:8081/api/v1/auth/usercheck', {
-          accessToken,
-          refreshToken,
-        })
-        .then((res) => {
-          console.log(res.data.code);
-          return res.data.code;
-          //return -1 or 1;
-        })
-        .catch((err) => {
-          console.log('usercheck err : ', err);
-        })
-    );
+  userCheck({ commit }, { accessToken, refreshToken }) {
+    return axios
+      .post('http://i4c102.p.ssafy.io:8081/api/v1/auth/usercheck', {
+        accessToken,
+        refreshToken,
+      })
+      .then((res) => {
+        console.log(res.data.code);
+        if (res.data.code === 1) {
+          // 회원정보 없음
+          commit('setAllInfo', {
+            accessToken: res.data.jwtToken,
+            refreshToken: res.data.jwtRefresh,
+            nickname: res.data.nickname,
+          });
+        }
+        return res.data.code;
+        //return -1 or 1;
+      })
+      .catch((err) => {
+        console.log('usercheck err : ', err);
+      });
   },
   signUpInApi({ commit }, params) {
     // 회원가입 api
-    console.log(params);
     return axios
       .post('http://i4c102.p.ssafy.io:8081/api/v1/auth/signup?accessToken=' + params.accessToken, {
         height: params.height,

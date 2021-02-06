@@ -81,10 +81,13 @@ import { mapGetters, mapActions } from "vuex";
 export default {
   name: "MainNavBar",
   computed: {
-    ...mapGetters(["getNickname"]),
+    ...mapGetters(["getNickname", "getAccessToken", "getRefreshToken"]),
   },
   mounted() {
-    this.userCheck();
+    // console.log("navbar mount ", this.getAccessToken, this.getRefreshToken);
+    if (this.getAccessToken && this.getRefreshToken) {
+      this.kakaoLogin();
+    }
   },
   data() {
     return {
@@ -99,7 +102,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["userCheck"]),
+    ...mapActions(["kakaoLogin"]),
     goToPage(item) {
       // console.log(item.text)
       if (item.text === "MyPage") {
