@@ -1,92 +1,125 @@
 <template>
-<!-- OOTD, WHATWEAR 공통 댓글창 -->
+  <!-- OOTD, WHATWEAR 공통 댓글창 -->
   <div>
-    <v-card
-      flat>
-      <v-list three-line>
-        <template v-for="(item, index) in items">
-          <!--댓글-->
-          <v-subheader
-            v-if="item.header"
-            :key="index"
-            v-text="item.header"
-          ></v-subheader>
+    <div v-for="(reply, groupNum) in getWhatwearReplyInfo" :key="groupNum">
+      <!--댓글창-->
+      <v-card v-if="reply.depth === 0" flat class="d-flex align-center justify-space-around">
+        <div class="d-flex">
+          <div>
+            <v-avatar class="mt-5">
+              <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
+            </v-avatar>
+          </div>
+          <div style="margin: 17px; margin-left: 10px;">
+            <p style="margin-bottom: 0; font-size: 14px">{{ reply.nickname }}</p>
+            <p style="margin-bottom: 0; font-size: 13px">{{ reply.content }}</p>
+          <div class="d-flex">
+            <!--write_date가 null이라서 바로반영못함-->
+            <!-- <p style="margin-bottom: 0; font-size: 10px">{{ reply.write_date.slice(0, 10) }}</p> -->
+            <p style="margin-bottom: 0; font-size: 10px">좋아요 {{ reply.count }}개</p>
+            <p style="margin-bottom: 0; margin-left: 10px; font-size: 10px" @click="clickWhatwearReReply(reply.nickname, reply.groupNum)">답글하기</p>
+            <p style="margin-bottom: 0; margin-left: 10px; font-size: 10px" @click="clickWhatwearReReply(reply.nickname, reply.groupNum)">수정</p>
+          </div>
+          </div>
+        </div>
+          <v-btn icon @click="likeWhatwearReply(reply.idx)" :color="reply.like ? 'red' : 'black'"><v-icon>mdi-heart-outline</v-icon></v-btn>
+          <!-- <v-btn icon @click="deleteWhatwearReply(reply.idx)"><v-icon>mdi-close</v-icon></v-btn> -->
+      </v-card>
+      <!--대댓글창-->
+      <v-card v-if="reply.depth === 1" flat class="d-flex align-center justify-space-around">
+        <div class="d-flex">
+          <div>
+            <v-avatar class="mt-5 ml-4" width="30" height="30">
+              <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
+            </v-avatar>
+          </div>
+          <div style="margin: 17px; margin-left: 10px;">
+            <p style="margin-bottom: 0; font-size: 14px">{{ reply.nickname }}</p>
+            <p style="margin-bottom: 0; font-size: 13px">{{ reply.content }}</p>
+          <div class="d-flex">
+            <!--write_date가 null이라서 바로반영못함-->
+            <!-- <p style="margin-bottom: 0; font-size: 10px">{{ reply.write_date.slice(0, 10) }}</p> -->
+            <p style="margin-bottom: 0; font-size: 10px">좋아요 {{ reply.count }}개</p>
+            <p style="margin-bottom: 0; margin-left: 10px; font-size: 10px" @click="clickWhatwearReReply(reply.nickname, reply.groupNum)">답글하기</p>
+          </div>
+          </div>
+        </div>
+        <v-btn icon @click="likeWhatwearReply(reply.idx)" :color="reply.like ? 'red' : 'black'"><v-icon>mdi-heart-outline</v-icon></v-btn>
+      </v-card>
+    </div>
 
-          <!--댓글출력되는부분-->
-          <v-list-item
-            v-else
-            :key="item.title"
-          >
-          <!--프로필이미지-->
-            <v-list-item-avatar>
-              <v-img :src="item.avatar"></v-img>
-            </v-list-item-avatar>
-            <!--title자리가 댓글, sub가 좋아요 수정 자리-->
-            <v-list-item-content>
-              <v-list-item-title v-html="item.title"></v-list-item-title>
-              <v-list-item-subtitle v-html="item.subtitle"></v-list-item-subtitle>
-            </v-list-item-content>
-          </v-list-item>
-        </template>
-      </v-list>
-    </v-card>
     <v-container fluid>
       <v-row>
-        <v-col
-          cols="12"
-          sm="6"
-        >
-          <v-textarea
+        <v-col cols="12" sm="6">
+          <v-text-field
             label="댓글쓰기"
-            auto-grow
             outlined
             rows="3"
             row-height="25"
-          ></v-textarea>
+            v-model="replyContent"
+            @keydown.enter="createWhatwearReply(getWhatwearInfo.wear_idx)"
+            :append-icon="replyContent ? 'mdi-send' : ''"
+            @click:append="createWhatwearReply(getWhatwearInfo.wear_idx)"
+          ></v-text-field>
         </v-col>
-
       </v-row>
     </v-container>
   </div>
 </template>
 
 <script>
-  export default {
-    name: "DetailComment",
-    data: () => ({
-      items: [
-        { header: '댓글' },
-        {
-          avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',
-          title: 'Brunch this weekend?',
-          subtitle: `<span class="text--primary">Ali Connors</span> &mdash; I'll be in your neighborhood doing errands this weekend. Do you want to hang out?`,
-        },
-        {
-          avatar: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-          title: 'Summer BBQ <span class="grey--text text--lighten-1">4</span>',
-          subtitle: `<span class="text--primary">to Alex, Scott, Jennifer</span> &mdash; Wish I could come, but I'm out of town this weekend.`,
-        },
+import { mapGetters, mapMutations, mapActions } from "vuex";
 
-        {
-          avatar: 'https://cdn.vuetifyjs.com/images/lists/3.jpg',
-          title: 'Oui oui',
-          subtitle: '<span class="text--primary">Sandra Adams</span> &mdash; Do you have Paris recommendations? Have you ever been?',
-        },
-
-        {
-          avatar: 'https://cdn.vuetifyjs.com/images/lists/4.jpg',
-          title: 'Birthday gift',
-          subtitle: '<span class="text--primary">Trevor Hansen</span> &mdash; Have any ideas about what we should get Heidi for her birthday?',
-        },
-
-        {
-          avatar: 'https://cdn.vuetifyjs.com/images/lists/5.jpg',
-          title: 'Recipe to try',
-          subtitle: '<span class="text--primary">Britta Holt</span> &mdash; We should eat this: Grate, Squash, Corn, and tomatillo Tacos.',
-        },
-      ],
-    }),
-  }
+export default {
+  name: "DetailComment",
+  data: () => ({
+    items: [{ header: "댓글" }],
+    replyContent: "",
+    depth: 0,
+    groupNum: 0,
+  }),
+  computed: {
+    ...mapGetters(["getWhatwearInfo", "getWhatwearReplyInfo"]),
+    
+  },
+  methods: {
+    ...mapMutations(["setWhatwearReplyInfo"]),
+    ...mapActions(["createWhatwearReplyInfo", "likeWhatwearReplyInfo", "deleteWhatwearReplyInfo"]),
+    // 댓글작성함수
+    createWhatwearReply(wearIdx) {
+      this.createWhatwearReplyInfo({
+        content: this.replyContent,
+        depth: this.depth,
+        groupNum: this.groupNum,
+        nickname: "han",
+        wear_idx: wearIdx,
+      });
+      this.replyContent = "";
+      this.depth = 0
+      this.groupNum = 0
+    },
+    // 댓글좋아요 함수
+    likeWhatwearReply(replyIdx) {
+      const nickname = "lee"
+      this.likeWhatwearReplyInfo(replyIdx, nickname)
+    },
+    // 대댓글작성함수
+    clickWhatwearReReply(nickname, groupNum) {
+      this.replyContent = '@'+nickname+' '
+      this.depth = 1
+      this.groupNum = groupNum
+    },
+    deleteWhatwearReply(replyIdx) {
+      console.log(replyIdx)
+      const result = this.deleteWhatwearReplyInfo(replyIdx)
+      if (result) {
+        console.log('삭제됨')
+      } else {
+        console.log('삭제실패')
+      }
+    }
+  },
+};
 </script>
 
 <style>

@@ -9,6 +9,7 @@ import MyPage from '@/views/user/MyPage';
 import Login from '@/views/user/Login';
 import OotdDetail from '@/views/ootd/OotdDetail';
 import LiveDetail from '@/views/live/LiveDetail';
+import Description from '@/views/Description';
 // import Auth from "@/views/user/Auth"
 
 Vue.use(VueRouter);
@@ -16,6 +17,12 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: '/',
+    name: 'Description',
+    component: Description,
+  },
+
+  {
+    path: '/home',
     name: 'Home',
     component: Home,
   },

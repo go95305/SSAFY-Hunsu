@@ -42,6 +42,7 @@
         <v-list three-line subheader>
           <div>
             <v-textarea
+              color="deep-purple accent-1"
               v-model="ootd_content"
               clearable
               clear-icon="mdi-close-circle"
@@ -51,20 +52,21 @@
               class="px-5"
             ></v-textarea>
             <v-text-field
+              color="deep-purple accent-1"
               label="해시태그 추가"
               @keydown.enter="addHashtag()"
               v-model="ootd_hashtag"
               class="px-5"
             ></v-text-field>
-            <div>
+            <div class="mx-4">
               <v-chip
                 v-for="(hashtag, idx) in ootd_hashtag_array"
                 :key="idx"
-                class="ma-2"
+                class="mx-1 my-1"
                 close
-                color="red"
+                color="deep-purple accent-1"
                 text-color="white"
-                @click="deleteHashtag(hashtag)"
+                @click:close="deleteHashtag(hashtag)"
               >
                 {{ hashtag }}
               </v-chip>
@@ -77,7 +79,8 @@
 </template>
 
 <script>
-import axios from "axios";
+// import axios from "axios";
+import { mapActions } from "vuex";
 // 작성값 Null 체크
 //
 export default {
@@ -100,6 +103,7 @@ export default {
     };
   },
   methods: {
+    ...mapActions(["createOotdInfo", "getOotdInfoInApi"]),
     onClickImageUpload() {
       this.$refs.imageInput.click();
     },
@@ -118,22 +122,18 @@ export default {
     },
     createOotd() {
       this.dialog = false;
-      console.log(this.ootd_hashtag_array);
+      //   console.log(this.ootd_hashtag_array);
       const params = {
         content: this.ootd_content,
         hashtagList: this.ootd_hashtag_array,
-        nickName: "test",
+        nickName: "go",
       };
-
-      axios
-        .post("http://localhost:8080/ootd", params)
-        .then(() => {
-          console.log("글쓰기성공");
-          this.ootd_hashtag_array = [];
-        })
-        .catch((err) => {
-          console.error(err);
-        });
+      if (this.createOotdInfo(params)) {
+        this.getOotdInfoInApi(0);
+        this.ootd_hastag_array = [];
+      } else {
+        console.log("실패함");
+      }
     },
   },
 };

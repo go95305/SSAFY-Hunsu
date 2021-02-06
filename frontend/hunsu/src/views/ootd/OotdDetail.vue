@@ -24,21 +24,9 @@
           </template>
           <!-- 수정 및 삭제 버튼 -->
           <v-list>
-            <!-- <v-list-item
-              v-for="(item, i) in items"
-              :key="i"
-              @click="goToPage(item)"
-            > -->
             <v-list-item>
               <v-list-item-title @click="onoffUpdateDialog()">
                 수정
-                <!-- <template
-                  v-slot:activator="{ on, attrs }"
-                  v-bind="attrs"
-                  v-on="on"
-                  @click="goToPage('update')"
-                  >수정
-                </template> -->
               </v-list-item-title>
             </v-list-item>
             <v-list-item>
@@ -75,11 +63,11 @@
           <v-list-item-title style="white-space: normal">{{
             getOotdInfo.content
           }}</v-list-item-title>
-          <!-- 해쉬태그 -->
+          <!-- ### Hashtag -->
           <v-list-item-subtitle>
             <!-- 추후 해쉬태그에 검색 링크 걸 예정 -->
             <p
-              v-for="(hashtag, i) in getOotdInfo.hashTag"
+              v-for="(hashtag, i) in getOotdInfo.hashtagList"
               :key="i"
               style="display: inline"
             >
@@ -87,10 +75,12 @@
             </p>
           </v-list-item-subtitle>
         </v-list-item-content>
-        <!-- 좋아요 버튼 -->
+        <!-- ### Follow button -->
         <v-list-item-action>
-          <v-btn icon>
-            <v-icon>mdi-heart</v-icon>
+          <v-btn icon @click="toggleLikeInDetail(nickName)">
+            <v-icon v-model="iconName" color="red">{{ iconName }}</v-icon>
+            <!-- <v-icon v-model="iconName" v-else>{{ iconName }}</v-icon> -->
+            <div>{{ getOotdInfo.likeCount }}</div>
           </v-btn>
         </v-list-item-action>
       </v-list-item>
@@ -219,9 +209,10 @@ export default {
   },
   data() {
     return {
+      nickName: "jin", // 임시 닉네임
       dialog: false,
-      updateDialog: false,
-      deleteDialog: false,
+      updateDialog: false, // 수정창 dialog 활성화
+      deleteDialog: false, // 삭제창 dialog 활성화
       required: false,
       colors: [
         "green",
@@ -236,34 +227,54 @@ export default {
       sound: true,
       widgets: false,
       rules: {
+        // 입력 창 체크 변수
         required: (v) => !!v || "Required",
         min: (v) => v.trim().length > 0 || "공백안됨",
         contentMax: (v) => v.length <= 300 || "300자이하",
       },
       imageUrl: null,
-      // updateOotdContent: this.getOotdInfo.content,
-      updateOotdHashtag: "",
-      // updateOotdHashtagArray: this.getOotdInfo.hashtag,
+      updateOotdHashtag: "", // 수정 관련 변수들
       updateOotdContent: "",
       updateOotdHashtagArray: [],
+      iconName: "", // 좋아요 토글 변수
     };
   },
+  watch: {
+    getOotdInfo: (newData) => {
+      // console.log("iconName ", newData);
+      if (newData.likeChk) {
+        return "mdi-heart";
+      } else {
+        return "mdi-heart-outline";
+      }
+    },
+  },
   mounted() {
-    // let ootd = this.getOotdInfo;
-    // console.log(ootd);
-    // this.updateOotdContent = ootd.content;
-    // this.updateOotdHashtagArray = this.getOotdInfo.hashTag.slice();
+    // console.log("mounted");
+    if (this.getOotdInfo.likeChk) {
+      // 좋아요 초기 설정 부분
+      this.iconName = "mdi-heart"; // 꽉찬 하트
+    } else {
+      this.iconName = "mdi-heart-outline"; // 덜찬 하트
+    }
   },
   methods: {
     ...mapMutations(["setOotdInfo"]),
-    ...mapActions(["getOotdInfoInApi", "updateOotdInfo", "deleteOotdInfo"]),
+    ...mapActions([
+      "getOotdInfoInApi",
+      "updateOotdInfo",
+      "deleteOotdInfo",
+      "toggleLike",
+    ]),
     onoffUpdateDialog() {
-      console.log("good");
+      // 수정 dialog 활성화
+      // console.log("good");
       this.updateDialog = !this.updateDialog;
       this.updateOotdContent = this.getOotdInfo.content;
-      this.updateOotdHashtagArray = this.getOotdInfo.hashTag.slice();
+      this.updateOotdHashtagArray = this.getOotdInfo.hashtagList.slice();
     },
     onoffDeleteDialog() {
+      // 삭제 dialog 활성화
       this.deleteDialog = !this.deleteDialog;
     },
     goToPage(item) {
@@ -315,6 +326,18 @@ export default {
         hashtagList: this.updateOotdHashtagArray,
         ootdIdx: this.getOotdInfo.ootdIdx,
       });
+    },
+    toggleLikeInDetail(nickname) {
+      if (this.getOotdInfo.likeChk) {
+        // 좋아요 였다가 좋아요 해제로
+        this.iconName = "mdi-heart-outline";
+        this.getOotdInfo.likeCount -= 1;
+      } else {
+        // 좋아요 해제였다가 좋아요로
+        this.iconName = "mdi-heart";
+        this.getOotdInfo.likeCount += 1;
+      }
+      this.toggleLike(nickname);
     },
   },
 };
