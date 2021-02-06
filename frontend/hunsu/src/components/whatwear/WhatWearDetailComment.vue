@@ -2,50 +2,100 @@
   <div>
     <div v-for="(reply, groupNum) in getWhatwearReplyInfo" :key="groupNum">
       <!--댓글창-->
-      <v-card v-if="reply.depth === 0 && reply.flag" flat class="d-flex align-center justify-space-around">
+      <v-card
+        v-if="reply.depth === 0 && reply.flag"
+        flat
+        class="d-flex align-center justify-space-around"
+      >
         <div class="d-flex">
           <div>
             <v-avatar class="mt-5">
               <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
             </v-avatar>
           </div>
-          <div style="margin: 17px; margin-left: 10px;">
-            <p style="margin-bottom: 0; font-size: 14px">{{ reply.nickname }}</p>
+          <div style="margin: 17px; margin-left: 10px">
+            <p style="margin-bottom: 0; font-size: 14px">
+              {{ reply.nickname }}
+            </p>
             <p style="margin-bottom: 0; font-size: 13px">{{ reply.content }}</p>
-          <div class="d-flex">
-            <!--write_date가 null이라서 바로반영못함-->
-            <!-- <p style="margin-bottom: 0; font-size: 10px">{{ reply.write_date.slice(0, 10) }}</p> -->
-            <p style="margin-bottom: 0; font-size: 10px">좋아요 {{ reply.count }}개</p>
-            <p style="margin-bottom: 0; margin-left: 10px; font-size: 10px" @click="clickWhatwearReReply(reply.nickname, reply.groupNum)">답글하기</p>
-            <p style="margin-bottom: 0; margin-left: 10px; font-size: 10px" @click="updateWhatwearReply(reply)">수정</p>
-          </div>
+            <div class="d-flex">
+              <!--write_date가 null이라서 바로반영못함-->
+              <!-- <p style="margin-bottom: 0; font-size: 10px">{{ reply.write_date.slice(0, 10) }}</p> -->
+              <p style="margin-bottom: 0; font-size: 10px">
+                좋아요 {{ reply.count }}개
+              </p>
+              <p
+                style="margin-bottom: 0; margin-left: 10px; font-size: 10px"
+                @click="clickWhatwearReReply(reply.nickname, reply.groupNum)"
+              >
+                답글하기
+              </p>
+              <p
+                style="margin-bottom: 0; margin-left: 10px; font-size: 10px"
+                @click="updateWhatwearReply(reply)"
+              >
+                수정
+              </p>
+            </div>
           </div>
         </div>
-          <v-btn icon @click="likeWhatwearReply(reply.idx)" :color="reply.like ? 'red' : 'black'"><v-icon>mdi-heart-outline</v-icon></v-btn>
-          <v-btn icon @click="deleteWhatwearReply(reply.idx)"><v-icon>mdi-close</v-icon></v-btn>
+        <v-btn
+          icon
+          @click="likeWhatwearReply(reply.idx)"
+          :color="reply.like ? 'red' : 'black'"
+          ><v-icon>mdi-heart-outline</v-icon></v-btn
+        >
+        <v-btn icon @click="deleteWhatwearReply(reply.idx)"
+          ><v-icon>mdi-close</v-icon></v-btn
+        >
       </v-card>
       <!--대댓글창-->
-      <v-card v-if="reply.depth === 1 && reply.flag" flat class="d-flex align-center justify-space-around">
+      <v-card
+        v-if="reply.depth === 1 && reply.flag"
+        flat
+        class="d-flex align-center justify-space-around"
+      >
         <div class="d-flex">
           <div>
             <v-avatar class="mt-5 ml-4" width="30" height="30">
               <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
             </v-avatar>
           </div>
-          <div style="margin: 17px; margin-left: 10px;">
-            <p style="margin-bottom: 0; font-size: 14px">{{ reply.nickname }}</p>
+          <div style="margin: 17px; margin-left: 10px">
+            <p style="margin-bottom: 0; font-size: 14px">
+              {{ reply.nickname }}
+            </p>
             <p style="margin-bottom: 0; font-size: 13px">{{ reply.content }}</p>
-          <div class="d-flex">
-            <!--write_date가 null이라서 바로반영못함-->
-            <!-- <p style="margin-bottom: 0; font-size: 10px">{{ reply.write_date.slice(0, 10) }}</p> -->
-            <p style="margin-bottom: 0; font-size: 10px">좋아요 {{ reply.count }}개</p>
-            <p style="margin-bottom: 0; margin-left: 10px; font-size: 10px" @click="clickWhatwearReReply(reply.nickname, reply.groupNum)">답글하기</p>
-            <p style="margin-bottom: 0; margin-left: 10px; font-size: 10px" @click="updateWhatwearReply(reply)">수정</p>         
-         </div>
+            <div class="d-flex">
+              <!--write_date가 null이라서 바로반영못함-->
+              <!-- <p style="margin-bottom: 0; font-size: 10px">{{ reply.write_date.slice(0, 10) }}</p> -->
+              <p style="margin-bottom: 0; font-size: 10px">
+                좋아요 {{ reply.count }}개
+              </p>
+              <p
+                style="margin-bottom: 0; margin-left: 10px; font-size: 10px"
+                @click="clickWhatwearReReply(reply.nickname, reply.groupNum)"
+              >
+                답글하기
+              </p>
+              <p
+                style="margin-bottom: 0; margin-left: 10px; font-size: 10px"
+                @click="updateWhatwearReply(reply)"
+              >
+                수정
+              </p>
+            </div>
           </div>
         </div>
-        <v-btn icon @click="likeWhatwearReply(reply.idx)" :color="reply.like ? 'red' : 'black'"><v-icon>mdi-heart-outline</v-icon></v-btn>
-        <v-btn icon @click="deleteWhatwearReply(reply.idx)"><v-icon>mdi-close</v-icon></v-btn> 
+        <v-btn
+          icon
+          @click="likeWhatwearReply(reply.idx)"
+          :color="reply.like ? 'red' : 'black'"
+          ><v-icon>mdi-heart-outline</v-icon></v-btn
+        >
+        <v-btn icon @click="deleteWhatwearReply(reply.idx)"
+          ><v-icon>mdi-close</v-icon></v-btn
+        >
       </v-card>
     </div>
 
@@ -83,11 +133,15 @@ export default {
   }),
   computed: {
     ...mapGetters(["getWhatwearInfo", "getWhatwearReplyInfo"]),
-    
   },
   methods: {
     ...mapMutations(["setWhatwearReplyInfo"]),
-    ...mapActions(["createWhatwearReplyInfo", "likeWhatwearReplyInfo", "deleteWhatwearReplyInfo", "updateWhatwearReplyInfo"]),
+    ...mapActions([
+      "createWhatwearReplyInfo",
+      "likeWhatwearReplyInfo",
+      "deleteWhatwearReplyInfo",
+      "updateWhatwearReplyInfo",
+    ]),
     // 댓글작성함수
     createWhatwearReply(wearIdx) {
       if (this.update === true) {
@@ -95,7 +149,7 @@ export default {
           content: this.replyContent,
           nickname: "lee",
           idx: this.updateReplyIdx,
-        })
+        });
       }
       if (this.update === false) {
         this.createWhatwearReplyInfo({
@@ -107,39 +161,38 @@ export default {
         });
       }
       this.replyContent = "";
-      this.depth = 0
-      this.groupNum = 0
+      this.depth = 0;
+      this.groupNum = 0;
     },
     // 댓글좋아요 함수
     likeWhatwearReply(replyIdx) {
-      const nickname = "lee"
-      this.likeWhatwearReplyInfo(replyIdx, nickname)
+      const nickname = "han";
+      this.likeWhatwearReplyInfo(replyIdx, nickname);
     },
     // 대댓글작성함수
     clickWhatwearReReply(nickname, groupNum) {
-      this.replyContent = '@'+nickname+' '
-      this.depth = 1
-      this.groupNum = groupNum
+      this.replyContent = "@" + nickname + " ";
+      this.depth = 1;
+      this.groupNum = groupNum;
     },
     deleteWhatwearReply(replyIdx) {
-      console.log(replyIdx)
-      const result = this.deleteWhatwearReplyInfo(replyIdx)
+      console.log(replyIdx);
+      const result = this.deleteWhatwearReplyInfo(replyIdx);
       if (result) {
-        console.log('삭제됨')
+        console.log("삭제됨");
       } else {
-        console.log('삭제실패')
+        console.log("삭제실패");
       }
     },
     updateWhatwearReply(reply) {
-      this.replyContent = reply.content
-      this.update = true
-      this.updateReplyIdx = reply.idx
-      console.log(reply.idx)
+      this.replyContent = reply.content;
+      this.update = true;
+      this.updateReplyIdx = reply.idx;
+      console.log(reply.idx);
     },
   },
 };
 </script>
 
 <style>
-
 </style>
