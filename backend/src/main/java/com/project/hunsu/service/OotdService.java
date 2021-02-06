@@ -339,7 +339,9 @@ public class OotdService {
 
     public List<OotdReplyDTO> ootdReplyLike(Long idx, String nickname) { // 댓글번호, 누가 좋아요눌렀는지 닉네임
         OotdReply reply = ootdReplyRepository.findOotdReplyByIdx(idx);//해당 댓글 정보
+        //28	ㅇㅇ	2	0	0	28	2021-02-05 09:07:53	22	4
         User user = userRepository.findUserByNickname(nickname);// 좋아요 누른 사람 정보
+        //	2	1	1	1	1	1	1	1	go	1	1
 
         OotdReplyLike replyLike = ootdReplyLikeRepository.findOotdReplyLikeByOotdReplyAndUser(reply, user); //해당 댓글 좋아요 누른 사람의 댓글좋아요 정보
 
@@ -406,9 +408,9 @@ public class OotdService {
             replyDTO.setLikeCount(reply.getCount());
             if (replyLike != null) {
                 if (replyLike.getFlag())//이미 좋아요면
-                    replyDTO.setLike(false);//좋아요 취소
+                    replyDTO.setLike(true);//좋아요 취소
                 else//좋아요 취소상태면
-                    replyDTO.setLike(true);// 좋아요 추가
+                    replyDTO.setLike(false);// 좋아요 추가
             } else
                 replyDTO.setLike(false);
             replyDTO.setIsDeleted(reply.getFlag());
