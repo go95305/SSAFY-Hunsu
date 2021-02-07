@@ -14,7 +14,7 @@
           }}</v-list-item-title>
         </v-list-item-content>
 
-        <v-menu bottom>
+        <v-menu bottom v-if="getOotdInfo.nickname === getNickname">
           <template v-slot:activator="{ on, attrs }">
             <v-avatar v-bind="attrs" v-on="on">
               <v-btn color="black" icon class="d-inline-block">
@@ -23,7 +23,7 @@
             </v-avatar>
           </template>
           <!-- 수정 및 삭제 버튼 -->
-          <v-list>
+          <v-list >
             <v-list-item>
               <v-list-item-title @click="onoffUpdateDialog()">
                 수정
@@ -205,7 +205,7 @@ export default {
     // OotdUpdate,
   },
   computed: {
-    ...mapGetters(["getOotdInfo"]),
+    ...mapGetters(["getOotdInfo", "getNickname"]),
   },
   data() {
     return {

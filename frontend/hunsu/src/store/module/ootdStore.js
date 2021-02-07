@@ -127,7 +127,7 @@ const actions = {
           const detailData = res.data
           this.$router.push({ name: "OotdDetail", params:{ detailData}});
           return true;
-          // 추후 자기가 쓴 페이지로 이동하는 것 수정 요망
+          // 추후 자기가 쓴 페이지로 이동하는 것 수정 요망(하는중)
         } else {
           return false;
         }
