@@ -310,7 +310,7 @@ public class WearService {
         List<WearReplyDTO> replyDTOList = new ArrayList<>();
 
         Wear wear = wearRepository.findWearByIdx(idx);
-        List<WearReply> replyList = replyRepository.findReplyByWearOrderByWriteDate(wear);
+        List<WearReply> replyList = replyRepository.findReplyByWearOrderByGroupNumDescWriteDateDesc(wear);
         User user = userRepository.findUserByNickname(nickname);
 
         for (WearReply reply : replyList) {
