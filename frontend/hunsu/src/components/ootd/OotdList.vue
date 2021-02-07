@@ -76,7 +76,7 @@ export default {
       slides: ["First", "Second", "Third", "Fourth", "Fifth"],
     };
   },
-  computed: { ...mapGetters(["getOotdList"]) },
+  computed: { ...mapGetters(["getOotdList", "getNickname"]) },
   created() {
     this.getOotdListInApi(0);
     // console.log(this.getOotdList);
@@ -89,7 +89,7 @@ export default {
       // this.$router.push({ name: "OotdDetail", params: { no: ootd.ootdIdx } });
       this.getOotdInfoInApi({
         ootdIdx: ootd.ootdIdx,
-        nickname: "jin",
+        nickname: this.getNickname,
       }).then(() => {
         this.$router.push({ name: "OotdDetail" });
       });

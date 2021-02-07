@@ -61,7 +61,7 @@ export default {
     updateReplyIdx: 0,
   }),
   computed: {
-    ...mapGetters(["getOotdInfo", "getOotdReplyInfo"]),
+    ...mapGetters(["getOotdInfo", "getOotdReplyInfo","getNickname"]),
     
   },
   methods: {
@@ -81,7 +81,7 @@ export default {
           content: this.replyContent,
           depth: this.depth,
           groupNum: this.groupNum,
-          nickname: "han",
+          nickname: this.getNickname,
           ootdIdx: ootd_idx,
         });
         console.log('댓글작성성공')
@@ -95,7 +95,7 @@ export default {
     },
     // 댓글좋아요 함수
     likeOotdReply(replyIdx) {
-      const nickname = "lee"
+      const nickname = this.getNickname
       this.likeOotdReplyInfo(replyIdx, nickname)
       console.log(this.getOotdReplyInfo)
     },
