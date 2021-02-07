@@ -68,9 +68,22 @@
   <component name="ExternalProjectsManager">
     <system id="GRADLE">
       <state>
+        <task path="$PROJECT_DIR$">
+          <activation />
+        </task>
         <projects_view>
           <tree_state>
-            <expand />
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="chat" type="f1a62948:ProjectNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="chat" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+              </path>
+            </expand>
             <select />
           </tree_state>
         </projects_view>
@@ -149,7 +162,7 @@
       <updated>1612608207081</updated>
       <workItem from="1612608208787" duration="2010000" />
       <workItem from="1612610633201" duration="707000" />
-      <workItem from="1612665882466" duration="713000" />
+      <workItem from="1612665882466" duration="1334000" />
     </task>
     <servers />
   </component>
