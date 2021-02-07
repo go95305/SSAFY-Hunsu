@@ -17,6 +17,7 @@ const actions = {
         Key: key,
         Body: file,
         ACL: 'public-read',
+        ContentType: 'image/png',
       },
       (err, data) => {
         if (err) {
@@ -28,6 +29,41 @@ const actions = {
         // viewAlbum(albumName);
       }
     );
+  },
+  getImageList(context, { prefix }) {
+    return new Promise((resolve, reject) => {
+      s3.listObjectsV2({ Prefix: prefix }, (err, data) => {
+        if (err) {
+          reject('getImageList err', err);
+        } else {
+          // console.log('in list 1', data.Contents);
+          resolve(data.Contents);
+          // return data.Contents;
+        }
+      });
+    });
+  },
+  getImages(context, { keys }) {
+    console.log('get', keys);
+    let images = [];
+    keys.map((key) => {
+      s3.getSignedUrl(
+        'getObject',
+        {
+          Bucket: this.albumBucketName,
+          Key: key.Key,
+        },
+        (err, data) => {
+          if (err) {
+            return alert('There was an error listing your photo: ', err.message);
+          } else {
+            // console.log('in getimage', data);
+            images.push(data);
+          }
+        }
+      );
+    });
+    return images;
   },
   downloadImages(context, imageUrl) {
     s3.getSignedUrl(

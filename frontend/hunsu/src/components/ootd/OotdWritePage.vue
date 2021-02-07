@@ -27,16 +27,54 @@
         </v-toolbar>
         <v-list three-line subheader>
           <v-subheader>사진 등록</v-subheader>
-          <input ref="imageInput" type="file" hidden @change="onChangeImages" />
+
+          <!-- 이미지 업로드 -->
+          <input
+            ref="imageInput"
+            type="file"
+            multiple
+            hidden
+            @change="onChangeImages"
+          />
           <v-btn class="mx-5" type="button" @click="onClickImageUpload"
             >사진 업로드</v-btn
+          ><br />
+          <!-- <v-sheet class="mx-auto" elevation="3" max-width="300"> -->
+          <!-- 현재는 사진 업로드만, 올렸던 사진 삭제는 미구현상태 -->
+          <v-slide-group
+            v-model="imageUrls"
+            class="pa-4"
+            center-active
+            show-arrows
           >
-          <v-img
-            class="mx-5 my-5"
-            v-if="imageUrl"
-            :src="imageUrl"
-            width="100"
-          ></v-img>
+            <v-slide-item v-for="(imageUrl, idx) in imageUrls" :key="idx">
+              <!-- <v-card
+                :color="active ? 'primary' : 'grey lighten-1'"
+                class="ma-4"
+                height="100"
+                width="100"
+                @click="toggle"
+              > -->
+              <v-img
+                class="mx-5 my-5"
+                :src="imageUrl"
+                height="100"
+                width="100"
+              ></v-img>
+              <!-- <v-row class="fill-height" align="center" justify="center">
+                  <v-scale-transition>
+                    <v-icon
+                      v-if="active"
+                      color="white"
+                      size="48"
+                      v-text="'mdi-close-circle-outline'"
+                    ></v-icon>
+                  </v-scale-transition>
+                </v-row> -->
+              <!-- </v-card> -->
+            </v-slide-item>
+          </v-slide-group>
+          <!-- </v-sheet> -->
         </v-list>
         <v-divider></v-divider>
         <v-list three-line subheader>
@@ -99,11 +137,11 @@ export default {
         min: (v) => v.trim().length > 0 || "공백안됨",
         contentMax: (v) => v.length <= 300 || "300자이하",
       },
-      imageUrl: null,
+      imageUrls: [],
       ootd_content: "",
       ootd_hashtag: "",
       ootd_hashtag_array: [],
-      imageFile: "",
+      imageFiles: [],
     };
   },
   methods: {
@@ -113,9 +151,17 @@ export default {
     },
     onChangeImages(e) {
       console.log(e.target.files);
-      this.imageFile = e.target.files[0];
-      console.log("onchange", this.imageFile);
-      this.imageUrl = URL.createObjectURL(this.imageFile);
+      // this.imageFile = e.target.files[0];
+      // console.log("onchange", this.imageFile);
+      // this.imageUrl = URL.createObjectURL(this.imageFile);
+      this.imageFiles = e.target.files;
+      console.log("onChange", this.imageFiles);
+      let imageTmp = [];
+      this.imageFiles.forEach((imageFile) => {
+        imageTmp.push(URL.createObjectURL(imageFile));
+      });
+      this.imageUrls = imageTmp;
+      console.log("onCHange imageURl ", this.imageUrls);
     },
     addHashtag() {
       this.ootd_hashtag_array.push(this.ootd_hashtag);
@@ -128,24 +174,35 @@ export default {
     createOotd() {
       this.dialog = false;
       let uploadImage = this.uploadImage;
-      let file = this.imageFile;
-      console.log("before send", file);
+      let imageFiles = this.imageFiles;
+      console.log("before send", imageFiles);
       // Ootd 글 내용들
       const params = {
         content: this.ootd_content,
         hashtagList: this.ootd_hashtag_array,
         nickName: this.getNickname,
       };
-      this.createOotdInfo(params).then(() => {
-        // 이미지 업로드
-        console.log("in ootd", file);
-        uploadImage({
-          // key: "/ootd/" + res.data.ootdIdx,
-          key: "ootd/1.png",
-          file: file,
-        }).then((res) => {
-          console.log("imageupload 1", res);
-        });
+      this.createOotdInfo(params).then((res) => {
+        if (!res) {
+          console.log("글 작성 실패");
+        } else {
+          // 이미지 업로드
+          if (imageFiles.length !== 0) {
+            console.log("in ootd file", imageFiles);
+            // let fileExt =
+            imageFiles.forEach((imageFile, idx) => {
+              console.log("upload ", imageFile);
+              uploadImage({
+                key: "ootd/" + res.ootdIdx + "/" + idx + 1 + ".png",
+                file: imageFile,
+              }).then((res) => {
+                console.log("imageupload 1", res);
+              });
+            });
+          } else {
+            console.log("file X");
+          }
+        }
       });
       // 추후 자기가 쓴 페이지로 이동하는 것 수정 요망
       this.ootd_hastag_array = [];
@@ -155,4 +212,13 @@ export default {
 </script>
 
 <style>
+/* #imageTab {
+  white-space: nowrap;
+  overflow: auto;
+  text-align: center;
+}
+#imageTab v-img {
+  display: inline-block;
+  border: 1px solid #6e1d1d;
+} */
 </style>
