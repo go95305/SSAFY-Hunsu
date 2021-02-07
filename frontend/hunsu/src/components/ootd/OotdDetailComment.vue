@@ -1,5 +1,21 @@
 <template>
   <div>
+    <v-container fluid>
+      <v-row>
+        <v-col cols="12" sm="6">
+          <v-text-field
+            label="댓글쓰기"
+            outlined
+            rows="3"
+            row-height="25"
+            v-model="replyContent"
+            @keydown.enter="createOotdReply(getOotdInfo.ootdIdx)"
+            :append-icon="replyContent ? 'mdi-send' : ''"
+            @click:append="createOotdReply(getOotdInfo.ootdIdx)"
+          ></v-text-field>
+        </v-col>
+      </v-row>
+    </v-container>
     <div v-for="(reply, groupNum) in getOotdReplyInfo" :key="groupNum">
       <!--댓글창-->
       <v-card v-if="reply.isDeleted" flat class="d-flex align-center justify-space-around">
@@ -17,8 +33,12 @@
             <!-- <p style="margin-bottom: 0; font-size: 10px">{{ reply.write_date.slice(0, 10) }}</p> -->
             <p style="margin-bottom: 0; font-size: 10px">좋아요 {{ reply.likeCount }}개</p>
             <!-- <p style="margin-bottom: 0; margin-left: 10px; font-size: 10px" @click="clickWhatwearReReply(reply.nickname, reply.groupNum)">답글하기</p> -->
-            <p style="margin-bottom: 0; margin-left: 10px; font-size: 10px" @click="updateOotdReply(reply)">수정</p>
-            <p style="margin-bottom: 0; margin-left: 10px; font-size: 10px" @click="deleteOotdReply(reply.replyIdx)">삭제</p>
+            <p style="margin-bottom: 0; margin-left: 10px; font-size: 10px" 
+            v-if="reply.nickname === getNickname"
+            @click="updateOotdReply(reply)">수정</p>
+            <p style="margin-bottom: 0; margin-left: 10px; font-size: 10px" 
+            v-if="reply.nickname === getNickname"
+            @click="deleteOotdReply(reply.replyIdx)">삭제</p>
           </div>
           </div>
         </div>
@@ -28,22 +48,7 @@
 
     </div>
 
-    <v-container fluid>
-      <v-row>
-        <v-col cols="12" sm="6">
-          <v-text-field
-            label="댓글쓰기"
-            outlined
-            rows="3"
-            row-height="25"
-            v-model="replyContent"
-            @keydown.enter="createOotdReply(getOotdInfo.ootdIdx)"
-            :append-icon="replyContent ? 'mdi-send' : ''"
-            @click:append="createOotdReply(getOotdInfo.ootdIdx)"
-          ></v-text-field>
-        </v-col>
-      </v-row>
-    </v-container>
+    
   </div>
 </template>
 
@@ -61,7 +66,7 @@ export default {
     updateReplyIdx: 0,
   }),
   computed: {
-    ...mapGetters(["getOotdInfo", "getOotdReplyInfo"]),
+    ...mapGetters(["getOotdInfo", "getOotdReplyInfo","getNickname"]),
     
   },
   methods: {
@@ -81,7 +86,7 @@ export default {
           content: this.replyContent,
           depth: this.depth,
           groupNum: this.groupNum,
-          nickname: "han",
+          nickname: this.getNickname,
           ootdIdx: ootd_idx,
         });
         console.log('댓글작성성공')
@@ -95,7 +100,7 @@ export default {
     },
     // 댓글좋아요 함수
     likeOotdReply(replyIdx) {
-      const nickname = "lee"
+      const nickname = this.getNickname
       this.likeOotdReplyInfo(replyIdx, nickname)
       console.log(this.getOotdReplyInfo)
     },

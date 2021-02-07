@@ -80,7 +80,7 @@
 
 <script>
 // import axios from "axios";
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 // 작성값 Null 체크
 //
 export default {
@@ -102,6 +102,7 @@ export default {
       ootd_hashtag_array: [],
     };
   },
+  computed: { ...mapGetters(["getNickname"]) },
   methods: {
     ...mapActions(["createOotdInfo", "getOotdInfoInApi"]),
     onClickImageUpload() {
@@ -126,7 +127,7 @@ export default {
       const params = {
         content: this.ootd_content,
         hashtagList: this.ootd_hashtag_array,
-        nickName: "go",
+        nickName: this.getNickname,
       };
       if (this.createOotdInfo(params)) {
         this.getOotdInfoInApi(0);
