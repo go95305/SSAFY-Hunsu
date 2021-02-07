@@ -202,6 +202,7 @@
 
 <script>
 import axios from "axios";
+import { mapGetters } from 'vuex';
 
 export default {
   name: "WhatWearWrite",
@@ -232,6 +233,9 @@ export default {
       num: 0,
     }
   },
+  computed: {
+    ...mapGetters(["getNickname"])
+  },
   methods: {
     createWhatWear() {
       // dialog창 닫기 + 입력데이터 보내기
@@ -246,7 +250,7 @@ export default {
       const params = {
         content: this.whatwearContent,
         endtime: this.endtime,
-        nickname: 'lee',
+        nickname: this.getNickname,
         num: this.num,
         title: this.whatwearTitle,
         

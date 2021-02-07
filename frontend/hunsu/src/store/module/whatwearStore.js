@@ -58,11 +58,12 @@ const actions = {
       });
   },
   createWhatwearReplyInfo(context, whatwearReplyInfo) {
-    console.log('create 댓구ㄹ', whatwearReplyInfo);
+    console.log('create 댓구ㄹ', whatwearReplyInfo); 
     axios
       .post('http://i4c102.p.ssafy.io:8080/api/wear/reply', whatwearReplyInfo)
       .then((res) => {
         console.log('댓글성공', res.data);
+
         context.commit('setWhatwearReplyInfo', res.data);
       })
       .catch((err) => {

@@ -33,7 +33,8 @@
               </v-list-item-title>
           </v-list-item-content>
 
-          <v-menu bottom>
+          <!--작성자nickname과 로그인nickname이 같을때만 삭제버튼 출력-->
+          <v-menu bottom v-if="getWhatwearInfo.nickname === getNickname">
             <template v-slot:activator="{ on, attrs }">
               <v-avatar v-bind="attrs" v-on="on">
                 <v-btn color="black" icon class="d-inline-block">
@@ -168,7 +169,7 @@
       <div id="vote_chart">
         <chartjs-doughnut
           :labels="getWhatwearChartlabels"
-          :datasets="getWhatwearChartDatasets"
+          :datasets="datasets"
           :option="option"
         ></chartjs-doughnut>
       </div>
@@ -192,7 +193,7 @@ export default {
     WhatWearDetailComment,
   },
   computed: {
-    ...mapGetters(["getWhatwearInfo", "getWhatwearChartlabels"])
+    ...mapGetters(["getWhatwearInfo", "getWhatwearChartlabels", "getNickname"])
   },
   data() {
     return {
