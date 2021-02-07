@@ -5,10 +5,10 @@ const state = {
   whatwearReplyInfo: {},
   // 차트오류아직 해결안됨
   labels: [],
-  datasets: [
+  datacollection: [
     {
-      data: [20, 20, 20, 20, 20],
-      backgroundColor: ['Red', 'Yellow', 'Purple', 'Black', 'Pink'],
+      data: [],
+      backgroundColor: [],
     },
   ],
 };
@@ -20,8 +20,11 @@ const getters = {
     return state.whatwearReplyInfo;
   },
   getWhatwearChartlabels(state) {
-    return state.labels;
+    return state.labels
   },
+  // getWhatwearChartDatasets(state) {
+  //   return state.datacollection
+  // }
 };
 const mutations = {
   setWhatwearInfo(state, whatwearInfo) {
@@ -31,8 +34,11 @@ const mutations = {
     state.whatwearReplyInfo = whatwearReplyInfo;
   },
   setWhatwearChartInfo(state, labels) {
-    state.labels = labels;
+    state.labels = labels
   },
+  // setWhatwearChartDatasets(state, datacollection) {
+  //   state.datacollection = datacollection
+  // }
 };
 const actions = {
   getWhatwearInfoApi(context, wearIdx, nickname) {
@@ -98,15 +104,27 @@ const actions = {
   },
   voteWhatwearInfo(context, { voteIdx, nickname }) {
     axios
-      .put(`http://i4c102.p.ssafy.io:8080/api/wear/reply/vote/${voteIdx}/${nickname}`)
-      .then((res) => {
-        console.log('투표완료', res);
-        console.log(nickname);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  },
+    .put(`http://i4c102.p.ssafy.io:8080/api/wear/reply/vote/${voteIdx}/${nickname}`)
+    .then((res) => {
+      console.log('투표완료', res)
+      // const datacollection = {
+      //   data: [],
+      //   backgroundColor: ['Red', 'Yellow', 'Purple', 'Black', 'Pink'],
+      // }
+      // var total = 0
+      // for (var k = 0; k < res.data.length; k++) {
+      //   total += res.data[k].count
+      // }
+      // for (var j = 0; j < res.data.length; j++) {
+      //   console.log('data값',res.data[j].count / total * 100)
+      //   datacollection.data.push(res.data[j].count / total * 100)
+      // }
+      // context.commit('setWhatwearChartDatasets', datacollection)
+    })
+    .catch((err) => {
+      console.error(err)
+    })
+  }
 };
 
 export default {
