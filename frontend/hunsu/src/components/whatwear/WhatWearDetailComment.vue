@@ -1,5 +1,21 @@
 <template>
   <div>
+    <v-container fluid>
+      <v-row>
+        <v-col cols="12" sm="6">
+          <v-text-field
+            label="댓글쓰기"
+            outlined
+            rows="3"
+            row-height="25"
+            v-model="replyContent"
+            @keydown.enter="createWhatwearReply(getWhatwearInfo.wear_idx)"
+            :append-icon="replyContent ? 'mdi-send' : ''"
+            @click:append="createWhatwearReply(getWhatwearInfo.wear_idx)"
+          ></v-text-field>
+        </v-col>
+      </v-row>
+    </v-container>
     <div v-for="(reply, groupNum) in getWhatwearReplyInfo" :key="groupNum">
       <!--댓글창-->
       <v-card
@@ -31,6 +47,7 @@
                 답글하기
               </p>
               <p
+                v-if="reply.nickname === getNickname"
                 style="margin-bottom: 0; margin-left: 10px; font-size: 10px"
                 @click="updateWhatwearReply(reply)"
               >
@@ -45,10 +62,14 @@
           :color="reply.like ? 'red' : 'black'"
           ><v-icon>mdi-heart-outline</v-icon></v-btn
         >
-        <v-btn icon @click="deleteWhatwearReply(reply.idx)"
+        <v-btn 
+        v-if="reply.nickname === getNickname"
+        icon @click="deleteWhatwearReply(reply.idx)"
           ><v-icon>mdi-close</v-icon></v-btn
         >
       </v-card>
+
+
       <!--대댓글창-->
       <v-card
         v-if="reply.depth === 1 && reply.flag"
@@ -79,6 +100,7 @@
                 답글하기
               </p>
               <p
+                v-if="reply.nickname === getNickname"
                 style="margin-bottom: 0; margin-left: 10px; font-size: 10px"
                 @click="updateWhatwearReply(reply)"
               >
@@ -93,28 +115,15 @@
           :color="reply.like ? 'red' : 'black'"
           ><v-icon>mdi-heart-outline</v-icon></v-btn
         >
-        <v-btn icon @click="deleteWhatwearReply(reply.idx)"
+        <v-btn 
+          v-if="reply.nickname === getNickname"
+          icon @click="deleteWhatwearReply(reply.idx)"
           ><v-icon>mdi-close</v-icon></v-btn
         >
       </v-card>
-    </div>
+      </div>
 
-    <v-container fluid>
-      <v-row>
-        <v-col cols="12" sm="6">
-          <v-text-field
-            label="댓글쓰기"
-            outlined
-            rows="3"
-            row-height="25"
-            v-model="replyContent"
-            @keydown.enter="createWhatwearReply(getWhatwearInfo.wear_idx)"
-            :append-icon="replyContent ? 'mdi-send' : ''"
-            @click:append="createWhatwearReply(getWhatwearInfo.wear_idx)"
-          ></v-text-field>
-        </v-col>
-      </v-row>
-    </v-container>
+
   </div>
 </template>
 
@@ -132,7 +141,7 @@ export default {
     updateReplyIdx: 0,
   }),
   computed: {
-    ...mapGetters(["getWhatwearInfo", "getWhatwearReplyInfo"]),
+    ...mapGetters(["getWhatwearInfo", "getWhatwearReplyInfo", "getNickname"]),
   },
   methods: {
     ...mapMutations(["setWhatwearReplyInfo"]),
@@ -147,7 +156,7 @@ export default {
       if (this.update === true) {
         this.updateWhatwearReplyInfo({
           content: this.replyContent,
-          nickname: "lee",
+          nickname: this.getNickname,
           idx: this.updateReplyIdx,
         });
       }
@@ -156,7 +165,7 @@ export default {
           content: this.replyContent,
           depth: this.depth,
           groupNum: this.groupNum,
-          nickname: "lee",
+          nickname: this.getNickname,
           wear_idx: wearIdx,
         });
       }
@@ -166,7 +175,7 @@ export default {
     },
     // 댓글좋아요 함수
     likeWhatwearReply(replyIdx) {
-      const nickname = "han";
+      const nickname = this.getNickname;
       this.likeWhatwearReplyInfo(replyIdx, nickname);
     },
     // 대댓글작성함수
@@ -176,7 +185,7 @@ export default {
       this.groupNum = groupNum;
     },
     deleteWhatwearReply(replyIdx) {
-      console.log(replyIdx);
+      // console.log(replyIdx);
       const result = this.deleteWhatwearReplyInfo(replyIdx);
       if (result) {
         console.log("삭제됨");
@@ -188,7 +197,7 @@ export default {
       this.replyContent = reply.content;
       this.update = true;
       this.updateReplyIdx = reply.idx;
-      console.log(reply.idx);
+      // console.log(reply.idx);
     },
   },
 };
