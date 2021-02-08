@@ -138,9 +138,12 @@ public class WearService {
             VoteDTO voteDTO = new VoteDTO();
             voteDTO.setIdx(voteItem.getIdx());
             voteDTO.setCount(voteItem.getCount());
-            if (voteChoice != null)
-                voteDTO.setChoice(true);
-            else
+            if (voteChoice != null){
+                if(voteChoice.getFlag())
+                    voteDTO.setChoice(true);
+                else
+                    voteDTO.setChoice(false);
+            } else
                 voteDTO.setChoice(false);
 
             voteDTOList.add(voteDTO);

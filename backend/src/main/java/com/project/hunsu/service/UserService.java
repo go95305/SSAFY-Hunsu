@@ -70,9 +70,13 @@ public class UserService {
                 myPageDetailDTO.setFollow(false);
         }
         for (OotdLike ootdLike: ootdLikeList){
-            Long idx = ootdLike.getIdx();
-
-            ootdLikeIdxList.add(idx);
+            if(ootdLike.getFlag()){
+                Ootd ootd = ootdLike.getOotd();
+                if(ootd.getFlag()){
+                    Long idx = ootd.getIdx();
+                    ootdLikeIdxList.add(idx);
+                }
+            }
         }
         for (Ootd ootd: ootdList){
             Long idx = ootd.getIdx();

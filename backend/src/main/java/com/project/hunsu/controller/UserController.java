@@ -32,7 +32,7 @@ public class UserController {
             "-follow: 팔로우 버튼 활성화 여부(true or false)\n" +
             "-follower_list(String): 팔로워 닉네임 리스트\n" +
             "-following_list(String): 팔로잉 닉네임 리스트")
-    public MyPageDetailDTO userFollowAdd(@PathVariable String myNickname, @PathVariable String clickNickname) {
+    public MyPageDetailDTO mypage(@PathVariable String myNickname, @PathVariable String clickNickname) {
         MyPageDetailDTO myPageDetailDTO = userService.mypage(myNickname, clickNickname);
 
         return myPageDetailDTO;
