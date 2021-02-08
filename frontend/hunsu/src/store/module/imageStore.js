@@ -4,31 +4,57 @@ const state = {
   albumBucketName: 'hunsutest',
   bucketRegion: 'ap-northeast-2',
   IdentityPoolId: 'ap-northeast-2:05f4caec-c58a-480d-9d25-8cacd2e2dea0',
+  uploadImageUrls: [],
+  uploadImageFiles: [],
 };
-const getters = {};
+const getters = {
+  getUploadImageUrls(state) {
+    return state.uploadImageUrls;
+  },
+  getUploadImageFiles(state) {
+    return state.uploadImageFiles;
+  },
+};
 
-const mutations = {};
+const mutations = {
+  setUploadImageUrls(state, payload) {
+    state.uploadImageUrls.push(payload);
+  },
+  setUploadImageFiles(state, payload) {
+    payload.forEach((file) => {
+      state.uploadImageFiles.push(file);
+    });
+    console.log('gd ', state.uploadImageFiles);
+  },
+  clearUploads(state) {
+    state.uploadImageUrls = [];
+    state.uploadImageFiles = [];
+  },
+};
 
 const actions = {
-  uploadImage(context, { key, file }) {
-    console.log('uploadImages', key, file);
-    return s3.upload(
-      {
-        Key: key,
-        Body: file,
-        ACL: 'public-read',
-        ContentType: 'image/png',
-      },
-      (err, data) => {
-        if (err) {
-          console.log(err);
-          return alert('There was an error uploading your photo: ', err.message);
+  uploadImage({ state }, { key, articleIdx }) {
+    console.log('uploadImages', key);
+    state.uploadImageFiles.forEach((imageFile, idx) => {
+      console.log('file', imageFile);
+      s3.upload(
+        {
+          Key: key + articleIdx + '/' + (idx + 1) + '.jpeg',
+          Body: imageFile,
+          ACL: 'public-read',
+          ContentType: 'image/jpeg',
+        },
+        (err, data) => {
+          if (err) {
+            console.log(err);
+            return alert('There was an error uploading your photo: ', err.message);
+          }
+          console.log('Successfully uploaded photo.');
+          console.log(data);
+          // viewAlbum(albumName);
         }
-        console.log('Successfully uploaded photo.');
-        console.log(data);
-        // viewAlbum(albumName);
-      }
-    );
+      );
+    });
   },
   getImageList(context, { prefix }) {
     return new Promise((resolve, reject) => {

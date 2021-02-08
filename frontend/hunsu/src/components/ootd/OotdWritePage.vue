@@ -25,91 +25,7 @@
             <v-btn dark text @click="createOotd()"> Save </v-btn>
           </v-toolbar-items>
         </v-toolbar>
-        <v-list three-line subheader>
-          <v-subheader>사진 등록</v-subheader>
-
-          <!-- 이미지 업로드 -->
-          <input
-            ref="imageInput"
-            type="file"
-            multiple
-            hidden
-            @change="onChangeImages"
-          />
-          <div class="display: inline-block;" v-if="imageUrls.length === 0">
-            <v-btn class="mx-5" type="button" @click="onClickImageUpload"
-              >사진 업로드</v-btn
-            >
-          </div>
-
-          <!-- <v-sheet class="mx-auto" elevation="3" max-width="300"> -->
-          <!-- 현재는 사진 업로드만, 올렸던 사진 삭제는 미구현상태 -->
-          <div v-else>
-            <v-slide-group
-              v-model="imageUrls"
-              class="pa-4"
-              center-active
-              show-arrows
-            >
-              <v-slide-item v-for="(imageUrl, idx) in imageUrls" :key="idx">
-                <!-- <v-card
-                  :color="active ? 'primary' : 'grey lighten-1'"
-                  class="ma-4"
-                  height="100"
-                  width="100"
-                  @click="toggle"
-                > -->
-                <!-- <div
-                    class="file-close-button"
-                    style="display: float"
-                    @click="fileDeleteButton(idx)"
-                    :idx="idx"
-                  >
-                    x
-                  </div> -->
-                <v-img
-                  class="mx-5 my-5"
-                  :src="imageUrl"
-                  height="100"
-                  width="100"
-                >
-                </v-img>
-
-                <!-- <v-row class="fill-height" align="center" justify="center">
-                  <v-scale-transition>
-                    <v-icon
-                      v-if="active"
-                      color="white"
-                      size="48"
-                      v-text="'mdi-close-circle-outline'"
-                    ></v-icon>
-                  </v-scale-transition>
-                </v-row> -->
-                <!-- </v-card> -->
-              </v-slide-item>
-              <div>
-                <br />
-                <v-btn
-                  class="mx-5"
-                  type="button"
-                  @click="onClickImageUpload"
-                  width="100"
-                  height="100"
-                  >추가 사진 업로드</v-btn
-                >
-                <input
-                  type="file"
-                  id="file"
-                  ref="imageInput"
-                  @change="onChangeImages"
-                  multiple
-                  hidden
-                />
-              </div>
-            </v-slide-group>
-          </div>
-          <!-- </v-sheet> -->
-        </v-list>
+        <ImageUpload />
         <v-divider></v-divider>
         <v-list three-line subheader>
           <div>
@@ -153,10 +69,14 @@
 <script>
 // import axios from "axios";
 import { mapActions, mapGetters } from "vuex";
+import ImageUpload from "@/components/module/ImageUpload";
 // 작성값 Null 체크
 //
 export default {
   name: "OotdWritePage",
+  components: {
+    ImageUpload,
+  },
   data() {
     return {
       dialog: false,
@@ -175,26 +95,25 @@ export default {
       imageFiles: [],
     };
   },
-  computed: { ...mapGetters(["getNickname"]) },
+  computed: {
+    ...mapGetters(["getNickname", "getUploadImageUrls", "getUploadImageFilse"]),
+  },
   methods: {
     ...mapActions(["createOotdInfo", "getOotdInfoInApi", "uploadImage"]),
-    onClickImageUpload() {
-      this.$refs.imageInput.click();
-    },
-    onChangeImages(e) {
-      console.log(e.target.files);
-      // this.imageFile = e.target.files[0];
-      // console.log("onchange", this.imageFile);
-      // this.imageUrl = URL.createObjectURL(this.imageFile);
-      this.imageFiles = e.target.files;
-      console.log("onChange", this.imageFiles);
-      let imageUrls = this.imageUrls;
-      this.imageFiles.forEach((imageFile) => {
-        imageUrls.push(URL.createObjectURL(imageFile));
-      });
-      // this.imageUrls = this.imageUrls + imageTmp;
-      console.log("onCHange imageURl ", this.imageUrls);
-    },
+    // onClickImageUpload() {
+    //   this.$refs.imageInput.click();
+    // },
+    // onChangeImages(e) {
+    //   console.log(e.target.files);
+
+    //   this.imageFiles = e.target.files;
+    //   console.log("onChange", this.imageFiles);
+    //   let imageUrls = this.imageUrls;
+    //   this.imageFiles.forEach((imageFile) => {
+    //     imageUrls.push(URL.createObjectURL(imageFile));
+    //   });
+    //   console.log("onChange imageURl ", this.imageUrls);
+    // },
     addHashtag() {
       this.ootd_hashtag_array.push(this.ootd_hashtag);
       this.ootd_hashtag = "";
@@ -205,8 +124,8 @@ export default {
     },
     createOotd() {
       this.dialog = false;
-      let uploadImage = this.uploadImage;
-      let imageFiles = this.imageFiles;
+      // let uploadImage = this.uploadImage;
+      let imageFiles = this.getUploadImageFiles;
       console.log("before send", imageFiles);
       // Ootd 글 내용들
       const params = {
@@ -221,16 +140,17 @@ export default {
           // 이미지 업로드
           if (imageFiles.length !== 0) {
             console.log("in ootd file", imageFiles);
+            this.uploadImage({ key: "ootd/", articleIdx: res.ootdIdx });
             // let fileExt =
-            imageFiles.forEach((imageFile, idx) => {
-              console.log("upload ", imageFile);
-              uploadImage({
-                key: "ootd/" + res.ootdIdx + "/" + idx + 1 + ".png",
-                file: imageFile,
-              }).then((res) => {
-                console.log("imageupload 1", res);
-              });
-            });
+            // imageFiles.forEach((imageFile, idx) => {
+            //   console.log("upload ", imageFile);
+            //   uploadImage({
+            //     key: "ootd/" + res.ootdIdx + "/" + idx + 1 + ".png",
+            //     file: imageFile,
+            //   }).then((res) => {
+            //     console.log("imageupload 1", res);
+            //   });
+            // });
           } else {
             console.log("file X");
           }

@@ -121,6 +121,7 @@ const actions = {
   },
   createOotdInfo(context, params) {
     // ootd 작성
+
     return axios
       .post('http://i4c102.p.ssafy.io:8080/api/ootd', params)
       .then((res) => {
@@ -148,7 +149,7 @@ const actions = {
         console.error(err);
       });
   },
-  likeOotdReplyInfo(context, {replyIdx, nickname}) {
+  likeOotdReplyInfo(context, { replyIdx, nickname }) {
     axios
       .put(`http://i4c102.p.ssafy.io:8080/api/ootd/reply/like/${replyIdx}/${nickname}`)
       .then((res) => {
