@@ -157,9 +157,6 @@ import { mapActions, mapGetters } from "vuex";
 //
 export default {
   name: "OotdWritePage",
-  computed: {
-    ...mapGetters(["getNickname"]),
-  },
   data() {
     return {
       dialog: false,
