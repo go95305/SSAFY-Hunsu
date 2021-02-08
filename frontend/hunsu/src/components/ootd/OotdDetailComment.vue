@@ -101,7 +101,7 @@ export default {
     // 댓글좋아요 함수
     likeOotdReply(replyIdx) {
       const nickname = this.getNickname
-      this.likeOotdReplyInfo(replyIdx, nickname)
+      this.likeOotdReplyInfo({replyIdx, nickname})
       console.log(this.getOotdReplyInfo)
     },
 

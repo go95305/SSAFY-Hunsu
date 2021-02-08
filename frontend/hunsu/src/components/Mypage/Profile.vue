@@ -139,8 +139,8 @@
         </div>
         <div>
           <!--유저닉네임-->
-          <p class="font-weight-black text-h5 hidden-sm-and-down" style="margin: 10px 30px">nicknamejin</p>
-          <p class="font-weight-black subtitle-1 hidden-sm-and-up" style="margin: 10px 30px">nicknamejin</p>
+          <p class="font-weight-black text-h5 hidden-sm-and-down" style="margin: 10px 30px">{{getNickname}}</p>
+          <p class="font-weight-black subtitle-1 hidden-sm-and-up" style="margin: 10px 30px">{{getNickname}}</p>
         </div>
 
         <v-tabs
@@ -161,10 +161,33 @@
             v-for="item in items"
             :key="item"
           >
-            <v-container class="white" style="padding: 0px">
+
+          <!-- ootd탭 -->
+            <v-container v-if="item === 'OOTD'" class="white" style="padding: 0px">
               <v-row no-gutters>
                 <v-col
-                  v-for="i in 9"
+                  v-for="i in profileData.ootd_list.length"
+                  :key="i"
+                  cols="4"
+                >
+                  <v-card
+                    outlined
+                    tile
+                  >
+                    <v-img
+                    src="@/assets/ootdtest.png">
+                    </v-img>
+                  </v-card>
+                </v-col>
+              </v-row>
+            </v-container>
+
+
+          <!-- 좋아요탭 -->
+            <v-container v-if="item === '좋아요'" class="white" style="padding: 0px">
+              <v-row no-gutters>
+                <v-col
+                  v-for="i in profileData.ootd_like_list.length"
                   :key="i"
                   cols="4"
                 >
@@ -190,6 +213,8 @@
 <script>
 import axios from "axios";
 import ProfileSetting from "@/components/Mypage/ProfileSetting"
+import { mapGetters} from "vuex";
+
 
 export default {
   name: "Profile",
@@ -221,17 +246,25 @@ export default {
           avatar: 'https://cdn.vuetifyjs.com/images/lists/4.jpg',
           title: 'Ali Connors',
         },
-      ]
+      ],
+      profileData: {}
     }
   },
   created() {
     this.getProfile();
   },
+  computed: {
+    ...mapGetters(["getNickname"]),
+  },
   methods: {
     getProfile() {
       axios
-        .get("http://i4c102.p.ssafy.io:8080/api/ootd/")
-        .then(() => {
+        .get(`http://i4c102.p.ssafy.io:8080/api/user/mypage/${this.getNickname}/${this.getNickname}`)
+        .then((res) => {
+
+          this.profileData = res.data
+          console.log(this.profileData)
+          console.log('마이페이지보기')
         })
         .catch((err) => {
           console.error(err);
