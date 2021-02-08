@@ -12,7 +12,7 @@ import java.util.List;
 public interface WearReplyRepository extends JpaRepository<WearReply,Long> {
 
     List<WearReply> findReplyByWearAndFlagOrderByWriteDate(Wear wear, Boolean isActivated);
-    List<WearReply> findReplyByWearOrderByWriteDate(Wear wear);
+    List<WearReply> findReplyByWearOrderByGroupNumAscWriteDateAsc(Wear wear);
     WearReply findReplyByIdx(Long idx);
     List<WearReply> findReplyByUser(User user);
 
