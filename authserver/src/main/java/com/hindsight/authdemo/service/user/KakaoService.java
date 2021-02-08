@@ -16,7 +16,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import sun.net.www.http.HttpClient;
 
+import javax.print.DocFlavor;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -198,5 +200,54 @@ public class KakaoService {
 
         return map;
     }
+
+//    public long logout(long uid) {
+//
+//        String reqURL = "https://kapi.kakao.com/v1/user/logout";
+//        try {
+//
+//            URL url = new URL(reqURL);
+//            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+//            conn.setRequestMethod("POST");
+//            String admin ="926ce1072cf2ecfe402e75f24a9ab3ef";
+//            //    요청에 필요한 Header에 포함될 내용
+//            conn.setRequestProperty("Authorization", "KakaoAK " + admin);
+//
+//            conn.setDoOutput(true);
+//
+//            //    POST 요청에 필요로 요구하는 파라미터 스트림을 통해 전송
+//            BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
+//            StringBuilder sb = new StringBuilder();
+//            sb.append("target_id_type=user_id");
+//            sb.append("&target_id="+uid);
+//            bw.write(sb.toString());
+//            bw.flush();
+//
+//            int responseCode = conn.getResponseCode();
+//            String msg=conn.getResponseMessage();
+//
+//            System.out.println("responseCode : " + responseCode);
+//            System.out.println("msg : " + msg);
+//
+//
+//            String line = "";
+//            String result = "";
+//
+//            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+//
+//            while ((line = br.readLine()) != null) {
+//                result += line;
+//            }
+//            System.out.println("response body : " + result);
+//
+//        }catch (IOException e) {
+//            // TODO Auto-generated catch block
+//            e.printStackTrace();
+//        }
+//
+//        return 11;
+//
+//    }
+
 
 }

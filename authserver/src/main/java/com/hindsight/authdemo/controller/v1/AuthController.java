@@ -150,9 +150,10 @@ public class AuthController {
         TokenResult result = new TokenResult();
         if(jwtTokenProvider.validateToken(tokens.getJwtToken())){
             System.out.println("jwtToken유효");
-
             long uid=jwtTokenProvider.getUserPk(tokens.getJwtToken()); // jwtToken을 이용해 uid추출
             User user = userJpaRepo.findUserByUid(uid);
+            System.out.println("#############################");
+            System.out.println(user.getRoles());
             result.setMsg("자동로그인");
             result.setCode(1);
             result.setSuccess(true);
@@ -170,10 +171,14 @@ public class AuthController {
                 long Uid =Long.parseLong(String.valueOf(jwtTokenProvider.getUserPk(tokens.getJwtRefresh()))); //Uid type
                 System.out.println("Uid: " + Uid);
                 List<String> roles = jwtTokenProvider.getRoles(tokens.getJwtRefresh());
+//                System.out.println("#############################");
+//                System.out.println(roles);
+
                 String jwtToken = jwtTokenProvider.generateToken(Uid, roles);
 
                 User user = userJpaRepo.findUserByUid(Uid);
-
+//                System.out.println("#############################");
+//                System.out.println(user.getRoles());
                 userService.updatejwtToken(Uid,jwtToken);
 
                 result.setCode(1);
@@ -248,6 +253,38 @@ public class AuthController {
             return false;
         }else{
             return true;
+        }
+
+    }
+
+    @ApiOperation(value = "로그아웃(~)",notes = "jwtToken으로 로그아웃 요청, 성공시 로컬스토리지 토큰 값 날리기\n" +
+            "\n" +
+            "Parameter\n" +
+            "- jwtToken\n" +
+            "\n" +
+            "Response\n" +
+            "- code : (1:성공, 0:실패)\n" +
+            "- Success \n" +
+            "- msg\n" +
+            "\n" +
+            "** 성공시 DB에서 해당 유저의 4개 토큰값 null처리,프론트에서는 로컬스토리지에서 날리기")
+    @PostMapping(value = "/logout")
+    public CommonResult logout(@ApiParam("jwtToken") @RequestParam String jwtToken){
+
+        CommonResult result = new CommonResult();
+        Optional<User> user=userJpaRepo.findUserByJwtAccess(jwtToken);
+
+        if(user.isPresent()){
+            userService.setAllTokens(user.get().getUid(),null,null,null,null);
+            result.setCode(1);
+            result.setSuccess(true);
+            result.setMsg("로그아웃 성공");
+            return result;
+        }else {
+            result.setCode(0);
+            result.setSuccess(false);
+            result.setMsg("토큰이 유효하지 않습니다.");
+            return result;
         }
 
     }
