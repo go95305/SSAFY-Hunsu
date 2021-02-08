@@ -52,7 +52,11 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="39bdff87-04e9-41b6-b492-b61bf95aceba" name="Default Changelist" comment="" />
+    <list default="true" id="39bdff87-04e9-41b6-b492-b61bf95aceba" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/../.idea/modules/hunsu.querydsl.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -96,6 +100,7 @@
     <property name="RequestMappingsPanelWidth0" value="75" />
     <property name="RequestMappingsPanelWidth1" value="75" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/resources" />
@@ -103,7 +108,7 @@
     <property name="project.structure.last.edited" value="SDKs" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.2" />
-    <property name="settings.editor.selected.configurable" value="reference.projectsettings.compiler.annotationProcessors" />
+    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.project.gradle" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RecentsManager">
@@ -134,6 +139,7 @@
       <workItem from="1612746020931" duration="403000" />
       <workItem from="1612746718419" duration="1168000" />
       <workItem from="1612748505852" duration="18000" />
+      <workItem from="1612754704945" duration="70000" />
     </task>
     <servers />
   </component>
@@ -154,39 +160,5 @@
       </map>
     </option>
     <option name="oldMeFiltersMigrated" value="true" />
-  </component>
-  <component name="WindowStateProjectService">
-    <state width="1234" height="279" key="GridCell.Tab.0.bottom" timestamp="1612713027859">
-      <screen x="0" y="0" width="2560" height="1040" />
-    </state>
-    <state width="1234" height="279" key="GridCell.Tab.0.bottom/0.0.2560.1040@0.0.2560.1040" timestamp="1612713027859" />
-    <state width="1234" height="279" key="GridCell.Tab.0.center" timestamp="1612713027859">
-      <screen x="0" y="0" width="2560" height="1040" />
-    </state>
-    <state width="1234" height="279" key="GridCell.Tab.0.center/0.0.2560.1040@0.0.2560.1040" timestamp="1612713027859" />
-    <state width="1234" height="279" key="GridCell.Tab.0.left" timestamp="1612713027859">
-      <screen x="0" y="0" width="2560" height="1040" />
-    </state>
-    <state width="1234" height="279" key="GridCell.Tab.0.left/0.0.2560.1040@0.0.2560.1040" timestamp="1612713027859" />
-    <state width="1234" height="279" key="GridCell.Tab.0.right" timestamp="1612713027859">
-      <screen x="0" y="0" width="2560" height="1040" />
-    </state>
-    <state width="1234" height="279" key="GridCell.Tab.0.right/0.0.2560.1040@0.0.2560.1040" timestamp="1612713027859" />
-    <state width="1234" height="279" key="GridCell.Tab.1.bottom" timestamp="1612713027859">
-      <screen x="0" y="0" width="2560" height="1040" />
-    </state>
-    <state width="1234" height="279" key="GridCell.Tab.1.bottom/0.0.2560.1040@0.0.2560.1040" timestamp="1612713027859" />
-    <state width="1234" height="279" key="GridCell.Tab.1.center" timestamp="1612713027859">
-      <screen x="0" y="0" width="2560" height="1040" />
-    </state>
-    <state width="1234" height="279" key="GridCell.Tab.1.center/0.0.2560.1040@0.0.2560.1040" timestamp="1612713027859" />
-    <state width="1234" height="279" key="GridCell.Tab.1.left" timestamp="1612713027859">
-      <screen x="0" y="0" width="2560" height="1040" />
-    </state>
-    <state width="1234" height="279" key="GridCell.Tab.1.left/0.0.2560.1040@0.0.2560.1040" timestamp="1612713027859" />
-    <state width="1234" height="279" key="GridCell.Tab.1.right" timestamp="1612713027859">
-      <screen x="0" y="0" width="2560" height="1040" />
-    </state>
-    <state width="1234" height="279" key="GridCell.Tab.1.right/0.0.2560.1040@0.0.2560.1040" timestamp="1612713027859" />
   </component>
 </project>
