@@ -175,8 +175,8 @@ export default {
     },
     // 댓글좋아요 함수
     likeWhatwearReply(replyIdx) {
-      const nickname = this.getNickname;
-      this.likeWhatwearReplyInfo(replyIdx, nickname);
+      const nickname = this.getNickname
+      this.likeWhatwearReplyInfo({replyIdx, nickname});
     },
     // 대댓글작성함수
     clickWhatwearReReply(nickname, groupNum) {
