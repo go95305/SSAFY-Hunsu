@@ -19,15 +19,16 @@
         delimiter-icon="mdi-minus"
         height="330"
       >
-        <v-carousel-item v-for="(slide, i) in slides" :key="i">
-          <v-sheet :color="colors[i]" height="100%" tile>
+        <v-carousel-item v-for="(imageUrl, i) in imageUrls" :key="i">
+          <v-sheet height="100%" tile>
             <v-row
               class="fill-height"
               align="center"
               justify="center"
               @click="goToOotdDetail(ootd)"
             >
-              <div class="display-3">{{ slide }} Slide</div>
+              <v-img :src="imageUrl" />
+              <!-- <div class="display-3">Slide</div> -->
             </v-row>
           </v-sheet>
         </v-carousel-item>
@@ -74,15 +75,43 @@ export default {
       ],
       cycle: false,
       slides: ["First", "Second", "Third", "Fourth", "Fifth"],
+      imageUrls: [],
     };
   },
   computed: { ...mapGetters(["getOotdList", "getNickname"]) },
   created() {
-    this.getOotdListInApi(0);
+    // let ootdList;
+    // let getImages = this.getImages;
+    let root = this;
+    // console.log("this", root);
+    // this.getImages({ key: "ootd/60", num: 3 });
+    // let images = [];
+    this.getOotdListInApi(0).then((res) => {
+      // console.log(res);
+      res.forEach((info) => {
+        if (info.ootdIdx === 60) {
+          root.getImageList({ prefix: "ootd/" + info.ootdIdx }).then((res) => {
+            console.log(res);
+            this.getImages({ keys: res }).then((res) => {
+              root.imageUrls = res;
+              console.log("result", res);
+            });
+          });
+        }
+      });
+      // console.log("in mount", root.imageUrls);
+      // root.imageUrls = images;
+    });
+    // console.log("out", root.imageUrls);
     // console.log(this.getOotdList);
   },
   methods: {
-    ...mapActions(["getOotdInfoInApi", "getOotdListInApi"]),
+    ...mapActions([
+      "getOotdInfoInApi",
+      "getOotdListInApi",
+      "getImages",
+      "getImageList",
+    ]),
 
     goToOotdDetail(ootd) {
       //idx 굳이 보여줄 필요 없을것같아서 params로 변경
