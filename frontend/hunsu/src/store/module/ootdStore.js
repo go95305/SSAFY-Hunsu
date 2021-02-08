@@ -148,7 +148,7 @@ const actions = {
         console.error(err);
       });
   },
-  likeOotdReplyInfo(context, replyIdx, nickname) {
+  likeOotdReplyInfo(context, {replyIdx, nickname}) {
     axios
       .put(`http://i4c102.p.ssafy.io:8080/api/ootd/reply/like/${replyIdx}/${nickname}`)
       .then((res) => {
