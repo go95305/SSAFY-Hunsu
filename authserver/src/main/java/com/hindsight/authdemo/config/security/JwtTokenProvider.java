@@ -91,8 +91,8 @@ public class JwtTokenProvider {
     public boolean validateToken(String jwtToken){
         System.out.println("토큰 확인");
         try{
-
             Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(jwtToken);
+            System.out.println("####################");
             System.out.println(claims.getHeader());
             return !claims.getBody().getExpiration().before(new Date()); // 기한이 현재보다 전인지
         }catch(Exception e){

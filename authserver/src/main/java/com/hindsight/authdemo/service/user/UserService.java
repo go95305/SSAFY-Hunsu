@@ -52,7 +52,7 @@ public class UserService {
 
     }
 
-    public  void setAllTokens(long Uid, String accessToken, String refreshToken, String jwtToken, String jwtRefresh){
+    public void setAllTokens(long Uid, String accessToken, String refreshToken, String jwtToken, String jwtRefresh){
         User user=userJpaRepo.findUserByUid(Uid);
 
         user.setAccessToken(accessToken);

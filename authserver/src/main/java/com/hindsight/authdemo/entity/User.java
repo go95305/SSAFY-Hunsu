@@ -47,6 +47,11 @@ public class User implements UserDetails {
     @Builder.Default
     private final List<String> roles = new ArrayList<>();
 
+    public List<String> getRoles() {
+        roles.clear();
+        roles.add("USER");
+        return roles;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
