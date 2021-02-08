@@ -21,22 +21,12 @@
         <v-btn @click="goToLogin()">로그인</v-btn>
       </div> -->
       <!--로그인 후 알림아이콘 옆에 표시할 프로필사진 + mypage, logout menu바-->
-      <v-menu
-        left
-        bottom
-        v-if="getNickname"
-      >
+      <v-menu left bottom v-if="getNickname">
         <template v-slot:activator="{ on, attrs }">
-          <v-avatar
-          v-bind="attrs"
-          v-on="on"
-          >
-            <img
-              src="https://cdn.vuetifyjs.com/images/john.jpg"
-              alt="John"
-            >
+          <v-avatar v-bind="attrs" v-on="on">
+            <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
           </v-avatar>
-        </template> 
+        </template>
 
         <v-list>
           <v-list-item
@@ -84,7 +74,12 @@ import { mapGetters, mapActions } from "vuex";
 export default {
   name: "MainNavBar",
   computed: {
-    ...mapGetters(["getNickname", "getAccessToken", "getRefreshToken"]),
+    ...mapGetters([
+      "getNickname",
+      "getAccessToken",
+      "getRefreshToken",
+      "getOotdList",
+    ]),
   },
   mounted() {
     // console.log("navbar mount ", this.getAccessToken, this.getRefreshToken);
@@ -113,7 +108,7 @@ export default {
       }
     },
     getName() {
-      console.log(this.getNickname);
+      console.log(this.getOotdList);
     },
     goToHome() {
       this.$router.push("/");

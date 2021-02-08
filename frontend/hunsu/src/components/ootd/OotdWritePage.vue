@@ -68,7 +68,7 @@
 
 <script>
 // import axios from "axios";
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters, mapMutations } from "vuex";
 import ImageUpload from "@/components/module/ImageUpload";
 // 작성값 Null 체크
 //
@@ -96,10 +96,11 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getNickname", "getUploadImageUrls", "getUploadImageFilse"]),
+    ...mapGetters(["getNickname", "getUploadImageUrls", "getUploadImageFiles"]),
   },
   methods: {
     ...mapActions(["createOotdInfo", "getOotdInfoInApi", "uploadImage"]),
+    ...mapMutations(["clearUploads"]),
     // onClickImageUpload() {
     //   this.$refs.imageInput.click();
     // },
@@ -126,6 +127,7 @@ export default {
       this.dialog = false;
       // let uploadImage = this.uploadImage;
       let imageFiles = this.getUploadImageFiles;
+      let clearUploads = this.clearUploads;
       console.log("before send", imageFiles);
       // Ootd 글 내용들
       const params = {
@@ -151,6 +153,8 @@ export default {
             //     console.log("imageupload 1", res);
             //   });
             // });
+            clearUploads();
+            this.$router.go(this.$router.currentRoute); // 현재 페이지 리로드
           } else {
             console.log("file X");
           }

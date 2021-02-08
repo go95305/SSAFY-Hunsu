@@ -17,10 +17,14 @@ const getters = {
 };
 
 const mutations = {
-  setUploadImageUrls(state, payload) {
-    state.uploadImageUrls.push(payload);
+  setUploadImageUrls(state) {
+    state.UploadImageUrls = [];
+    state.uploadImageFiles.forEach((file) => {
+      state.uploadImageUrls.push(URL.createObjectURL(file));
+    });
   },
   setUploadImageFiles(state, payload) {
+    state.uploadImageFiles = [];
     payload.forEach((file) => {
       state.uploadImageFiles.push(file);
     });
@@ -33,16 +37,18 @@ const mutations = {
 };
 
 const actions = {
-  uploadImage({ state }, { key, articleIdx }) {
+  async uploadImage({ state }, { key, articleIdx }) {
     console.log('uploadImages', key);
-    state.uploadImageFiles.forEach((imageFile, idx) => {
+    await state.uploadImageFiles.forEach((imageFile, idx) => {
       console.log('file', imageFile);
+      let fileExt = imageFile.name.split('.')[1];
+
       s3.upload(
         {
-          Key: key + articleIdx + '/' + (idx + 1) + '.jpeg',
+          Key: key + articleIdx + '/' + (idx + 1) + '.' + fileExt,
           Body: imageFile,
           ACL: 'public-read',
-          ContentType: 'image/jpeg',
+          ContentType: 'image/' + fileExt,
         },
         (err, data) => {
           if (err) {
@@ -62,15 +68,13 @@ const actions = {
         if (err) {
           reject('getImageList err', err);
         } else {
-          // console.log('in list 1', data.Contents);
           resolve(data.Contents);
-          // return data.Contents;
         }
       });
     });
   },
   getImages(context, { keys }) {
-    console.log('get', keys);
+    // console.log('get', keys);
     let images = [];
     keys.map((key) => {
       s3.getSignedUrl(
@@ -83,7 +87,6 @@ const actions = {
           if (err) {
             return alert('There was an error listing your photo: ', err.message);
           } else {
-            // console.log('in getimage', data);
             images.push(data);
           }
         }

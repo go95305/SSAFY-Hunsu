@@ -11,15 +11,19 @@
       class="mx-auto my-5"
     >
       <!-- OOTD 사진 -->
+      <v-carousel :show-arrows="false" v-if="!ootd.imageUrls">
+        <p>loading..</p>
+      </v-carousel>
       <v-carousel
+        v-else
         :continuous="false"
         :cycle="cycle"
-        :show-arrows="false"
+        :show-arrows="true"
         hide-delimiter-background
         delimiter-icon="mdi-minus"
         height="330"
       >
-        <v-carousel-item v-for="(imageUrl, i) in imageUrls" :key="i">
+        <v-carousel-item v-for="(imageUrl, i) in ootd.imageUrls" :key="i">
           <v-sheet height="100%" tile>
             <v-row
               class="fill-height"
@@ -28,7 +32,6 @@
               @click="goToOotdDetail(ootd)"
             >
               <v-img :src="imageUrl" />
-              <!-- <div class="display-3">Slide</div> -->
             </v-row>
           </v-sheet>
         </v-carousel-item>
@@ -81,29 +84,18 @@ export default {
   computed: { ...mapGetters(["getOotdList", "getNickname"]) },
   created() {
     // let ootdList;
-    // let getImages = this.getImages;
     let root = this;
-    // console.log("this", root);
-    // this.getImages({ key: "ootd/60", num: 3 });
-    // let images = [];
     this.getOotdListInApi(0).then((res) => {
-      // console.log(res);
       res.forEach((info) => {
-        if (info.ootdIdx === 60) {
-          root.getImageList({ prefix: "ootd/" + info.ootdIdx }).then((res) => {
-            console.log(res);
-            this.getImages({ keys: res }).then((res) => {
-              root.imageUrls = res;
-              console.log("result", res);
-            });
+        root.getImageList({ prefix: "ootd/" + info.ootdIdx }).then((res) => {
+          console.log("hi", res);
+          this.getImages({ keys: res }).then((res) => {
+            info.imageUrls = res;
+            console.log(info.ootdIdx, " result", res, "info ", info.imageUrls);
           });
-        }
+        });
       });
-      // console.log("in mount", root.imageUrls);
-      // root.imageUrls = images;
     });
-    // console.log("out", root.imageUrls);
-    // console.log(this.getOotdList);
   },
   methods: {
     ...mapActions([

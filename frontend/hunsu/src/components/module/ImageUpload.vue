@@ -10,7 +10,7 @@
       hidden
       @change="onChangeImages"
     />
-    <div class="display: inline-block;" v-if="uploadImageUrls.length === 0">
+    <div class="display: inline-block;" v-if="getUploadImageUrls.length === 0">
       <v-btn class="mx-5" type="button" @click="onClickImageUpload"
         >사진 업로드</v-btn
       >
@@ -20,12 +20,12 @@
     <!-- 현재는 사진 업로드만, 올렸던 사진 삭제는 미구현상태 -->
     <div v-else>
       <v-slide-group
-        v-model="uploadImageUrls"
+        v-model="getUploadImageUrls"
         class="pa-4"
         center-active
         show-arrows
       >
-        <v-slide-item v-for="(imageUrl, idx) in uploadImageUrls" :key="idx">
+        <v-slide-item v-for="(imageUrl, idx) in getUploadImageUrls" :key="idx">
           <v-img class="mx-5 my-5" :src="imageUrl" height="100" width="100">
           </v-img>
         </v-slide-item>
@@ -65,7 +65,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getUploadImageUrls", "getUploadImageFilse"]),
+    ...mapGetters(["getUploadImageUrls", "getUploadImageFiles"]),
   },
   methods: {
     ...mapMutations(["setUploadImageUrls", "setUploadImageFiles"]),
@@ -76,11 +76,9 @@ export default {
       console.log(e.target.files);
 
       this.setUploadImageFiles(e.target.files);
-      console.log("onChange", this.getUploadImageFiles);
-      let setUrls = this.setUploadImageUrls;
-      this.getUploadImageFiles.forEach((imageFile) => {
-        setUrls.push(URL.createObjectURL(imageFile));
-      });
+      console.log(e.target.files[0].name.split("."));
+      //   console.log("onChange", this.getUploadImageFiles);
+      this.setUploadImageUrls();
       console.log("onChange imageURl ", this.getUploadImageUrls);
     },
   },
