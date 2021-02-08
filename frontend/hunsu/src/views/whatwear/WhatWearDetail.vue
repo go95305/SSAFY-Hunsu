@@ -156,42 +156,44 @@
       
     <!--투표창-->
     <div v-if="getWhatwearInfo.vote_activated">
-      <v-radio-group v-model="radioGroup" id="vote_input">
-        <v-radio
-          v-for="n in getWhatwearInfo.voteList.length"
-          :key="n"
-          :label="`${n}번`"
-          :value="n"
-          @click="voteWhatwear(getWhatwearInfo.voteList[n-1].idx, getWhatwearInfo.nickname)"
-        ></v-radio>
-      </v-radio-group>
+      <div id="vote_input">
+        <v-checkbox
+          v-for="(n, index) in getWhatwearVoteInfo"
+          :key="n.idx"
+          :label="`${index+1}번`"
+          v-model="n.choice"
+          @click="voteWhatwear(getWhatwearVoteInfo[index].idx, getNickname)"
+        ></v-checkbox>
+      </div>
       <!--투표결과그래프-->
-      <div v-if="!voteValueTotal">
-
-      <div 
-        v-for="(value, idx) in getWhatwearInfo.voteList"
-        :key="idx">
-        <v-progress-linear
-          color="light-blue"
-          height="10"
-          value="0"
-          striped
-        ></v-progress-linear>
-        <br>
+      <div v-if="getVoteTotal">
+        <div 
+          id="vote_linear"
+          v-for="(value, idx) in getWhatwearVoteInfo"
+          :key="idx">
+          <v-progress-linear
+            color="light-blue"
+            height="10"
+            :value="(value.count / getVoteTotal ) * 100"
+            striped
+          ></v-progress-linear>
+          <br>
+        </div>
       </div>
-      </div>
 
-      <div 
-        id="vote_linear"
-        v-for="(value, idx) in voteValueList"
-        :key="idx">
-        <v-progress-linear
-          color="light-blue"
-          height="10"
-          :value="value"
-          striped
-        ></v-progress-linear>
-        <br>
+      <div v-if="getVoteTotal === 0">
+        <div 
+          id="vote_linear"
+          v-for="(value, idx) in getWhatwearVoteInfo"
+          :key="idx">
+          <v-progress-linear
+            color="light-blue"
+            height="10"
+            value="0"
+            striped
+          ></v-progress-linear>
+          <br>
+        </div>
       </div>
     </div>
     <WhatWearDetailComment />
@@ -213,7 +215,7 @@ export default {
     WhatWearDetailComment,
   },
   computed: {
-    ...mapGetters(["getWhatwearInfo", "getWhatwearVoteInfo", "getNickname"])
+    ...mapGetters(["getWhatwearInfo", "getWhatwearVoteInfo", "getNickname", "getVoteTotal"])
   },
   data() {
     return {
@@ -224,31 +226,13 @@ export default {
         'yellow darken-2',
       ],
       dialog: false,
-      radioGroup: '',
-      option: {
-        title: {
-          display: true,
-          position: "bottom",
-          text: "test"
-        }
-      },
       vote_activated: false,
-      datasets: [
-        {
-          data: [20, 20, 20, 20, 20],
-          backgroundColor: ['Red', 'Yellow', 'Purple', 'Black', 'Pink'],
-        },
-      ],
-      voteValueList: [],
-      voteValueTotal: 0,
     }
-  },
-  created() {
-    // console.log(this.getWhatwearInfo)
   },
   methods: {
     ...mapMutations(["setWhatwearInfo"]),
     ...mapActions(["getWhatwearInfoApi", "voteWhatwearInfo"]),
+    // 글 삭제 함수
     deleteWhatWear(wear_idx) {
       const wearIdx = wear_idx
       axios.put(`http://i4c102.p.ssafy.io:8080/api/wear/${wearIdx}`)
@@ -260,24 +244,10 @@ export default {
           console.error(err)
         })
     },
+    // 투표하는 함수
     voteWhatwear(voteIdx, nickname) {
-      // console.log(voteIdx)
       this.voteWhatwearInfo({voteIdx, nickname})
-      console.log(this.getWhatwearVoteInfo)
-      this.voteValueTotal = 0
-      var valueList = []
-      var voteTotal = 0
-      for (var i = 0; i < this.getWhatwearVoteInfo.length; i++) {
-        voteTotal += this.getWhatwearVoteInfo[i].count
-      }
-      for (var k = 0; k < this.getWhatwearVoteInfo.length; k++) {
-        valueList.push((this.getWhatwearVoteInfo[k].count / voteTotal) * 100)
-      }
-      console.log(valueList)
-      console.log(voteTotal)
-      this.voteValueList = valueList
-      this.voteValueTotal = voteTotal
-    }
+    },
   }
 }
 

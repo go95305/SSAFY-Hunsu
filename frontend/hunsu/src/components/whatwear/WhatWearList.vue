@@ -35,6 +35,21 @@
         <!-- <div class="mb-2"></div> -->
       </div>
     </v-card>
+  <!-- <div class="text-center">
+    <v-container>
+      <v-row justify="center">
+        <v-col cols="8">
+          <v-container class="max-width">
+            <v-pagination
+              v-model="page"
+              class="my-4"
+              :length="2"
+            ></v-pagination>
+          </v-container>
+        </v-col>
+      </v-row>
+    </v-container>
+  </div> -->
   </v-card>
 </template>
 
@@ -55,7 +70,10 @@ export default {
   methods: {
     ...mapActions(["getWhatwearInfoApi"]),
     goToWhatwearDetail(whatwear) {
-      this.getWhatwearInfoApi(whatwear.wear_idx, "han"); // 유저정보 닉네임으로 변경, 현재는 글 작성자로 들어감
+      console.log('글번호', whatwear.wear_idx)
+      const wearIdx = whatwear.wear_idx
+      const nickname = whatwear.nickname
+      this.getWhatwearInfoApi({wearIdx, nickname}); // 유저정보 닉네임으로 변경, 현재는 글 작성자로 들어감
       this.$router.push({ name: "WhatWearDetail" });
     },
     getWhatWearList() {
@@ -63,7 +81,7 @@ export default {
         .get("http://i4c102.p.ssafy.io:8080/api/wear")
         .then((res) => {
           this.whatwearList = res.data;
-          console.log(res.data);
+          // console.log(res.data);
         })
         .catch((err) => {
           console.error(err);
