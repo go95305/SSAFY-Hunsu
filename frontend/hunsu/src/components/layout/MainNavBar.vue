@@ -12,19 +12,19 @@
       <v-btn @click="getName()">닉네임출력</v-btn>
       <v-spacer></v-spacer>
       <!--로그인아이콘, 알림아이콘-->
-      <div v-if="getNickname">
+      <div v-if="!getNickname">
         <v-icon class="mr-2" color="black" @click="goToLogin()"
           >mdi-account-outline</v-icon
         >
-        <v-icon color="black">mdi-bell-outline</v-icon>
       </div>
-      <div v-else>
+      <!-- <div>
         <v-btn @click="goToLogin()">로그인</v-btn>
-      </div>
+      </div> -->
       <!--로그인 후 알림아이콘 옆에 표시할 프로필사진 + mypage, logout menu바-->
-      <!-- <v-menu
+      <v-menu
         left
         bottom
+        v-if="getNickname"
       >
         <template v-slot:activator="{ on, attrs }">
           <v-avatar
@@ -47,7 +47,10 @@
             <v-list-item-title>{{ item.text }}</v-list-item-title>
           </v-list-item>
         </v-list>
-      </v-menu> -->
+      </v-menu>
+      <div>
+        <v-icon color="black">mdi-bell-outline</v-icon>
+      </div>
       <!--v-app-bar태그 밖에있던 tabs들을 안으로 가져옴 tabs에도 app을 적용하여 스크롤기능 활성화시킴-->
       <template v-slot:extension>
         <v-tabs
