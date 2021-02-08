@@ -92,7 +92,7 @@ public class WearService {
         Vote vote = voteRepository.findVoteByWear(wear);
         User user = userRepository.findUserByNickname(nickname);
         voteList = voteItemRepository.findVoteItemByVoteOrderByVote(vote);
-        List<WearReplyDTO> replyDTOList = replyList(idx, nickname);
+        List<WearReplyDTO> replyDTOList = new ArrayList<>();
         List<VoteDTO> voteDTOList = new ArrayList<>();
 
         for (VoteItem voteItem : voteList) {
@@ -101,9 +101,12 @@ public class WearService {
             VoteDTO voteDTO = new VoteDTO();
             voteDTO.setIdx(voteItem.getIdx());
             voteDTO.setCount(voteItem.getCount());
-            if (voteChoice != null)
-                voteDTO.setChoice(true);
-            else
+            if (voteChoice != null){
+                if(voteChoice.getFlag())
+                    voteDTO.setChoice(true);
+                else
+                    voteDTO.setChoice(false);
+            } else
                 voteDTO.setChoice(false);
 
             voteDTOList.add(voteDTO);
