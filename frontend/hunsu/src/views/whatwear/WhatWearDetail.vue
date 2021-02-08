@@ -166,32 +166,33 @@
         ></v-radio>
       </v-radio-group>
       <!--투표결과그래프-->
-      <div v-if="!voteValueTotal">
-
-      <div 
-        v-for="(value, idx) in getWhatwearInfo.voteList"
-        :key="idx">
-        <v-progress-linear
-          color="light-blue"
-          height="10"
-          value="0"
-          striped
-        ></v-progress-linear>
-        <br>
+      <div v-if="voteValueTotal === 0">
+        <div 
+          v-for="(value, idx) in getWhatwearInfo.voteList"
+          :key="idx">
+          <v-progress-linear
+            color="light-blue"
+            height="10"
+            value="0"
+            striped
+          ></v-progress-linear>
+          <br>
+        </div>
       </div>
-      </div>
 
-      <div 
-        id="vote_linear"
-        v-for="(value, idx) in voteValueList"
-        :key="idx">
-        <v-progress-linear
-          color="light-blue"
-          height="10"
-          :value="value"
-          striped
-        ></v-progress-linear>
-        <br>
+      <div v-else>
+        <div 
+          id="vote_linear"
+          v-for="(value, idx) in voteValueList"
+          :key="idx">
+          <v-progress-linear
+            color="light-blue"
+            height="10"
+            :value="value"
+            striped
+          ></v-progress-linear>
+          <br>
+        </div>
       </div>
     </div>
     <WhatWearDetailComment />
