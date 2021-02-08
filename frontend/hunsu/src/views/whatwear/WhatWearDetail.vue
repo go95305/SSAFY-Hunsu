@@ -166,12 +166,32 @@
         ></v-radio>
       </v-radio-group>
       <!--투표결과그래프-->
-      <div id="vote_chart">
-        <chartjs-doughnut
-          :labels="getWhatwearChartlabels"
-          :datasets="datasets"
-          :option="option"
-        ></chartjs-doughnut>
+      <div v-if="!voteValueTotal">
+
+      <div 
+        v-for="(value, idx) in getWhatwearInfo.voteList"
+        :key="idx">
+        <v-progress-linear
+          color="light-blue"
+          height="10"
+          value="0"
+          striped
+        ></v-progress-linear>
+        <br>
+      </div>
+      </div>
+
+      <div 
+        id="vote_linear"
+        v-for="(value, idx) in voteValueList"
+        :key="idx">
+        <v-progress-linear
+          color="light-blue"
+          height="10"
+          :value="value"
+          striped
+        ></v-progress-linear>
+        <br>
       </div>
     </div>
     <WhatWearDetailComment />
@@ -193,7 +213,7 @@ export default {
     WhatWearDetailComment,
   },
   computed: {
-    ...mapGetters(["getWhatwearInfo", "getWhatwearChartlabels", "getNickname"])
+    ...mapGetters(["getWhatwearInfo", "getWhatwearVoteInfo", "getNickname"])
   },
   data() {
     return {
@@ -219,7 +239,12 @@ export default {
           backgroundColor: ['Red', 'Yellow', 'Purple', 'Black', 'Pink'],
         },
       ],
+      voteValueList: [],
+      voteValueTotal: 0,
     }
+  },
+  created() {
+    // console.log(this.getWhatwearInfo)
   },
   methods: {
     ...mapMutations(["setWhatwearInfo"]),
@@ -238,6 +263,20 @@ export default {
     voteWhatwear(voteIdx, nickname) {
       // console.log(voteIdx)
       this.voteWhatwearInfo({voteIdx, nickname})
+      console.log(this.getWhatwearVoteInfo)
+      this.voteValueTotal = 0
+      var valueList = []
+      var voteTotal = 0
+      for (var i = 0; i < this.getWhatwearVoteInfo.length; i++) {
+        voteTotal += this.getWhatwearVoteInfo[i].count
+      }
+      for (var k = 0; k < this.getWhatwearVoteInfo.length; k++) {
+        valueList.push((this.getWhatwearVoteInfo[k].count / voteTotal) * 100)
+      }
+      console.log(valueList)
+      console.log(voteTotal)
+      this.voteValueList = valueList
+      this.voteValueTotal = voteTotal
     }
   }
 }
@@ -248,5 +287,9 @@ export default {
 #vote_input {
   margin-left: 18px;
   text-align: center;
+}
+#vote_linear {
+  margin-left: 40px;
+  margin-right: 40px;
 }
 </style>
