@@ -5,6 +5,7 @@ const state = {
   whatwearReplyInfo: {},
   // 차트오류아직 해결안됨
   WhatwearVoteInfo: {},
+  voteTotal: 0,
 };
 const getters = {
   getWhatwearInfo(state) {
@@ -16,7 +17,9 @@ const getters = {
   getWhatwearVoteInfo(state) {
     return state.WhatwearVoteInfo
   },
-
+  getVoteTotal(state) {
+    return state.voteTotal
+  }
 };
 const mutations = {
   setWhatwearInfo(state, whatwearInfo) {
@@ -28,23 +31,24 @@ const mutations = {
   setWhatwearVoteInfo(state, WhatwearVoteInfo) {
     state.WhatwearVoteInfo = WhatwearVoteInfo
   },
+  setVoteTotal(state, voteTotal) {
+    state.voteTotal = voteTotal
+  }
 };
 const actions = {
-  getWhatwearInfoApi(context, wearIdx, nickname) {
+  getWhatwearInfoApi(context, { wearIdx, nickname }) {
     return axios
       .get(`http://i4c102.p.ssafy.io:8080/api/wear/detail/${wearIdx}/${nickname}`)
       .then((res) => {
-        console.log('Vuex get Whatwear ', res.data);
-        state.wear_idx = res.data.wear_idx;
-        const labels = [];
-        for (var i = 1; i <= res.data.voteList.length; i++) {
-          labels.push(String(i));
-        }
-        context.commit('setWhatwearChartInfo', labels);
-
+        // console.log('Vuex get Whatwear ', res.data);
+        
         context.commit('setWhatwearInfo', res.data);
         context.commit('setWhatwearReplyInfo', res.data.replyList);
-      });
+        context.commit('setWhatwearVoteInfo', res.data.voteList);
+      })
+      .catch((err) => {
+        console.error(err)
+      })
   },
   createWhatwearReplyInfo(context, whatwearReplyInfo) {
     console.log('create 댓구ㄹ', whatwearReplyInfo); 
@@ -96,14 +100,19 @@ const actions = {
     axios
     .put(`http://i4c102.p.ssafy.io:8080/api/wear/reply/vote/${voteIdx}/${nickname}`)
     .then((res) => {
-      // console.log('투표완료', res)
+      console.log('투표완료', res.data)
       context.commit('setWhatwearVoteInfo', res.data)
-
+      var voteTotal = 0
+      for (var q = 0; q < res.data.length; q++) {
+        voteTotal += res.data[q].count
+      }
+      // console.log('합', voteTotal)
+      context.commit('setVoteTotal', voteTotal)
     })
     .catch((err) => {
       console.error(err)
     })
-  }
+  },
 };
 
 export default {
