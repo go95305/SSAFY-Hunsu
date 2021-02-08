@@ -3,6 +3,8 @@ package com.project.hunsu.service;
 import com.project.hunsu.repository.*;
 import com.project.hunsu.model.dto.*;
 import com.project.hunsu.model.entity.*;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
@@ -34,9 +36,12 @@ public class WearService {
     }
 
     //return: title, nickname, wear_idx, voteActivated
-    public List<WearMainDTO> sortByRecent() {
+    public WearMainTotalDTO sortByRecent(Integer page) {
+        WearMainTotalDTO wearMainTotalDTO = new WearMainTotalDTO();
+        PageRequest pageRequest = PageRequest.of(page-1,10, Sort.by("WriteDate"));
         List<WearMainDTO> wearMainDTOList = new ArrayList<>();
-        List<Wear> wearList = wearRepository.findWearByFlagOrderByWriteDate(true);
+        List<Wear> wearList = wearRepository.findByFlag(true, pageRequest);
+        Long count = wearRepository.countByFlag(true);
 
         for (Wear wear : wearList) {
             WearMainDTO wearMainDTO = new WearMainDTO();
@@ -48,7 +53,10 @@ public class WearService {
             wearMainDTOList.add(wearMainDTO);
         }
 
-        return wearMainDTOList;
+        wearMainTotalDTO.setWearMainDTOList(wearMainDTOList);
+        wearMainTotalDTO.setCount(count);
+
+        return wearMainTotalDTO;
     }
 
     public void insertWear(WearDTO request) {

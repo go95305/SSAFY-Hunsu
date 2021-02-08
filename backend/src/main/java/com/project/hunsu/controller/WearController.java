@@ -23,17 +23,18 @@ public class WearController {
     private EntityManager entityManager;
 
     //뭘 입을까 목록(최신순 정렬)
-    @GetMapping("/wear")
-    @ApiOperation(value = "뭘 입을까 메인 (O)", notes = "Parameter(x)\n" +
+    @GetMapping("/wear/{page}")
+    @ApiOperation(value = "뭘 입을까 메인 (O)", notes = "Parameter\n" +
+            "-page(path): 페이지 넘버\n" +
             "Response\n" +
             "-wear_list(wear): 뭘 입을까 리스트\n" +
             "-----title: 제목\n" +
             "-----nickname: 작성자\n" +
             "-----wear_idx: 뭘입을까 idx\n" +
             "-----voteActivated: 투표 활성화 여부(true or false)\n")
-    public List<WearMainDTO> wearMain() {
-        List<WearMainDTO> wearList = wearService.sortByRecent();
-        return wearList;
+    public WearMainTotalDTO wearMain(@PathVariable Integer page) {
+        WearMainTotalDTO wearMainTotalDTO = wearService.sortByRecent(page);
+        return wearMainTotalDTO;
     }
 
     //content, nickname, num, title 필요
