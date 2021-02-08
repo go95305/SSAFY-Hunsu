@@ -6,6 +6,9 @@ import com.project.hunsu.model.entity.*;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
@@ -40,13 +43,15 @@ public class OotdService {
 
 
     // 최신순 혹은 인기순으로 Ootd값을 정렬해서 가져오는 메소드 QueryDSL을 사용.
-    public List<OotdMainDTO> SortByRecentOrPopularity(int sort) {
+    public List<OotdMainDTO> SortByRecentOrPopularity(int sort, int count) {
         List<OotdMainDTO> ootdMainDTOList = new ArrayList<>();
         List<Ootd> ootdList = new ArrayList<>();
         if (sort == 0) {
-            ootdList = ootdRepository.findOotdByOrderByWriteDateDesc();
+            PageRequest pageRequest = PageRequest.of(0,6 * (count + 1), Sort.by("WriteDate"));
+            ootdList = ootdRepository.findBy(pageRequest);
         } else {
-            ootdList = ootdRepository.findOotdByOrderByCountDesc();
+            PageRequest pageRequest = PageRequest.of(0,6 * (count + 1), Sort.by("Count").descending());
+            ootdList = ootdRepository.findBy(pageRequest);
         }
 
         for (int i = 0; i < ootdList.size(); i++) {

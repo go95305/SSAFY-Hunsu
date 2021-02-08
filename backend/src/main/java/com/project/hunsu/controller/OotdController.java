@@ -31,15 +31,16 @@ public class OotdController {
     @PersistenceContext    // EntityManagerFactory가 DI 할 수 있도록 어노테이션 설정
     private EntityManager entityManager;
 
-    @GetMapping("/ootd/{sort}")  //ootd_idx, 닉네임, 글내용, 해시태그, 좋아요 개수
+    @GetMapping("/ootd/{sort}/{count}")  //ootd_idx, 닉네임, 글내용, 해시태그, 좋아요 개수
     @ApiOperation(value = "Ootd 메인페이지 (O)", notes = "0 혹은 1값을 보내면 \n" +
             "                                           0: 최신순으로 리턴 \n" +
             "                                           1: 인기순으로 리턴 \n" +
-            "                                           Parameter: 0 or 1\n" +
+            "                                           count: 더보기 누른 횟수" +
+            "                                           Parameter: 0 or 1/count(int)\n" +
             "                                           Response:  모든 ootd글을 정렬된 상태로 리턴해준다.")
-    public List<OotdMainDTO> ootdSortedList(@PathVariable int sort) {
+    public List<OotdMainDTO> ootdSortedList(@PathVariable int sort, @PathVariable int count) {
         System.out.println(sort);
-        List<OotdMainDTO> ootdMainDTOList = ootdService.SortByRecentOrPopularity(sort);
+        List<OotdMainDTO> ootdMainDTOList = ootdService.SortByRecentOrPopularity(sort, count);
         return ootdMainDTOList;
     }
 
