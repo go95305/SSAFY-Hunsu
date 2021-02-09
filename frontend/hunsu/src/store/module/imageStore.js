@@ -71,6 +71,32 @@ const actions = {
       );
     });
   },
+  uploadProfile({ rootState, state }) {
+    state.uploadImageFiles.forEach((imageFile) => {
+      console.log('profilefile', imageFile);
+      //파일 확장자
+      let fileExtList = imageFile.name.split('.');
+      let fileExt = fileExtList[fileExtList.length - 1];
+      console.log(fileExt);
+
+      s3.upload(
+        {
+          Key: 'mypage/' + rootState.user.nickname + '/' + rootState.user.nickname,
+          Body: imageFile,
+          ACL: 'public-read',
+          ContentType: 'image/' + fileExt,
+        },
+        (err, data) => {
+          if (err) {
+            console.log(err);
+            return alert('There was an error uploading your photo: ', err.message);
+          }
+          console.log('Successfully uploaded photo.');
+          console.log(data);
+        }
+      );
+    });
+  },
   getImageList(context, { prefix }) {
     let images = [];
     return new Promise((resolve, reject) => {
@@ -100,26 +126,26 @@ const actions = {
       });
     });
   },
-  async getImages(context, { keys }) {
-    // console.log('get', keys);
-    let images = new Array();
-    await keys.map((key) => {
+  getImages({ rootState }) {
+    console.log(rootState);
+    rootState.ootd.ootdList.map((ootd) => {
+      console.log(ootd);
       s3.getSignedUrl(
         'getObject',
         {
           Bucket: this.albumBucketName,
-          Key: key.Key,
+          Key: 'mypage/' + ootd.nickname + '/' + ootd.nickname,
         },
         (err, data) => {
           if (err) {
             return alert('There was an error listing your photo: ', err.message);
           } else {
-            images.push(data);
+            console.log('getImage', data);
+            ootd.profileImage = data;
           }
         }
       );
     });
-    return images;
   },
   downloadImages(context, imageUrl) {
     s3.getSignedUrl(
@@ -139,38 +165,13 @@ const actions = {
     );
   },
   getProfileImage({ rootState }, { nickname, target }) {
-    // return new Promise((resolve, reject) => {
-    //   let images = [];
-    //   let prefix = 'mypage/' + nickname;
-    //   s3.listObjectsV2({ Prefix: prefix }, (err, data) => {
-    //     if (err) {
-    //       reject('getImageList err', err);
-    //     } else {
-    //       data.Contents.map((key) => {
-    //         s3.getSignedUrl(
-    //           'getObject',
-    //           {
-    //             Bucket: this.albumBucketName,
-    //             Key: key.Key,
-    //           },
-    //           (err, data) => {
-    //             if (err) {
-    //               return alert('There was an error listing your photo: ', err.message);
-    //             } else {
-    //               console.log('in profile data', data);
-    //               images.push(data);
-    //             }
-    //           }
-    //         );
-    //       });
-    //     }
-    //   });
-    //   console.log('in profile array', images);
-    //   resolve(images);
-    // });
     let prefix = 'mypage/' + nickname;
-    let getImages = new Promise((resolve) => {
+    let getImages = new Promise((resolve, reject) => {
       s3.listObjectsV2({ Prefix: prefix }, (err, data) => {
+        if (data.Contents.length === 0) {
+          reject(null);
+          return;
+        }
         if (err) {
           // reject('getImageList err', err);
           console.log(err);
@@ -194,15 +195,22 @@ const actions = {
         }
       });
     });
-    getImages.then((image) => {
-      // console.log(image);
-      if (target === 'my') {
-        rootState.user.myProfileImage = image;
-      } else {
-        rootState.user.targetProfileImage = image;
-      }
-      return image;
-    });
+    getImages
+      .then((image) => {
+        if (target === 'my') {
+          rootState.user.myProfileImage = image;
+        } else if (target === 'target') {
+          rootState.user.targetProfileImage = image;
+        }
+        return image;
+      })
+      .catch(() => {
+        if (target === 'my') {
+          rootState.user.myProfileImage = null;
+        } else {
+          rootState.user.targetProfileImage = null;
+        }
+      });
   },
 };
 AWS.config.update({

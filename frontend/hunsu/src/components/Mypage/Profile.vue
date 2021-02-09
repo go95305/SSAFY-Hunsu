@@ -8,7 +8,11 @@
           <!--상대 프로필이미지-->
           <!--웹 전체화면일때-->
           <v-avatar class="mt-10 ml-10 mb-8 hidden-sm-and-down">
-            <v-img v-if="getTargetProfileImage" :src="getTargetProfileImage" />
+            <v-img
+              v-model="getTargetProfileImage"
+              v-if="getTargetProfileImage"
+              :src="getTargetProfileImage"
+            />
             <v-img v-else src="https://cdn.vuetifyjs.com/images/john.jpg" />
           </v-avatar>
           <!--모바일-->
@@ -18,7 +22,11 @@
             class="mt-7 ml-7 hidden-sm-and-up"
             style="margin: 80px 60px 0px 20px"
           >
-            <v-img v-if="getTargetProfileImage" :src="getTargetProfileImage" />
+            <v-img
+              v-model="getTargetProfileImage"
+              v-if="getTargetProfileImage"
+              :src="getTargetProfileImage"
+            />
             <v-img v-else src="https://cdn.vuetifyjs.com/images/john.jpg" />
           </v-avatar>
           <!--유저닉네임-->

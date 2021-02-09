@@ -85,6 +85,7 @@ export default {
       "getRefreshToken",
       "getOotdList",
       "getMyProfileImage",
+      "getTargetProfileImage",
     ]),
   },
   mounted() {
@@ -146,7 +147,9 @@ export default {
         "image ",
         this.getMyProfileImage,
         "nickname",
-        this.getNickname
+        this.getNickname,
+        "targetName",
+        this.getTargetProfileImage
       );
     },
     goToHome() {

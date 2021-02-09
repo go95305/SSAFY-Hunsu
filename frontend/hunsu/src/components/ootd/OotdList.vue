@@ -13,36 +13,18 @@
     >
       <!-- OOTD 사진 -->
       <ImageView :images="ootd.imageUrls" />
-      <!-- <v-carousel :show-arrows="false" v-if="!ootd.imageUrls">
-        <p>loading..</p>
-      </v-carousel>
-      <v-carousel
-        v-else
-        :continuous="false"
-        :cycle="cycle"
-        :show-arrows="true"
-        hide-delimiter-background
-        delimiter-icon="mdi-minus"
-        height="330"
-      >
-        <v-carousel-item v-for="(imageUrl, i) in ootd.imageUrls" :key="i">
-          <v-sheet height="100%" tile>
-            <v-row
-              class="fill-height"
-              align="center"
-              justify="center"
-              @click="goToOotdDetail(ootd)"
-            >
-              <v-img :src="imageUrl" />
-            </v-row>
-          </v-sheet>
-        </v-carousel-item>
-      </v-carousel> -->
+
       <v-list two-line>
         <v-list-item>
           <!-- 작성자 프로필 -->
           <v-list-item-avatar>
             <v-img
+              v-if="ootd.profileImage"
+              @click="goToProfilePage(ootd.nickname)"
+              :src="ootd.profileImage"
+            ></v-img>
+            <v-img
+              v-else
               @click="goToProfilePage(getOotdInfo.nickname)"
               src="https://cdn.vuetifyjs.com/images/john.png"
             ></v-img>
@@ -91,24 +73,35 @@ export default {
       pageNum: 2,
     };
   },
-  computed: { ...mapGetters(["getOotdList", "getNickname", "getOotdInfo"]) },
+  computed: {
+    ...mapGetters(["getOotdList", "getNickname", "getOotdInfo"]),
+  },
   created() {
     // let ootdList;
     let root = this;
     this.getOotdListInApi({ sort: 0, pageNum: this.pageNum }).then((res) => {
       res.forEach((info) => {
+        console.log(info);
         root.getImageList({ prefix: "ootd/" + info.ootdIdx }).then((res) => {
-          // console.log("hi", res);
-          // this.getImages({ keys: res }).then((res) => {
           info.imageUrls = res;
-          // console.log(info.ootdIdx, " result", res, "info ", info.imageUrls);
           // });
+        });
+        root.getImages({ key: "mypage/" + info.nickname }).then((res) => {
+          console.log("user", res);
+
+          info.profileImage = res;
         });
       });
     });
   },
   methods: {
-    ...mapActions(["getOotdInfoInApi", "getOotdListInApi", "getImageList"]),
+    ...mapActions([
+      "getOotdInfoInApi",
+      "getOotdListInApi",
+      "getImageList",
+      "getProfileImage",
+      "getImages",
+    ]),
     ...mapMutations(["setOotdInfoImages", "setTargetProfileImage"]),
     goToOotdDetail(ootd) {
       //idx 굳이 보여줄 필요 없을것같아서 params로 변경
@@ -140,9 +133,9 @@ export default {
         myNickname: this.getNickname,
         yourNickname: infoNickname,
       }).then(() => {
-        this.getImageList({ prefix: "mypage/", infoNickname }).then((res) => {
-          console.log("go to profile", res);
-          this.setTargetProfileImage(res);
+        this.getProfileImage({
+          nickname: infoNickname,
+          target: "target",
         });
         this.$router.push({ name: "MyPage" });
       });

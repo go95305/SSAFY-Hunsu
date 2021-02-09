@@ -270,6 +270,7 @@ export default {
       "toggleLike",
       "getProfileInfoInApi",
       "getImageList",
+      "getProfileImage",
     ]),
     onoffUpdateDialog() {
       // 수정 dialog 활성화
@@ -288,9 +289,9 @@ export default {
         myNickname: this.getNickname,
         yourNickname: infoNickname,
       }).then(() => {
-        this.getImageList({ prefix: "mypage/" + infoNickname }).then((res) => {
-          console.log("in targetprofile", res);
-          this.setTargetProfileImage(res[1]);
+        this.getProfileImage({
+          nickname: infoNickname,
+          target: "target",
         });
         this.$router.push({ name: "MyPage" });
       });
