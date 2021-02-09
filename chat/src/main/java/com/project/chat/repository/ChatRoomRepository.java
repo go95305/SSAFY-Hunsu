@@ -16,6 +16,7 @@ public class ChatRoomRepository {
     // Redis CacheKeys
     private static final String CHAT_ROOMS = "CHAT_ROOM"; // 채팅룸 저장
     public static final String USER_COUNT = "USER_COUNT"; // 채팅룸에 입장한 클라이언트수 저장
+    public static final String LIKE_COUNT = "LIKE_COUNT"; // 채팅룸에 입장한 클라이언트수 저장
     public static final String ENTER_INFO = "ENTER_INFO"; // 채팅룸에 입장한 클라이언트의 sessionId와 채팅룸 id를 맵핑한 정보 저장
 
     @Resource(name = "redisTemplate")
@@ -62,10 +63,12 @@ public class ChatRoomRepository {
         return Long.valueOf(Optional.ofNullable(valueOps.get(USER_COUNT + "_" + roomId)).orElse("0"));
     }
 
+
     // 채팅방에 입장한 유저수 +1
     public long plusUserCount(String roomId) {
         return Optional.ofNullable(valueOps.increment(USER_COUNT + "_" + roomId)).orElse(0L);
     }
+
 
     // 채팅방에 입장한 유저수 -1
     public long minusUserCount(String roomId) {

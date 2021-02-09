@@ -37,8 +37,6 @@
         <li class="list-group-item list-group-item-action" v-for="item in chatrooms" v-bind:key="item.roomId"
             v-on:click="enterRoom(item.roomId, item.name)">
             <h6>{{item.name}} <span class="badge badge-info badge-pill">{{item.userCount}}</span></h6>
-            <h6>방이름{{item.name}} 개설자: {{item.publisher}} <span
-                        class="badge badge-info badge-pill">{{item.userCount}}</span></h6>
             <button class="btn btn-primary" type="button" @click="removeRoom(item.roomId)">방 삭제</button>
         </li>
     </ul>
@@ -51,11 +49,7 @@
         el: '#app',
         data: {
             room_name: '',
-
             publisher: '',
-            hashtag: [],
-            chatrooms: [],
-            publisher: 'koyuchang',
             hashtagList: [],
             chatrooms: [],
             fixedComment: '',
