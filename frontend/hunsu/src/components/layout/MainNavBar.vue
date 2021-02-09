@@ -100,11 +100,16 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["kakaoLogin"]),
+    ...mapActions(["kakaoLogin", "getProfileInfoInApi"]),
     goToPage(item) {
       // console.log(item.text)
       if (item.text === "MyPage") {
-        this.$router.push("/mypage");
+        this.getProfileInfoInApi({
+          myNickname: this.getNickname,
+          yourNickname: this.getNickname,
+          }).then(() => {
+            this.$router.push({name: "MyPage"})
+          }) 
       }
     },
     getName() {

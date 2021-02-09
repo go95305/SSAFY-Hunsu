@@ -3,6 +3,7 @@ const state = {
   accessToken: null,
   refreshToken: null,
   nickname: null,
+  userInfo: {},
 };
 const getters = {
   // 모든 토큰은 jwt 의미함
@@ -18,6 +19,9 @@ const getters = {
   getNickname(state) {
     return state.nickname;
   },
+  getUserInfo(state) {
+    return state.userInfo
+  }
 };
 const mutations = {
   //모든 토큰은 jwt 의미함
@@ -40,6 +44,9 @@ const mutations = {
     state.refreshToken = refreshToken;
     state.nickname = nickname;
   },
+  setUserInfo(state, userInfo) {
+    state.userInfo = userInfo
+  }
 };
 
 const actions = {
@@ -111,6 +118,19 @@ const actions = {
         });
       });
   },
+  getProfileInfoInApi(context, {myNickname, yourNickname}) {
+    return axios
+      .get(`http://i4c102.p.ssafy.io:8080/api/user/mypage/${myNickname}/${yourNickname}`)
+      .then((res) => {
+        console.log(res.data)
+        context.commit('setUserInfo', res.data)
+
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  },
+
 };
 
 export default {

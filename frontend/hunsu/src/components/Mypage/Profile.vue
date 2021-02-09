@@ -1,5 +1,5 @@
 <template>
-  <v-container style="padding: 0px">
+  <v-container style="width:375px">
     <v-layout justify-center>
       <v-card
       >
@@ -32,44 +32,47 @@
           <p class="font-weight-black subtitle-1 hidden-sm-and-up" style="margin: 40px 10px">닉네임</p> -->
 
           <!--팔로우버튼, 팔로우목록 dialog-->
+          <div class="mt-9">
+            <div class="ml-2">팔로워</div>
           <v-dialog
             transition="dialog-top-transition"
             max-width="600"
           >
             <template v-slot:activator="{ on, attrs }">
+              
               <v-btn
-                color="primary"
+                text
                 v-bind="attrs"
                 v-on="on"
-                class="mt-16 ml-8 hidden-sm-and-down"
-              >팔로우</v-btn>
+                class="mt-1 ml-8 hidden-sm-and-down"
+              >{{followerListLength}}</v-btn>
               <v-btn
-                color="primary"
+                text
                 v-bind="attrs"
                 v-on="on"
-                class="mt-16 mr-2 hidden-sm-and-up"
-              >팔로우</v-btn>
+                class="mt-1 mr-2 hidden-sm-and-up"
+              >{{followerListLength}}</v-btn>
             </template>
             <template v-slot:default="dialog">
               <v-card>
                 <v-toolbar
                   color="dark"
                   dark
-                >팔로우</v-toolbar>
+                >팔로워</v-toolbar>
                 <v-list subheader>
                     <v-list-item
-                      v-for="chat in recent"
-                      :key="chat.title"
+                      v-for="follower in profileData.follower_list"
+                      :key="follower.id"
                     >
                       <v-list-item-avatar>
                         <v-img
-                          :alt="`${chat.title} avatar`"
-                          :src="chat.avatar"
+                          :alt="`${follower} avatar`"
+                          src="https://cdn.vuetifyjs.com/images/lists/2.jpg"
                         ></v-img>
                       </v-list-item-avatar>
 
                       <v-list-item-content>
-                        <v-list-item-title v-text="chat.title"></v-list-item-title>
+                        <v-list-item-title v-text="follower"></v-list-item-title>
                       </v-list-item-content>
                     </v-list-item>
                   </v-list>
@@ -82,24 +85,28 @@
               </v-card>
             </template>
           </v-dialog>
+
+          </div>
           <!--팔로잉버튼, 팔로잉목록dialog-->
+          <div class="mt-9">
+            <div class="ml-2">팔로잉</div>
           <v-dialog
             transition="dialog-top-transition"
             max-width="600"
           >
             <template v-slot:activator="{ on, attrs }">
               <v-btn
-                color="primary"
+                text
                 v-bind="attrs"
                 v-on="on"
-                class="mt-16 ml-5 hidden-sm-and-down"
-              >팔로잉</v-btn>
+                class="mt-1 ml-5 hidden-sm-and-down"
+              >{{followingListLength}}</v-btn>
               <v-btn
-                color="primary"
+                text
                 v-bind="attrs"
                 v-on="on"
-                class="mt-16 hidden-sm-and-up"
-              >팔로잉</v-btn>
+                class="mt-1 hidden-sm-and-up"
+              >{{followingListLength}}</v-btn>
             </template>
             <template v-slot:default="dialog">
               <v-card>
@@ -109,18 +116,18 @@
                 >팔로잉</v-toolbar>
                   <v-list subheader>
                       <v-list-item
-                        v-for="chat in recent"
-                        :key="chat.title"
+                        v-for="following in profileData.following_list"
+                        :key="following.id"
                       >
                         <v-list-item-avatar>
                           <v-img
-                            :alt="`${chat.title} avatar`"
-                            :src="chat.avatar"
+                            :alt="`${following} avatar`"
+                            src="https://cdn.vuetifyjs.com/images/lists/1.jpg"
                           ></v-img>
                         </v-list-item-avatar>
 
                         <v-list-item-content>
-                          <v-list-item-title v-text="chat.title"></v-list-item-title>
+                          <v-list-item-title v-text="following"></v-list-item-title>
                         </v-list-item-content>
                       </v-list-item>
                     </v-list>
@@ -134,19 +141,24 @@
             </template>
           </v-dialog>
 
+          </div>
           <!--설정아이콘-->
-          <ProfileSetting />
+          <ProfileSetting v-if="getUserInfo.mypageNickname === getNickname"/>
         </div>
         <div>
           <!--유저닉네임-->
-          <p class="font-weight-black text-h5 hidden-sm-and-down" style="margin: 10px 30px">{{getNickname}}</p>
-          <p class="font-weight-black subtitle-1 hidden-sm-and-up" style="margin: 10px 30px">{{getNickname}}</p>
+          <p class="font-weight-black text-h5 hidden-sm-and-down" style="margin: 10px 80px 10px 30px">{{getUserInfo.mypageNickname}}</p>
+          <p class="d-inline-block font-weight-black subtitle-1 hidden-sm-and-up" style="margin: 10px 80px 10px 30px">{{getUserInfo.mypageNickname}}</p>
+          <div class="d-inline-block ml-11 pb-3">
+            <v-btn small v-model="followStatus" v-if="(getUserInfo.mypageNickname !== getNickname) & (followStatus === false)" @click="followThisUser()" style="color: white" color="deep-purple accent-1">Follow</v-btn>
+            <v-btn small v-model="followStatus" v-if="(getUserInfo.mypageNickname !== getNickname) & (followStatus === true)" @click="followThisUser()" style="color: white" color="deep-purple accent-1">Unfollow</v-btn>
+          </div>
         </div>
-
+        
         <v-tabs
           v-model="tab"
           background-color="white"
-          color="blue"
+          color="red accent-3"
           grow
         >
           <v-tab
@@ -166,7 +178,7 @@
             <v-container v-if="item === 'OOTD'" class="white" style="padding: 0px">
               <v-row no-gutters>
                 <v-col
-                  v-for="i in profileData.ootd_list.length"
+                  v-for="i in ootdListLength"
                   :key="i"
                   cols="4"
                 >
@@ -187,7 +199,7 @@
             <v-container v-if="item === '좋아요'" class="white" style="padding: 0px">
               <v-row no-gutters>
                 <v-col
-                  v-for="i in profileData.ootd_like_list.length"
+                  v-for="i in ootdLikeListLength"
                   :key="i"
                   cols="4"
                 >
@@ -213,7 +225,7 @@
 <script>
 import axios from "axios";
 import ProfileSetting from "@/components/Mypage/ProfileSetting"
-import { mapGetters} from "vuex";
+import { mapGetters } from "vuex";
 
 
 export default {
@@ -227,49 +239,68 @@ export default {
       items: [
         'OOTD', '좋아요',
       ],
-      recent: [
-        {
-          active: true,
-          avatar: 'https://cdn.vuetifyjs.com/images/lists/1.jpg',
-          title: 'Jason Oner',
-        },
-        {
-          active: true,
-          avatar: 'https://cdn.vuetifyjs.com/images/lists/2.jpg',
-          title: 'Mike Carlson',
-        },
-        {
-          avatar: 'https://cdn.vuetifyjs.com/images/lists/3.jpg',
-          title: 'Cindy Baker',
-        },
-        {
-          avatar: 'https://cdn.vuetifyjs.com/images/lists/4.jpg',
-          title: 'Ali Connors',
-        },
-      ],
-      profileData: {}
+      profileData: {},
+      followStatus: false,
     }
   },
   created() {
-    this.getProfile();
+    this.getProfile(this.getUserInfo);
   },
   computed: {
-    ...mapGetters(["getNickname"]),
+    ...mapGetters(["getNickname", "getUserInfo"]),
+    ootdListLength() {
+      if (this.profileData.ootd_list) {
+        return this.profileData.ootd_list.length
+      }
+      return ''
+    },
+    ootdLikeListLength() {
+      if (this.profileData.ootd_like_list) {
+        return this.profileData.ootd_like_list.length
+      }
+      return ''
+    },
+    followerListLength() {
+      if (this.profileData.follower_list) {
+        return this.profileData.follower_list.length
+      }
+      return ''
+    },
+    followingListLength() {
+      if (this.profileData.following_list) {
+        return this.profileData.following_list.length
+      }
+      return ''
+    }
+
   },
   methods: {
-    getProfile() {
+    getProfile(getUserInfo) {
       axios
-        .get(`http://i4c102.p.ssafy.io:8080/api/user/mypage/${this.getNickname}/${this.getNickname}`)
+        .get(`http://i4c102.p.ssafy.io:8080/api/user/mypage/${this.getNickname}/${getUserInfo.mypageNickname}`)
         .then((res) => {
 
           this.profileData = res.data
           console.log(this.profileData)
+          console.log(getUserInfo.mypageNickname)
           console.log('마이페이지보기')
         })
         .catch((err) => {
           console.error(err);
         });
     },
+    followThisUser() {
+      const myNickname = this.getNickname
+      const yourNickname = this.getUserInfo.mypageNickname
+      axios.post('http://i4c102.p.ssafy.io:8080/api/user/follow', {myNickname, yourNickname})
+      .then(() => {
+        console.log('팔로우성공')
+        this.followStatus = true
+      })
+      .catch((err) => {
+        console.error(err)
+      })
+    }
   },
 }
 </script>

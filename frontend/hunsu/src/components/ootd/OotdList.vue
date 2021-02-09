@@ -42,7 +42,7 @@
         <v-list-item>
           <!-- 작성자 프로필 -->
           <v-list-item-avatar>
-            <v-img src="https://cdn.vuetifyjs.com/images/john.png"></v-img>
+            <v-img @click="goToProfilePage(getOotdInfo.nickname)" src="https://cdn.vuetifyjs.com/images/john.png"></v-img>
           </v-list-item-avatar>
           <v-list-item-content>
             <v-list-item-title>{{ ootd.ootdContent }}</v-list-item-title>
@@ -88,7 +88,7 @@ export default {
       pageNum: 2,
     };
   },
-  computed: { ...mapGetters(["getOotdList", "getNickname"]) },
+  computed: { ...mapGetters(["getOotdList", "getNickname", "getOotdInfo"]) },
   created() {
     // let ootdList;
     let root = this;
@@ -134,6 +134,14 @@ export default {
             this.$router.push({ name: "OotdDetail" });
           });
       });
+    },
+    goToProfilePage(infoNickname) {
+      this.getProfileInfoInApi({
+          myNickname: this.getNickname,
+          yourNickname: infoNickname,
+          }).then(() => {
+            this.$router.push({name: "MyPage"})
+          }) 
     },
   },
 };
