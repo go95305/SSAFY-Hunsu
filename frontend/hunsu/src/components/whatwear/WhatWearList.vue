@@ -2,6 +2,7 @@
   <!-- WHATWEAR 메인 페이지 -->
   <!--v-for 사용을 위한 최상위 div-->
   <v-card flat>
+    <v-btn @click="testa">test</v-btn>
     <v-card
       v-for="(whatwear, idx) in whatwearList"
       :key="idx"
@@ -12,9 +13,18 @@
         <!--프로필사진-->
         <!-- <div class="mt-2"></div> -->
         <v-avatar class="mt-5 ml-2">
-          <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" id="profile"/>
+          <v-img
+            v-if="whatwear.profileImage"
+            :src="whatwear.profileImage"
+            alt="John"
+            id="profile"
+          />
+          <v-img
+            v-else
+            src="https://s.pstatic.net/mimgnews/image/upload/office_logo/018/2017/01/05/logo_018_18_20170105111205.png?type=nf40_40"
+          />
+          <!--유저닉네임-->
         </v-avatar>
-        <!--유저닉네임-->
         <v-card-subtitle class="mt-4 font-weight-bold" id="nickname">
           {{ whatwear.nickname }}
         </v-card-subtitle>
@@ -58,52 +68,69 @@ export default {
       whatwearList: [],
       page: 1,
       length: 0,
-
     };
   },
   computed: {
     test() {
-      return this.pageWhatwear()
-    }
+      return this.pageWhatwear();
+    },
   },
-  created() {
-    this.getWhatWearList();
+  async created() {
+    await this.getWhatWearList();
   },
   methods: {
-    ...mapActions(["getWhatwearInfoApi"]),
+    ...mapActions(["getWhatwearInfoApi", "getProfiles", "getProfileImage"]),
     goToWhatwearDetail(whatwear) {
       // console.log('글번호', whatwear.wear_idx)
-      const wearIdx = whatwear.wear_idx
-      const nickname = whatwear.nickname
-      this.getWhatwearInfoApi({wearIdx, nickname}); // 유저정보 닉네임으로 변경, 현재는 글 작성자로 들어감
+      const wearIdx = whatwear.wear_idx;
+      const nickname = whatwear.nickname;
+      this.getWhatwearInfoApi({ wearIdx, nickname }) // 유저정보 닉네임으로 변경, 현재는 글 작성자로 들어감
+        .then(() => {
+          this.getProfileImage({
+            nickname: nickname,
+            target: "target",
+          });
+        });
       this.$router.push({ name: "WhatWearDetail" });
     },
     getWhatWearList() {
-      const pageNum = 1
+      const pageNum = 1;
+      let root = this;
       axios
         .get(`http://i4c102.p.ssafy.io:8080/api/wear/${pageNum}`)
         .then((res) => {
           this.whatwearList = res.data.wearMainDTOList;
-          this.length = parseInt(res.data.count / 10) + 1
-          // console.log(res.data);
+          this.length = parseInt(res.data.count / 10) + 1;
+
+          this.getProfiles(this.whatwearList);
+        })
+        .then(() => {
+          root.$foreceUpdate();
         })
         .catch((err) => {
           console.error(err);
         });
     },
-    pageWhatwear() {
+    async pageWhatwear() {
       // console.log(this.page)
-      const pageNum = this.page
-      axios
+      const pageNum = this.page;
+      await axios
         .get(`http://i4c102.p.ssafy.io:8080/api/wear/${pageNum}`)
         .then((res) => {
           this.whatwearList = res.data.wearMainDTOList;
           // console.log('test', res)
+          this.getProfiles(this.whatwearList);
         })
+        .then(() => this.$foreceUpdate())
         .catch((err) => {
-          console.error(err)
-        })
-    }
+          console.error(err);
+        });
+    },
+    testa() {
+      this.whatwearList.map((info) => {
+        console.log(info.profileImage);
+      });
+    },
   },
 };
 </script>

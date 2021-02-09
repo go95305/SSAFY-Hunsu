@@ -126,22 +126,22 @@ const actions = {
       });
     });
   },
-  getImages({ rootState }) {
-    console.log(rootState);
-    rootState.ootd.ootdList.map((ootd) => {
-      console.log(ootd);
+  async getProfiles(context, list) {
+    console.log('list', list);
+    await list.map((info) => {
+      console.log(info);
       s3.getSignedUrl(
         'getObject',
         {
           Bucket: this.albumBucketName,
-          Key: 'mypage/' + ootd.nickname + '/' + ootd.nickname,
+          Key: 'mypage/' + info.nickname + '/' + info.nickname,
         },
         (err, data) => {
           if (err) {
             return alert('There was an error listing your photo: ', err.message);
           } else {
             console.log('getImage', data);
-            ootd.profileImage = data;
+            info.profileImage = data;
           }
         }
       );

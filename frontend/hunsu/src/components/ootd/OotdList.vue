@@ -82,13 +82,13 @@ export default {
     // let ootdList;
     let root = this;
     this.getOotdListInApi({ sort: 0, pageNum: this.pageNum }).then((res) => {
+      root.getProfiles(res);
       res.forEach((info) => {
         console.log(info);
         root.getImageList({ prefix: "ootd/" + info.ootdIdx }).then((res) => {
           info.imageUrls = res;
           // });
         });
-        root.getImages();
       });
     });
   },
@@ -99,7 +99,7 @@ export default {
       "getImageList",
       "getProfileInfoInApi",
       "getProfileImage",
-      "getImages",
+      "getProfiles",
     ]),
     ...mapMutations(["setOotdInfoImages", "setTargetProfileImage"]),
     goToOotdDetail(ootd) {
@@ -118,7 +118,12 @@ export default {
             // root.getImages({ keys: res }).then((res) => {
             // console.log("getimages", res);
             root.setOotdInfoImages(res);
-            // });
+          })
+          .then(() => {
+            this.getProfileImage({
+              nickname: ootd.nickname,
+              target: "target",
+            });
           })
           .then(() => {
             this.$router.push({ name: "OotdDetail" });

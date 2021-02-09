@@ -6,8 +6,8 @@
         <!-- 작성자 정보 -->
         <v-list-item-avatar>
           <v-img
+            :src="getTargetProfileImage"
             @click="goToProfilePage(getOotdInfo.nickname)"
-            src="https://cdn.vuetifyjs.com/images/john.png"
           ></v-img>
         </v-list-item-avatar>
         <v-list-item-content>
@@ -194,21 +194,14 @@
     </v-dialog>
     <!-- 댓글 -->
     <OotdDetailComment />
-<<<<<<< HEAD
-
-=======
     <!-- 디테일 하단 리스트 -->
     <!-- <OotdList /> -->
->>>>>>> frontend/imageupload
   </v-card>
 </template>
 
 <script>
 import OotdDetailComment from "@/components/ootd/OotdDetailComment";
-<<<<<<< HEAD
-=======
 // import OotdList from "@/components/ootd/OotdList";
->>>>>>> frontend/imageupload
 
 import { mapGetters, mapMutations, mapActions } from "vuex";
 
@@ -216,10 +209,7 @@ export default {
   name: "OotdDetail",
   components: {
     OotdDetailComment,
-<<<<<<< HEAD
-=======
     // OotdList,
->>>>>>> frontend/imageupload
     // OotdUpdate,
   },
   computed: {
@@ -227,7 +217,7 @@ export default {
       "getOotdInfo",
       "getNickname",
       "getOotdInfoImages",
-      "targetProfileImage",
+      "getTargetProfileImage",
     ]),
   },
   data() {
