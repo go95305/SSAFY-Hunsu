@@ -14,7 +14,7 @@
           }}</v-list-item-title>
         </v-list-item-content>
 
-        <v-menu bottom>
+        <v-menu bottom v-if="getOotdInfo.nickname === getNickname">
           <template v-slot:activator="{ on, attrs }">
             <v-avatar v-bind="attrs" v-on="on">
               <v-btn color="black" icon class="d-inline-block">
@@ -23,7 +23,7 @@
             </v-avatar>
           </template>
           <!-- 수정 및 삭제 버튼 -->
-          <v-list>
+          <v-list >
             <v-list-item>
               <v-list-item-title @click="onoffUpdateDialog()">
                 수정
@@ -185,14 +185,14 @@
       </v-card>
     </v-dialog>
     <!-- 댓글 -->
-    <DetailComment />
+    <OotdDetailComment />
     <!-- 디테일 하단 리스트 -->
     <OotdList />
   </v-card>
 </template>
 
 <script>
-import DetailComment from "@/components/DetailComment";
+import OotdDetailComment from "@/components/ootd/OotdDetailComment";
 import OotdList from "@/components/ootd/OotdList";
 
 import { mapGetters, mapMutations, mapActions } from "vuex";
@@ -200,12 +200,12 @@ import { mapGetters, mapMutations, mapActions } from "vuex";
 export default {
   name: "OotdDetail",
   components: {
-    DetailComment,
+    OotdDetailComment,
     OotdList,
     // OotdUpdate,
   },
   computed: {
-    ...mapGetters(["getOotdInfo"]),
+    ...mapGetters(["getOotdInfo", "getNickname"]),
   },
   data() {
     return {

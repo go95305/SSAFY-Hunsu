@@ -10,6 +10,8 @@ import Login from '@/views/user/Login';
 import OotdDetail from '@/views/ootd/OotdDetail';
 import LiveDetail from '@/views/live/LiveDetail';
 import Description from '@/views/Description';
+import SignUp from '@/components/Mypage/SignupInfo';
+// import SignUp from '@/views/user/SignUp';
 // import Auth from "@/views/user/Auth"
 
 Vue.use(VueRouter);
@@ -25,6 +27,12 @@ const routes = [
     path: '/home',
     name: 'Home',
     component: Home,
+  },
+  {
+    path: '/signup',
+    name: 'SignUp',
+    component: SignUp,
+    props: true,
   },
   {
     path: '/live',

@@ -21,35 +21,48 @@
 <script>
 // import SignupInfo from "@/components/Mypage/SignupInfo";
 import KakaoLogin from "vue-kakao-login";
-import axios from "axios";
+// import axios from "axios";
+import { mapGetters, mapActions } from "vuex";
 
 export default {
   name: "Login",
+  computed: {
+    ...mapGetters(["getAccessToken, getRefreshToken"]),
+  },
   components: {
     // SignupInfo,
     KakaoLogin,
   },
   methods: {
+    ...mapActions(["userCheck", "kakaoLogin"]),
     onSuccess(authObj) {
-      console.log(authObj);
-      let accessToken = authObj.access_token;
-      console.log("accessTOken", accessToken);
+      console.log("auth", authObj);
+      let router = this.$router; // 임시방편
 
-      axios
-        .post("http://localhost:8081/v1/auth/signin/kakao", accessToken)
-        .then((result) => {
-          console.log(result);
-          if (result.code === "-1000") {
-            // 일치하는 회원 없음 ( 회원가입 처리 )
+      this.userCheck({
+        //카카오 초기 로그인 시 사용
+        accessToken: authObj.access_token,
+        refreshToken: authObj.refresh_token,
+      })
+        .then((res) => {
+          // console.log("return userchk 2", res);
+          if (res === -1) {
+            // 가입정보 없으면 회원가입으로
+            router.push({
+              name: "SignUp",
+              params: {
+                accessToken: authObj.access_token,
+                refreshToken: authObj.refresh_token,
+              },
+            });
           } else {
-            // 일치하는 회원 있음 ( 로그인 처리 )
+            // 있으면 로그인 후 홈으로 이동
+            router.push("/");
           }
         })
-        .catch((e) => {
-          console.log("error : ", e);
+        .catch((err) => {
+          console.log("error in userCheck ", err);
         });
-
-      console.log("success");
     },
     onFailure(res) {
       console.log(res);

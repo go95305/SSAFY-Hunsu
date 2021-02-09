@@ -1,12 +1,16 @@
 import axios from 'axios';
 const state = {
   ootdInfo: {},
+  ootdReplyInfo: {},
   ootdList: [],
   like: false,
 };
 const getters = {
   getOotdInfo(state) {
     return state.ootdInfo;
+  },
+  getOotdReplyInfo(state) {
+    return state.ootdReplyInfo;
   },
   getOotdList(state) {
     return state.ootdList;
@@ -18,6 +22,9 @@ const getters = {
 const mutations = {
   setOotdInfo(state, ootdInfo) {
     state.ootdInfo = ootdInfo;
+  },
+  setOotdReplyInfo(state, ootdReplyInfo) {
+    state.ootdReplyInfo = ootdReplyInfo;
   },
   setOotdList(state, ootdList) {
     state.ootdList = ootdList;
@@ -33,11 +40,13 @@ const mutations = {
 
 const actions = {
   // Ootd 리스트 정렬
-  getOotdListInApi(context, sort) {
-    axios
+  getOotdListInApi({ rootState, commit }, sort) {
+    console.log(rootState);
+    return axios
       .get(`http://i4c102.p.ssafy.io:8080/api/ootd/${sort}`)
       .then((res) => {
-        context.commit('setOotdList', res.data);
+        commit('setOotdList', res.data);
+        return res.data;
       })
       .catch((err) => {
         console.error(err);
@@ -64,6 +73,7 @@ const actions = {
         console.log('getOotdInfo', res);
         state.ootdInfo = res.data;
         context.commit('setOotdInfo', res.data);
+        context.commit('setOotdReplyInfo', res.data.ootdReplyDTOList);
       });
   },
   updateOotdInfo(context, ootdInfo) {
@@ -111,18 +121,63 @@ const actions = {
   },
   createOotdInfo(context, params) {
     // ootd 작성
-    axios
+    return axios
       .post('http://i4c102.p.ssafy.io:8080/api/ootd', params)
       .then((res) => {
-        if (res.data === 'success') {
-          return true;
-          // 추후 자기가 쓴 페이지로 이동하는 것 수정 요망
+        console.log(res.status);
+        if (res.status === 200) {
+          return res.data;
         } else {
           return false;
         }
+        // 추후 자기가 쓴 페이지로 이동하는 것 수정 요망
       })
       .catch(() => {
         return false;
+      });
+  },
+
+  // 댓글
+  createOotdReplyInfo(context, OotdReplyInfo) {
+    axios
+      .post('http://i4c102.p.ssafy.io:8080/api/ootd/reply', OotdReplyInfo)
+      .then((res) => {
+        context.commit('setOotdReplyInfo', res.data);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  },
+  likeOotdReplyInfo(context, {replyIdx, nickname}) {
+    axios
+      .put(`http://i4c102.p.ssafy.io:8080/api/ootd/reply/like/${replyIdx}/${nickname}`)
+      .then((res) => {
+        console.log(res);
+        context.commit('setOotdReplyInfo', res.data);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  },
+  deleteOotdReplyInfo(context, replyIdx) {
+    axios
+      .delete(`http://i4c102.p.ssafy.io:8080/api/ootd/reply/${replyIdx}`)
+      .then((res) => {
+        context.commit('setOotdReplyInfo', res.data);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  },
+  updateOotdReplyInfo(context, replyInfo) {
+    axios
+      .put('http://i4c102.p.ssafy.io:8080/api/ootd/reply', replyInfo)
+      .then((res) => {
+        console.log('수정완료', res);
+        context.commit('setOotdReplyInfo', res.data);
+      })
+      .catch((err) => {
+        console.error(err);
       });
   },
 };
