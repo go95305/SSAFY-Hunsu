@@ -65,9 +65,13 @@ public class UserService {
         else{
             myPageDetailDTO.setMypage(false);
             if(isActivated != null)
-                myPageDetailDTO.setFollow(true);
-            else
+                if(isActivated.getFlag())
+                    myPageDetailDTO.setFollow(true);
+                else
+                    myPageDetailDTO.setFollow(false);
+            else{
                 myPageDetailDTO.setFollow(false);
+            }
         }
         for (OotdLike ootdLike: ootdLikeList){
             if(ootdLike.getFlag()){
