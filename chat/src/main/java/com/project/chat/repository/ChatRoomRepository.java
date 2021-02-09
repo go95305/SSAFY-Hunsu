@@ -43,6 +43,11 @@ public class ChatRoomRepository {
         return chatRoom;
     }
 
+    //채팅방 삭제
+    public long removeRoom(String roomId) {
+        return hashOpsChatRoom.delete(CHAT_ROOMS,roomId);
+    }
+
     // 유저가 입장한 채팅방ID와 유저 세션ID 맵핑 정보 저장
     public void setUserEnterInfo(String sessionId, String roomId) {
         hashOpsEnterInfo.put(ENTER_INFO, sessionId, roomId);

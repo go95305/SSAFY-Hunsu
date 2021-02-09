@@ -3,12 +3,14 @@ package com.project.chat.controller;
 import com.project.chat.dto.ChatRoom;
 import com.project.chat.repository.ChatRoomRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @RequiredArgsConstructor
 @Controller
 @RequestMapping("/chat")
@@ -52,6 +54,13 @@ public class ChatRoomController {
         return chatRoomRepository.findRoomById(roomId);
     }
 
+    //채팅방 삭제
+    @PostMapping("/room/remove/{roomId}")
+    @ResponseBody
+    public void removeRoom(@PathVariable String roomId) {
+        long result = chatRoomRepository.removeRoom(roomId);
+        log.info("삭제여부"+result);
+    }
 
 
 }
