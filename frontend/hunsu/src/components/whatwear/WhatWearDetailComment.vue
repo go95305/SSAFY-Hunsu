@@ -1,8 +1,9 @@
 <template>
   <div>
-    <v-container fluid>
+    <v-container fluid>      
+      <p>댓글 {{ getWhatwearReplyInfo.length }}개</p>
       <v-row>
-        <v-col cols="12" sm="6">
+        <v-col cols="12" sm="6" id="comment_input">
           <v-text-field
             label="댓글쓰기"
             outlined
@@ -204,4 +205,8 @@ export default {
 </script>
 
 <style>
+#comment_input {
+  height: 70px;
+  margin-bottom: 10px;
+}
 </style>
