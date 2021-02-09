@@ -22,23 +22,29 @@
 // import SignupInfo from "@/components/Mypage/SignupInfo";
 import KakaoLogin from "vue-kakao-login";
 // import axios from "axios";
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapActions, mapMutations } from "vuex";
 
 export default {
   name: "Login",
   computed: {
-    ...mapGetters(["getAccessToken, getRefreshToken"]),
+    ...mapGetters(["getAccessToken, getRefreshToken", "getNickname"]),
   },
   components: {
     // SignupInfo,
     KakaoLogin,
   },
   methods: {
-    ...mapActions(["userCheck", "kakaoLogin"]),
+    ...mapActions([
+      "userCheck",
+      "kakaoLogin",
+      "getImageList",
+      "getProfileImage",
+    ]),
+    ...mapMutations(["setMyProfileImage"]),
     onSuccess(authObj) {
-      console.log("auth", authObj);
+      // console.log("auth", authObj);
       let router = this.$router; // 임시방편
-
+      // let root = this;
       this.userCheck({
         //카카오 초기 로그인 시 사용
         accessToken: authObj.access_token,
@@ -55,10 +61,16 @@ export default {
                 refreshToken: authObj.refresh_token,
               },
             });
-          } else {
-            // 있으면 로그인 후 홈으로 이동
-            router.push("/");
           }
+          return res;
+        })
+        .then(() => {
+          // console.log("2 res", res, this.getNickname);
+          this.getProfileImage({
+            nickname: this.getNickname,
+            target: "my",
+          });
+          router.push("/");
         })
         .catch((err) => {
           console.log("error in userCheck ", err);
