@@ -105,20 +105,25 @@ public class OotdService {
                         ootdDetailDTO.addHashtag(hashtagList.get(i).getContent());
                     }
                 }
+
+                List<OotdReplyDTO> replyDTOList = new ArrayList<>();
+
+                replyDTOList = replyList(ootdIdx, nickname);// 해당 댓글의 ootdIdx, 좋아요 누른 사람 닉네임
+                ootdDetailDTO.setOotdReplyDTOList(replyDTOList);
                 //해당 ootd글의 댓글리스트 리턴
-                List<OotdReply> ootdReplyList = ootdReplyRepository.findOotdReplyByOotdIdx(ootdIdx);
-                for (int i = 0; i < ootdReplyList.size(); i++) {
-                    OotdReplyDTO ootdreplDTO = new OotdReplyDTO();
-                    ootdreplDTO.setReplyIdx(ootdReplyList.get(i).getIdx());
-                    ootdreplDTO.setOotdIdx(ootdReplyList.get(i).getOotd().getIdx());
-                    ootdreplDTO.setNickname(ootdReplyList.get(i).getUser().getNickname());
-                    ootdreplDTO.setContent(ootdReplyList.get(i).getContent());
-                    ootdreplDTO.setDepth(ootdReplyList.get(i).getDepth());
-                    ootdreplDTO.setGroupNum(ootdReplyList.get(i).getGroupNum());
-                    ootdreplDTO.setWrite_date(ootdReplyList.get(i).getWriteDate());
-                    ootdreplDTO.setIsDeleted(ootdReplyList.get(i).getFlag());
-                    ootdDetailDTO.addReply(ootdreplDTO);
-                }
+//                List<OotdReply> ootdReplyList = ootdReplyRepository.findOotdReplyByOotdIdx(ootdIdx);
+//                for (int i = 0; i < ootdReplyList.size(); i++) {
+//                    OotdReplyDTO ootdreplDTO = new OotdReplyDTO();
+//                    ootdreplDTO.setReplyIdx(ootdReplyList.get(i).getIdx());
+//                    ootdreplDTO.setOotdIdx(ootdReplyList.get(i).getOotd().getIdx());
+//                    ootdreplDTO.setNickname(ootdReplyList.get(i).getUser().getNickname());
+//                    ootdreplDTO.setContent(ootdReplyList.get(i).getContent());
+//                    ootdreplDTO.setDepth(ootdReplyList.get(i).getDepth());
+//                    ootdreplDTO.setGroupNum(ootdReplyList.get(i).getGroupNum());
+//                    ootdreplDTO.setWrite_date(ootdReplyList.get(i).getWriteDate());
+//                    ootdreplDTO.setIsDeleted(ootdReplyList.get(i).getFlag());
+//                    ootdDetailDTO.addReply(ootdreplDTO);
+//                }
 
             }
         }
