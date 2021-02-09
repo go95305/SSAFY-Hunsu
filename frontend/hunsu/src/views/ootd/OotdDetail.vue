@@ -191,14 +191,12 @@
     </v-dialog>
     <!-- 댓글 -->
     <OotdDetailComment />
-    <!-- 디테일 하단 리스트 -->
-    <OotdList />
+
   </v-card>
 </template>
 
 <script>
 import OotdDetailComment from "@/components/ootd/OotdDetailComment";
-import OotdList from "@/components/ootd/OotdList";
 
 import { mapGetters, mapMutations, mapActions } from "vuex";
 
@@ -206,7 +204,6 @@ export default {
   name: "OotdDetail",
   components: {
     OotdDetailComment,
-    OotdList,
     // OotdUpdate,
   },
   computed: {
