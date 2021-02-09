@@ -86,11 +86,7 @@ export default {
           info.imageUrls = res;
           // });
         });
-        root.getImages({ key: "mypage/" + info.nickname }).then((res) => {
-          console.log("user", res);
-
-          info.profileImage = res;
-        });
+        root.getImages();
       });
     });
   },
