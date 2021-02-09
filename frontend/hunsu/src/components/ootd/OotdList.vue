@@ -9,29 +9,35 @@
       elevation="24"
       max-width="450"
       class="mx-auto my-5"
+      @click="goToOotdDetail(ootd)"
     >
       <!-- OOTD 사진 -->
+      <ImageView :images="ootd.imageUrls" />
+      <!-- <v-carousel :show-arrows="false" v-if="!ootd.imageUrls">
+        <p>loading..</p>
+      </v-carousel>
       <v-carousel
+        v-else
         :continuous="false"
         :cycle="cycle"
-        :show-arrows="false"
+        :show-arrows="true"
         hide-delimiter-background
         delimiter-icon="mdi-minus"
         height="330"
       >
-        <v-carousel-item v-for="(slide, i) in slides" :key="i">
-          <v-sheet :color="colors[i]" height="100%" tile>
+        <v-carousel-item v-for="(imageUrl, i) in ootd.imageUrls" :key="i">
+          <v-sheet height="100%" tile>
             <v-row
               class="fill-height"
               align="center"
               justify="center"
               @click="goToOotdDetail(ootd)"
             >
-              <div class="display-3">{{ slide }} Slide</div>
+              <v-img :src="imageUrl" />
             </v-row>
           </v-sheet>
         </v-carousel-item>
-      </v-carousel>
+      </v-carousel> -->
       <v-list two-line>
         <v-list-item>
           <!-- 작성자 프로필 -->
@@ -40,12 +46,21 @@
           </v-list-item-avatar>
           <v-list-item-content>
             <v-list-item-title>{{ ootd.ootdContent }}</v-list-item-title>
-            <v-list-item-subtitle>{{ ootd.nickname }}</v-list-item-subtitle>
+            <v-list-item-subtitle>
+              <!-- 추후 해쉬태그에 검색 링크 걸 예정 -->
+              <p
+                v-for="(hashtag, i) in ootd.hashtagList"
+                :key="i"
+                style="display: inline"
+              >
+                {{ "#" + hashtag }}
+              </p>
+            </v-list-item-subtitle>
           </v-list-item-content>
           <!-- <v-list-item-content>{{ootd.ootdLike}}개의</v-list-item-content> -->
           <v-list-item-action>
             <!-- 좋아요 버튼 -->
-            {{ ootd.ootdLike }}개의
+            {{ ootd.ootdLike }}개
             <v-btn icon class="mr-1">
               <v-icon color="red">mdi-heart</v-icon>
             </v-btn>
@@ -58,40 +73,66 @@
 
 
 <script>
-// import axios from "axios";
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters, mapMutations } from "vuex";
+import ImageView from "@/components/module/ImageView";
 
 export default {
   name: "OotdList",
+  components: {
+    ImageView,
+  },
   data() {
     return {
-      colors: [
-        "green",
-        "secondary",
-        "yellow darken-4",
-        "red lighten-2",
-        "orange darken-1",
-      ],
       cycle: false,
-      slides: ["First", "Second", "Third", "Fourth", "Fifth"],
+      imageUrls: [],
+      pageNum: 2,
     };
   },
   computed: { ...mapGetters(["getOotdList", "getNickname", "getOotdInfo"]) },
   created() {
-    this.getOotdListInApi(0);
-    // console.log(this.getOotdList);
+    // let ootdList;
+    let root = this;
+    this.getOotdListInApi({ sort: 0, pageNum: this.pageNum }).then((res) => {
+      res.forEach((info) => {
+        root.getImageList({ prefix: "ootd/" + info.ootdIdx }).then((res) => {
+          // console.log("hi", res);
+          this.getImages({ keys: res }).then((res) => {
+            info.imageUrls = res;
+            // console.log(info.ootdIdx, " result", res, "info ", info.imageUrls);
+          });
+        });
+      });
+    });
   },
   methods: {
-    ...mapActions(["getOotdInfoInApi", "getOotdListInApi", "getProfileInfoInApi"]),
-
+    ...mapActions([
+      "getOotdInfoInApi",
+      "getOotdListInApi",
+      "getImages",
+      "getImageList",
+    ]),
+    ...mapMutations(["setOotdInfoImages"]),
     goToOotdDetail(ootd) {
       //idx 굳이 보여줄 필요 없을것같아서 params로 변경
       // this.$router.push({ name: "OotdDetail", params: { no: ootd.ootdIdx } });
+      let root = this;
+      console.log(ootd);
       this.getOotdInfoInApi({
         ootdIdx: ootd.ootdIdx,
         nickname: this.getNickname,
       }).then(() => {
-        this.$router.push({ name: "OotdDetail" });
+        root
+          .getImageList({ prefix: "ootd/" + ootd.ootdIdx })
+          .then((res) => {
+            console.log("imageList", res);
+            root.getImages({ keys: res }).then((res) => {
+              console.log("getimages", res);
+              root.setOotdInfoImages(res);
+            });
+          })
+          .then(() => {
+            this.$router.push({ name: "OotdDetail" });
+          });
       });
     },
     goToProfilePage(infoNickname) {

@@ -4,13 +4,8 @@ const state = {
   whatwearInfo: {},
   whatwearReplyInfo: {},
   // 차트오류아직 해결안됨
-  labels: [],
-  datacollection: [
-    {
-      data: [],
-      backgroundColor: [],
-    },
-  ],
+  WhatwearVoteInfo: {},
+  voteTotal: 0,
 };
 const getters = {
   getWhatwearInfo(state) {
@@ -19,12 +14,12 @@ const getters = {
   getWhatwearReplyInfo(state) {
     return state.whatwearReplyInfo;
   },
-  getWhatwearChartlabels(state) {
-    return state.labels
+  getWhatwearVoteInfo(state) {
+    return state.WhatwearVoteInfo
   },
-  // getWhatwearChartDatasets(state) {
-  //   return state.datacollection
-  // }
+  getVoteTotal(state) {
+    return state.voteTotal
+  }
 };
 const mutations = {
   setWhatwearInfo(state, whatwearInfo) {
@@ -33,29 +28,27 @@ const mutations = {
   setWhatwearReplyInfo(state, whatwearReplyInfo) {
     state.whatwearReplyInfo = whatwearReplyInfo;
   },
-  setWhatwearChartInfo(state, labels) {
-    state.labels = labels
+  setWhatwearVoteInfo(state, WhatwearVoteInfo) {
+    state.WhatwearVoteInfo = WhatwearVoteInfo
   },
-  // setWhatwearChartDatasets(state, datacollection) {
-  //   state.datacollection = datacollection
-  // }
+  setVoteTotal(state, voteTotal) {
+    state.voteTotal = voteTotal
+  }
 };
 const actions = {
-  getWhatwearInfoApi(context, wearIdx, nickname) {
+  getWhatwearInfoApi(context, { wearIdx, nickname }) {
     return axios
       .get(`http://i4c102.p.ssafy.io:8080/api/wear/detail/${wearIdx}/${nickname}`)
       .then((res) => {
-        console.log('Vuex get Whatwear ', res.data);
-        state.wear_idx = res.data.wear_idx;
-        const labels = [];
-        for (var i = 1; i <= res.data.voteList.length; i++) {
-          labels.push(String(i));
-        }
-        context.commit('setWhatwearChartInfo', labels);
-
+        // console.log('Vuex get Whatwear ', res.data);
+        
         context.commit('setWhatwearInfo', res.data);
         context.commit('setWhatwearReplyInfo', res.data.replyList);
-      });
+        context.commit('setWhatwearVoteInfo', res.data.voteList);
+      })
+      .catch((err) => {
+        console.error(err)
+      })
   },
   createWhatwearReplyInfo(context, whatwearReplyInfo) {
     console.log('create 댓구ㄹ', whatwearReplyInfo); 
@@ -70,11 +63,11 @@ const actions = {
         console.error(err);
       });
   },
-  likeWhatwearReplyInfo(context, replyIdx, nickname) {
+  likeWhatwearReplyInfo(context, { replyIdx, nickname }) {
     axios
       .put(`http://i4c102.p.ssafy.io:8080/api/wear/reply/like/${replyIdx}/${nickname}`)
       .then((res) => {
-        // console.log('좋아요성공', res.data)
+        console.log('좋아요성공', res.data)
         context.commit('setWhatwearReplyInfo', res.data);
       })
       .catch((err) => {
@@ -107,25 +100,19 @@ const actions = {
     axios
     .put(`http://i4c102.p.ssafy.io:8080/api/wear/reply/vote/${voteIdx}/${nickname}`)
     .then((res) => {
-      console.log('투표완료', res)
-      // const datacollection = {
-      //   data: [],
-      //   backgroundColor: ['Red', 'Yellow', 'Purple', 'Black', 'Pink'],
-      // }
-      // var total = 0
-      // for (var k = 0; k < res.data.length; k++) {
-      //   total += res.data[k].count
-      // }
-      // for (var j = 0; j < res.data.length; j++) {
-      //   console.log('data값',res.data[j].count / total * 100)
-      //   datacollection.data.push(res.data[j].count / total * 100)
-      // }
-      // context.commit('setWhatwearChartDatasets', datacollection)
+      console.log('투표완료', res.data)
+      context.commit('setWhatwearVoteInfo', res.data)
+      var voteTotal = 0
+      for (var q = 0; q < res.data.length; q++) {
+        voteTotal += res.data[q].count
+      }
+      // console.log('합', voteTotal)
+      context.commit('setVoteTotal', voteTotal)
     })
     .catch((err) => {
       console.error(err)
     })
-  }
+  },
 };
 
 export default {

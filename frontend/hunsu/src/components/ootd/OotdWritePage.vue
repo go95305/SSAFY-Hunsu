@@ -25,19 +25,7 @@
             <v-btn dark text @click="createOotd()"> Save </v-btn>
           </v-toolbar-items>
         </v-toolbar>
-        <v-list three-line subheader>
-          <v-subheader>사진 등록</v-subheader>
-          <input ref="imageInput" type="file" hidden @change="onChangeImages" />
-          <v-btn class="mx-5" type="button" @click="onClickImageUpload"
-            >사진 업로드</v-btn
-          >
-          <v-img
-            class="mx-5 my-5"
-            v-if="imageUrl"
-            :src="imageUrl"
-            width="100"
-          ></v-img>
-        </v-list>
+        <ImageUpload />
         <v-divider></v-divider>
         <v-list three-line subheader>
           <div>
@@ -80,11 +68,15 @@
 
 <script>
 // import axios from "axios";
-import { mapActions, mapGetters } from "vuex";
+import { mapActions, mapGetters, mapMutations } from "vuex";
+import ImageUpload from "@/components/module/ImageUpload";
 // 작성값 Null 체크
 //
 export default {
   name: "OotdWritePage",
+  components: {
+    ImageUpload,
+  },
   data() {
     return {
       dialog: false,
@@ -96,23 +88,20 @@ export default {
         min: (v) => v.trim().length > 0 || "공백안됨",
         contentMax: (v) => v.length <= 300 || "300자이하",
       },
-      imageUrl: null,
+      imageUrls: [],
       ootd_content: "",
       ootd_hashtag: "",
       ootd_hashtag_array: [],
+      imageFiles: [],
     };
   },
-  computed: { ...mapGetters(["getNickname"]) },
+  computed: {
+    ...mapGetters(["getNickname", "getUploadImageUrls", "getUploadImageFiles"]),
+  },
   methods: {
-    ...mapActions(["createOotdInfo", "getOotdInfoInApi"]),
-    onClickImageUpload() {
-      this.$refs.imageInput.click();
-    },
-    onChangeImages(e) {
-      console.log(e.target.files);
-      const file = e.target.files[0];
-      this.imageUrl = URL.createObjectURL(file);
-    },
+    ...mapActions(["createOotdInfo", "getOotdInfoInApi", "uploadImage"]),
+    ...mapMutations(["clearUploads"]),
+
     addHashtag() {
       this.ootd_hashtag_array.push(this.ootd_hashtag);
       this.ootd_hashtag = "";
@@ -123,22 +112,55 @@ export default {
     },
     createOotd() {
       this.dialog = false;
-      //   console.log(this.ootd_hashtag_array);
+      // let uploadImage = this.uploadImage;
+      let imageFiles = this.getUploadImageFiles;
+      let clearUploads = this.clearUploads;
+      console.log("before send", imageFiles);
+      // Ootd 글 내용들
       const params = {
         content: this.ootd_content,
         hashtagList: this.ootd_hashtag_array,
         nickName: this.getNickname,
       };
-      if (this.createOotdInfo(params)) {
-        this.getOotdInfoInApi(0);
-        this.ootd_hastag_array = [];
-      } else {
-        console.log("실패함");
-      }
+      this.createOotdInfo(params).then((res) => {
+        if (!res) {
+          console.log("글 작성 실패");
+        } else {
+          // 이미지 업로드
+          if (imageFiles.length !== 0) {
+            console.log("in ootd file", imageFiles);
+            this.uploadImage({ key: "ootd/", articleIdx: res.ootdIdx }).then(
+              () => {
+                clearUploads();
+              }
+            );
+
+            // this.$router.go(this.$router.currentRoute); // 현재 페이지 리로드
+          } else {
+            console.log("file X");
+          }
+        }
+      });
+      // 추후 자기가 쓴 페이지로 이동하는 것 수정 요망
+      this.ootd_hastag_array = [];
     },
+  },
+  fileDeleteButton(e, idx) {
+    console.log("delete ", idx);
+    const targetIdx = e.target.getAttribute("idx");
+    this.imageFiles = this.imageFIles.filter((data, idx) => idx !== targetIdx);
   },
 };
 </script>
 
 <style>
+/* #imageTab {
+  white-space: nowrap;
+  overflow: auto;
+  text-align: center;
+}
+#imageTab v-img {
+  display: inline-block;
+  border: 1px solid #6e1d1d;
+} */
 </style>

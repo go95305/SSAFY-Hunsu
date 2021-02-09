@@ -3,7 +3,7 @@
     <div id="whatwear_profile">
       <v-list one-line>
         <v-list-item>
-          <v-list-item-content>
+          <v-list-item-content class="pb-0">
             <v-list-item-title class="text-h6">
               {{ getWhatwearInfo.title }}
             </v-list-item-title>
@@ -156,22 +156,94 @@
       
     <!--투표창-->
     <div v-if="getWhatwearInfo.vote_activated">
-      <v-radio-group v-model="radioGroup" id="vote_input">
-        <v-radio
-          v-for="n in getWhatwearInfo.voteList.length"
-          :key="n"
-          :label="`${n}번`"
-          :value="n"
-          @click="voteWhatwear(getWhatwearInfo.voteList[n-1].idx, getWhatwearInfo.nickname)"
-        ></v-radio>
-      </v-radio-group>
+      <!-- <div id="vote_input">
+        <v-checkbox
+          v-for="(n, index) in getWhatwearVoteInfo"
+          :key="n.idx"
+          :label="`${index+1}번`"
+          v-model="n.choice"
+          @click="voteWhatwear(getWhatwearVoteInfo[index].idx, getNickname)"
+        ></v-checkbox>
+      </div> -->
+      <v-row justify="center" class="mb-5">
+    <v-dialog
+      v-model="dialog"
+      scrollable
+      max-width="300px"
+    >
+      <template v-slot:activator="{ on, attrs }">
+        <v-btn
+          color="black"
+          dark
+          v-bind="attrs"
+          v-on="on"
+          text
+        >
+          Choice✨
+        </v-btn>
+      </template>
+      <v-card>
+        <v-card-title>투표창</v-card-title>
+        <v-divider></v-divider>
+        <v-card-text style="height: 300px;">
+          <v-card-subtitle class="pa-0 mt-4">중복투표가능</v-card-subtitle>
+          <v-checkbox
+            v-for="(n, index) in getWhatwearVoteInfo"
+            :key="n.idx"
+            :label="`${index+1}번`"
+            v-model="n.choice"
+            @click="voteWhatwear(getWhatwearVoteInfo[index].idx, getNickname)"
+          ></v-checkbox>
+        </v-card-text>
+        <v-divider></v-divider>
+        <v-card-actions>
+          <v-btn
+            color="gray"
+            text
+            @click="dialog = false"
+          >
+            취소
+          </v-btn>
+          <v-btn
+            color="blue darken-1"
+            text
+            @click="dialog = false"
+          >
+            확인
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </v-row>
       <!--투표결과그래프-->
-      <div id="vote_chart">
-        <chartjs-doughnut
-          :labels="getWhatwearChartlabels"
-          :datasets="datasets"
-          :option="option"
-        ></chartjs-doughnut>
+      <div v-if="getVoteTotal">
+        <div 
+          id="vote_linear"
+          v-for="(value, idx) in getWhatwearVoteInfo"
+          :key="idx">
+          <v-progress-linear
+            color="light-blue"
+            height="10"
+            :value="(value.count / getVoteTotal ) * 100"
+            striped
+          ></v-progress-linear>
+          <br>
+        </div>
+      </div>
+
+      <div v-if="getVoteTotal === 0">
+        <div 
+          id="vote_linear"
+          v-for="(value, idx) in getWhatwearVoteInfo"
+          :key="idx">
+          <v-progress-linear
+            color="light-blue"
+            height="10"
+            value="0"
+            striped
+          ></v-progress-linear>
+          <br>
+        </div>
       </div>
     </div>
     <WhatWearDetailComment />
@@ -193,7 +265,7 @@ export default {
     WhatWearDetailComment,
   },
   computed: {
-    ...mapGetters(["getWhatwearInfo", "getWhatwearChartlabels", "getNickname"])
+    ...mapGetters(["getWhatwearInfo", "getWhatwearVoteInfo", "getNickname", "getVoteTotal"])
   },
   data() {
     return {
@@ -204,26 +276,13 @@ export default {
         'yellow darken-2',
       ],
       dialog: false,
-      radioGroup: '',
-      option: {
-        title: {
-          display: true,
-          position: "bottom",
-          text: "test"
-        }
-      },
       vote_activated: false,
-      datasets: [
-        {
-          data: [20, 20, 20, 20, 20],
-          backgroundColor: ['Red', 'Yellow', 'Purple', 'Black', 'Pink'],
-        },
-      ],
     }
   },
   methods: {
     ...mapMutations(["setWhatwearInfo"]),
     ...mapActions(["getWhatwearInfoApi", "voteWhatwearInfo"]),
+    // 글 삭제 함수
     deleteWhatWear(wear_idx) {
       const wearIdx = wear_idx
       axios.put(`http://i4c102.p.ssafy.io:8080/api/wear/${wearIdx}`)
@@ -235,10 +294,10 @@ export default {
           console.error(err)
         })
     },
+    // 투표하는 함수
     voteWhatwear(voteIdx, nickname) {
-      // console.log(voteIdx)
       this.voteWhatwearInfo({voteIdx, nickname})
-    }
+    },
   }
 }
 
@@ -248,5 +307,9 @@ export default {
 #vote_input {
   margin-left: 18px;
   text-align: center;
+}
+#vote_linear {
+  margin-left: 40px;
+  margin-right: 40px;
 }
 </style>
