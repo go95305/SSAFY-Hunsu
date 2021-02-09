@@ -6,6 +6,7 @@ const state = {
   IdentityPoolId: 'ap-northeast-2:05f4caec-c58a-480d-9d25-8cacd2e2dea0',
   uploadImageUrls: [],
   uploadImageFiles: [],
+  ootdInfoImages: [],
 };
 const getters = {
   getUploadImageUrls(state) {
@@ -13,6 +14,9 @@ const getters = {
   },
   getUploadImageFiles(state) {
     return state.uploadImageFiles;
+  },
+  getOotdInfoImages(state) {
+    return state.ootdInfoImages;
   },
 };
 
@@ -34,6 +38,9 @@ const mutations = {
     state.uploadImageUrls = [];
     state.uploadImageFiles = [];
   },
+  setOotdInfoImages(state, payload) {
+    state.ootdInfoImages = payload;
+  },
 };
 
 const actions = {
@@ -41,7 +48,10 @@ const actions = {
     console.log('uploadImages', key);
     await state.uploadImageFiles.forEach((imageFile, idx) => {
       console.log('file', imageFile);
-      let fileExt = imageFile.name.split('.')[1];
+      //파일 확장자
+      let fileExtList = imageFile.name.split('.');
+      let fileExt = fileExtList[fileExtList.length - 1];
+      console.log(fileExt);
 
       s3.upload(
         {
@@ -57,7 +67,6 @@ const actions = {
           }
           console.log('Successfully uploaded photo.');
           console.log(data);
-          // viewAlbum(albumName);
         }
       );
     });

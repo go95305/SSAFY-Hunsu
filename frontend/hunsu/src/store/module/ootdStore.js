@@ -40,10 +40,11 @@ const mutations = {
 
 const actions = {
   // Ootd 리스트 정렬
-  getOotdListInApi({ commit }, sort) {
+  getOotdListInApi({ commit }, { sort, pageNum }) {
     // console.log(rootState);
+    console.log(sort, pageNum);
     return axios
-      .get(`http://i4c102.p.ssafy.io:8080/api/ootd/${sort}`)
+      .get(`http://i4c102.p.ssafy.io:8080/api/ootd/${sort}/${pageNum}`)
       .then((res) => {
         console.log(res);
         res.data.forEach((info) => {
@@ -77,6 +78,7 @@ const actions = {
         console.log('getOotdInfo', res);
         state.ootdInfo = res.data;
         context.commit('setOotdInfo', res.data);
+        console.log(res.data.ootdReplyDTOList);
         context.commit('setOotdReplyInfo', res.data.ootdReplyDTOList);
       });
   },

@@ -101,20 +101,7 @@ export default {
   methods: {
     ...mapActions(["createOotdInfo", "getOotdInfoInApi", "uploadImage"]),
     ...mapMutations(["clearUploads"]),
-    // onClickImageUpload() {
-    //   this.$refs.imageInput.click();
-    // },
-    // onChangeImages(e) {
-    //   console.log(e.target.files);
 
-    //   this.imageFiles = e.target.files;
-    //   console.log("onChange", this.imageFiles);
-    //   let imageUrls = this.imageUrls;
-    //   this.imageFiles.forEach((imageFile) => {
-    //     imageUrls.push(URL.createObjectURL(imageFile));
-    //   });
-    //   console.log("onChange imageURl ", this.imageUrls);
-    // },
     addHashtag() {
       this.ootd_hashtag_array.push(this.ootd_hashtag);
       this.ootd_hashtag = "";
@@ -142,19 +129,13 @@ export default {
           // 이미지 업로드
           if (imageFiles.length !== 0) {
             console.log("in ootd file", imageFiles);
-            this.uploadImage({ key: "ootd/", articleIdx: res.ootdIdx });
-            // let fileExt =
-            // imageFiles.forEach((imageFile, idx) => {
-            //   console.log("upload ", imageFile);
-            //   uploadImage({
-            //     key: "ootd/" + res.ootdIdx + "/" + idx + 1 + ".png",
-            //     file: imageFile,
-            //   }).then((res) => {
-            //     console.log("imageupload 1", res);
-            //   });
-            // });
-            clearUploads();
-            this.$router.go(this.$router.currentRoute); // 현재 페이지 리로드
+            this.uploadImage({ key: "ootd/", articleIdx: res.ootdIdx }).then(
+              () => {
+                clearUploads();
+              }
+            );
+
+            // this.$router.go(this.$router.currentRoute); // 현재 페이지 리로드
           } else {
             console.log("file X");
           }
@@ -165,10 +146,9 @@ export default {
     },
   },
   fileDeleteButton(e, idx) {
-    console.log("delet ", idx);
+    console.log("delete ", idx);
     const targetIdx = e.target.getAttribute("idx");
     this.imageFiles = this.imageFIles.filter((data, idx) => idx !== targetIdx);
-    // console.log(this.files);
   },
 };
 </script>

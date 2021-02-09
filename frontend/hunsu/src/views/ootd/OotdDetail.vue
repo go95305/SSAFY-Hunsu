@@ -23,7 +23,7 @@
             </v-avatar>
           </template>
           <!-- 수정 및 삭제 버튼 -->
-          <v-list >
+          <v-list>
             <v-list-item>
               <v-list-item-title @click="onoffUpdateDialog()">
                 수정
@@ -39,18 +39,23 @@
       </v-list-item>
     </v-list>
     <!-- OOTD 이미지들 -->
+    <v-carousel :show-arrows="false" v-if="!getOotdInfoImages">
+      <p>loading..</p>
+    </v-carousel>
     <v-carousel
+      v-else
       :continuous="false"
       :cycle="cycle"
-      :show-arrows="false"
+      :show-arrows="true"
       hide-delimiter-background
       delimiter-icon="mdi-minus"
       height="330"
     >
-      <v-carousel-item v-for="(slide, i) in slides" :key="i">
-        <v-sheet :color="colors[i]" height="100%" tile>
+      <v-carousel-item v-for="(imageUrl, i) in getOotdInfoImages" :key="i">
+        <v-sheet height="100%" tile>
           <v-row class="fill-height" align="center" justify="center">
-            <div class="display-3">{{ slide }} Slide</div>
+            <!-- 사진 클릭 시 이미지 업로드 -->
+            <v-img :src="imageUrl" />
           </v-row>
         </v-sheet>
       </v-carousel-item>
@@ -77,7 +82,7 @@
         </v-list-item-content>
         <!-- ### Follow button -->
         <v-list-item-action>
-          <v-btn icon @click="toggleLikeInDetail(nickName)">
+          <v-btn icon @click="toggleLikeInDetail">
             <v-icon v-model="iconName" color="red">{{ iconName }}</v-icon>
             <!-- <v-icon v-model="iconName" v-else>{{ iconName }}</v-icon> -->
             <div>{{ getOotdInfo.likeCount }}</div>
@@ -205,24 +210,23 @@ export default {
     // OotdUpdate,
   },
   computed: {
-    ...mapGetters(["getOotdInfo", "getNickname"]),
+    ...mapGetters(["getOotdInfo", "getNickname", "getOotdInfoImages"]),
   },
   data() {
     return {
-      nickName: "jin", // 임시 닉네임
       dialog: false,
       updateDialog: false, // 수정창 dialog 활성화
       deleteDialog: false, // 삭제창 dialog 활성화
       required: false,
-      colors: [
-        "green",
-        "secondary",
-        "yellow darken-4",
-        "red lighten-2",
-        "orange darken-1",
-      ],
+      // colors: [
+      //   "green",
+      //   "secondary",
+      //   "yellow darken-4",
+      //   "red lighten-2",
+      //   "orange darken-1",
+      // ],
       cycle: false,
-      slides: ["First", "Second", "Third", "Fourth", "Fifth"],
+      // slides: ["First", "Second", "Third", "Fourth", "Fifth"],
       notifications: false,
       sound: true,
       widgets: false,
@@ -327,7 +331,7 @@ export default {
         ootdIdx: this.getOotdInfo.ootdIdx,
       });
     },
-    toggleLikeInDetail(nickname) {
+    toggleLikeInDetail() {
       if (this.getOotdInfo.likeChk) {
         // 좋아요 였다가 좋아요 해제로
         this.iconName = "mdi-heart-outline";
@@ -337,7 +341,7 @@ export default {
         this.iconName = "mdi-heart";
         this.getOotdInfo.likeCount += 1;
       }
-      this.toggleLike(nickname);
+      this.toggleLike(this.getNickname);
     },
   },
 };
