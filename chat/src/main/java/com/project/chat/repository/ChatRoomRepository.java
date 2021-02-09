@@ -7,6 +7,8 @@ import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,8 +30,22 @@ public class ChatRoomRepository {
 
     // 모든 채팅방 조회
     public List<ChatRoom> findAllRoom() {
-        return hashOpsChatRoom.values(CHAT_ROOMS);
+        List<ChatRoom> chatRoomList = hashOpsChatRoom.values(CHAT_ROOMS);
+        Collections.sort(chatRoomList, new Comparator<ChatRoom>() {
+            @Override
+            public int compare(ChatRoom o1, ChatRoom o2) {
+                if(o1.getCreatDate()<o2.getCreatDate()){
+                    return -1;
+                }else if(o1.getCreatDate()>o2.getCreatDate()){
+                    return 1;
+                }
+                return 0;
+            }
+        });
+//        return hashOpsChatRoom.values(CHAT_ROOMS);
+        return chatRoomList;
     }
+
 
     // 특정 채팅방 조회
     public ChatRoom findRoomById(String id) {

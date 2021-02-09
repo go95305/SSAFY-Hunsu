@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -22,6 +24,7 @@ public class ChatRoom implements Serializable {
     private List<String> hashtagList; //해시태그
     private String publisher;//개설자
     private String fixedComment;
+    private long creatDate;
 
     public static ChatRoom create(String name,String publisher,List<String> hashtagList,String fixedComment) {
         ChatRoom chatRoom = new ChatRoom();
@@ -31,6 +34,7 @@ public class ChatRoom implements Serializable {
         chatRoom.hashtagList = new ArrayList<>();
         chatRoom.hashtagList=hashtagList;
         chatRoom.fixedComment=fixedComment;
+        chatRoom.creatDate = System.currentTimeMillis();
         return chatRoom;
     }
 }
