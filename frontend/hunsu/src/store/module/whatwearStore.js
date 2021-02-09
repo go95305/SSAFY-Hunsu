@@ -40,7 +40,7 @@ const actions = {
     return axios
       .get(`http://i4c102.p.ssafy.io:8080/api/wear/detail/${wearIdx}/${nickname}`)
       .then((res) => {
-        // console.log('Vuex get Whatwear ', res.data);
+        console.log('Vuex get Whatwear ', res.data);
         
         context.commit('setWhatwearInfo', res.data);
         context.commit('setWhatwearReplyInfo', res.data.replyList);

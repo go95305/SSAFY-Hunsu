@@ -72,7 +72,7 @@ export default {
   methods: {
     ...mapActions(["getWhatwearInfoApi"]),
     goToWhatwearDetail(whatwear) {
-      console.log('글번호', whatwear.wear_idx)
+      // console.log('글번호', whatwear.wear_idx)
       const wearIdx = whatwear.wear_idx
       const nickname = whatwear.nickname
       this.getWhatwearInfoApi({wearIdx, nickname}); // 유저정보 닉네임으로 변경, 현재는 글 작성자로 들어감
@@ -85,20 +85,20 @@ export default {
         .then((res) => {
           this.whatwearList = res.data.wearMainDTOList;
           this.length = parseInt(res.data.count / 10) + 1
-          console.log(res.data);
+          // console.log(res.data);
         })
         .catch((err) => {
           console.error(err);
         });
     },
     pageWhatwear() {
-      console.log(this.page)
+      // console.log(this.page)
       const pageNum = this.page
       axios
         .get(`http://i4c102.p.ssafy.io:8080/api/wear/${pageNum}`)
         .then((res) => {
           this.whatwearList = res.data.wearMainDTOList;
-          console.log('test', res)
+          // console.log('test', res)
         })
         .catch((err) => {
           console.error(err)
