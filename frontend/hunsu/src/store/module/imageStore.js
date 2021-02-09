@@ -72,20 +72,38 @@ const actions = {
     });
   },
   getImageList(context, { prefix }) {
+    let images = [];
     return new Promise((resolve, reject) => {
       s3.listObjectsV2({ Prefix: prefix }, (err, data) => {
         if (err) {
           reject('getImageList err', err);
         } else {
-          resolve(data.Contents);
+          data.Contents.map((key) => {
+            s3.getSignedUrl(
+              'getObject',
+              {
+                Bucket: this.albumBucketName,
+                Key: key.Key,
+              },
+              (err, data) => {
+                if (err) {
+                  return alert('There was an error listing your photo: ', err.message);
+                } else {
+                  // console.log('in data', data);
+                  images.push(data);
+                }
+              }
+            );
+          });
+          resolve(images);
         }
       });
     });
   },
-  getImages(context, { keys }) {
+  async getImages(context, { keys }) {
     // console.log('get', keys);
-    let images = [];
-    keys.map((key) => {
+    let images = new Array();
+    await keys.map((key) => {
       s3.getSignedUrl(
         'getObject',
         {
@@ -119,6 +137,72 @@ const actions = {
         }
       }
     );
+  },
+  getProfileImage({ rootState }, { nickname, target }) {
+    // return new Promise((resolve, reject) => {
+    //   let images = [];
+    //   let prefix = 'mypage/' + nickname;
+    //   s3.listObjectsV2({ Prefix: prefix }, (err, data) => {
+    //     if (err) {
+    //       reject('getImageList err', err);
+    //     } else {
+    //       data.Contents.map((key) => {
+    //         s3.getSignedUrl(
+    //           'getObject',
+    //           {
+    //             Bucket: this.albumBucketName,
+    //             Key: key.Key,
+    //           },
+    //           (err, data) => {
+    //             if (err) {
+    //               return alert('There was an error listing your photo: ', err.message);
+    //             } else {
+    //               console.log('in profile data', data);
+    //               images.push(data);
+    //             }
+    //           }
+    //         );
+    //       });
+    //     }
+    //   });
+    //   console.log('in profile array', images);
+    //   resolve(images);
+    // });
+    let prefix = 'mypage/' + nickname;
+    let getImages = new Promise((resolve) => {
+      s3.listObjectsV2({ Prefix: prefix }, (err, data) => {
+        if (err) {
+          // reject('getImageList err', err);
+          console.log(err);
+        } else {
+          // console.log(data.Contents[1]);
+          s3.getSignedUrl(
+            'getObject',
+            {
+              Bucket: this.albumBucketName,
+              Key: data.Contents[1].Key,
+            },
+            (err, data) => {
+              if (err) {
+                return alert('There was an error listing your photo: ', err.message);
+              } else {
+                // console.log('in profile data', data);
+                resolve(data);
+              }
+            }
+          );
+        }
+      });
+    });
+    getImages.then((image) => {
+      // console.log(image);
+      if (target === 'my') {
+        rootState.user.myProfileImage = image;
+      } else {
+        rootState.user.targetProfileImage = image;
+      }
+      return image;
+    });
   },
 };
 AWS.config.update({

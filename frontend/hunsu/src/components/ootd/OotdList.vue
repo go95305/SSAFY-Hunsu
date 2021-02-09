@@ -42,7 +42,10 @@
         <v-list-item>
           <!-- 작성자 프로필 -->
           <v-list-item-avatar>
-            <v-img @click="goToProfilePage(getOotdInfo.nickname)" src="https://cdn.vuetifyjs.com/images/john.png"></v-img>
+            <v-img
+              @click="goToProfilePage(getOotdInfo.nickname)"
+              src="https://cdn.vuetifyjs.com/images/john.png"
+            ></v-img>
           </v-list-item-avatar>
           <v-list-item-content>
             <v-list-item-title>{{ ootd.ootdContent }}</v-list-item-title>
@@ -96,22 +99,17 @@ export default {
       res.forEach((info) => {
         root.getImageList({ prefix: "ootd/" + info.ootdIdx }).then((res) => {
           // console.log("hi", res);
-          this.getImages({ keys: res }).then((res) => {
-            info.imageUrls = res;
-            // console.log(info.ootdIdx, " result", res, "info ", info.imageUrls);
-          });
+          // this.getImages({ keys: res }).then((res) => {
+          info.imageUrls = res;
+          // console.log(info.ootdIdx, " result", res, "info ", info.imageUrls);
+          // });
         });
       });
     });
   },
   methods: {
-    ...mapActions([
-      "getOotdInfoInApi",
-      "getOotdListInApi",
-      "getImages",
-      "getImageList",
-    ]),
-    ...mapMutations(["setOotdInfoImages"]),
+    ...mapActions(["getOotdInfoInApi", "getOotdListInApi", "getImageList"]),
+    ...mapMutations(["setOotdInfoImages", "setTargetProfileImage"]),
     goToOotdDetail(ootd) {
       //idx 굳이 보여줄 필요 없을것같아서 params로 변경
       // this.$router.push({ name: "OotdDetail", params: { no: ootd.ootdIdx } });
@@ -125,10 +123,10 @@ export default {
           .getImageList({ prefix: "ootd/" + ootd.ootdIdx })
           .then((res) => {
             console.log("imageList", res);
-            root.getImages({ keys: res }).then((res) => {
-              console.log("getimages", res);
-              root.setOotdInfoImages(res);
-            });
+            // root.getImages({ keys: res }).then((res) => {
+            // console.log("getimages", res);
+            root.setOotdInfoImages(res);
+            // });
           })
           .then(() => {
             this.$router.push({ name: "OotdDetail" });
@@ -136,12 +134,18 @@ export default {
       });
     },
     goToProfilePage(infoNickname) {
+      // let root = this;
+      // console.log("this", this);
       this.getProfileInfoInApi({
-          myNickname: this.getNickname,
-          yourNickname: infoNickname,
-          }).then(() => {
-            this.$router.push({name: "MyPage"})
-          }) 
+        myNickname: this.getNickname,
+        yourNickname: infoNickname,
+      }).then(() => {
+        this.getImageList({ prefix: "mypage/", infoNickname }).then((res) => {
+          console.log("go to profile", res);
+          this.setTargetProfileImage(res);
+        });
+        this.$router.push({ name: "MyPage" });
+      });
     },
   },
 };
