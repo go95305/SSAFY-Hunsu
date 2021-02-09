@@ -5,7 +5,7 @@
       <v-list-item style="height: 15px">
         <!-- 작성자 정보 -->
         <v-list-item-avatar>
-          <v-img src="https://cdn.vuetifyjs.com/images/john.png"></v-img>
+          <v-img @click="goToProfilePage(getOotdInfo.nickname)" src="https://cdn.vuetifyjs.com/images/john.png"></v-img>
         </v-list-item-avatar>
         <v-list-item-content>
           <!-- 닉네임 -->
@@ -77,7 +77,7 @@
         </v-list-item-content>
         <!-- ### Follow button -->
         <v-list-item-action>
-          <v-btn icon @click="toggleLikeInDetail(nickName)">
+          <v-btn icon @click="toggleLikeInDetail(getNickname)">
             <v-icon v-model="iconName" color="red">{{ iconName }}</v-icon>
             <!-- <v-icon v-model="iconName" v-else>{{ iconName }}</v-icon> -->
             <div>{{ getOotdInfo.likeCount }}</div>
@@ -209,7 +209,6 @@ export default {
   },
   data() {
     return {
-      nickName: "jin", // 임시 닉네임
       dialog: false,
       updateDialog: false, // 수정창 dialog 활성화
       deleteDialog: false, // 삭제창 dialog 활성화
@@ -265,6 +264,7 @@ export default {
       "updateOotdInfo",
       "deleteOotdInfo",
       "toggleLike",
+      "getProfileInfoInApi"
     ]),
     onoffUpdateDialog() {
       // 수정 dialog 활성화
@@ -277,13 +277,13 @@ export default {
       // 삭제 dialog 활성화
       this.deleteDialog = !this.deleteDialog;
     },
-    goToPage(item) {
-      // 마이페이지, 수정 및 삭제 이동
-      if (item.text === "MyPage") {
-        this.$router.push("/mypage");
-      } else if (item === "update") {
-        console.log("in 수정", this.getOotdInfo);
-      }
+    goToProfilePage(infoNickname) {
+      this.getProfileInfoInApi({
+          myNickname: this.getNickname,
+          yourNickname: infoNickname,
+          }).then(() => {
+            this.$router.push({name: "MyPage"})
+          }) 
     },
     goToLogin() {
       // 로그인 페이지로 이동

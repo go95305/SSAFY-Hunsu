@@ -36,7 +36,7 @@
         <v-list-item>
           <!-- 작성자 프로필 -->
           <v-list-item-avatar>
-            <v-img src="https://cdn.vuetifyjs.com/images/john.png"></v-img>
+            <v-img @click="goToProfilePage(getOotdInfo.nickname)" src="https://cdn.vuetifyjs.com/images/john.png"></v-img>
           </v-list-item-avatar>
           <v-list-item-content>
             <v-list-item-title>{{ ootd.ootdContent }}</v-list-item-title>
@@ -76,13 +76,13 @@ export default {
       slides: ["First", "Second", "Third", "Fourth", "Fifth"],
     };
   },
-  computed: { ...mapGetters(["getOotdList", "getNickname"]) },
+  computed: { ...mapGetters(["getOotdList", "getNickname", "getOotdInfo"]) },
   created() {
     this.getOotdListInApi(0);
     // console.log(this.getOotdList);
   },
   methods: {
-    ...mapActions(["getOotdInfoInApi", "getOotdListInApi"]),
+    ...mapActions(["getOotdInfoInApi", "getOotdListInApi", "getProfileInfoInApi"]),
 
     goToOotdDetail(ootd) {
       //idx 굳이 보여줄 필요 없을것같아서 params로 변경
@@ -93,6 +93,14 @@ export default {
       }).then(() => {
         this.$router.push({ name: "OotdDetail" });
       });
+    },
+    goToProfilePage(infoNickname) {
+      this.getProfileInfoInApi({
+          myNickname: this.getNickname,
+          yourNickname: infoNickname,
+          }).then(() => {
+            this.$router.push({name: "MyPage"})
+          }) 
     },
   },
 };

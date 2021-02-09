@@ -42,8 +42,9 @@ const mutations = {
 const actions = {
   // Ootd 리스트 정렬
   getOotdListInApi(context, sort) {
+    const count = 1
     axios
-      .get(`http://i4c102.p.ssafy.io:8080/api/ootd/${sort}`)
+      .get(`http://i4c102.p.ssafy.io:8080/api/ootd/${sort}/${count}`)
       .then((res) => {
         context.commit('setOotdList', res.data);
       })
