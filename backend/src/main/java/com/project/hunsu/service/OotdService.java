@@ -47,7 +47,7 @@ public class OotdService {
         List<OotdMainDTO> ootdMainDTOList = new ArrayList<>();
         List<Ootd> ootdList = new ArrayList<>();
         if (sort == 0) {
-            PageRequest pageRequest = PageRequest.of(0,6 * (count + 1), Sort.by("WriteDate"));
+            PageRequest pageRequest = PageRequest.of(0,6 * (count + 1), Sort.by("WriteDate").descending());
             ootdList = ootdRepository.findBy(pageRequest);
         } else {
             PageRequest pageRequest = PageRequest.of(0,6 * (count + 1), Sort.by("Count").descending());
