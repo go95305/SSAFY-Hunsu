@@ -9,10 +9,10 @@
       elevation="24"
       max-width="450"
       class="mx-auto my-5"
-      @click="goToOotdDetail(ootd)"
+      
     >
       <!-- OOTD 사진 -->
-      <ImageView :images="ootd.imageUrls" />
+      <ImageView :images="ootd.imageUrls" @click.native="goToOotdDetail(ootd)"/>
       <!-- <v-carousel :show-arrows="false" v-if="!ootd.imageUrls">
         <p>loading..</p>
       </v-carousel>
@@ -110,6 +110,7 @@ export default {
       "getOotdListInApi",
       "getImages",
       "getImageList",
+      "getProfileInfoInApi"
     ]),
     ...mapMutations(["setOotdInfoImages"]),
     goToOotdDetail(ootd) {
