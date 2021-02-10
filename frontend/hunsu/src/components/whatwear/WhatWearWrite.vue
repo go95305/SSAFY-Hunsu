@@ -1,5 +1,5 @@
 <template>
-  <v-layout justify-end>
+  <v-layout justify-end >
     <v-dialog
       v-model="dialog"
       fullscreen
