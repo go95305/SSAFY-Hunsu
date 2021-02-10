@@ -6,6 +6,7 @@ const state = {
   userInfo: {},
   myProfileImage: '',
   targetProfileImage: '',
+  myProfileInfo: {}, // 내 프로필(키, 사이즈, 닉네임 등)
 };
 const getters = {
   // 모든 토큰은 jwt 의미함
@@ -30,6 +31,9 @@ const getters = {
   getTargetProfileImage(state) {
     return state.targetProfileImage;
   },
+  getMyProfileInfo(state) {
+    return state.myProfileInfo;
+  }
 };
 const mutations = {
   //모든 토큰은 jwt 의미함
@@ -69,6 +73,9 @@ const mutations = {
     state.targetProfileImage = payload;
     console.log('int targetprofile', payload);
   },
+  setMyProfileInfo(state, myProfileInfo) {
+    state.myProfileInfo = myProfileInfo;
+  }
 };
 
 const actions = {
@@ -156,6 +163,31 @@ const actions = {
         console.error(err);
       });
   },
+  getMyProfileInfoInApi(context, myNickname) {
+    return axios
+    .get(`http://i4c102.p.ssafy.io:8080/api/user/mypage/profile/${myNickname}`)
+    .then((res) => {
+      context.commit('setMyProfileInfo', res.data)
+    })
+    .catch((err) => {
+      console.error(err)
+    })
+  },
+  updateMyProfileInfoInApi(context, {getNickname, newNickname, height, size}) {
+    console.log(getNickname, newNickname, height, size)
+    return axios
+    .put(`http://i4c102.p.ssafy.io:8080/api/user/mypage/modify/${getNickname}`, {
+      nickname: newNickname,
+      height: height,
+      size: size,
+    })
+    .then((res) => {
+      context.commit('setMyProfileInfo', res.data)
+    })
+    .catch((err) => {
+      console.error(err)
+    })
+  }
 };
 
 export default {

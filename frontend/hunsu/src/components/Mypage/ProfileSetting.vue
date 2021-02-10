@@ -18,7 +18,7 @@
         <v-toolbar-title>프로필수정</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-toolbar-items>
-          <v-btn dark text @click="updateProfile"> 완료 </v-btn>
+          <v-btn dark text @click="updateProfile(getNickname, newNickname, height, size)"> 완료 </v-btn>
         </v-toolbar-items>
       </v-toolbar>
       <div id="profile_image">
@@ -46,7 +46,8 @@
       <div id="info_input">
         <v-text-field
           label="닉네임"
-          value="닉네임"
+          v-model="newNickname"
+          :placeholder="getNickname"
           hint="닉네임 중복불가안내, 규칙안내"
           outlined
         ></v-text-field>
@@ -55,10 +56,11 @@
         <!-- 숫자만 가능하게 필터링 -->
         <v-text-field
           label="키"
+          v-model="height"
           hint="cm를 제외하고 적어주세요"
           outlined
         ></v-text-field>
-        <v-select :items="items" label="체형" outlined></v-select>
+        <v-select :items="items" v-model="size" label="체형" outlined></v-select>
       </div>
     </v-card>
   </v-dialog>
@@ -74,6 +76,7 @@ export default {
       "getUploadImageFiles",
       "getUploadImageUrls",
       "getNickname",
+      "getMyProfileInfo",
     ]),
   },
 
@@ -84,10 +87,13 @@ export default {
       sound: true,
       widgets: false,
       items: ["XS", "S", "M", "L", "XL", "XXL"],
-    };
+      newNickname: "",
+      height: 0,
+      size: "",
+    }
   },
   methods: {
-    ...mapActions(["uploadProfile", "getProfileImage"]),
+    ...mapActions(["uploadProfile", "getProfileImage", "updateMyProfileInfoInApi"]),
     ...mapMutations([
       "setUploadImageFiles",
       "setUploadImageUrls",
@@ -104,8 +110,8 @@ export default {
       this.setUploadImageUrls();
       console.log("onChange imageURl ", this.getUploadImageUrls);
     },
-    updateProfile() {
-      // 프로필사진 업로드
+    updateProfile({getNickname, newNickname, height, size}) {
+      // 프로필사진 업로드, 정보수정
       this.dialog = false;
       this.uploadProfile()
         .then(() => {
@@ -119,6 +125,7 @@ export default {
           this.clearUploads();
           this.$forceUpdate();
         });
+      this.updateMyProfileInfoInApi({getNickname, newNickname, height, size})
     },
   },
 };

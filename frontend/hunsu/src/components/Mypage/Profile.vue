@@ -140,12 +140,12 @@
           <p class="font-weight-black text-h5 hidden-sm-and-down" style="margin: 10px 80px 10px 30px">{{getUserInfo.mypageNickname}}</p>
           <p class="d-inline-block font-weight-black subtitle-1 hidden-sm-and-up" style="margin: 10px 80px 10px 30px">{{getUserInfo.mypageNickname}}</p>
           </div>
+          <!--팔로우버튼-->
           <div class="d-inline-block">
             <v-btn small v-model="followName" v-if="getUserInfo.mypageNickname !== getNickname" @click="followThisUser()" style="color: white" color="deep-purple accent-1">{{followName}}</v-btn>
-            <!-- <v-btn small v-model="followName" v-if="(getUserInfo.mypageNickname !== getNickname) & (followStatus === true)" @click="followThisUser()" style="color: white" color="deep-purple accent-1">Unfollow</v-btn> -->
           </div>
         </div>
-
+        <!--ootd, 좋아요 탭-->
         <v-tabs
           v-model="tab"
           background-color="white"
@@ -208,7 +208,7 @@ export default {
       tab: null,
       items: ["OOTD", "좋아요"],
       profileData: {},
-      followName: "",
+      followName: "", // 팔로우 상태에 따른 버튼내용
     }
   },
   created() {
@@ -226,6 +226,7 @@ export default {
       "getMyProfileImage",
       "getTargetProfileImage",
     ]),
+    // v-for에 쓰일 length값들
     ootdListLength() {
       if (this.profileData.ootd_list) {
         return this.profileData.ootd_list.length;
