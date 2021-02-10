@@ -6,6 +6,7 @@ const state = {
   // 차트오류아직 해결안됨
   WhatwearVoteInfo: {},
   voteTotal: 0,
+  replyCount: 0,
 };
 const getters = {
   getWhatwearInfo(state) {
@@ -19,6 +20,9 @@ const getters = {
   },
   getVoteTotal(state) {
     return state.voteTotal
+  },
+  getReplyCount(state) {
+    return state.replyCount
   }
 };
 const mutations = {
@@ -33,6 +37,9 @@ const mutations = {
   },
   setVoteTotal(state, voteTotal) {
     state.voteTotal = voteTotal
+  },
+  setReplyCount(state, replyCount) {
+    state.replyCount = replyCount
   }
 };
 const actions = {
@@ -42,6 +49,16 @@ const actions = {
       .then((res) => {
         console.log('Vuex get Whatwear ', res.data);
         
+        let replyCount = 0
+        for (let r = 0; r < res.data.replyList.length; r++) {
+          // console.log(res.data.replyList[r].flag)
+          if (res.data.replyList[r].flag) {
+            replyCount++
+          }
+        }
+        // console.log('댓글합', replyCount)
+        context.commit('setReplyCount', replyCount)
+
         context.commit('setWhatwearInfo', res.data);
         context.commit('setWhatwearReplyInfo', res.data.replyList);
         context.commit('setWhatwearVoteInfo', res.data.voteList);
@@ -56,7 +73,14 @@ const actions = {
       .post('http://i4c102.p.ssafy.io:8080/api/wear/reply', whatwearReplyInfo)
       .then((res) => {
         console.log('댓글성공', res.data);
-
+        let replyCount = 0
+        for (let c = 0; c < res.data.length; c++) {
+          if (res.data[c].flag) {
+            replyCount++
+          }
+        }
+        // console.log('댓글합', replyCount)
+        context.commit('setReplyCount', replyCount)
         context.commit('setWhatwearReplyInfo', res.data);
       })
       .catch((err) => {
@@ -79,6 +103,13 @@ const actions = {
       .put(`http://i4c102.p.ssafy.io:8080/api/wear/reply/${replyIdx}`)
       .then((res) => {
         console.log('삭제완료', res);
+        let replyCount = 0
+        for (let c = 0; c < res.data.length; c++) {
+          if (res.data[c].flag) {
+            replyCount++
+          }
+        }
+        context.commit('setReplyCount', replyCount)
         context.commit('setWhatwearReplyInfo', res.data);
       })
       .catch((err) => {
@@ -102,8 +133,8 @@ const actions = {
     .then((res) => {
       console.log('투표완료', res.data)
       context.commit('setWhatwearVoteInfo', res.data)
-      var voteTotal = 0
-      for (var q = 0; q < res.data.length; q++) {
+      let voteTotal = 0
+      for (let q = 0; q < res.data.length; q++) {
         voteTotal += res.data[q].count
       }
       // console.log('합', voteTotal)
