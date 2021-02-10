@@ -27,10 +27,22 @@ public class ChatController {
     @MessageMapping("/chat/message")
     public void message(ChatMessage message, @Header("nickname") String nickname) {
         // 로그인 회원 정보로 대화명 설정
+        log.info("여기숑");
         message.setSender(nickname);
         // 채팅방 인원수 세팅
         message.setUserCount(chatRoomRepository.getUserCount(message.getRoomId()));
         message.setLikeCount(chatRoomRepository.getLikeCount(message.getRoomId()));
+        // Websocket에 발행된 메시지를 redis로 발행(publish)
+        chatService.sendChatMessage(message);
+    }
+    @MessageMapping("/chat/like")
+    public void roomLike(ChatMessage message, @Header("nickname") String nickname) {
+        // 로그인 회원 정보로 대화명 설정
+        message.setSender(nickname);
+        // 채팅방 인원수 세팅
+        message.setUserCount(chatRoomRepository.getUserCount(message.getRoomId()));
+        message.setLikeCount(chatRoomRepository.plusLikeCount(message.getRoomId()));
+        log.info("roomId"+chatRoomRepository.getUserCount(message.getRoomId()));
         // Websocket에 발행된 메시지를 redis로 발행(publish)
         chatService.sendChatMessage(message);
     }

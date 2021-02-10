@@ -40,7 +40,6 @@ public class ChatService {
             chatMessage.setSender("[알림]");
         }else if(ChatMessage.MessageType.LIKE.equals(chatMessage.getType())){
             chatMessage.setMessage(chatMessage.getSender()+"님이 좋아요를 눌렀습니다.");
-//            chatMessage.setSender();
         }
         redisTemplate.convertAndSend(channelTopic.getTopic(), chatMessage);
     }

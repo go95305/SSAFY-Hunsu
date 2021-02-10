@@ -33,11 +33,11 @@
         <input type="text" class="form-control" v-model="message" v-on:keypress.enter="sendMessage('TALK')">
         <div class="input-group-append">
             <button class="btn btn-primary" type="button" @click="sendMessage('TALK')">보내기</button>
-            <button class="btn btn-primary" type="button" @click="plusLike(this.roomId)">좋아요</button>
+            <button class="btn btn-primary" type="button" @click="plusLike('LIKE')">좋아요</button>
         </div>
     </div>
     <ul class="list-group">
-        <li class="list-group-item" v-for="message in messages">
+        <li class="list-group-item" v-for="message in messages" v-if="message.type != 'LIKE'">
             {{message.sender}} - {{message.message}}</a>
         </li>
     </ul>
@@ -80,14 +80,19 @@
 
         },
         methods: {
-            plusLike: function (roomId) {
-                ws.send("/sub/chat/room/"+this.roomId)
+            plusLike: function (type) {
+                ws.send("/pub/chat/like",{"nickname": this.nickname},JSON.stringify({
+                    type:type,
+                    roomId:this.roomId,
+                    sender:this.nickname
+                }))
                 // axios.post('/chat/room/like/' + roomId).then(response => {
                 //     console.log("new like:"+ response.data),
                 //     this.likeCount = response.data;
                 // });
             },
             sendMessage: function (type) {
+                console.log("여기부터")
                 ws.send("/pub/chat/message", {"nickname": this.nickname}, JSON.stringify({
                     type: type,
                     roomId: this.roomId,

@@ -53,20 +53,21 @@ public class StompHandler implements ChannelInterceptor {
             // 퇴장한 클라이언트의 roomId 맵핑 정보를 삭제한다.
             chatRoomRepository.removeUserEnterInfo(sessionId);
             log.info("DISCONNECTED {}, {}", sessionId, roomId);
-        } else if (StompCommand.SEND == accessor.getCommand()) {
-            String roomId = chatService.getRoomId(Optional.ofNullable((String) message.getHeaders().get("simpDestination")).orElse("InvalidRoomId"));
-            String name = Optional.ofNullable((Principal) message.getHeaders().get("simpUser")).map(Principal::getName).orElse("UnknownUser");
-            log.info("name"+name);
-//            log.info("roomid"+roomId);
-//            String sessionId = (String) message.getHeaders().get("simpSessionId");
-//            chatRoomRepository.setUserEnterInfo(sessionId, roomId);
-//            chatService.sendChatMessage(ChatMessage.builder().roomId(roomId).build());
-            ChatMessage msg = new ChatMessage();
-            msg.setRoomId(roomId);
-            msg.setLikeCount(chatRoomRepository.getLikeCount(roomId));
-            chatRoomRepository.plusLikeCount(roomId);
-            chatService.sendChatMessage(msg);
         }
+//        else if (StompCommand.SEND == accessor.getCommand()) {
+//            String roomId = chatService.getRoomId(Optional.ofNullable((String) message.getHeaders().get("simpDestination")).orElse("InvalidRoomId"));
+//            String name = Optional.ofNullable((Principal) message.getHeaders().get("simpUser")).map(Principal::getName).orElse("UnknownUser");
+//            log.info("name"+name);
+////            log.info("roomid"+roomId);
+////            String sessionId = (String) message.getHeaders().get("simpSessionId");
+////            chatRoomRepository.setUserEnterInfo(sessionId, roomId);
+////            chatService.sendChatMessage(ChatMessage.builder().roomId(roomId).build());
+//            ChatMessage msg = new ChatMessage();
+//            msg.setRoomId(roomId);
+//            msg.setLikeCount(chatRoomRepository.getLikeCount(roomId));
+//            chatRoomRepository.plusLikeCount(roomId);
+//            chatService.sendChatMessage(msg);
+//        }
         return message;
     }
 }
