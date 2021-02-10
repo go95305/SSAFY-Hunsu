@@ -24,7 +24,12 @@
       <v-menu left bottom v-if="getNickname">
         <template v-slot:activator="{ on, attrs }">
           <v-avatar v-bind="attrs" v-on="on">
-            <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
+            <v-img
+              v-model="getMyProfileImage"
+              v-if="getMyProfileImage"
+              :src="getMyProfileImage"
+            />
+            <v-img v-else src="https://cdn.vuetifyjs.com/images/john.jpg" />
           </v-avatar>
         </template>
 
@@ -69,7 +74,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from "vuex";
+import { mapGetters, mapActions, mapMutations } from "vuex";
 
 export default {
   name: "MainNavBar",
@@ -79,12 +84,25 @@ export default {
       "getAccessToken",
       "getRefreshToken",
       "getOotdList",
+      "getMyProfileImage",
+      "getTargetProfileImage",
     ]),
   },
   mounted() {
-    // console.log("navbar mount ", this.getAccessToken, this.getRefreshToken);
+    console.log("navbar mount ", this.getAccessToken, this.getRefreshToken);
+    // let root = this;
     if (this.getAccessToken && this.getRefreshToken) {
-      this.kakaoLogin();
+      // uid로 설계해야하는데, 임시적으로 닉네임으로 처리
+      this.kakaoLogin().then(() => {
+        // console.log(this.getNickname);
+        this.getProfileImage({
+          nickname: this.getNickname,
+          target: "my",
+        });
+      });
+    } else {
+      this.setAllInfoClear();
+      this.$router.push("/login");
     }
   },
   data() {
@@ -99,21 +117,44 @@ export default {
       ],
     };
   },
+
   methods: {
-    ...mapActions(["kakaoLogin", "getProfileInfoInApi"]),
+    ...mapActions([
+      "kakaoLogin",
+      "getProfileInfoInApi",
+      "getImages",
+      "getImageList",
+      "getProfileImage",
+    ]),
+    ...mapMutations(["setMyProfileImage", "setAllInfoClear"]),
     goToPage(item) {
       // console.log(item.text)
       if (item.text === "MyPage") {
+        // 여기선 자기 자신의 마이페이지로 이동
         this.getProfileInfoInApi({
+          // 타겟 유저의 프로필 정보 가져오기
           myNickname: this.getNickname,
           yourNickname: this.getNickname,
-          }).then(() => {
-            this.$router.push({name: "MyPage"})
-          }) 
+        }).then(() => {
+          this.getProfileImage({
+            // 타겟 유저의 이미지 정보 가져오기
+            nickname: this.getNickname,
+            target: "target",
+          });
+          this.$router.push({ name: "MyPage" });
+        });
       }
     },
     getName() {
-      console.log(this.getOotdList);
+      // 변수 할당 확인 버튼 ( test )
+      console.log(
+        "image ",
+        this.getMyProfileImage,
+        "nickname",
+        this.getNickname,
+        "targetName",
+        this.getTargetProfileImage
+      );
     },
     goToHome() {
       this.$router.push("/");

@@ -4,6 +4,8 @@ const state = {
   refreshToken: null,
   nickname: null,
   userInfo: {},
+  myProfileImage: '',
+  targetProfileImage: '',
 };
 const getters = {
   // 모든 토큰은 jwt 의미함
@@ -20,8 +22,14 @@ const getters = {
     return state.nickname;
   },
   getUserInfo(state) {
-    return state.userInfo
-  }
+    return state.userInfo;
+  },
+  getMyProfileImage(state) {
+    return state.myProfileImage;
+  },
+  getTargetProfileImage(state) {
+    return state.targetProfileImage;
+  },
 };
 const mutations = {
   //모든 토큰은 jwt 의미함
@@ -45,34 +53,50 @@ const mutations = {
     state.nickname = nickname;
   },
   setUserInfo(state, userInfo) {
-    state.userInfo = userInfo
-  }
+    state.userInfo = userInfo;
+  },
+  setAllInfoClear(state) {
+    state.accessToken = null;
+    state.refreshToken = null;
+    state.nickname = null;
+    state.userInfo = {};
+  },
+  setMyProfileImage(state, payload) {
+    state.myProfileImage = payload;
+    console.log('in setprofile', payload);
+  },
+  setTargetProfileImage(state, payload) {
+    state.targetProfileImage = payload;
+    console.log('int targetprofile', payload);
+  },
 };
 
 const actions = {
   // 카카오 로그인 후 회원가입이 되어있는지 확인 후 유무에 따라 회원가입 절차 or 로그인 유도
   userCheck({ commit }, { accessToken, refreshToken }) {
-    return axios
-      .post('http://i4c102.p.ssafy.io:8081/api/v1/auth/usercheck', {
-        accessToken,
-        refreshToken,
-      })
-      .then((res) => {
-        console.log(res.data.code);
-        if (res.data.code === 1) {
-          // 회원정보 없음
-          commit('setAllInfo', {
-            accessToken: res.data.jwtToken,
-            refreshToken: res.data.jwtRefresh,
-            nickname: res.data.nickname,
-          });
-        }
-        return res.data.code;
-        //return -1 or 1;
-      })
-      .catch((err) => {
-        console.log('usercheck err : ', err);
-      });
+    return new Promise((resolve) => {
+      axios
+        .post('http://i4c102.p.ssafy.io:8081/api/v1/auth/usercheck', {
+          accessToken,
+          refreshToken,
+        })
+        .then((res) => {
+          console.log('in usercheck', res.data);
+          if (res.data.code === 1) {
+            // 회원정보 있음
+            commit('setAllInfo', {
+              accessToken: res.data.jwtToken,
+              refreshToken: res.data.jwtRefresh,
+              nickname: res.data.nickname,
+            });
+          }
+          resolve(res.data.code);
+          //return -1 or 1;
+        })
+        .catch((err) => {
+          console.log('usercheck err : ', err);
+        });
+    });
   },
   signUpInApi({ commit }, params) {
     // 회원가입 api
@@ -104,33 +128,34 @@ const actions = {
     console.log('in kakaoLogin 3', state.accessToken); //jwtAccessToken
     console.log('in kakaoLogin 3', state.refreshToken); //jwtAccessToken
 
-    return axios
-      .post('http://i4c102.p.ssafy.io:8081/api/v1/auth/tokenlogin', {
-        jwtToken: state.accessToken,
-        jwtRefresh: state.refreshToken,
-      })
-      .then((res) => {
-        console.log(res);
-        commit('setAllInfo', {
-          accessToken: res.data.jwtToken,
-          refreshToken: res.data.refreshToken,
-          nickname: res.data.nickname,
+    new Promise((resolve) => {
+      axios
+        .post('http://i4c102.p.ssafy.io:8081/api/v1/auth/tokenlogin', {
+          jwtToken: state.accessToken,
+          jwtRefresh: state.refreshToken,
+        })
+        .then((res) => {
+          console.log(res);
+          commit('setAllInfo', {
+            accessToken: res.data.jwtToken,
+            refreshToken: res.data.refreshToken,
+            nickname: res.data.nickname,
+          });
+          resolve();
         });
-      });
+    });
   },
-  getProfileInfoInApi(context, {myNickname, yourNickname}) {
+  getProfileInfoInApi(context, { myNickname, yourNickname }) {
     return axios
       .get(`http://i4c102.p.ssafy.io:8080/api/user/mypage/${myNickname}/${yourNickname}`)
       .then((res) => {
-        console.log(res.data)
-        context.commit('setUserInfo', res.data)
-
+        console.log(res.data);
+        context.commit('setUserInfo', res.data);
       })
       .catch((err) => {
         console.error(err);
       });
   },
-
 };
 
 export default {

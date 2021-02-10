@@ -1,4 +1,5 @@
 <template>
+  <!-- 오오티디, 뭘입을까 리스트, 디테일에서 보이는 이미지 뷰 -->
   <v-carousel :show-arrows="false" v-if="!images">
     <p>loading..</p>
   </v-carousel>
