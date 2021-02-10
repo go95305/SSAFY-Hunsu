@@ -77,9 +77,6 @@ export default {
 
       this.setUploadImageFiles(e.target.files);
       this.setUploadImageUrls();
-      let fileExtList = e.target.files[0].name.split(".");
-      let fileExt = fileExtList[fileExtList.length - 1];
-      console.log(fileExt);
       console.log("onChange imageURl ", this.getUploadImageUrls);
     },
   },

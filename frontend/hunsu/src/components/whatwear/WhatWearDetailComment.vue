@@ -54,19 +54,28 @@
               >
                 수정
               </p>
+              <p
+                v-if="reply.nickname === getNickname"
+                style="margin-bottom: 0; margin-left: 10px; font-size: 10px"
+                @click="deleteWhatwearReply(reply.idx)">
+                삭제
+              </p>
             </div>
           </div>
         </div>
         <v-btn
+          v-if="reply.like === false"
           icon
-          @click="likeWhatwearReply(reply.idx)"
-          :color="reply.like ? 'red' : 'black'"
+          @click="likeWhatwearReply(reply)"
+          color="black"
           ><v-icon>mdi-heart-outline</v-icon></v-btn
         >
-        <v-btn 
-        v-if="reply.nickname === getNickname"
-        icon @click="deleteWhatwearReply(reply.idx)"
-          ><v-icon>mdi-close</v-icon></v-btn
+        <v-btn
+          v-if="reply.like === true"
+          icon
+          @click="likeWhatwearReply(reply)"
+          color="red"
+          ><v-icon>mdi-heart</v-icon></v-btn
         >
       </v-card>
 
@@ -107,19 +116,28 @@
               >
                 수정
               </p>
+              <p
+                v-if="reply.nickname === getNickname"
+                style="margin-bottom: 0; margin-left: 10px; font-size: 10px"
+                @click="deleteWhatwearReply(reply.idx)">
+                삭제
+              </p>
             </div>
           </div>
         </div>
         <v-btn
+          v-if="reply.like === false"
           icon
-          @click="likeWhatwearReply(reply.idx)"
-          :color="reply.like ? 'red' : 'black'"
+          @click="likeWhatwearReply(reply)"
+          color="black"
           ><v-icon>mdi-heart-outline</v-icon></v-btn
         >
-        <v-btn 
-          v-if="reply.nickname === getNickname"
-          icon @click="deleteWhatwearReply(reply.idx)"
-          ><v-icon>mdi-close</v-icon></v-btn
+        <v-btn
+          v-if="reply.like === true"
+          icon
+          @click="likeWhatwearReply(reply)"
+          color="red"
+          ><v-icon>mdi-heart</v-icon></v-btn
         >
       </v-card>
       </div>
@@ -140,6 +158,7 @@ export default {
     groupNum: 0,
     update: false,
     updateReplyIdx: 0,
+    iconName: "",
   }),
   computed: {
     ...mapGetters(["getWhatwearInfo", "getWhatwearReplyInfo", "getNickname"]),
@@ -175,8 +194,14 @@ export default {
       this.groupNum = 0;
     },
     // 댓글좋아요 함수
-    likeWhatwearReply(replyIdx) {
+    likeWhatwearReply(reply) {
+      // if (reply.like) {
+      //   this.iconName = "mdi-heart"
+      // } else {
+      //   this.iconName = "mdi-heart-outline"
+      // }
       const nickname = this.getNickname
+      const replyIdx = reply.idx
       this.likeWhatwearReplyInfo({replyIdx, nickname});
     },
     // 대댓글작성함수
