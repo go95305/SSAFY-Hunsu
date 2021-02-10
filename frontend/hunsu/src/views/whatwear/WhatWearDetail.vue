@@ -39,7 +39,7 @@
               </v-avatar>
             </template>
             <v-list>
-              <v-dialog v-model="dialog" persistent max-width="290">
+              <v-dialog v-model="deleteDialog" persistent max-width="290">
                 <template v-slot:activator="{ on, attrs }">
                   <v-btn
                     color="red accent-4"
@@ -56,7 +56,7 @@
                   <v-card-text>게시글을 삭제하시겠어요?</v-card-text>
                   <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="blue darken-4" text @click="dialog = false">
+                    <v-btn color="blue darken-4" text @click="deleteDialog = false">
                       취소
                     </v-btn>
                     <v-btn
@@ -64,7 +64,7 @@
                       text
                       @click="
                         [
-                          (dialog = false),
+                          (deleteDialog = false),
                           deleteWhatWear(getWhatwearInfo.wear_idx),
                         ]
                       "
@@ -116,7 +116,7 @@
 
     <!--투표창-->
     <div v-if="getWhatwearInfo.vote_activated">
-      <div id="vote_input">
+      <!-- <div id="vote_input">
         <v-checkbox
           v-for="(n, index) in getWhatwearVoteInfo"
           :key="n.idx"
@@ -124,7 +124,7 @@
           v-model="n.choice"
           @click="voteWhatwear(getWhatwearVoteInfo[index].idx, getNickname)"
         ></v-checkbox>
-      </div>
+      </div> -->
       <v-row justify="center" class="mb-5">
         <v-dialog v-model="dialog" scrollable max-width="300px">
           <template v-slot:activator="{ on, attrs }">
@@ -222,6 +222,7 @@ export default {
       model: 0,
       colors: ["primary", "secondary", "yellow darken-2"],
       dialog: false,
+      deleteDialog: false,
       vote_activated: false,
       voteImages: [],
     };
