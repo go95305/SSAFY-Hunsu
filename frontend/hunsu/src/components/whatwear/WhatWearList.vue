@@ -9,7 +9,7 @@
       @click="goToWhatwearDetail(whatwear)"
       flat
     >
-      <div class="d-flex">
+      <div class="d-flex align-center pt-4 mb-4">
         <!--프로필사진-->
         <!-- <div class="mt-2"></div> -->
         <v-avatar class="mt-5 ml-2">
@@ -142,7 +142,10 @@ export default {
 }
 
 #nickname {
-  padding-left: 5px;
-  padding-right: 5px;
+  padding: 0 0 0 0;
+}
+
+#title {
+  padding: 0 0 0 0;
 }
 </style>

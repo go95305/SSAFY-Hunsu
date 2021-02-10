@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-container fluid>      
-      <p>댓글 {{ getWhatwearReplyInfo.length }}개</p>
+      <p>댓글 {{ getReplyCount }}개</p>
       <v-row>
         <v-col cols="12" sm="6" id="comment_input">
           <v-text-field
@@ -77,6 +77,9 @@
           color="red"
           ><v-icon>mdi-heart</v-icon></v-btn
         >
+      </v-card>
+      <v-card>
+
       </v-card>
 
 
@@ -161,7 +164,7 @@ export default {
     iconName: "",
   }),
   computed: {
-    ...mapGetters(["getWhatwearInfo", "getWhatwearReplyInfo", "getNickname"]),
+    ...mapGetters(["getWhatwearInfo", "getWhatwearReplyInfo", "getNickname", "getReplyCount"]),
   },
   methods: {
     ...mapMutations(["setWhatwearReplyInfo"]),
