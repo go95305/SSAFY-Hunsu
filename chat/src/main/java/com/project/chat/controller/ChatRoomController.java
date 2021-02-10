@@ -29,7 +29,7 @@ public class ChatRoomController {
     public List<ChatRoom> room() {
         List<ChatRoom> chatRooms = chatRoomRepository.findAllRoom();
         chatRooms.stream().forEach(room -> room.setUserCount(chatRoomRepository.getUserCount(room.getRoomId())));
-
+        chatRooms.stream().forEach(room -> room.setLikeCount(chatRoomRepository.getLikeCount(room.getRoomId())));
         return chatRooms;
     }
 
@@ -60,6 +60,12 @@ public class ChatRoomController {
     public void removeRoom(@PathVariable String roomId) {
         long result = chatRoomRepository.removeRoom(roomId);
         log.info("삭제여부"+result);
+    }
+
+    @PostMapping("/room/like/{roomId}")
+    @ResponseBody
+    public long roomlike(@PathVariable String roomId){
+        return chatRoomRepository.plusLikeCount(roomId);
     }
 
 

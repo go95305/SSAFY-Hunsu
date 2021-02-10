@@ -34,9 +34,9 @@ public class ChatRoomRepository {
         Collections.sort(chatRoomList, new Comparator<ChatRoom>() {
             @Override
             public int compare(ChatRoom o1, ChatRoom o2) {
-                if(o1.getCreatDate()<o2.getCreatDate()){
+                if (o1.getCreatDate() < o2.getCreatDate()) {
                     return -1;
-                }else if(o1.getCreatDate()>o2.getCreatDate()){
+                } else if (o1.getCreatDate() > o2.getCreatDate()) {
                     return 1;
                 }
                 return 0;
@@ -61,7 +61,7 @@ public class ChatRoomRepository {
 
     //채팅방 삭제
     public long removeRoom(String roomId) {
-        return hashOpsChatRoom.delete(CHAT_ROOMS,roomId);
+        return hashOpsChatRoom.delete(CHAT_ROOMS, roomId);
     }
 
     // 유저가 입장한 채팅방ID와 유저 세션ID 맵핑 정보 저장
@@ -84,12 +84,22 @@ public class ChatRoomRepository {
         return Long.valueOf(Optional.ofNullable(valueOps.get(USER_COUNT + "_" + roomId)).orElse("0"));
     }
 
+    //채팅방 좋아요 조회
+    public long getLikeCount(String roomId) {
+        return Long.valueOf(Optional.ofNullable(valueOps.get(LIKE_COUNT + "_" + roomId)).orElse("0"));
+    }
+
 
     // 채팅방에 입장한 유저수 +1
     public long plusUserCount(String roomId) {
         return Optional.ofNullable(valueOps.increment(USER_COUNT + "_" + roomId)).orElse(0L);
     }
 
+    //채팅방 좋아요 +1
+    public long plusLikeCount(String roomId) {
+        Optional.ofNullable(valueOps.increment(LIKE_COUNT + "_" + roomId)).orElse(0L);
+        return getLikeCount(roomId);
+    }
 
     // 채팅방에 입장한 유저수 -1
     public long minusUserCount(String roomId) {

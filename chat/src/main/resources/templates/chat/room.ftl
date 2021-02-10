@@ -25,10 +25,16 @@
     <div class="input-group">
         <div class="input-group-prepend">
             <label class="input-group-text">방제목</label>
+            <input type="text" class="form-control" v-model="room_name">
         </div>
-        방이름:<input type="text" class="form-control" v-model="room_name"><br/>
-        해시태그:<input type="text" class="form-control" v-model="hashtagList"><br/>
-        고정댓글<input type="text" class="form-control" v-model="fixedComment">
+        <div class="input-group-prepend">
+            <label class="input-group-text">해시태그</label>
+            <input type="text" class="form-control" v-model="hashtagList">
+        </div>
+        <div class="input-group-prepend">
+            <label class="input-group-text">고정댓글</label>
+            <input type="text" class="form-control" v-model="fixedComment">
+        </div>
         <div class="input-group-append">
             <button class="btn btn-primary" type="button" @click="createRoom">채팅방 개설</button>
         </div>
@@ -87,6 +93,7 @@
                                 alert(response.data.name + "방 개설에 성공하였습니다.")
                                 this.room_name = '';
                                 this.hashtagList = [];
+                                this.fixedComment = '';
                                 this.findAllRoom();
                             }
                         )

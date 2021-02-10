@@ -31,6 +31,7 @@ public class ChatService {
      */
     public void sendChatMessage(ChatMessage chatMessage) {
         chatMessage.setUserCount(chatRoomRepository.getUserCount(chatMessage.getRoomId()));
+        chatMessage.setLikeCount(chatRoomRepository.getLikeCount(chatMessage.getRoomId()));
         if (ChatMessage.MessageType.ENTER.equals(chatMessage.getType())) {
             chatMessage.setMessage(chatMessage.getSender() + "님이 방에 입장했습니다.");
             chatMessage.setSender("[알림]");

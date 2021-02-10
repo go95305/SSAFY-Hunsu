@@ -18,7 +18,7 @@
 <div class="container" id="app" v-cloak>
     <div class="row">
         <div class="col-md-6">
-            <h4>{{roomName}} <span class="badge badge-info badge-pill">{{userCount}}</span></h4>
+            <h4>{{roomName}} <span class="badge badge-info badge-pill">{{userCount}}</span><span class="badge badge-info badge-pill">{{likeCount}}</span></h4>
         </div>
         <div class="col-md-6 text-right">
             <a class="btn btn-info btn-sm" href="/chat/room">채팅방 나가기</a>
@@ -32,6 +32,7 @@
         <input type="text" class="form-control" v-model="message" v-on:keypress.enter="sendMessage('TALK')">
         <div class="input-group-append">
             <button class="btn btn-primary" type="button" @click="sendMessage('TALK')">보내기</button>
+            <button class="btn btn-primary" type="button" @click="plusLike(this.roomId)">좋아요</button>
         </div>
     </div>
     <ul class="list-group">
@@ -59,6 +60,7 @@
             messages: [],
             token: '',
             userCount: 0,
+            likeCount: 0,
             nickname: 'koyuchang',
         },
         created() {
@@ -77,6 +79,12 @@
 
         },
         methods: {
+            plusLike: function (roomId){
+                ws.ack()
+                axios.post('/chat/room/like/'+roomId).then(response => {
+                    this.likeCount=response.data;
+                });
+            },
             sendMessage: function (type) {
                 ws.send("/pub/chat/message", {"nickname": this.nickname}, JSON.stringify({
                     type: type,
@@ -86,6 +94,7 @@
                 this.message = '';
             },
             recvMessage: function (recv) {
+                this.likeCount = recv.likeCount;
                 this.userCount = recv.userCount;
                 this.messages.unshift({"type": recv.type, "sender": recv.sender, "message": recv.message})
             }

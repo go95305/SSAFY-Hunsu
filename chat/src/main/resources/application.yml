@@ -7,5 +7,5 @@ spring:
   freemarker:
     cache: false
   profiles:
-    active: alpha
+    active: local
 

@@ -30,6 +30,7 @@ public class ChatController {
         message.setSender(nickname);
         // 채팅방 인원수 세팅
         message.setUserCount(chatRoomRepository.getUserCount(message.getRoomId()));
+        message.setLikeCount(chatRoomRepository.getLikeCount(message.getRoomId()));
         // Websocket에 발행된 메시지를 redis로 발행(publish)
         chatService.sendChatMessage(message);
     }

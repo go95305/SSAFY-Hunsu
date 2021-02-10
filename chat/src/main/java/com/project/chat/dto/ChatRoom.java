@@ -20,11 +20,12 @@ public class ChatRoom implements Serializable {
     private String roomId; //채팅방 ID
     private String name; //채팅방 이름
     private long userCount; // 채팅방 인원수
+    private long likeCount; //채팅방 좋아요 수
     @JsonFormat(with = JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
     private List<String> hashtagList; //해시태그
     private String publisher;//개설자
-    private String fixedComment;
-    private long creatDate;
+    private String fixedComment; //고정댓글
+    private long creatDate; // 채팅방 개설 시간(날짜)
 
     public static ChatRoom create(String name,String publisher,List<String> hashtagList,String fixedComment) {
         ChatRoom chatRoom = new ChatRoom();
