@@ -192,6 +192,7 @@ export default {
           wear_idx: wearIdx,
         });
       }
+      console.log(this.replyContent, this.depth, this.groupNum, this.getNickname, wearIdx)
       this.replyContent = "";
       this.depth = 0;
       this.groupNum = 0;
