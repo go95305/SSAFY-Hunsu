@@ -130,11 +130,14 @@ export default {
     goToPage(item) {
       // console.log(item.text)
       if (item.text === "MyPage") {
+        // 여기선 자기 자신의 마이페이지로 이동
         this.getProfileInfoInApi({
+          // 타겟 유저의 프로필 정보 가져오기
           myNickname: this.getNickname,
           yourNickname: this.getNickname,
         }).then(() => {
           this.getProfileImage({
+            // 타겟 유저의 이미지 정보 가져오기
             nickname: this.getNickname,
             target: "target",
           });
@@ -143,6 +146,7 @@ export default {
       }
     },
     getName() {
+      // 변수 할당 확인 버튼 ( test )
       console.log(
         "image ",
         this.getMyProfileImage,

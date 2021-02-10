@@ -45,6 +45,7 @@ const mutations = {
 
 const actions = {
   async uploadImage({ state }, { key, articleIdx }) {
+    // 이미지 업로드
     console.log('uploadImages', key);
     await state.uploadImageFiles.forEach((imageFile, idx) => {
       console.log('file', imageFile);
@@ -72,6 +73,7 @@ const actions = {
     });
   },
   uploadProfile({ rootState, state }) {
+    // 프로필사진 업로드
     state.uploadImageFiles.forEach((imageFile) => {
       console.log('profilefile', imageFile);
       //파일 확장자
@@ -98,6 +100,7 @@ const actions = {
     });
   },
   getImageList(context, { prefix }) {
+    // prefix에 위치한 이미지 리스트 가져오기
     let images = [];
     return new Promise((resolve, reject) => {
       s3.listObjectsV2({ Prefix: prefix }, (err, data) => {
@@ -127,6 +130,7 @@ const actions = {
     });
   },
   async getProfiles(context, list) {
+    // 게시글 내에 위치할 프로필사진들 가져오기
     console.log('list', list);
     await list.map((info) => {
       console.log(info);
@@ -147,24 +151,8 @@ const actions = {
       );
     });
   },
-  downloadImages(context, imageUrl) {
-    s3.getSignedUrl(
-      'getObject',
-      {
-        Bucket: this.albumBucketName,
-        //   Key: 'https://hunsutest.s3.ap-northeast-2.amazonaws.com/1.jpg',
-        Key: imageUrl,
-      },
-      (err, data) => {
-        if (err) {
-          return alert('There was an error listing your photo: ', err.message);
-        } else {
-          console.log(data);
-        }
-      }
-    );
-  },
   getProfileImage({ rootState }, { nickname, target }) {
+    // 마이페이지 및 디테일에서의 프로필 이미지 가져오기
     let prefix = 'mypage/' + nickname;
     let getImages = new Promise((resolve, reject) => {
       s3.listObjectsV2({ Prefix: prefix }, (err, data) => {

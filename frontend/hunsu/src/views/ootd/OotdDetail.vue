@@ -284,12 +284,15 @@ export default {
       this.deleteDialog = !this.deleteDialog;
     },
     goToProfilePage(infoNickname) {
+      // 타겟 프로필 페이지로 이동
       // let root = this;
       this.getProfileInfoInApi({
+        // 타겟의 프로필 정보 가졍괴
         myNickname: this.getNickname,
         yourNickname: infoNickname,
       }).then(() => {
         this.getProfileImage({
+          // 타겟의 프로필 사진 가져오기
           nickname: infoNickname,
           target: "target",
         });

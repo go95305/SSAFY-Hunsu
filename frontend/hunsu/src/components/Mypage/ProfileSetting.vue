@@ -105,6 +105,7 @@ export default {
       console.log("onChange imageURl ", this.getUploadImageUrls);
     },
     updateProfile() {
+      // 프로필사진 업로드
       this.dialog = false;
       this.uploadProfile()
         .then(() => {
