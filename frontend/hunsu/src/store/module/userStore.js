@@ -10,10 +10,16 @@ const state = {
 const getters = {
   // 모든 토큰은 jwt 의미함
   getAccessToken(state) {
+    if (!state.accessToken) {
+      return localStorage.getItem('hunsu-access-token');
+    }
     return state.accessToken;
   },
-  getRefreshToken(state) {
-    return state.refreshToken;
+  getRefreshToken() {
+    // if (!state.refreshToken) {
+    return localStorage.getItem('hunsu-refresh-token');
+    // }
+    // return state.refreshToken;
   },
   getAllToken(state) {
     return { accessToken: state.accessToken, refreshToken: state.refreshToken };
@@ -35,13 +41,17 @@ const mutations = {
   //모든 토큰은 jwt 의미함
   setAccessToken(state, token) {
     state.accessToken = token;
+    localStorage.setItem('hunsu-access-token', token);
   },
   setRefreshToken(state, token) {
     state.refreshToken = token;
+    localStorage.setItem('hunsu-refresh-token', token);
   },
   setAllToken(state, { accessToken, refreshToken }) {
     state.accessToken = accessToken;
     state.refreshToken = refreshToken;
+    localStorage.setItem('hunsu-access-token', accessToken);
+    localStorage.setItem('hunsu-refresh-token', refreshToken);
     console.log('setAllToken', accessToken, state.accessToken);
   },
   setNickname(state, nickname) {
@@ -51,6 +61,8 @@ const mutations = {
     state.accessToken = accessToken;
     state.refreshToken = refreshToken;
     state.nickname = nickname;
+    localStorage.setItem('hunsu-access-token', accessToken);
+    localStorage.setItem('hunsu-refresh-token', refreshToken);
   },
   setUserInfo(state, userInfo) {
     state.userInfo = userInfo;
