@@ -113,7 +113,6 @@ public class UserService {
         User user = userRepository.findUserByNickname(nickname);
 
         profileDTO.setNickname(nickname);
-        profileDTO.setGender(user.getGender());
         profileDTO.setHeight(user.getHeight());
         profileDTO.setSize(user.getSize());
 

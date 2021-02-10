@@ -59,7 +59,7 @@ public class WearService {
         return wearMainTotalDTO;
     }
 
-    public void insertWear(WearDTO request) {
+    public long insertWear(WearDTO request) {
         Wear wear = new Wear();
         User user = userRepository.findUserByNickname(request.getNickname());
 
@@ -90,6 +90,7 @@ public class WearService {
                 //vote 항목 생성
             }
         }
+        return savedWear.getIdx();
     }
 
     //return 값: wear_idx, title, content, nickname, write_date, vote_activated, List<Reply>(reply_idx, nickname, depth, writeDate, content, groupNum, count, like, flag), List<vote>(voteItem_idx, count, choice)

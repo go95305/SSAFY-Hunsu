@@ -10,7 +10,6 @@ import javax.validation.Valid;
 @Setter
 public class ProfileDTO {
     private String nickname;
-    private String gender;
     private Double height;
     private String size;
 }
