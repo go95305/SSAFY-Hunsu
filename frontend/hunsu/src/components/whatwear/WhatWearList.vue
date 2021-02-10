@@ -125,7 +125,7 @@ export default {
         });
     },
     async pageWhatwear() {
-      // console.log(this.page)
+      console.log(this.page)
       const pageNum = this.page;
       await axios
         .get(`http://i4c102.p.ssafy.io:8080/api/wear/${pageNum}`)
