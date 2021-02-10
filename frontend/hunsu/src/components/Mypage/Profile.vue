@@ -147,11 +147,13 @@
         </div>
         <div>
           <!--유저닉네임-->
+          <div class="d-inline-block">
           <p class="font-weight-black text-h5 hidden-sm-and-down" style="margin: 10px 80px 10px 30px">{{getUserInfo.mypageNickname}}</p>
           <p class="d-inline-block font-weight-black subtitle-1 hidden-sm-and-up" style="margin: 10px 80px 10px 30px">{{getUserInfo.mypageNickname}}</p>
-          <div class="d-inline-block ml-11 pb-3">
-            <v-btn small v-model="followStatus" v-if="(getUserInfo.mypageNickname !== getNickname) & (followStatus === false)" @click="followThisUser()" style="color: white" color="deep-purple accent-1">Follow</v-btn>
-            <v-btn small v-model="followStatus" v-if="(getUserInfo.mypageNickname !== getNickname) & (followStatus === true)" @click="followThisUser()" style="color: white" color="deep-purple accent-1">Unfollow</v-btn>
+          </div>
+          <div class="d-inline-block">
+            <v-btn small v-model="followName" v-if="getUserInfo.mypageNickname !== getNickname" @click="followThisUser()" style="color: white" color="deep-purple accent-1">{{followName}}</v-btn>
+            <!-- <v-btn small v-model="followName" v-if="(getUserInfo.mypageNickname !== getNickname) & (followStatus === true)" @click="followThisUser()" style="color: white" color="deep-purple accent-1">Unfollow</v-btn> -->
           </div>
         </div>
         
@@ -240,11 +242,16 @@ export default {
         'OOTD', '좋아요',
       ],
       profileData: {},
-      followStatus: false,
+      followName: "",
     }
   },
   created() {
     this.getProfile(this.getUserInfo);
+    if (this.getUserInfo.follow) {
+      return this.followName = "Unfollow"
+    } else {
+      return this.followName = "Follow"
+    }
   },
   computed: {
     ...mapGetters(["getNickname", "getUserInfo"]),
@@ -281,8 +288,9 @@ export default {
         .then((res) => {
 
           this.profileData = res.data
-          console.log(this.profileData)
           console.log(getUserInfo.mypageNickname)
+          console.log(this.getNickname)
+          console.log(this.profileData)
           console.log('마이페이지보기')
         })
         .catch((err) => {
@@ -292,10 +300,17 @@ export default {
     followThisUser() {
       const myNickname = this.getNickname
       const yourNickname = this.getUserInfo.mypageNickname
+      console.log(myNickname, yourNickname)
       axios.post('http://i4c102.p.ssafy.io:8080/api/user/follow', {myNickname, yourNickname})
-      .then(() => {
-        console.log('팔로우성공')
-        this.followStatus = true
+      .then((res) => {
+        if (res.data) {
+          console.log('팔로우성공')
+          this.followName = "Unfollow"
+        } else {
+          console.log('언팔로우성공')
+          this.followName = "Follow"
+        }
+          this.getProfile(this.getUserInfo)
       })
       .catch((err) => {
         console.error(err)
