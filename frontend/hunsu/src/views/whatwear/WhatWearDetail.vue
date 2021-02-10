@@ -93,7 +93,8 @@
     </div>
     <!--투표사진-->
     <div id="vote" v-if="getWhatwearInfo.vote_activated">
-      <v-carousel v-model="model" hide-delimiter-background>
+      <ImageView :images="getWhatwearInfo.imageUrls" />
+      <!-- <v-carousel v-model="model" hide-delimiter-background>
         <v-carousel-item v-for="(color, i) in colors" :key="color">
           <v-sheet :color="color" height="100%" tile>
             <v-row class="fill-height" align="center" justify="center">
@@ -101,7 +102,7 @@
             </v-row>
           </v-sheet>
         </v-carousel-item>
-      </v-carousel>
+      </v-carousel> -->
     </div>
 
     <!--글 내용-->
@@ -115,15 +116,15 @@
 
     <!--투표창-->
     <div v-if="getWhatwearInfo.vote_activated">
-      <!-- <div id="vote_input">
+      <div id="vote_input">
         <v-checkbox
           v-for="(n, index) in getWhatwearVoteInfo"
           :key="n.idx"
-          :label="`${index+1}번`"
+          :label="`${index + 1}번`"
           v-model="n.choice"
           @click="voteWhatwear(getWhatwearVoteInfo[index].idx, getNickname)"
         ></v-checkbox>
-      </div> -->
+      </div>
       <v-row justify="center" class="mb-5">
         <v-dialog v-model="dialog" scrollable max-width="300px">
           <template v-slot:activator="{ on, attrs }">
@@ -197,13 +198,14 @@
 <script>
 import WhatWearDetailComment from "@/components/whatwear/WhatWearDetailComment";
 import { mapActions, mapGetters, mapMutations } from "vuex";
-
+// import ImageView from "@/components/module/ImageView";
 import axios from "axios";
 
 export default {
   name: "WhatWearDetail",
   components: {
     WhatWearDetailComment,
+    // ImageView,
   },
   computed: {
     ...mapGetters([
@@ -214,12 +216,14 @@ export default {
       "getTargetProfileImage",
     ]),
   },
+  created() {},
   data() {
     return {
       model: 0,
       colors: ["primary", "secondary", "yellow darken-2"],
       dialog: false,
       vote_activated: false,
+      voteImages: [],
     };
   },
   methods: {

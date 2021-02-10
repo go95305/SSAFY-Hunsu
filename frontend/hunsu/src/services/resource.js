@@ -1,6 +1,9 @@
 import axios from 'axios';
 
-axios.defaults.baseURL = 'http://localhost:8080';
+axios.defaults.baseURL = 'http://i4c102.p.ssafy.io:8080/api/';
+// axios.defaults.headers = {
+
+// } // 헤더 추가
 
 // Add a request interceptor
 axios.interceptors.request.use(

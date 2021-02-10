@@ -16,14 +16,14 @@ const getters = {
     return state.whatwearReplyInfo;
   },
   getWhatwearVoteInfo(state) {
-    return state.WhatwearVoteInfo
+    return state.WhatwearVoteInfo;
   },
   getVoteTotal(state) {
-    return state.voteTotal
+    return state.voteTotal;
   },
   getReplyCount(state) {
-    return state.replyCount
-  }
+    return state.replyCount;
+  },
 };
 const mutations = {
   setWhatwearInfo(state, whatwearInfo) {
@@ -33,14 +33,17 @@ const mutations = {
     state.whatwearReplyInfo = whatwearReplyInfo;
   },
   setWhatwearVoteInfo(state, WhatwearVoteInfo) {
-    state.WhatwearVoteInfo = WhatwearVoteInfo
+    state.WhatwearVoteInfo = WhatwearVoteInfo;
   },
   setVoteTotal(state, voteTotal) {
-    state.voteTotal = voteTotal
+    state.voteTotal = voteTotal;
   },
   setReplyCount(state, replyCount) {
-    state.replyCount = replyCount
-  }
+    state.replyCount = replyCount;
+  },
+  setWhatwearInfoImages(state, images) {
+    state.whatwearInfo.imageUrls = images;
+  },
 };
 const actions = {
   getWhatwearInfoApi(context, { wearIdx, nickname }) {
@@ -48,39 +51,39 @@ const actions = {
       .get(`http://i4c102.p.ssafy.io:8080/api/wear/detail/${wearIdx}/${nickname}`)
       .then((res) => {
         console.log('Vuex get Whatwear ', res.data);
-        
-        let replyCount = 0
+
+        let replyCount = 0;
         for (let r = 0; r < res.data.replyList.length; r++) {
           // console.log(res.data.replyList[r].flag)
           if (res.data.replyList[r].flag) {
-            replyCount++
+            replyCount++;
           }
         }
         // console.log('댓글합', replyCount)
-        context.commit('setReplyCount', replyCount)
+        context.commit('setReplyCount', replyCount);
 
         context.commit('setWhatwearInfo', res.data);
         context.commit('setWhatwearReplyInfo', res.data.replyList);
         context.commit('setWhatwearVoteInfo', res.data.voteList);
       })
       .catch((err) => {
-        console.error(err)
-      })
+        console.error(err);
+      });
   },
   createWhatwearReplyInfo(context, whatwearReplyInfo) {
-    console.log('create 댓구ㄹ', whatwearReplyInfo); 
+    console.log('create 댓구ㄹ', whatwearReplyInfo);
     axios
       .post('http://i4c102.p.ssafy.io:8080/api/wear/reply', whatwearReplyInfo)
       .then((res) => {
         console.log('댓글성공', res.data);
-        let replyCount = 0
+        let replyCount = 0;
         for (let c = 0; c < res.data.length; c++) {
           if (res.data[c].flag) {
-            replyCount++
+            replyCount++;
           }
         }
         // console.log('댓글합', replyCount)
-        context.commit('setReplyCount', replyCount)
+        context.commit('setReplyCount', replyCount);
         context.commit('setWhatwearReplyInfo', res.data);
       })
       .catch((err) => {
@@ -91,7 +94,7 @@ const actions = {
     axios
       .put(`http://i4c102.p.ssafy.io:8080/api/wear/reply/like/${replyIdx}/${nickname}`)
       .then((res) => {
-        console.log('좋아요성공', res.data)
+        console.log('좋아요성공', res.data);
         context.commit('setWhatwearReplyInfo', res.data);
       })
       .catch((err) => {
@@ -103,13 +106,13 @@ const actions = {
       .put(`http://i4c102.p.ssafy.io:8080/api/wear/reply/${replyIdx}`)
       .then((res) => {
         console.log('삭제완료', res);
-        let replyCount = 0
+        let replyCount = 0;
         for (let c = 0; c < res.data.length; c++) {
           if (res.data[c].flag) {
-            replyCount++
+            replyCount++;
           }
         }
-        context.commit('setReplyCount', replyCount)
+        context.commit('setReplyCount', replyCount);
         context.commit('setWhatwearReplyInfo', res.data);
       })
       .catch((err) => {
@@ -129,20 +132,20 @@ const actions = {
   },
   voteWhatwearInfo(context, { voteIdx, nickname }) {
     axios
-    .put(`http://i4c102.p.ssafy.io:8080/api/wear/reply/vote/${voteIdx}/${nickname}`)
-    .then((res) => {
-      console.log('투표완료', res.data)
-      context.commit('setWhatwearVoteInfo', res.data)
-      let voteTotal = 0
-      for (let q = 0; q < res.data.length; q++) {
-        voteTotal += res.data[q].count
-      }
-      // console.log('합', voteTotal)
-      context.commit('setVoteTotal', voteTotal)
-    })
-    .catch((err) => {
-      console.error(err)
-    })
+      .put(`http://i4c102.p.ssafy.io:8080/api/wear/reply/vote/${voteIdx}/${nickname}`)
+      .then((res) => {
+        console.log('투표완료', res.data);
+        context.commit('setWhatwearVoteInfo', res.data);
+        let voteTotal = 0;
+        for (let q = 0; q < res.data.length; q++) {
+          voteTotal += res.data[q].count;
+        }
+        // console.log('합', voteTotal)
+        context.commit('setVoteTotal', voteTotal);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   },
 };
 
