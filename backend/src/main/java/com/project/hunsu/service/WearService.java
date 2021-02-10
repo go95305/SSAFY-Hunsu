@@ -129,6 +129,7 @@ public class WearService {
         wearDetailDTO.setVote_activated(wear.isVoteActivated());
         wearDetailDTO.setReplyList(replyDTOList);
         wearDetailDTO.setVoteList(voteDTOList);
+        wearDetailDTO.setEnd_time(vote.getEndTime());
 
         return wearDetailDTO;
     }

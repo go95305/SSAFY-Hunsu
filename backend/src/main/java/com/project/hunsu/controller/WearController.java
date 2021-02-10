@@ -67,6 +67,7 @@ public class WearController {
             "-content: 내용\n" +
             "-nickname: 작성자\n" +
             "-write_date: 작성날짜\n" +
+            "-end_time: 투표종료시간\n" +
             "-vote_activated: 투표 활성화 여부(true or false)\n" +
             "-replyList: 댓글 리스트\n" +
             "-----idx: 댓글 idx\n" +
