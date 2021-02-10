@@ -76,7 +76,7 @@
                   >투표기능</v-list-item-title
                 >
               </div>
-              <v-img
+              <!-- <v-img
                 v-for="(voteImageUrl, idx) in voteImageUrls"
                 :key="idx"
                 :src="voteImageUrl"
@@ -90,7 +90,7 @@
                 label="File input"
                 v-model="voteImage"
                 @change="previewVoteImage()"
-              ></v-file-input>
+              ></v-file-input> -->
               <v-dialog
                 ref="dateDialog"
                 v-model="dateDialog"
@@ -170,7 +170,7 @@
 
 <script>
 import axios from "axios";
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions, mapMutations } from "vuex";
 import ImageUpload from "@/components/module/ImageUpload";
 
 export default {
@@ -209,6 +209,8 @@ export default {
     ...mapGetters(["getNickname"]),
   },
   methods: {
+    ...mapActions(["uploadImage"]),
+    ...mapMutations(["setUploadImageUrls", "setUploadImageFiles"]),
     createWhatWear() {
       // dialog창 닫기 + 입력데이터 보내기
       this.dialog = false;
@@ -230,8 +232,20 @@ export default {
       (this.whatwearTitle = ""), (this.whatwearContent = ""), (this.num = 0);
       axios
         .post("http://i4c102.p.ssafy.io:8080/api/wear", params)
-        .then(() => {
+        .then((res) => {
           // console.log('뭘입을까글쓰기성공')
+          console.log(res);
+
+          this.uploadImage({
+            key: "whatwear/",
+            articleIdx: res.data.whatwaerIdx,
+          }).then(() => {
+            // this.setUploadImageFiles(this.voteImage);
+            // this.setUploadImageUrls();
+            // //추후 개별업로드 필요
+            // this.uploadImage({ key: "vote/", article: res.data.voteIdx });
+          });
+
           console.log(params);
         })
         .catch((err) => {
