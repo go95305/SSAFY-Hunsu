@@ -1,7 +1,10 @@
 package com.project.chat.repository;
 
+import com.project.chat.controller.ChatController;
 import com.project.chat.dto.ChatRoom;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
@@ -15,6 +18,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Service
 public class ChatRoomRepository {
+    private final static Logger LOG = LoggerFactory.getLogger(ChatController.class);
     // Redis CacheKeys
     private static final String CHAT_ROOMS = "CHAT_ROOM"; // 채팅룸 저장
     public static final String USER_COUNT = "USER_COUNT"; // 채팅룸에 입장한 클라이언트수 저장
@@ -59,6 +63,10 @@ public class ChatRoomRepository {
         return chatRoom;
     }
 
+    public void setLikeCount(String roomId, String num) {
+        valueOps.set(LIKE_COUNT + "_" + roomId, num);
+    }
+
     //채팅방 삭제
     public long removeRoom(String roomId) {
         return hashOpsChatRoom.delete(CHAT_ROOMS, roomId);
@@ -85,7 +93,7 @@ public class ChatRoomRepository {
     }
 
     //채팅방 좋아요 조회
-    public long getLikeCount(String roomId) {
+    public long getLikeCount(String roomId) {//메인 페이지에 계속 0인 이유가 orElse부분인듯?
         return Long.valueOf(Optional.ofNullable(valueOps.get(LIKE_COUNT + "_" + roomId)).orElse("0"));
     }
 
@@ -97,8 +105,7 @@ public class ChatRoomRepository {
 
     //채팅방 좋아요 +1
     public long plusLikeCount(String roomId) {
-        Optional.ofNullable(valueOps.increment(LIKE_COUNT + "_" + roomId)).orElse(0L);
-        return getLikeCount(roomId);
+        return Optional.ofNullable(valueOps.increment(LIKE_COUNT + "_" + roomId)).orElse(0L);
     }
 
     // 채팅방에 입장한 유저수 -1
