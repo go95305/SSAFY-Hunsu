@@ -51,14 +51,13 @@ const actions = {
       .get(`http://i4c102.p.ssafy.io:8080/api/wear/detail/${wearIdx}/${nickname}`)
       .then((res) => {
         console.log('Vuex get Whatwear ', res.data);
-
-        let replyCount = 0;
-        for (let r = 0; r < res.data.replyList.length; r++) {
-          // console.log(res.data.replyList[r].flag)
-          if (res.data.replyList[r].flag) {
-            replyCount++;
+        
+        let replyCount = 0
+        res.data.replyList.map((v) => {
+          if (v.flag) {
+            replyCount++
           }
-        }
+        })
         // console.log('댓글합', replyCount)
         context.commit('setReplyCount', replyCount);
 
@@ -76,12 +75,12 @@ const actions = {
       .post('http://i4c102.p.ssafy.io:8080/api/wear/reply', whatwearReplyInfo)
       .then((res) => {
         console.log('댓글성공', res.data);
-        let replyCount = 0;
-        for (let c = 0; c < res.data.length; c++) {
-          if (res.data[c].flag) {
-            replyCount++;
+        let replyCount = 0
+        res.data.replyList.map((v) => {
+          if (v.flag) {
+            replyCount++
           }
-        }
+        })
         // console.log('댓글합', replyCount)
         context.commit('setReplyCount', replyCount);
         context.commit('setWhatwearReplyInfo', res.data);
@@ -106,13 +105,13 @@ const actions = {
       .put(`http://i4c102.p.ssafy.io:8080/api/wear/reply/${replyIdx}`)
       .then((res) => {
         console.log('삭제완료', res);
-        let replyCount = 0;
-        for (let c = 0; c < res.data.length; c++) {
-          if (res.data[c].flag) {
-            replyCount++;
+        let replyCount = 0
+        res.data.replyList.map((v) => {
+          if (v.flag) {
+            replyCount++
           }
-        }
-        context.commit('setReplyCount', replyCount);
+        })
+        context.commit('setReplyCount', replyCount)
         context.commit('setWhatwearReplyInfo', res.data);
       })
       .catch((err) => {

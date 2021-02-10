@@ -18,12 +18,22 @@
       작성자 접속자수
     </v-card-title>
   </v-card>
+
 </div>
+
 </template>
 
 <script>
 export default {
   name: "LiveList",
+  data() {
+    return {
+      dialog: false,
+      notifications: false,
+      sound: true,
+      widgets: false,
+    }
+  },
   methods: {
     goToLiveDetail() {
       this.$router.push('/live/detail')
