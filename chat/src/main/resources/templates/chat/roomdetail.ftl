@@ -62,6 +62,7 @@
             token: '',
             userCount: 0,
             likeCount: 0,
+            fixedComment:'',
             nickname: 'koyuchang',
         },
         created() {
@@ -101,6 +102,7 @@
                 this.message = '';
             },
             recvMessage: function (recv) {
+                this.fixedComment = recv.fixedComment;
                 this.userCount = recv.userCount;
                 this.likeCount = recv.likeCount;
                 this.messages.unshift({"type": recv.type, "sender": recv.sender, "message": recv.message})
