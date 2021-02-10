@@ -5,7 +5,10 @@
       <v-list-item style="height: 15px">
         <!-- 작성자 정보 -->
         <v-list-item-avatar>
-          <v-img @click="goToProfilePage(getOotdInfo.nickname)" src="https://cdn.vuetifyjs.com/images/john.png"></v-img>
+          <v-img
+            :src="getTargetProfileImage"
+            @click="goToProfilePage(getOotdInfo.nickname)"
+          ></v-img>
         </v-list-item-avatar>
         <v-list-item-content>
           <!-- 닉네임 -->
@@ -191,12 +194,14 @@
     </v-dialog>
     <!-- 댓글 -->
     <OotdDetailComment />
-
+    <!-- 디테일 하단 리스트 -->
+    <!-- <OotdList /> -->
   </v-card>
 </template>
 
 <script>
 import OotdDetailComment from "@/components/ootd/OotdDetailComment";
+// import OotdList from "@/components/ootd/OotdList";
 
 import { mapGetters, mapMutations, mapActions } from "vuex";
 
@@ -204,10 +209,16 @@ export default {
   name: "OotdDetail",
   components: {
     OotdDetailComment,
+    // OotdList,
     // OotdUpdate,
   },
   computed: {
-    ...mapGetters(["getOotdInfo", "getNickname", "getOotdInfoImages"]),
+    ...mapGetters([
+      "getOotdInfo",
+      "getNickname",
+      "getOotdInfoImages",
+      "getTargetProfileImage",
+    ]),
   },
   data() {
     return {
@@ -215,15 +226,7 @@ export default {
       updateDialog: false, // 수정창 dialog 활성화
       deleteDialog: false, // 삭제창 dialog 활성화
       required: false,
-      // colors: [
-      //   "green",
-      //   "secondary",
-      //   "yellow darken-4",
-      //   "red lighten-2",
-      //   "orange darken-1",
-      // ],
       cycle: false,
-      // slides: ["First", "Second", "Third", "Fourth", "Fifth"],
       notifications: false,
       sound: true,
       widgets: false,
@@ -242,7 +245,6 @@ export default {
   },
   watch: {
     getOotdInfo: (newData) => {
-      // console.log("iconName ", newData);
       if (newData.likeChk) {
         return "mdi-heart";
       } else {
@@ -260,13 +262,15 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(["setOotdInfo"]),
+    ...mapMutations(["setOotdInfo", "setTargetProfileImage"]),
     ...mapActions([
       "getOotdInfoInApi",
       "updateOotdInfo",
       "deleteOotdInfo",
       "toggleLike",
-      "getProfileInfoInApi"
+      "getProfileInfoInApi",
+      "getImageList",
+      "getProfileImage",
     ]),
     onoffUpdateDialog() {
       // 수정 dialog 활성화
@@ -280,12 +284,20 @@ export default {
       this.deleteDialog = !this.deleteDialog;
     },
     goToProfilePage(infoNickname) {
+      // 타겟 프로필 페이지로 이동
+      // let root = this;
       this.getProfileInfoInApi({
-          myNickname: this.getNickname,
-          yourNickname: infoNickname,
-          }).then(() => {
-            this.$router.push({name: "MyPage"})
-          }) 
+        // 타겟의 프로필 정보 가졍괴
+        myNickname: this.getNickname,
+        yourNickname: infoNickname,
+      }).then(() => {
+        this.getProfileImage({
+          // 타겟의 프로필 사진 가져오기
+          nickname: infoNickname,
+          target: "target",
+        });
+        this.$router.push({ name: "MyPage" });
+      });
     },
     goToLogin() {
       // 로그인 페이지로 이동
