@@ -14,11 +14,13 @@
         </div>
         <!-- 라이브 제목 -->
         <div
-          class="text-truncate mt-1"
+          class="text-truncate"
         >
           채팅방제목
         </div>
+        <!--개설자면 종료, 참여자는 나가기로 표시-->
         <v-btn text class="mb-1">종료</v-btn>
+        <!-- <v-btn text class="mb-1">나가기</v-btn> -->
       </div>
 
         <v-list-item style="height: 50px;">
@@ -29,7 +31,10 @@
           <v-list-item-subtitle>작성자</v-list-item-subtitle>
         </v-list-item-content>
         <v-list-item-action>
-          123명 접속중
+          <div class="d-flex align-center">
+          <v-icon color="red">mdi-circle-medium</v-icon>
+          <v-list-item-subtitle>참여자수</v-list-item-subtitle>
+          </div>
         </v-list-item-action>
       </v-list-item>
     </v-list>
@@ -38,7 +43,8 @@
         max-height="125"
         contain
         class="grey darken-4"
-      ></v-img>
+      >
+      </v-img>
     <LiveDetailChat />
     </v-card>
 </template>

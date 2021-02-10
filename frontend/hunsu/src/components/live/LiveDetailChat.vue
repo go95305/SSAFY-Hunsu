@@ -1,7 +1,7 @@
 <template>
 <!-- 라이브 채팅창 (아직 구현안돼서 댓글로 대체해놓음)-->
   <div>
-    <v-card
+    <!-- <v-card
       max-width="450"
       class="mx-auto"
     >
@@ -34,25 +34,28 @@
           </v-list-item>
         </template>
       </v-list>
-    </v-card>
+    </v-card> -->
     
-    <v-container fluid>
+    <v-container fluid>      
       <v-row>
-        <v-col
-          cols="12"
-          sm="6"
-        >
-          <v-textarea
-            label="채팅구현하기!!!!!!!!!!!!!!!!!!!"
-            auto-grow
+        <v-col cols="12" sm="6" id="comment_input">
+          <v-text-field
+            label="바르고 고운 채팅:)"
             outlined
             rows="3"
             row-height="25"
-          ></v-textarea>
+          ></v-text-field>
         </v-col>
-
       </v-row>
     </v-container>
+    <v-icon>mdi-heart</v-icon>
+  <div></div>
+  <div></div>
+  <div></div>
+  <div></div>
+  <div></div>
+  <div></div>
+  <div></div>
   </div>
 
 </template>
@@ -98,5 +101,7 @@ export default {
 </script>
 
 <style>
-
+div {
+  position: relative;
+}
 </style>
