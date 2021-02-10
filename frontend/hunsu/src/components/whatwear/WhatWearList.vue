@@ -9,41 +9,50 @@
       @click="goToWhatwearDetail(whatwear)"
       flat
     >
-      <div class="d-flex">
+      <div class="d-flex align-center pt-4 mb-4">
         <!--프로필사진-->
-        <!-- <div class="mt-2"></div> -->
-        <v-avatar class="mt-5 ml-2">
-          <v-img
-            v-if="whatwear.profileImage"
-            :src="whatwear.profileImage"
-            alt="John"
-            id="profile"
-          />
-          <v-img
-            v-else
-            src="https://s.pstatic.net/mimgnews/image/upload/office_logo/018/2017/01/05/logo_018_18_20170105111205.png?type=nf40_40"
-          />
-          <!--유저닉네임-->
-        </v-avatar>
-        <v-card-subtitle class="mt-4 font-weight-bold" id="nickname">
-          {{ whatwear.nickname }}
-        </v-card-subtitle>
-        <!--뭘입을까 글제목-->
-        <v-card-subtitle class="mt-4 font-weight-bold">
-          {{ whatwear.title }}
-        </v-card-subtitle>
-        <!--투표기능뱃지-->
-        <v-badge
-          v-if="whatwear.voteActivated"
-          color="red accent-3"
-          content="투표"
-          inline
-          class="mt-8"
-        >
-        </v-badge>
+        <div>
+          <v-avatar class="ml-2">
+            <v-img
+              v-if="whatwear.profileImage"
+              :src="whatwear.profileImage"
+              alt="John"
+              id="profile"
+            />
+            <v-img
+              v-else
+              src="https://s.pstatic.net/mimgnews/image/upload/office_logo/018/2017/01/05/logo_018_18_20170105111205.png?type=nf40_40"
+            />
+          </v-avatar>
+        </div>
+        <div class="ml-2">
+          <div>
+            <div class="d-flex">
+              <!--뭘입을까 글제목-->
+              <v-card-subtitle class="font-weight-bold" id="title">
+                {{ whatwear.title }}
+              </v-card-subtitle>
+              <!--투표기능뱃지-->
+              <v-badge
+                v-if="whatwear.voteActivated"
+                color="red accent-3"
+                content="투표"
+                inline
+                class="ml-2"
+              >
+              </v-badge>
+            </div>
+            <!--유저닉네임-->
+            <v-card-subtitle class="font-weight-light text-caption" id="nickname">
+              {{ whatwear.nickname }}
+            </v-card-subtitle>
+          </div>
+
+        </div>
         <!-- <div class="mb-2"></div> -->
       </div>
     </v-card>
+
     <v-card flat class="mt-4">
       <div class="text-center">
         <v-pagination
@@ -142,7 +151,10 @@ export default {
 }
 
 #nickname {
-  padding-left: 5px;
-  padding-right: 5px;
+  padding: 0 0 0 0;
+}
+
+#title {
+  padding: 0 0 0 0;
 }
 </style>
