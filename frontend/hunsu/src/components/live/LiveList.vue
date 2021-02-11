@@ -1,7 +1,67 @@
 <template>
   <!-- 라이브 메인페이지 -->
   <div>
-    <v-card @click="goToLiveDetail">
+    <!-- <div class="row">
+      <div class="col-md-6">
+        <h3>채팅방 리스트</h3>
+      </div>
+      <div class="col-md-6 text-right">
+        <a class="btn btn-primary btn-sm" href="/chat/room">방 나가기</a>
+      </div>
+    </div>
+    <div class="input-group">
+      <div class="input-group-prepend">
+        <label class="input-group-text">방제목</label>
+        <input type="text" class="form-control" v-model="room_name" />
+      </div>
+      <div class="input-group-prepend">
+        <label class="input-group-text">해시태그</label>
+        <input type="text" class="form-control" v-model="hashtagList" />
+      </div>
+      <div class="input-group-prepend">
+        <label class="input-group-text">고정댓글</label>
+        <input type="text" class="form-control" v-model="fixedComment" />
+      </div>
+      <div class="input-group-append">
+        <button class="btn btn-primary" type="button" @click="createRoom">
+          채팅방 개설
+        </button>
+      </div>
+    </div>
+    <ul class="list-group">
+      <li
+        class="list-group-item list-group-item-action"
+        v-for="item in chatrooms"
+        v-bind:key="item.roomId"
+      >
+        <h6>
+          {{ item.name }}
+          <span class="badge badge-info badge-pill">{{ item.userCount }}</span
+          ><span class="badge badge-info badge-pill">{{ item.likeCount }}</span>
+        </h6>
+        <span class="badge badge-info badge-pill">{{ item.hashtagList }}</span>
+        <br />
+        <button
+          class="btn btn-primary"
+          type="button"
+          v-on:click="enterRoom(item.roomId, item.name)"
+        >
+          방입장
+        </button>
+        <button
+          class="btn btn-primary"
+          type="button"
+          @click="removeRoom(item.roomId)"
+        >
+          방 삭제
+        </button>
+      </li>
+    </ul> -->
+    <v-card
+      v-for="(room, idx) in getChatRooms"
+      :key="idx"
+      @click="enterRoom(room.roomId, room.name)"
+    >
       <!-- 라이브 메인 사진 -->
       <v-img
         src="https://picsum.photos/350/165?random"
@@ -9,85 +69,76 @@
         contain
         class="grey darken-4"
       ></v-img>
-      <!-- 라이브 제목 -->
-      <v-card-title class="title text-body-1">
-        한시간 뒤에 소개팅가요 ㅠㅠ 도와주세요
-      </v-card-title>
-      <!-- 작성자, 접속자수 -->
-      <div class="d-flex align-center justify-center">
+      <!-- 작성자 프로필 -->
+      <v-card-title class="text-body-1" id="writer">
         <v-list-item-avatar>
           <v-img src="https://cdn.vuetifyjs.com/images/john.png"></v-img>
         </v-list-item-avatar>
-        <v-card-title class="text-body-1" id="writer"> 작성자 </v-card-title>
-      </div>
+        {{ room.name }}
+        <v-list-item-title class="title text-body-1">
+          {{ room.publisher }}
+        </v-list-item-title>
+      </v-card-title>
+
+      <v-list-item-content>
+        <!-- 라이브 제목 -->
+        <!-- 해시태그 -->
+        <v-list-item-subtitle>
+          <!-- 추후 해시태그에 검색 링크 걸 예정 -->
+          <p
+            v-for="(hashtag, i) in room.hashtagList"
+            :key="i"
+            style="display: inline"
+          >
+            {{ "#" + hashtag }}
+          </p>
+        </v-list-item-subtitle>
+      </v-list-item-content>
+      <!-- 작성자, 접속자수 -->
     </v-card>
   </div>
 </template>
 
 <script>
-import axios from "axios";
-axios.defaults.url = "http://localhost:8080";
+import { mapActions, mapGetters, mapMutations } from "vuex";
+
 export default {
   name: "LiveList",
-  data() => ({
-    
+  data() {
+    return {
       dialog: false,
       notifications: false,
       sound: true,
       widgets: false,
       room_name: "",
-    publisher: "",
-    hashtagList: [],
-    chatrooms: [],
-    fixedComment: "",
+      publisher: "",
+      hashtagList: [],
+      chatrooms: [],
+      fixedComment: "",
+    };
   },
   created() {
     this.findAllRoom();
   },
-  
+  computed: {
+    ...mapGetters(["getChatRooms"]),
+  },
   methods: {
-    findAllRoom: () => {
-      axios.get("/chat/rooms").then((res) => {
-        if (Object.prototype.toString.call(res.data) === "[object Array]") {
-          console.log(res.data);
-        }
-        this.chatrooms = res.data;
+    ...mapActions(["findAllRoom"]),
+    ...mapMutations(["setChatRoomDetail"]),
+    // removeRoom(roomId) {
+    //   axios.post("/chat/room/remove/" + roomId).then(() => {
+    //     console.log("삭제완료");
+    //     this.findAllRoom();
+    //   });
+    // },
+    enterRoom(roomId, roomName) {
+      // localStorage.setItem("wschat.roomId", roomId);
+      // localStorage.setItem("wschat.roomName", roomName);
+      this.setChatRoomDetail({
+        roomId,
+        title: roomName,
       });
-    },
-    removeRoom: (roomId) => {
-      axios.post("/chat/room/remove/" + roomId).then(() => {
-        console.log("삭제완료");
-        this.findAllRoom();
-      });
-    },
-    createRoom: () => {
-      if ("" === this.room_name) {
-        alert("방 제목을 입력해라");
-        return;
-      } else {
-        axios
-          .post("/chat/room", {
-            name: this.room_name,
-            publisher: this.publisher,
-            hashtagList: this.hashtagList,
-            fixedComment: this.fixedComment,
-          })
-          .then((res) => {
-            alert(res.data.name + " 방 개설 성공");
-            this.room_name = "";
-            this.hashtagList = [];
-            this.fixedComment = "";
-            this.findAllRoom();
-          })
-          .catch((res) => {
-            alert("채팅방개설 실패");
-            console.log(res);
-          });
-      }
-    },
-    enterRoom: (roomId, roomName) => {
-      localStorage.setItem("wschat.roomId", roomId);
-      localStorage.setItem("wschat.roomName", roomName);
       this.$router.push("/live/detail");
     },
     // goToLiveDetail: () => {
