@@ -22,7 +22,7 @@
                         class="badge badge-info badge-pill">{{likeCount}}</span></h4>
         </div>
         <div class="col-md-6 text-right">
-            <a class="btn btn-info btn-sm" href="/chat/room">채팅방 나가기</a>
+            <a class="btn btn-info btn-sm" @click="leaveRoom">채팅방 나가기</a>
         </div>
 
     </div>
@@ -74,7 +74,7 @@
                     var recv = JSON.parse(message.body);
                     _this.recvMessage(recv);
                     //방입장 닉네임 설정을 위해 닉네임을 헤더에 보내주세요!({"nickname":"koyuchang"})
-                }, {"nickname": "koyuchang"});
+                }, {"nickname": _this.nickname});
             }, function (error) {
                 alert("서버 연결에 실패 하였습니다. 다시 접속해 주십시요.");
                 location.href = "/chat/room";
@@ -82,6 +82,11 @@
 
         },
         methods: {
+            leaveRoom: function () {
+                var _this = this;
+                ws.disconnect("/sub/chat/room/" + this.roomId, {"nickname": _this.nickname})
+                location.href = "/chat/room"
+            },
             plusLike: function (type) {
                 ws.send("/pub/chat/like", {"nickname": this.nickname}, JSON.stringify({
                     type: type,

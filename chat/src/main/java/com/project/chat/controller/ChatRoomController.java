@@ -24,10 +24,10 @@ public class ChatRoomController {
     }
 
     //실채훈 메인페이지(모든 채팅방 리스트)
-    @GetMapping("/rooms")
+    @GetMapping("/rooms/{sort}")
     @ResponseBody
-    public List<ChatRoom> room() {
-        List<ChatRoom> chatRooms = chatRoomRepository.findAllRoom();
+    public List<ChatRoom> room(@PathVariable int sort) {
+        List<ChatRoom> chatRooms = chatRoomRepository.findAllRoom(sort);
         chatRooms.stream().forEach(room -> room.setUserCount(chatRoomRepository.getUserCount(room.getRoomId())));
         chatRooms.stream().forEach(room -> room.setLikeCount(chatRoomRepository.getLikeCount(room.getRoomId())));
         return chatRooms;

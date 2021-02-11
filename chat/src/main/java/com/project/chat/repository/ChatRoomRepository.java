@@ -33,23 +33,38 @@ public class ChatRoomRepository {
     private ValueOperations<String, String> valueOps;
 
     // 모든 채팅방 조회
-    public List<ChatRoom> findAllRoom() {
+    public List<ChatRoom> findAllRoom(int sort) {
         List<ChatRoom> chatRoomList = hashOpsChatRoom.values(CHAT_ROOMS);
-        Collections.sort(chatRoomList, new Comparator<ChatRoom>() {
-            @Override
-            public int compare(ChatRoom o1, ChatRoom o2) {
-                if (o1.getCreatDate() < o2.getCreatDate()) {
-                    return -1;
-                } else if (o1.getCreatDate() > o2.getCreatDate()) {
-                    return 1;
+        //최신순으로 정렬
+        if(sort==0) {
+            Collections.sort(chatRoomList, new Comparator<ChatRoom>() {
+                @Override
+                public int compare(ChatRoom o1, ChatRoom o2) {
+                    if (o1.getCreatDate() > o2.getCreatDate()) {
+                        return -1;
+                    } else if (o1.getCreatDate() < o2.getCreatDate()) {
+                        return 1;
+                    }
+                    return 0;
                 }
-                return 0;
-            }
-        });
-//        return hashOpsChatRoom.values(CHAT_ROOMS);
+            });
+        }
+        //인기순으로 정렬
+        else{
+            Collections.sort(chatRoomList, new Comparator<ChatRoom>() {
+                @Override
+                public int compare(ChatRoom o1, ChatRoom o2) {
+                    if (o1.getLikeCount() > o2.getLikeCount()) {
+                        return -1;
+                    } else if (o1.getLikeCount() < o2.getLikeCount()) {
+                        return 1;
+                    }
+                    return 0;
+                }
+            });
+        }
         return chatRoomList;
     }
-
 
     // 특정 채팅방 조회
     public ChatRoom findRoomById(String id) {
@@ -63,8 +78,13 @@ public class ChatRoomRepository {
         return chatRoom;
     }
 
-    public void setLikeCount(String roomId, String num) {
-        valueOps.set(LIKE_COUNT + "_" + roomId, num);
+    public void updateLikeCount(String roomId) {
+        ChatRoom chatRoom = hashOpsChatRoom.get(CHAT_ROOMS, roomId);
+        assert chatRoom != null;
+        chatRoom.setLikeCount(chatRoom.getLikeCount() + 1);
+//        hashOpsChatRoom.delete(CHAT_ROOMS,roomId);
+        hashOpsChatRoom.put(CHAT_ROOMS, roomId, chatRoom);
+        LOG.info("uplike" + chatRoom.getLikeCount());
     }
 
     //채팅방 삭제
@@ -89,12 +109,12 @@ public class ChatRoomRepository {
 
     // 채팅방 유저수 조회
     public long getUserCount(String roomId) {
-        return Long.valueOf(Optional.ofNullable(valueOps.get(USER_COUNT + "_" + roomId)).orElse("0"));
+        return Long.parseLong(Optional.ofNullable(valueOps.get(USER_COUNT + "_" + roomId)).orElse("0"));
     }
 
     //채팅방 좋아요 조회
-    public long getLikeCount(String roomId) {//메인 페이지에 계속 0인 이유가 orElse부분인듯?
-        return Long.valueOf(Optional.ofNullable(valueOps.get(LIKE_COUNT + "_" + roomId)).orElse("0"));
+    public Long getLikeCount(String roomId) {//메인 페이지에 계속 0인 이유가 orElse부분인듯?
+        return Long.parseLong(Optional.ofNullable(valueOps.get(LIKE_COUNT + "_" + roomId)).orElse("0"));
     }
 
 
@@ -104,7 +124,8 @@ public class ChatRoomRepository {
     }
 
     //채팅방 좋아요 +1
-    public long plusLikeCount(String roomId) {
+    public Long plusLikeCount(String roomId) {
+        updateLikeCount(roomId);
         return Optional.ofNullable(valueOps.increment(LIKE_COUNT + "_" + roomId)).orElse(0L);
     }
 

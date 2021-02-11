@@ -20,6 +20,8 @@
         </div>
         <div class="col-md-6 text-right">
             <a class="btn btn-primary btn-sm" href="/chat/room">방 나가기</a>
+            <a class="btn btn-primary btn-sm" @click="findAllRoom(0)">최신순</a>
+            <a class="btn btn-primary btn-sm" @click="findAllRoom(1)">인기순</a>
         </div>
     </div>
     <div class="input-group">
@@ -41,7 +43,8 @@
     </div>
     <ul class="list-group">
         <li class="list-group-item list-group-item-action" v-for="item in chatrooms" v-bind:key="item.roomId">
-            <h6>{{item.name}} <span class="badge badge-info badge-pill">{{item.userCount}}</span><span class="badge badge-info badge-pill">{{item.likeCount}}</span></h6>
+            <h6>{{item.name}} <span class="badge badge-info badge-pill">{{item.userCount}}</span><span
+                        class="badge badge-info badge-pill">{{item.likeCount}}</span></h6>
             <span class="badge badge-info badge-pill">{{item.hashtagList}}</span>
             <br/>
             <button class="btn btn-primary" type="button" v-on:click="enterRoom(item.roomId, item.name)">방입장</button>
@@ -63,16 +66,18 @@
             fixedComment: '',
         },
         created() {
-            this.findAllRoom();
+            const tmp = 0;
+            this.findAllRoom(tmp);
         },
         methods: {
             removeRoom: function (roomId) {
                 axios.post('/chat/room/remove/' + roomId)
-                alert("방 삭제 완료"),
-                    this.findAllRoom();
+                alert("방 삭제 완료")
+                var tmp = 0;
+                this.findAllRoom(tmp);
             },
-            findAllRoom: function () {
-                axios.get('/chat/rooms').then(response => {
+            findAllRoom: function (num) {
+                axios.get('/chat/rooms/' + num).then(response => {
                     // prevent html, allow json array
                     if (Object.prototype.toString.call(response.data) === "[object Array]")
                         console.log(response.data);
@@ -96,7 +101,8 @@
                                 this.room_name = '';
                                 this.hashtagList = [];
                                 this.fixedComment = '';
-                                this.findAllRoom();
+                                var tmp = 0;
+                                this.findAllRoom(tmp);
                             }
                         )
                         .catch(response => {
