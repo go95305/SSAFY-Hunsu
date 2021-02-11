@@ -6,7 +6,6 @@ import com.project.chat.repository.ChatRoomRepository;
 import com.project.chat.service.ChatService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.omg.PortableInterceptor.LOCATION_FORWARD;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.simp.stomp.StompCommand;
@@ -21,7 +20,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Component
 public class StompHandler implements ChannelInterceptor {
-
     private final ChatRoomRepository chatRoomRepository;
     private final ChatService chatService;
 
@@ -38,7 +36,8 @@ public class StompHandler implements ChannelInterceptor {
             // 채팅방의 인원수를 +1한다.
             chatRoomRepository.plusUserCount(roomId);
             // 클라이언트 입장 메시지를 채팅방에 발송한다.(redis publish)
-            String name = Optional.ofNullable((Principal) message.getHeaders().get("simpUser")).map(Principal::getName).orElse("UnknownUser");
+            String name = accessor.getFirstNativeHeader("nickname");
+            log.info("헤더가 무엇이냐: "+message.getHeaders());
             chatService.sendChatMessage(ChatMessage.builder().type(ChatMessage.MessageType.ENTER).roomId(roomId).sender(name).build());
             log.info("SUBSCRIBED {}, {}", name, roomId);
         } else if (StompCommand.DISCONNECT == accessor.getCommand()) { // Websocket 연결 종료

@@ -62,7 +62,7 @@
             token: '',
             userCount: 0,
             likeCount: 0,
-            fixedComment:'',
+            fixedComment: '',
             nickname: 'koyuchang',
         },
         created() {
@@ -73,7 +73,8 @@
                 ws.subscribe("/sub/chat/room/" + _this.roomId, function (message) {
                     var recv = JSON.parse(message.body);
                     _this.recvMessage(recv);
-                });
+                    //방입장 닉네임 설정을 위해 닉네임을 헤더에 보내주세요!({"nickname":"koyuchang"})
+                }, {"nickname": "koyuchang"});
             }, function (error) {
                 alert("서버 연결에 실패 하였습니다. 다시 접속해 주십시요.");
                 location.href = "/chat/room";
@@ -82,15 +83,11 @@
         },
         methods: {
             plusLike: function (type) {
-                ws.send("/pub/chat/like",{"nickname": this.nickname},JSON.stringify({
-                    type:type,
-                    roomId:this.roomId,
-                    sender:this.nickname
+                ws.send("/pub/chat/like", {"nickname": this.nickname}, JSON.stringify({
+                    type: type,
+                    roomId: this.roomId,
+                    sender: this.nickname
                 }))
-                // axios.post('/chat/room/like/' + roomId).then(response => {
-                //     console.log("new like:"+ response.data),
-                //     this.likeCount = response.data;
-                // });
             },
             sendMessage: function (type) {
                 console.log("여기부터")
