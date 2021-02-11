@@ -10,7 +10,10 @@
     </v-container>
     <!-- 좋아요 누르기 -->
     <v-btn icon @click="plusLike">
-      <v-icon id="heart" color="red">mdi-heart</v-icon>
+      <!-- <v-icon class="a" color="red">mdi-heart</v-icon> -->
+      <transition name="heart">
+        <v-icon v-if="show" class="a heart" color="red">mdi-heart</v-icon>
+      </transition>
     </v-btn>
     <!-- 참여자 채팅 -->
     <v-container fluid>
@@ -62,6 +65,7 @@ export default {
     publisherMsgs: [],
     stompClient: "",
     connected: false,
+    show: true,
   }),
   computed: {
     ...mapGetters(["getChatRoomDetail", "getNickname"]),
@@ -112,6 +116,7 @@ export default {
         console.log("연결안됐는데 왜 좋아요보내?");
         return;
       }
+      this.show = !this.show;
       const _this = this;
       this.stompClient.send(
         "/pub/chat/like",
@@ -152,6 +157,8 @@ export default {
       this.userCount = recv.userCount;
       this.likeCount = recv.likeCount;
       if (recv.type === "LIKE") {
+        console.log(recv);
+        this.show = !this.show;
       } else {
         if (recv.sender === this.getNickname) {
           // 개설자 메세지 일 때
@@ -176,47 +183,55 @@ export default {
 
 <style>
 .a {
+  float: center;
   position: absolute;
-  bottom: -60px;
   width: 50px;
   height: 50px;
 }
-
-.a:first-of-type {
-  left: 10px;
-  animation: bubble 2s 1s linear infinite;
+.heart-enter-active {
+  animation: bubble 2s;
+}
+/* .a:first-of-type {
+  animation: bubble 1s 2s linear;
 }
 
 .a:nth-of-type(2) {
-  left: 10px;
-  animation: bubble 3s 1s linear infinite;
+  animation: bubble 1s 1s linear;
 }
 
 .a:nth-of-type(3) {
-  left: 10px;
   animation: bubble 3.5s 1s linear infinite;
 }
 
 .a:nth-of-type(4) {
-  left: 10px;
   animation: bubble 3.1s 1s linear infinite;
 }
 
 .a:nth-of-type(5) {
-  left: 10px;
   animation: bubble 3s 1s linear infinite;
-}
+} */
 
 @keyframes bubble {
-  0% {
-    bottom: -100px;
+  from {
+    bottom: 0px;
+    left: 0%;
+    right: 0%;
     opacity: 1;
   }
-  50% {
-    opacity: 0;
+  20% {
+    right: 20%;
+  }
+  40% {
+    left: -20%;
+  }
+  60% {
+    right: 20%;
+  }
+  80% {
+    left: -20%;
   }
   to {
-    bottom: 100%;
+    bottom: 100px;
     opacity: 0;
   }
 }
