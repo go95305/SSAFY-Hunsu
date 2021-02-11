@@ -91,7 +91,8 @@ export default {
   mounted() {
     console.log("navbar mount ", this.getAccessToken, this.getRefreshToken);
     // let root = this;
-    if (this.getAccessToken && this.getRefreshToken) {
+    // if (this.getAccessToken && this.getRefreshToken) {
+    if (this.getAccessToken) {
       // uid로 설계해야하는데, 임시적으로 닉네임으로 처리
       this.kakaoLogin().then(() => {
         // console.log(this.getNickname);
