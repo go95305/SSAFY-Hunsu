@@ -128,7 +128,8 @@
       <v-row justify="center" class="mb-5">
         <v-dialog v-model="dialog" scrollable max-width="300px">
           <template v-slot:activator="{ on, attrs }">
-            <v-btn color="black" dark v-bind="attrs" v-on="on" text>
+            <!--마감이 true면 버튼을 안보여준다. false일때만 보여준다.-->
+            <v-btn v-if="getVoteTime === false" color="black" dark v-bind="attrs" v-on="on" text>
               Choice✨
             </v-btn>
           </template>
@@ -214,9 +215,9 @@ export default {
       "getNickname",
       "getVoteTotal",
       "getTargetProfileImage",
+      "getVoteTime",
     ]),
   },
-  created() {},
   data() {
     return {
       model: 0,
@@ -225,7 +226,11 @@ export default {
       deleteDialog: false,
       vote_activated: false,
       voteImages: [],
+      endTimeCheck: this.getVoteTime
     };
+  },
+  created() {
+    console.log('최종확인', this.getVoteTime)
   },
   methods: {
     ...mapMutations(["setWhatwearInfo"]),
@@ -247,6 +252,49 @@ export default {
     voteWhatwear(voteIdx, nickname) {
       this.voteWhatwearInfo({ voteIdx, nickname });
     },
+    // endTime() {
+    //   let today = new Date()
+    //   let year = today.getFullYear()
+    //   let month = this.leadingZeros(today.getMonth() + 1, 2)
+    //   let date = today.getDate()
+    //   let nowDay = year + '.' + month + '.' + date
+
+    //   let hours = today.getHours()
+    //   let minutes = today.getMinutes()
+    //   let seconds = today.getSeconds()
+    //   let nowTime = hours + ':' + minutes + ':' + seconds
+
+
+    //   let endTime = this.getWhatwearInfo.end_time
+    //   let endDay = endTime.slice(0, 10)
+    //   let endHours = endTime.slice(11, 19)
+      
+
+    //   if (nowDay > endDay) {
+    //     this.dayCheck = true
+    //   }
+
+    //   if (nowTime > endHours) {
+    //     this.timeCheck = true
+    //   }
+
+    //   if (this.dayCheck && this.timeCheck) {
+    //     this.endTimeCheck = true
+
+    //   console.log('확인', this.dayCheck, this.timeCheck)
+    //   }
+    // }, 
+    // leadingZeros(n, digits) {
+    //   let zero = ''
+    //   n = n.toString()
+
+    //   if (n.length < digits) {
+    //     for (let i = 0; i < digits - n.length; i++) {
+    //       zero += '0'
+    //     }
+    //   }
+    //   return zero + n
+    // },
   },
 };
 </script>
