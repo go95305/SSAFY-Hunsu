@@ -22,7 +22,6 @@
         <v-btn text class="mb-1">종료</v-btn>
         <!-- <v-btn text class="mb-1">나가기</v-btn> -->
       </div>
-
         <v-list-item style="height: 50px;">
         <v-list-item-avatar>
           <v-img src="https://cdn.vuetifyjs.com/images/john.png"></v-img>
