@@ -9,7 +9,9 @@
       </v-row>
     </v-container>
     <!-- 좋아요 누르기 -->
-    <font-awesome-icon icon="fa-heart" @click="plusLike" />
+    <v-btn icon @click="plusLike">
+      <v-icon id="heart" color="red">mdi-heart</v-icon>
+    </v-btn>
     <!-- 참여자 채팅 -->
     <v-container fluid>
       <v-row>
@@ -19,15 +21,17 @@
     <!-- 참여자 채팅 전송 -->
     <v-container fluid>
       <v-row>
-        <v-col cols="12" sm="6" id="comment_input">
+        <v-col class="mb-6">
           <v-text-field
             v-model="msg"
             label="바르고 고운 채팅:)"
             outlined
-            rows="3"
-            row-height="25"
+            rows="2"
+            row-height="20"
+            append-outer-icon="mdi-chevron-right"
+            @click:append-outer="sendMessage"
+            @keyup.enter="sendMessage"
           ></v-text-field>
-          <font-awesome-icon icon="fa-angle-right" @click="plusLike" />
         </v-col>
       </v-row>
     </v-container>
@@ -48,9 +52,6 @@ import Stomp from "webstomp-client";
 import SockJS from "sockjs-client";
 import { mapGetters } from "vuex";
 
-var sock = new SockJS("http://localhost:8082/ws-stomp");
-var ws = Stomp.over(sock);
-
 export default {
   name: "LiveDetailChat",
   data: () => ({
@@ -59,19 +60,24 @@ export default {
     likeCount: 0,
     joinerMsgs: [],
     publisherMsgs: [],
+    stompClient: "",
+    connected: false,
   }),
   computed: {
     ...mapGetters(["getChatRoomDetail", "getNickname"]),
   },
   created() {
+    let sock = new SockJS("http://localhost:8082/ws-stomp");
+    this.stompClient = Stomp.over(sock);
+
     const _this = this;
-    ws.connect(
+    this.stompClient.connect(
       {},
       function (frame) {
         console.log("frame", frame);
         console.log(_this.getNickname);
-
-        ws.subscribe(
+        _this.connected = true;
+        _this.stompClient.subscribe(
           "/sub/chat/room/" + _this.getChatRoomDetail.roomId,
           function (msg) {
             let recv = JSON.parse(msg.body);
@@ -87,59 +93,81 @@ export default {
       }
     );
   },
+  beforeDestroyed() {
+    console.log("exitroom");
+    this.exitChatRoom();
+  },
   methods: {
     exitChatRoom() {
       const _this = this;
-      ws.disconnect(
+      this.stompClient.disconnect(
         () => {
           _this.$router.push("/live");
         },
         { nickname: _this.getNickname }
       );
     },
-    plusLike(type) {
+    plusLike() {
+      if (!this.stompClient || !this.connected) {
+        console.log("연결안됐는데 왜 좋아요보내?");
+        return;
+      }
       const _this = this;
-      ws.send(
+      this.stompClient.send(
         "/pub/chat/like",
-        { nickname: _this.getNickname },
         JSON.stringify({
-          type: type,
+          type: "LIKE",
           roomId: _this.getChatRoomDetail.roomId,
           sender: _this.getNickname,
-        })
+        }),
+        { nickname: _this.getNickname }
       );
     },
-    sendMessage(type) {
-      console.log("여기부터");
+    sendMessage() {
+      if (!this.stompClient || !this.connected) {
+        console.log("연결안됐는데 왜 메세지보내?");
+        return;
+      }
       const _this = this;
-      ws.send(
-        "/pub/chat/message",
-        { nickname: _this.getNickname },
+      let content = JSON.stringify({
+        type: "TALK",
+        roomId: _this.getChatRoomDetail.roomId,
+        message: _this.msg,
+        sender: _this.getNickname,
+      });
+      this.stompClient.send("/pub/chat/message", content, {
+        // 여기선 순서 바꿔줘야함
+        nickname: _this.getNickname,
+      });
+      console.log(
         JSON.stringify({
-          type: type,
+          type: "TALK",
           roomId: _this.getChatRoomDetail.roomId,
-          message: _this.message,
+          message: _this.msg,
         })
       );
-      this.message = "";
+      this.msg = "";
     },
     recvMessage(recv) {
       this.userCount = recv.userCount;
       this.likeCount = recv.likeCount;
-      if (recv.sender === this.getNickname) {
-        // 개설자 메세지 일 때
-        this.publisherMsgs.unshift({
-          type: recv.type,
-          sender: recv.sender,
-          message: recv.message,
-        });
+      if (recv.type === "LIKE") {
       } else {
-        // 참여자 메세지 일 때
-        this.joinerMsgs.unshift({
-          type: recv.type,
-          sender: recv.sender,
-          message: recv.message,
-        });
+        if (recv.sender === this.getNickname) {
+          // 개설자 메세지 일 때
+          this.publisherMsgs.unshift({
+            type: recv.type,
+            sender: recv.sender,
+            message: recv.message,
+          });
+        } else {
+          // 참여자 메세지 일 때
+          this.joinerMsgs.unshift({
+            type: recv.type,
+            sender: recv.sender,
+            message: recv.message,
+          });
+        }
       }
     },
   },

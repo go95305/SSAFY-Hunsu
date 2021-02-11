@@ -60,7 +60,7 @@
     <v-card
       v-for="(room, idx) in getChatRooms"
       :key="idx"
-      @click="enterRoom(room.roomId, room.name)"
+      @click="enterRoom(room)"
     >
       <!-- 라이브 메인 사진 -->
       <v-img
@@ -132,13 +132,11 @@ export default {
     //     this.findAllRoom();
     //   });
     // },
-    enterRoom(roomId, roomName) {
+    enterRoom(roomInfo) {
       // localStorage.setItem("wschat.roomId", roomId);
       // localStorage.setItem("wschat.roomName", roomName);
-      this.setChatRoomDetail({
-        roomId,
-        title: roomName,
-      });
+      console.log(roomInfo);
+      this.setChatRoomDetail(roomInfo);
       this.$router.push("/live/detail");
     },
     // goToLiveDetail: () => {
