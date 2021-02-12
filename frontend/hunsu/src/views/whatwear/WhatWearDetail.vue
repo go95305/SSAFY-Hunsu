@@ -39,7 +39,7 @@
               </v-avatar>
             </template>
             <v-list>
-              <v-dialog v-model="dialog" persistent max-width="290">
+              <v-dialog v-model="deleteDialog" persistent max-width="290">
                 <template v-slot:activator="{ on, attrs }">
                   <v-btn
                     color="red accent-4"
@@ -56,7 +56,7 @@
                   <v-card-text>게시글을 삭제하시겠어요?</v-card-text>
                   <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="blue darken-4" text @click="dialog = false">
+                    <v-btn color="blue darken-4" text @click="deleteDialog = false">
                       취소
                     </v-btn>
                     <v-btn
@@ -64,7 +64,7 @@
                       text
                       @click="
                         [
-                          (dialog = false),
+                          (deleteDialog = false),
                           deleteWhatWear(getWhatwearInfo.wear_idx),
                         ]
                       "
@@ -93,7 +93,8 @@
     </div>
     <!--투표사진-->
     <div id="vote" v-if="getWhatwearInfo.vote_activated">
-      <v-carousel v-model="model" hide-delimiter-background>
+      <ImageView :images="getWhatwearInfo.imageUrls" />
+      <!-- <v-carousel v-model="model" hide-delimiter-background>
         <v-carousel-item v-for="(color, i) in colors" :key="color">
           <v-sheet :color="color" height="100%" tile>
             <v-row class="fill-height" align="center" justify="center">
@@ -101,7 +102,7 @@
             </v-row>
           </v-sheet>
         </v-carousel-item>
-      </v-carousel>
+      </v-carousel> -->
     </div>
 
     <!--글 내용-->
@@ -119,7 +120,7 @@
         <v-checkbox
           v-for="(n, index) in getWhatwearVoteInfo"
           :key="n.idx"
-          :label="`${index+1}번`"
+          :label="`${index + 1}번`"
           v-model="n.choice"
           @click="voteWhatwear(getWhatwearVoteInfo[index].idx, getNickname)"
         ></v-checkbox>
@@ -197,13 +198,14 @@
 <script>
 import WhatWearDetailComment from "@/components/whatwear/WhatWearDetailComment";
 import { mapActions, mapGetters, mapMutations } from "vuex";
-
+// import ImageView from "@/components/module/ImageView";
 import axios from "axios";
 
 export default {
   name: "WhatWearDetail",
   components: {
     WhatWearDetailComment,
+    // ImageView,
   },
   computed: {
     ...mapGetters([
@@ -214,12 +216,15 @@ export default {
       "getTargetProfileImage",
     ]),
   },
+  created() {},
   data() {
     return {
       model: 0,
       colors: ["primary", "secondary", "yellow darken-2"],
       dialog: false,
+      deleteDialog: false,
       vote_activated: false,
+      voteImages: [],
     };
   },
   methods: {

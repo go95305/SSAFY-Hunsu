@@ -20,7 +20,7 @@
     <div v-for="(reply, groupNum) in getWhatwearReplyInfo" :key="groupNum">
       <!--댓글창-->
       <v-card
-        v-if="reply.depth === 0 && reply.flag"
+        v-if="reply.depth === 0"
         flat
         class="d-flex align-center justify-space-around"
       >
@@ -34,7 +34,8 @@
             <p style="margin-bottom: 0; font-size: 14px">
               {{ reply.nickname }}
             </p>
-            <p style="margin-bottom: 0; font-size: 13px">{{ reply.content }}</p>
+            <p v-if="reply.flag" style="margin-bottom: 0; font-size: 13px">{{ reply.content }}</p>
+            <p v-if="!reply.flag" style="margin-bottom: 0; font-size: 13px">작성자에 의해 삭제된 댓글 입니다.</p>
             <div class="d-flex">
               <!--write_date가 null이라서 바로반영못함-->
               <!-- <p style="margin-bottom: 0; font-size: 10px">{{ reply.write_date.slice(0, 10) }}</p> -->
@@ -78,6 +79,10 @@
           ><v-icon>mdi-heart</v-icon></v-btn
         >
       </v-card>
+
+
+
+
       <v-card>
 
       </v-card>
@@ -192,6 +197,7 @@ export default {
           wear_idx: wearIdx,
         });
       }
+      console.log(this.replyContent, this.depth, this.groupNum, this.getNickname, wearIdx)
       this.replyContent = "";
       this.depth = 0;
       this.groupNum = 0;

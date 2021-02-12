@@ -3,52 +3,24 @@
   <v-card>
       <v-list two-line>
       <!-- 뒤로가기 버튼 (라이브 메인페이지로 이동) -->
-      <div class="d-flex justify-space-between">
-      <div class="d-inline-block">
-      <v-btn
-        icon
-        @click="goToLiveMain"
-      >
-        <v-icon>mdi-chevron-left</v-icon>
-      </v-btn>
-      </div>
+      <div class="d-flex align-center justify-space-between">
+        <div>
+          <v-btn
+            icon
+            @click="goToLiveMain"
+          >
+            <v-icon>mdi-chevron-left</v-icon>
+          </v-btn>
+        </div>
         <!-- 라이브 제목 -->
         <div
-          class="d-inline-block text-truncate"
-          style="max-width: 270px; height: 36px"
+          class="text-truncate"
         >
-          소개팅가요 도와주세요 !!!소개팅가요 도와주세요 !!!소개팅가요 도와주세요 !!!
+          채팅방제목
         </div>
-        <div class="d-inline-block">
-        <v-menu
-        bottom
-      >
-        <template v-slot:activator="{ on, attrs }">
-          <v-avatar
-          v-bind="attrs"
-          v-on="on"
-          >
-            <v-btn
-              color="black"
-              icon
-              class="d-inline-block"
-            >
-              <v-icon>mdi-dots-vertical</v-icon>
-            </v-btn>
-          </v-avatar>
-        </template>
-
-        <v-list>
-          <v-list-item
-            v-for="(item, i) in items"
-            :key="i"
-            @click="goToPage(item)"
-          >
-            <v-list-item-title>{{ item.text }}</v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </v-menu>
-      </div>
+        <!--개설자면 종료, 참여자는 나가기로 표시-->
+        <v-btn text class="mb-1">종료</v-btn>
+        <!-- <v-btn text class="mb-1">나가기</v-btn> -->
       </div>
         <v-list-item style="height: 50px;">
         <v-list-item-avatar>
@@ -58,7 +30,10 @@
           <v-list-item-subtitle>작성자</v-list-item-subtitle>
         </v-list-item-content>
         <v-list-item-action>
-          123명 접속중
+          <div class="d-flex align-center">
+          <v-icon color="red">mdi-circle-medium</v-icon>
+          <v-list-item-subtitle>참여자수</v-list-item-subtitle>
+          </div>
         </v-list-item-action>
       </v-list-item>
     </v-list>
@@ -67,7 +42,8 @@
         max-height="125"
         contain
         class="grey darken-4"
-      ></v-img>
+      >
+      </v-img>
     <LiveDetailChat />
     </v-card>
 </template>

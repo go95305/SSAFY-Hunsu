@@ -14,16 +14,30 @@
       한시간 뒤에 소개팅가요 ㅠㅠ 도와주세요
     </v-card-title>
     <!-- 작성자, 접속자수 -->
-    <v-card-title class="title text-body-1">
-      작성자 접속자수
-    </v-card-title>
+      <div class="d-flex align-center justify-center">
+        <v-list-item-avatar>
+          <v-img src="https://cdn.vuetifyjs.com/images/john.png"></v-img>
+        </v-list-item-avatar>
+        <v-card-title class="text-body-1" id="writer">
+          작성자
+        </v-card-title>
+      </div>
   </v-card>
 </div>
+
 </template>
 
 <script>
 export default {
   name: "LiveList",
+  data() {
+    return {
+      dialog: false,
+      notifications: false,
+      sound: true,
+      widgets: false,
+    }
+  },
   methods: {
     goToLiveDetail() {
       this.$router.push('/live/detail')
@@ -32,6 +46,6 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 
 </style>

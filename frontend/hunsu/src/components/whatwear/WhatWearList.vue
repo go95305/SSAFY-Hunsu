@@ -68,7 +68,7 @@
 
 <script>
 import axios from "axios";
-import { mapActions } from "vuex";
+import { mapActions, mapMutations } from "vuex";
 
 export default {
   name: "WhatWearList",
@@ -89,6 +89,7 @@ export default {
   },
   methods: {
     ...mapActions(["getWhatwearInfoApi", "getProfiles", "getProfileImage"]),
+    ...mapMutations(["setWhatwearInfoImages"]),
     goToWhatwearDetail(whatwear) {
       // console.log('글번호', whatwear.wear_idx)
       const wearIdx = whatwear.wear_idx;
@@ -98,6 +99,9 @@ export default {
           this.getProfileImage({
             nickname: nickname,
             target: "target",
+          });
+          this.getImageList({ prefix: "whatwear/" + wearIdx }).then((res) => {
+            this.setWhatwearInfoImages(res);
           });
         });
       this.$router.push({ name: "WhatWearDetail" });
@@ -121,7 +125,7 @@ export default {
         });
     },
     async pageWhatwear() {
-      // console.log(this.page)
+      console.log(this.page)
       const pageNum = this.page;
       await axios
         .get(`http://i4c102.p.ssafy.io:8080/api/wear/${pageNum}`)
