@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <v-card height="100%">
     <div id="whatwear_profile">
       <v-list one-line>
         <v-list-item>
@@ -306,4 +306,5 @@ export default {
   margin-left: 40px;
   margin-right: 40px;
 }
+
 </style>
