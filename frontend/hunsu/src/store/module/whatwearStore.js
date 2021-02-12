@@ -60,7 +60,7 @@ const actions = {
     const endTime = (res) => {
       // 현재시간값
       let nowTime = new Date().getTime()
-      // console.log('현재', nowTime)
+      console.log('현재', nowTime)
 
       // 마감시간값
       let endTime = res.end_time
@@ -105,7 +105,7 @@ const actions = {
         context.commit('setWhatwearInfo', res.data)
         context.commit('setWhatwearReplyInfo', res.data.replyList)
         context.commit('setWhatwearVoteInfo', res.data.voteList)
-        state.endTimeCheck = false
+        state.endTimeCheck = false // 초기화해줘야하나?
       })
       .catch((err) => {
         console.error(err)

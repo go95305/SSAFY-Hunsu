@@ -132,6 +132,7 @@
             <v-btn v-if="getVoteTime === false" color="black" dark v-bind="attrs" v-on="on" text>
               Choice✨
             </v-btn>
+            <v-btn v-else text disabled>투표가 마감되었습니다</v-btn>
           </template>
           <v-card>
             <v-card-title>투표창</v-card-title>
@@ -228,9 +229,6 @@ export default {
       voteImages: [],
       endTimeCheck: this.getVoteTime
     };
-  },
-  created() {
-    console.log('최종확인', this.getVoteTime)
   },
   methods: {
     ...mapMutations(["setWhatwearInfo"]),
