@@ -33,7 +33,7 @@ public class UserService {
     }
 
 
-    public  void joinUser(long uid, String accessToken, String refreshToken,boolean flag){
+    public Long joinUser(long uid, String accessToken, String refreshToken,boolean flag){
         User user = new User();
 
         user.setUid(uid);
@@ -47,8 +47,10 @@ public class UserService {
 //        user.setGender(gender);
         user.setFlag(flag);
         System.out.println("set flag");
-        userJpaRepo.save(user);
+        User savedUser = userJpaRepo.save(user);
         System.out.println("save user");
+
+        return savedUser.getUid();
 
     }
 

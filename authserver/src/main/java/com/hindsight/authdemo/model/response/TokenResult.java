@@ -17,5 +17,8 @@ public class TokenResult<T> extends CommonResult {
 
     @ApiModelProperty(value="nickname")
     private String nickname;
+
+    @ApiModelProperty(value="uid")
+    private Long uid;
 }
 

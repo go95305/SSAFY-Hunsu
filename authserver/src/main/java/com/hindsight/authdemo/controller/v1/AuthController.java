@@ -116,12 +116,13 @@ public class AuthController {
                   //로그인
         }else{
             System.out.println("회원가입!!!");
-            userService.joinUser(profile.getUid(),tokens.getAccessToken(),tokens.getRefreshToken(),false);
+            Long uid = userService.joinUser(profile.getUid(),tokens.getAccessToken(),tokens.getRefreshToken(),false);
             System.out.println("가입완료");
             /////////////////////////////////////////////////////////////////
             result.setSuccess(true);
             result.setCode(-1);
             result.setMsg("회원가입");
+            result.setUid(uid);
 //            result.setAccessToken(tokens.getAccessToken());
             System.out.println("SetCode2");
             ///////////////////////////////////////////////////////////////
