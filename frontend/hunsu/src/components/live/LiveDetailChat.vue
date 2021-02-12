@@ -5,9 +5,19 @@
     <ImageView :images="getChatRoomDetail.imageUrls" />
     <!-- 개설자 채팅 -->
     <v-container fluid>
-      <v-row>
+      <v-virtual-scroll :items="publisherMsgs" height="90" item-height="30">
+        <template v-slot:default="{ item }">
+          <v-list-item :key="item">
+            {{ item.sender }} - {{ item.message }}
+          </v-list-item>
+          <!-- <v-row>
+          <li v-for="(msg, i) in joinerMsgs" :key="i">{{ msg }}</li>
+        </v-row> -->
+        </template>
+      </v-virtual-scroll>
+      <!-- <v-row>
         <li v-for="(msg, i) in publisherMsgs" :key="i">{{ msg }}</li>
-      </v-row>
+      </v-row> -->
     </v-container>
     <!-- 좋아요 누르기 -->
     <v-btn icon @click="plusLike">
@@ -18,11 +28,19 @@
     </v-btn>
     <!-- 참여자 채팅 -->
     <v-container fluid>
-      <v-row>
-        <li v-for="(msg, i) in joinerMsgs" :key="i">{{ msg }}</li>
-      </v-row>
+      <!--참가자 채팅 -->
+      <v-virtual-scroll :items="joinerMsgs" height="150" item-height="64">
+        <template v-slot:default="{ item }">
+          <v-list-item :key="item">
+            <li>{{ msg }}</li>
+          </v-list-item>
+          <!-- <v-row>
+          <li v-for="(msg, i) in joinerMsgs" :key="i">{{ msg }}</li>
+        </v-row> -->
+        </template>
+      </v-virtual-scroll>
     </v-container>
-    <!-- 참여자 채팅 전송 -->
+    <!-- 채팅 입력 -->
     <v-container fluid>
       <v-row>
         <v-col class="mb-6">
@@ -41,14 +59,6 @@
     </v-container>
     <v-btn @click="exitChatRoom">종료</v-btn>
     <v-btn @click="imageUpdate">이미지 수정</v-btn>
-
-    <!--클릭할때만 하트애니메이션 작동되도록-->
-    <!-- <v-icon >mdi-heart</v-icon>
-    <p class="a">🧡</p>
-    <p class="a">🧡</p>
-    <p class="a">🧡</p>
-    <p class="a">🧡</p>
-    <p class="a">🧡</p> -->
   </div>
 </template>
 
@@ -189,6 +199,7 @@ export default {
           });
         } else {
           // 참여자 메세지 일 때
+
           this.joinerMsgs.unshift({
             type: recv.type,
             sender: recv.sender,
