@@ -165,9 +165,12 @@
               style="padding: 0px"
             >
               <v-row no-gutters>
-                <v-col v-for="i in ootdListLength" :key="i" cols="4">
+                <v-col v-for="(ootd, idx) in profileData.imageList" :key="idx" cols="4">
                   <v-card outlined tile>
-                    <v-img src="@/assets/ootdtest.png"> </v-img>
+                      <ImageView
+                        :images="ootd"
+                        @click.native="goToOotdDetail(ootd)"
+                      />
                   </v-card>
                 </v-col>
               </v-row>
@@ -196,12 +199,15 @@
 <script>
 import axios from "axios";
 import ProfileSetting from "@/components/Mypage/ProfileSetting";
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions, mapMutations } from "vuex";
+import ImageView from "@/components/module/ImageView";
+
 
 export default {
   name: "Profile",
   components: {
     ProfileSetting,
+    ImageView
   },
   data() {
     return {
@@ -225,6 +231,8 @@ export default {
       "getUserInfo",
       "getMyProfileImage",
       "getTargetProfileImage",
+      "getOotdList",
+      "getOotdInfo"
     ]),
     // v-for에 쓰일 length값들
     ootdListLength() {
@@ -253,6 +261,15 @@ export default {
     },
   },
   methods: {
+    ...mapMutations(["setOotdInfoImages", "setTargetProfileImage"]),
+    ...mapActions([
+      "getOotdInfoInApi",
+      "getProfileImage",
+      "getOotdListInApi",
+      "getImageList",
+      "getProfileInfoInApi",
+      "getProfiles",
+      ]),
     getProfile(getUserInfo) {
       axios
         .get(
@@ -265,6 +282,16 @@ export default {
           console.log(this.getNickname)
           console.log(this.profileData)
           console.log('마이페이지보기')
+          this.profileData.imageList = []
+          this.profileData.ootd_list.map((idx) => {
+            this.getImageList({prefix: "ootd/" + idx}).then((res) => {
+              console.log("inImageList", res)
+              this.profileData.imageList.push(res)
+              
+            }).then(() => {
+              console.log(this.profileData.imageList)
+            })
+          })
         })
         .catch((err) => {
           console.error(err);
@@ -288,7 +315,35 @@ export default {
       .catch((err) => {
         console.error(err)
       })
-    }
+    },
+    goToOotdDetail(ootd) {
+      //idx 굳이 보여줄 필요 없을것같아서 params로 변경
+      // this.$router.push({ name: "OotdDetail", params: { no: ootd.ootdIdx } });
+      let root = this;
+      console.log(ootd);
+      this.getOotdInfoInApi({
+        ootdIdx: ootd.ootdIdx,
+        nickname: this.getNickname,
+      }).then(() => {
+        root
+          .getImageList({ prefix: "ootd/" + ootd.ootdIdx })
+          .then((res) => {
+            console.log("imageList", res);
+            // root.getImages({ keys: res }).then((res) => {
+            // console.log("getimages", res);
+            root.setOotdInfoImages(res);
+          })
+          .then(() => {
+            this.getProfileImage({
+              nickname: ootd.nickname,
+              target: "target",
+            });
+          })
+          .then(() => {
+            this.$router.push({ name: "OotdDetail" });
+          });
+      });
+    },
   },
 };
 </script>

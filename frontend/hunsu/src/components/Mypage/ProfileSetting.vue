@@ -110,7 +110,7 @@ export default {
       this.setUploadImageUrls();
       console.log("onChange imageURl ", this.getUploadImageUrls);
     },
-    updateProfile({getNickname, newNickname, height, size}) {
+    updateProfile(getNickname, newNickname, height, size) {
       // 프로필사진 업로드, 정보수정
       this.dialog = false;
       this.uploadProfile()
