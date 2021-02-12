@@ -13,11 +13,10 @@
         <div class="text-truncate">{{ getChatRoomDetail.name }}</div>
         <!--개설자면 종료, 참여자는 나가기로 표시-->
         <v-btn text class="mb-1">종료</v-btn>
-        <!-- <v-btn text class="mb-1">나가기</v-btn> -->
       </div>
       <v-list-item style="height: 50px">
         <v-list-item-avatar>
-          <v-img src="https://cdn.vuetifyjs.com/images/john.png"></v-img>
+          <v-img :src="getChatRoomDetail.profileImage"></v-img>
         </v-list-item-avatar>
         <v-list-item-content>
           <v-list-item-subtitle>{{
@@ -35,13 +34,6 @@
         </v-list-item-action>
       </v-list-item>
     </v-list>
-    <!-- <v-img
-      src="https://picsum.photos/350/165?random"
-      max-height="125"
-      contain
-      class="grey darken-4"
-    >
-    </v-img> -->
     <LiveDetailChat />
   </v-card>
 </template>
@@ -63,15 +55,7 @@ export default {
           text: "삭제",
         },
       ],
-      colors: [
-        "green",
-        "secondary",
-        "yellow darken-4",
-        "red lighten-2",
-        "orange darken-1",
-      ],
       cycle: false,
-      slides: ["First", "Second", "Third", "Fourth", "Fifth"],
     };
   },
   computed: {

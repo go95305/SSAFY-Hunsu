@@ -138,7 +138,7 @@ const actions = {
         'getObject',
         {
           Bucket: this.albumBucketName,
-          Key: 'mypage/' + info.nickname + '/' + info.nickname,
+          Key: 'mypage/' + info.publisher + '/' + info.publisher,
         },
         (err, data) => {
           if (err) {

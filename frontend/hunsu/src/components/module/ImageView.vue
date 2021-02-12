@@ -21,7 +21,7 @@
     </v-carousel-item>
   </v-carousel>
   <v-carousel v-else>
-    <p>Not Images</p>
+    <v-progress-circular indeterminate color="primary"></v-progress-circular>
   </v-carousel>
 </template>
 
