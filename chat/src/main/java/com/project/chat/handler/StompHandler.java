@@ -19,7 +19,7 @@ import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
-@CrossOrigin(origins = {"localhost:3000","i4c102.p.ssafy.io"})
+@CrossOrigin(origins = {"http://localhost:3000","http://i4c102.p.ssafy.io"})
 @Component
 public class StompHandler implements ChannelInterceptor {
     private final ChatRoomRepository chatRoomRepository;

@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Slf4j
-@CrossOrigin(origins = {"localhost:3000","i4c102.p.ssafy.io"})
+@CrossOrigin(origins = {"http://localhost:3000","http://i4c102.p.ssafy.io"})
 @RequiredArgsConstructor
 @Controller
 @RequestMapping("/chat")
