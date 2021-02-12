@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 @Slf4j
-@CrossOrigin(origins = {"*"})
+@CrossOrigin(origins = {"localhost:3000","i4c102.p.ssafy.io"})
 @RequiredArgsConstructor
 @Service
 public class RedisSubscriber {
