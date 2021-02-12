@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="flex">
     <WhatWearCard />
     <WhatWearList />
     <WhatWearWrite />
@@ -23,6 +23,4 @@ export default {
 </script>
 
 <style>
-
-
 </style>

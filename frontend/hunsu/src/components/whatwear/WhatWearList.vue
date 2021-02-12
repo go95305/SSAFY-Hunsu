@@ -2,7 +2,7 @@
   <!-- WHATWEAR 메인 페이지 -->
   <!--v-for 사용을 위한 최상위 div-->
   <v-card flat>
-    <v-btn @click="testa">test</v-btn>
+    <!-- <v-btn @click="testa">test</v-btn> -->
     <v-card
       v-for="(whatwear, idx) in whatwearList"
       :key="idx"
