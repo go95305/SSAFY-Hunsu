@@ -11,7 +11,7 @@
       </v-card-text>
 
       <v-card-text class="white--text pt-0">
-        | 만든사람들 : 한재희, 고유창, 박홍균, 최진영, 이지현<br />
+        | 만든사람들 : 한재희, 고유창, 박홍균, 최진영, 이지현, 정보현<br />
         ｜ 소속 : SSAFY 4기 광주 1반 <br />
         | 고객센터 : gkswogml23@naver.com <br />
         | 질문은 한재희 매터모스트 DM or Email
