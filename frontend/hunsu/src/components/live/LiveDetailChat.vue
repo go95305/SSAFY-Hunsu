@@ -87,7 +87,7 @@ export default {
     ...mapGetters(["getChatRoomDetail", "getNickname"]),
   },
   created() {
-    let sock = new SockJS("http://i4c102.p.ssafy.io:8082/ws-stomp");
+    let sock = new SockJS("http://i4c102.p.ssafy.io:8082/api/ws-stomp");
     this.stompClient = Stomp.over(sock);
 
     const _this = this;
