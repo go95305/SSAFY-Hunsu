@@ -214,9 +214,10 @@ export default {
     createWhatWear() {
       // dialog창 닫기 + 입력데이터 보내기
       this.dialog = false;
-      if (this.timeDialog && this.dateDialog) {
-        this.endtime = this.dates.concat("T", this.time, ":00");
-      }
+      
+      this.endtime = this.dates.concat("T", this.time, ":00");
+      
+      console.log('왜안뜨냐고', this.endtime)
       // 원래는 투표이미지 갯수인데 우선 투표체크박스 활성화하면 숫자가 3이 들어가도록 구현함
       if (this.vote) {
         this.num = 3;
@@ -264,9 +265,11 @@ export default {
     },
     inputDate(dates) {
       this.dates = dates;
+      console.log(this.dates)
     },
     inputTime(time) {
       this.time = time;
+      console.log(this.time)
     },
   },
 };
