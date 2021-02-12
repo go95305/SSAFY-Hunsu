@@ -168,7 +168,7 @@ const actions = {
     return axios
       .get(`http://i4c102.p.ssafy.io:8080/api/user/mypage/${myNickname}/${yourNickname}`)
       .then((res) => {
-        console.log(res.data);
+        console.log("스토어", res.data);
         context.commit('setUserInfo', res.data);
       })
       .catch((err) => {
@@ -180,6 +180,7 @@ const actions = {
     .get(`http://i4c102.p.ssafy.io:8080/api/user/mypage/profile/${myNickname}`)
     .then((res) => {
       context.commit('setMyProfileInfo', res.data)
+      console.log('수정후마이페이지')
     })
     .catch((err) => {
       console.error(err)
@@ -194,7 +195,9 @@ const actions = {
       size: size,
     })
     .then((res) => {
+      console.log(res.data)
       context.commit('setMyProfileInfo', res.data)
+      console.log('프로필수정성공')
     })
     .catch((err) => {
       console.error(err)

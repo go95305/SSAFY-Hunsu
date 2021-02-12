@@ -165,11 +165,12 @@
               style="padding: 0px"
             >
               <v-row no-gutters>
-                <v-col v-for="(ootd, idx) in profileData.imageList" :key="idx" cols="4">
+                <v-col v-for="(img, idx) in profileData.imageList" :key="idx" cols="4">
                   <v-card outlined tile>
                       <ImageView
-                        :images="ootd"
-                        @click.native="goToOotdDetail(ootd)"
+                        :images="img"
+                        @click.native="goToOotdDetail(idx)"
+                        style="height: 180px"
                       />
                   </v-card>
                 </v-col>
@@ -232,7 +233,9 @@ export default {
       "getMyProfileImage",
       "getTargetProfileImage",
       "getOotdList",
-      "getOotdInfo"
+      "getOotdInfo",
+      "getMyProfileInfo"
+
     ]),
     // v-for에 쓰일 length값들
     ootdListLength() {
@@ -271,31 +274,27 @@ export default {
       "getProfiles",
       ]),
     getProfile(getUserInfo) {
-      axios
-        .get(
-          `http://i4c102.p.ssafy.io:8080/api/user/mypage/${this.getNickname}/${getUserInfo.mypageNickname}`
-        )
-        .then((res) => {
-
-          this.profileData = res.data
-          console.log(getUserInfo.mypageNickname)
-          console.log(this.getNickname)
-          console.log(this.profileData)
-          console.log('마이페이지보기')
-          this.profileData.imageList = []
-          this.profileData.ootd_list.map((idx) => {
-            this.getImageList({prefix: "ootd/" + idx}).then((res) => {
-              console.log("inImageList", res)
-              this.profileData.imageList.push(res)
-              
-            }).then(() => {
-              console.log(this.profileData.imageList)
-            })
+      const myNickname = this.getNickname
+      const yourNickname = getUserInfo.mypageNickname
+      this.getProfileInfoInApi({ myNickname, yourNickname })
+      .then(() => {
+        this.profileData = this.getUserInfo
+        this.profileData.imageList = []
+        this.profileData.ootd_list.map((idx) => {
+          this.getImageList({prefix: "ootd/" + idx}).then((res) => {
+            console.log("inImageList는???", res)
+            this.profileData.imageList.push({img: res, ootdIdx: idx})
+            
+          }).then(() => {
+            console.log(this.profileData.imageList)
           })
         })
-        .catch((err) => {
-          console.error(err);
-        });
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+
+          
     },
     followThisUser() {
       const myNickname = this.getNickname
@@ -322,7 +321,7 @@ export default {
       let root = this;
       console.log(ootd);
       this.getOotdInfoInApi({
-        ootdIdx: ootd.ootdIdx,
+        ootdIdx: ootd,
         nickname: this.getNickname,
       }).then(() => {
         root

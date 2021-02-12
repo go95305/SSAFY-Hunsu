@@ -45,9 +45,8 @@
       </div>
       <div id="info_input">
         <v-text-field
-          label="닉네임"
+          :label="getNickname"
           v-model="newNickname"
-          :placeholder="getNickname"
           hint="닉네임 중복불가안내, 규칙안내"
           outlined
         ></v-text-field>
@@ -55,12 +54,12 @@
         <p class="text-subtitle2">추천서비스 제공에 쓰이는 정보입니다.</p>
         <!-- 숫자만 가능하게 필터링 -->
         <v-text-field
-          label="키"
+          :label="getMyProfileInfo.height"
           v-model="height"
           hint="cm를 제외하고 적어주세요"
           outlined
         ></v-text-field>
-        <v-select :items="items" v-model="size" label="체형" outlined></v-select>
+        <v-select :items="items" v-model="size" :label="getMyProfileInfo.size" outlined></v-select>
       </div>
     </v-card>
   </v-dialog>
@@ -88,12 +87,12 @@ export default {
       widgets: false,
       items: ["XS", "S", "M", "L", "XL", "XXL"],
       newNickname: "",
-      height: 0,
+      height: "",
       size: "",
     }
   },
   methods: {
-    ...mapActions(["uploadProfile", "getProfileImage", "updateMyProfileInfoInApi"]),
+    ...mapActions(["uploadProfile", "getProfileImage", "updateMyProfileInfoInApi", "getProfileInfoInApi"]),
     ...mapMutations([
       "setUploadImageFiles",
       "setUploadImageUrls",
@@ -126,6 +125,16 @@ export default {
           this.$forceUpdate();
         });
       this.updateMyProfileInfoInApi({getNickname, newNickname, height, size})
+      .then(() => {
+        console.log("수정후내정보", this.getMyProfileInfo)
+        const myNickname = newNickname
+        const yourNickname = newNickname
+        this.getProfileInfoInApi({myNickname, yourNickname})
+        console.log('겟성공?')
+        this.$router.push({name: "Home"}).catch(() => {})
+
+
+      })
     },
   },
 };
