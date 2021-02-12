@@ -9,8 +9,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 @Slf4j
+@CrossOrigin(origins = {"*"})
 @RequiredArgsConstructor
 @Service
 public class RedisSubscriber {

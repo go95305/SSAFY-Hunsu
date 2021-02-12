@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Slf4j
+@CrossOrigin(origins = {"*"})
 @RequiredArgsConstructor
 @Controller
 @RequestMapping("/chat")
@@ -59,12 +60,12 @@ public class ChatRoomController {
     @ResponseBody
     public void removeRoom(@PathVariable String roomId) {
         long result = chatRoomRepository.removeRoom(roomId);
-        log.info("삭제여부"+result);
+        log.info("삭제여부" + result);
     }
 
     @PostMapping("/room/like/{roomId}")
     @ResponseBody
-    public long roomlike(@PathVariable String roomId){
+    public long roomlike(@PathVariable String roomId) {
         return chatRoomRepository.plusLikeCount(roomId);
     }
 
