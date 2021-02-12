@@ -21,10 +21,10 @@
           <v-btn icon dark @click="dialog = false">
             <v-icon>mdi-close</v-icon>
           </v-btn>
-          <v-toolbar-title>뭘입을까 작성</v-toolbar-title>
+          <v-toolbar-title class="text-subtitle-1">뭘입을까 작성</v-toolbar-title>
           <v-spacer></v-spacer>
           <v-toolbar-items>
-            <v-btn text @click="createWhatWear()"> 완료 </v-btn>
+            <v-btn text @click="createWhatWear()" class="text-subtitle-1"> 완료 </v-btn>
           </v-toolbar-items>
         </v-toolbar>
         <v-list three-line subheader>
@@ -278,5 +278,13 @@ export default {
 <style>
 #votebtn {
   display: flex;
+}
+
+
+#whatwear_writebtn {
+  position: fixed;
+  bottom: 5%;
+  left: 85%;
+  z-index: 100;
 }
 </style>
