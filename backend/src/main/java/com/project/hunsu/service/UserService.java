@@ -101,6 +101,7 @@ public class UserService {
         myPageDetailDTO.setOotd_list(ootdIdxList);
         myPageDetailDTO.setFollower_list(followerNicknameList);
         myPageDetailDTO.setFollowing_list(followingNicknameList);
+        myPageDetailDTO.setUid(user.getUid());
 
         return myPageDetailDTO;
 
@@ -121,13 +122,20 @@ public class UserService {
     }
 
     @Transactional
-    public void profileModify(String nickname, ProfileDTO profileDTO) {
+    public ProfileDTO profileModify(String nickname, ProfileDTO profileDTO) {
+        ProfileDTO profile = new ProfileDTO();
+
         User user = userRepository.findUserByNickname(nickname);
 
         user.setNickname(profileDTO.getNickname());
         user.setHeight(profileDTO.getHeight());
         user.setSize(profileDTO.getSize());
 
+        profile.setSize(user.getSize());
+        profile.setNickname(user.getNickname());
+        profile.setHeight(user.getHeight());
+
+        return profile;
     }
 
     //return: isActivated(활성화: true, 비활성화: false)

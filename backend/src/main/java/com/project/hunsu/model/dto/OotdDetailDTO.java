@@ -16,6 +16,7 @@ public class OotdDetailDTO {
     private Long ootdIdx;
     private String content;
     private int likeCount;
+    private Long uid;
     private Boolean isUpdated;
     private LocalDateTime writeDate;
     private String nickname;

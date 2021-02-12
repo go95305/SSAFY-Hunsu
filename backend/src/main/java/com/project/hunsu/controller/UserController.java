@@ -74,9 +74,11 @@ public class UserController {
             "----- height: 수정후의 키\n" +
             "----- size: 수정 후의 사이트\n" +
             "Response(x)")
-    public void profileModify(@RequestHeader("X-AUTH-ACCESS") String jwtToken, @RequestBody ProfileDTO profileDTO) {
+    public ProfileDTO profileModify(@RequestHeader("X-AUTH-ACCESS") String jwtToken, @RequestBody ProfileDTO profileDTO) {
         String nickname=userRepository.findUserByJwtAccess(jwtToken).getNickname();
-        userService.profileModify(nickname, profileDTO);
+        ProfileDTO profile = userService.profileModify(nickname, profileDTO);
+
+        return profile;
     }
 
     //입력: nickname(기존 닉네임)

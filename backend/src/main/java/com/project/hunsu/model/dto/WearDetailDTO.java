@@ -16,6 +16,7 @@ public class WearDetailDTO {
     private Long wear_idx;
     private String title;
     private String content;
+    private Long uid;
     private Boolean vote_activated;
     private LocalDateTime write_date;
     private LocalDateTime end_time;

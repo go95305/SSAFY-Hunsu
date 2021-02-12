@@ -58,6 +58,7 @@ public class OotdService {
             if (ootdList.get(i).getFlag()) {
                 OotdMainDTO ootdMainDTO = new OotdMainDTO();
                 ootdMainDTO.setOotdIdx(ootdList.get(i).getIdx());
+                ootdMainDTO.setUid(ootdList.get(i).getUser().getUid());
                 ootdMainDTO.setNickname(ootdList.get(i).getUser().getNickname());
                 ootdMainDTO.setOotdContent(ootdList.get(i).getContent());
                 List<Hashtag> hashtagList = hashtagRepository.findHashtagByOotdIdx(ootdList.get(i).getIdx());
@@ -87,6 +88,7 @@ public class OotdService {
                 ootdDetailDTO.setNickname(ootd.getUser().getNickname());
                 ootdDetailDTO.setWriteDate(ootd.getWriteDate());
                 ootdDetailDTO.setIsUpdated(ootd.getIsUpdated());
+                ootdDetailDTO.setUid(ootd.getUser().getUid());
                 ootdDetailDTO.setLikeCount(ootd.getCount());
                 ootdDetailDTO.setContent(ootd.getContent());
                 OotdLike ootdLike = ootdLikeRepository.findOotdLikeByOotdIdxAndUser(ootdIdx, user);
@@ -429,6 +431,7 @@ public class OotdService {
             replyDTO.setReplyIdx(reply.getIdx());
             replyDTO.setOotdIdx(reply.getOotd().getIdx());
             replyDTO.setNickname(reply.getUser().getNickname());
+            replyDTO.setUid(reply.getUser().getUid());
             replyDTO.setDepth(reply.getDepth());
             replyDTO.setWrite_date(reply.getWriteDate());
             replyDTO.setContent(reply.getContent());

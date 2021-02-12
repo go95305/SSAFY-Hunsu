@@ -15,6 +15,7 @@ import java.util.List;
 public class OotdReplyDTO {
     private Long replyIdx;
     private Long ootdIdx;
+    private Long uid;
     private String nickname;
     private String content;
     private Long depth;

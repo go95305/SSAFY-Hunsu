@@ -46,6 +46,7 @@ public class WearService {
         for (Wear wear : wearList) {
             WearMainDTO wearMainDTO = new WearMainDTO();
             wearMainDTO.setTitle(wear.getTitle());
+            wearMainDTO.setUid(wear.getUser().getUid());
             wearMainDTO.setNickname(wear.getUser().getNickname());
             wearMainDTO.setWear_idx(wear.getIdx());
             wearMainDTO.setVoteActivated(wear.isVoteActivated());
@@ -121,6 +122,7 @@ public class WearService {
             voteDTOList.add(voteDTO);
         }
 
+        wearDetailDTO.setUid(wear.getUser().getUid());
         wearDetailDTO.setWear_idx(wear.getIdx());
         wearDetailDTO.setTitle(wear.getTitle());
         wearDetailDTO.setContent(wear.getContent());
@@ -337,6 +339,7 @@ public class WearService {
             WearReplyDTO replyDTO = new WearReplyDTO();
             replyDTO.setIdx(reply.getIdx());
             replyDTO.setNickname(reply.getUser().getNickname());
+            replyDTO.setUid(reply.getUser().getUid());
             replyDTO.setDepth(reply.getDepth());
             replyDTO.setWrite_date(reply.getWriteDate());
             replyDTO.setContent(reply.getContent());

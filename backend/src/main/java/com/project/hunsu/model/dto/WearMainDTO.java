@@ -10,6 +10,7 @@ import lombok.ToString;
 public class WearMainDTO {
     private Boolean voteActivated;
     private Long wear_idx;
+    private Long uid;
     private String nickname;
     private String title;
 }

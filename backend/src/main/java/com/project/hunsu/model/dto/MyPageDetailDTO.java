@@ -15,6 +15,7 @@ import java.util.List;
 public class MyPageDetailDTO {
     private String mypageNickname;
     private Boolean mypage;
+    private Long uid;
     private Boolean follow;
     private List<Long> ootd_like_list=new ArrayList<>();
     private List<Long> ootd_list=new ArrayList<>();

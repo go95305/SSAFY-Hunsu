@@ -53,7 +53,10 @@ public class WearController {
             "Response" +
             "")
     public long insertWear(@RequestBody WearDTO request,@RequestHeader("X-AUTH-ACCESS") String jwtToken) {
-        return wearService.insertWear(request);
+        if(request.getNickname() != null)
+            return wearService.insertWear(request);
+        else
+            return 0;
     }
 
     //wear_idx, nickname 필요
