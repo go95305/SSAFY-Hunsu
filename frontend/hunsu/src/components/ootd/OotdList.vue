@@ -31,6 +31,7 @@
               src="https://cdn.vuetifyjs.com/images/john.png"
             ></v-img>
           </v-list-item-avatar>
+
           <v-list-item-content>
             <v-list-item-title>{{ ootd.ootdContent }}</v-list-item-title>
             <v-list-item-subtitle>

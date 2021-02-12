@@ -7,9 +7,15 @@ import store from './store/store';
 import axios from 'axios';
 import VueAxios from 'vue-axios';
 import VueCookies from 'vue-cookies';
-
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import 'chart.js';
 import 'hchs-vue-charts';
+// 아이콘 리스트
+import { faHeart, faAngleRight } from '@fortawesome/free-solid-svg-icons';
+
+library.add(faHeart, faAngleRight);
+Vue.component('font-awesome-icon', FontAwesomeIcon);
 
 Vue.use(window.VueCharts);
 
