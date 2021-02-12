@@ -35,13 +35,13 @@
         </v-list-item-action>
       </v-list-item>
     </v-list>
-    <v-img
+    <!-- <v-img
       src="https://picsum.photos/350/165?random"
       max-height="125"
       contain
       class="grey darken-4"
     >
-    </v-img>
+    </v-img> -->
     <LiveDetailChat />
   </v-card>
 </template>

@@ -24,11 +24,7 @@
       <v-menu left bottom v-if="getNickname">
         <template v-slot:activator="{ on, attrs }">
           <v-avatar v-bind="attrs" v-on="on">
-            <v-img
-              v-model="getMyProfileImage"
-              v-if="getMyProfileImage"
-              :src="getMyProfileImage"
-            />
+            <v-img v-if="getMyProfileImage" :src="getMyProfileImage" />
             <v-img v-else src="https://cdn.vuetifyjs.com/images/john.jpg" />
           </v-avatar>
         </template>
@@ -81,31 +77,28 @@ export default {
   computed: {
     ...mapGetters([
       "getNickname",
-      "getAccessToken",
-      "getRefreshToken",
-      "getOotdList",
+      // "getAccessToken",
+      // "getRefreshToken",
+      // "getOotdList",
       "getMyProfileImage",
       "getTargetProfileImage",
+      // "getChatRooms",
     ]),
   },
-  mounted() {
-    console.log("navbar mount ", this.getAccessToken, this.getRefreshToken);
-    // let root = this;
-    // if (this.getAccessToken && this.getRefreshToken) {
-    if (this.getAccessToken) {
-      // uid로 설계해야하는데, 임시적으로 닉네임으로 처리
-      this.kakaoLogin().then(() => {
-        // console.log(this.getNickname);
-        this.getProfileImage({
-          nickname: this.getNickname,
-          target: "my",
-        });
-      });
-    } else {
-      this.setAllInfoClear();
-      this.$router.push("/login");
-    }
-  },
+  // mounted() {
+  //   if (this.getAccessToken) {
+  //     this.kakaoLogin().then(() => {
+  //       // console.log(this.getNickname);
+  //       this.getProfileImage({
+  //         nickname: this.getNickname,
+  //         target: "my",
+  //       });
+  //     });
+  //   } else {
+  //     this.setAllInfoClear();
+  //     this.$router.push("/login");
+  //   }
+  // },
   data() {
     return {
       items: [
@@ -154,7 +147,9 @@ export default {
         "nickname",
         this.getNickname,
         "targetName",
-        this.getTargetProfileImage
+        this.getTargetProfileImage,
+        "liveList",
+        this.getChatRooms
       );
     },
     goToHome() {

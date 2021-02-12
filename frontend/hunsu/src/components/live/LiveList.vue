@@ -1,78 +1,18 @@
 <template>
   <!-- 라이브 메인페이지 -->
-  <div>
-    <!-- <div class="row">
-      <div class="col-md-6">
-        <h3>채팅방 리스트</h3>
-      </div>
-      <div class="col-md-6 text-right">
-        <a class="btn btn-primary btn-sm" href="/chat/room">방 나가기</a>
-      </div>
-    </div>
-    <div class="input-group">
-      <div class="input-group-prepend">
-        <label class="input-group-text">방제목</label>
-        <input type="text" class="form-control" v-model="room_name" />
-      </div>
-      <div class="input-group-prepend">
-        <label class="input-group-text">해시태그</label>
-        <input type="text" class="form-control" v-model="hashtagList" />
-      </div>
-      <div class="input-group-prepend">
-        <label class="input-group-text">고정댓글</label>
-        <input type="text" class="form-control" v-model="fixedComment" />
-      </div>
-      <div class="input-group-append">
-        <button class="btn btn-primary" type="button" @click="createRoom">
-          채팅방 개설
-        </button>
-      </div>
-    </div>
-    <ul class="list-group">
-      <li
-        class="list-group-item list-group-item-action"
-        v-for="item in chatrooms"
-        v-bind:key="item.roomId"
-      >
-        <h6>
-          {{ item.name }}
-          <span class="badge badge-info badge-pill">{{ item.userCount }}</span
-          ><span class="badge badge-info badge-pill">{{ item.likeCount }}</span>
-        </h6>
-        <span class="badge badge-info badge-pill">{{ item.hashtagList }}</span>
-        <br />
-        <button
-          class="btn btn-primary"
-          type="button"
-          v-on:click="enterRoom(item.roomId, item.name)"
-        >
-          방입장
-        </button>
-        <button
-          class="btn btn-primary"
-          type="button"
-          @click="removeRoom(item.roomId)"
-        >
-          방 삭제
-        </button>
-      </li>
-    </ul> -->
+  <div v-if="imageReady">
     <v-card
       v-for="(room, idx) in getChatRooms"
       :key="idx"
       @click="enterRoom(room)"
     >
       <!-- 라이브 메인 사진 -->
-      <v-img
-        src="https://picsum.photos/350/165?random"
-        max-height="125"
-        contain
-        class="grey darken-4"
-      ></v-img>
+      <!-- <ImageView :images="room.imageUrls" /> -->
+      <ImageView :images="room.imageUrls" />
       <!-- 작성자 프로필 -->
       <v-card-title class="text-body-1" id="writer">
         <v-list-item-avatar>
-          <v-img src="https://cdn.vuetifyjs.com/images/john.png"></v-img>
+          <v-img v-if="room.profileImage" :src="room.profileImage" />
         </v-list-item-avatar>
         {{ room.name }}
         <v-list-item-title class="title text-body-1">
@@ -101,9 +41,13 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations } from "vuex";
+import ImageView from "@/components/module/ImageView";
 
 export default {
   name: "LiveList",
+  components: {
+    ImageView,
+  },
   data() {
     return {
       dialog: false,
@@ -113,35 +57,36 @@ export default {
       room_name: "",
       publisher: "",
       hashtagList: [],
-      chatrooms: [],
       fixedComment: "",
+      imageReady: false,
     };
   },
   created() {
-    this.findAllRoom();
+    const _this = this;
+    this.findAllRoom()
+      .then(() => {
+        this.getChatRooms.forEach((room) => {
+          _this.getImageList({ prefix: "live/" + room.roomId }).then((res) => {
+            _this.$set(room, "imageUrls", res);
+          });
+        });
+        this.getProfiles(this.getChatRooms);
+      })
+      .then(() => (this.imageReady = true));
+    console.log("images", this.getChatRooms);
   },
   computed: {
     ...mapGetters(["getChatRooms"]),
   },
   methods: {
-    ...mapActions(["findAllRoom"]),
-    ...mapMutations(["setChatRoomDetail"]),
-    // removeRoom(roomId) {
-    //   axios.post("/chat/room/remove/" + roomId).then(() => {
-    //     console.log("삭제완료");
-    //     this.findAllRoom();
-    //   });
-    // },
+    ...mapActions(["findAllRoom", "getImageList", "getProfiles"]),
+    ...mapMutations(["setChatRoomDetail", "setChatImageFiles"]),
+
     enterRoom(roomInfo) {
-      // localStorage.setItem("wschat.roomId", roomId);
-      // localStorage.setItem("wschat.roomName", roomName);
       console.log(roomInfo);
       this.setChatRoomDetail(roomInfo);
       this.$router.push("/live/detail");
     },
-    // goToLiveDetail: () => {
-    //   this.$router.push("/live/detail");
-    // },
   },
 };
 </script>

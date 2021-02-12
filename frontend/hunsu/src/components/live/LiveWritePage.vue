@@ -59,7 +59,8 @@
             </v-chip>
           </div>
         </v-list>
-        <v-list three-line subheader>
+        <ImageUpload />
+        <!-- <v-list three-line subheader>
           <v-subheader>사진 등록</v-subheader>
           <input ref="imageInput" type="file" hidden @change="onChangeImages" />
           <v-btn class="mx-5" type="button" @click="onClickImageUpload"
@@ -71,7 +72,7 @@
             :src="imageUrl"
             width="100"
           ></v-img>
-        </v-list>
+        </v-list> -->
       </v-card>
     </v-dialog>
   </v-row>
@@ -79,10 +80,14 @@
 
 <script>
 // import axios from "axios";
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
+import ImageUpload from "@/components/module/ImageUpload";
 
 export default {
   name: "LiveWritePage",
+  components: {
+    ImageUpload,
+  },
   data() {
     return {
       dialog: false,
@@ -99,32 +104,49 @@ export default {
       hashtagList: [],
     };
   },
+  computed: {
+    ...mapGetters(["getChatRooms"]),
+  },
   methods: {
-    ...mapActions(["createRoom", "findAllRoom"]),
+    ...mapActions(["createRoom", "findAllRoom", "uploadImage", "getImageList"]),
     async create() {
+      const _this = this;
       await this.createRoom({
         title: this.title,
         hashtagList: this.hashtagList,
       }).then((res) => {
-        if (res === 1) {
+        if (res.data) {
           this.dialog = false;
           this.title = "";
           this.hashtagList = [];
+          this.uploadImage({
+            key: "live/",
+            articleIdx: res.data.roomId,
+          });
           // 추후 개설된 방으로 접속하는 로직
-          this.findAllRoom();
+          this.findAllRoom().then(() => {
+            this.getChatRooms.map((room) => {
+              _this
+                .getImageList({ prefix: "live/" + room.roomId })
+                .then((res) => {
+                  room.images = res;
+                });
+            });
+          });
         } else {
           alert("방 개설 실패");
         }
       });
     },
-    onClickImageUpload() {
-      this.$refs.imageInput.click();
-    },
-    onChangeImages(e) {
-      console.log(e.target.files);
-      const file = e.target.files[0];
-      this.imageUrl = URL.createObjectURL(file);
-    },
+
+    // onClickImageUpload() {
+    //   this.$refs.imageInput.click();
+    // },
+    // onChangeImages(e) {
+    //   console.log(e.target.files);
+    //   const file = e.target.files[0];
+    //   this.imageUrl = URL.createObjectURL(file);
+    // },
     addHashtag() {
       this.hashtagList.push(this.hashtag);
       this.hashtag = "";

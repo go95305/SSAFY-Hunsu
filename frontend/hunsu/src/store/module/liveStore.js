@@ -15,8 +15,14 @@ const getters = {
 };
 
 const mutations = {
+  setChatRooms(state, payload) {
+    state.chatRooms = payload;
+  },
   setChatRoomDetail(state, payload) {
     state.chatRoomDetail = payload;
+  },
+  setChatImageFiles(state, payload) {
+    state.chatRoomDetail.images = payload;
   },
 };
 
@@ -37,7 +43,7 @@ const actions = {
         .then((res) => {
           console.log('in create', res);
           alert(res.data.name + ' 방 개설 성공');
-          return 1;
+          return res;
           //   this.room_name = '';
           //   this.hashtagList = [];
           //   this.fixedComment = '';
@@ -51,7 +57,7 @@ const actions = {
     }
   },
   findAllRoom({ state }) {
-    axios.get('http://localhost:8082/chat/rooms').then((res) => {
+    return axios.get('http://localhost:8082/chat/rooms/0').then((res) => {
       if (Object.prototype.toString.call(res.data) === '[object Array]') {
         console.log(res.data);
       }

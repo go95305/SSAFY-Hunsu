@@ -2,6 +2,7 @@
   <!-- 라이브 채팅창 (아직 구현안돼서 댓글로 대체해놓음)-->
   <div>
     <!-- 이미지 뷰  -->
+    <ImageView :images="getChatRoomDetail.imageUrls" />
     <!-- 개설자 채팅 -->
     <v-container fluid>
       <v-row>
@@ -39,6 +40,7 @@
       </v-row>
     </v-container>
     <v-btn @click="exitChatRoom">종료</v-btn>
+    <v-btn @click="imageUpdate">이미지 수정</v-btn>
 
     <!--클릭할때만 하트애니메이션 작동되도록-->
     <!-- <v-icon >mdi-heart</v-icon>
@@ -53,10 +55,14 @@
 <script>
 import Stomp from "webstomp-client";
 import SockJS from "sockjs-client";
+import ImageView from "@/components/module/ImageView";
 import { mapGetters } from "vuex";
 
 export default {
   name: "LiveDetailChat",
+  components: {
+    ImageView,
+  },
   data: () => ({
     msg: "",
     userCount: 0,
@@ -134,33 +140,47 @@ export default {
         return;
       }
       const _this = this;
-      let content = JSON.stringify({
-        type: "TALK",
-        roomId: _this.getChatRoomDetail.roomId,
-        message: _this.msg,
-        sender: _this.getNickname,
-      });
-      this.stompClient.send("/pub/chat/message", content, {
-        // 여기선 순서 바꿔줘야함
-        nickname: _this.getNickname,
-      });
-      console.log(
+
+      this.stompClient.send(
+        "/pub/chat/message",
         JSON.stringify({
           type: "TALK",
           roomId: _this.getChatRoomDetail.roomId,
           message: _this.msg,
-        })
+          sender: _this.getNickname,
+        }),
+        {
+          // 여기선 순서 바꿔줘야함
+          nickname: _this.getNickname,
+        }
       );
       this.msg = "";
+    },
+    imageUpdate() {
+      const _this = this;
+      this.stompClient.send(
+        "/pub/chat/message",
+        JSON.stringify({
+          type: "IMAGE",
+          roomId: _this.getChatRoomDetail.roomId,
+          sender: _this.getNickname,
+        }),
+        {
+          nickname: _this.getNickname,
+        }
+      );
     },
     recvMessage(recv) {
       this.userCount = recv.userCount;
       this.likeCount = recv.likeCount;
       if (recv.type === "LIKE") {
-        console.log(recv);
+        // console.log(recv);
         this.show = !this.show;
+      } else if (recv.type === "IMAGE") {
+        console.log("IMAGE tlsgh");
+        //이미지 리로드
       } else {
-        if (recv.sender === this.getNickname) {
+        if (recv.sender === this.getChatRoomDetail.publisher) {
           // 개설자 메세지 일 때
           this.publisherMsgs.unshift({
             type: recv.type,
