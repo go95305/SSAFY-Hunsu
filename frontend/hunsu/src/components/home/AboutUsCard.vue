@@ -2,7 +2,6 @@
   <v-card flat class="mt-3" >
     <div >
         <v-carousel 
-          v-model="model" 
           id="home_carousel" 
           cycle 
           show-arrows-on-hover 
