@@ -1,4 +1,4 @@
-import liveAxios from '@/services/live';
+import axios from 'axios';
 
 const state = {
   chatRooms: {},
@@ -33,8 +33,8 @@ const actions = {
       return;
     } else {
       console.log(rootState);
-      return liveAxios
-        .post('chat/room', {
+      return axios
+        .post('http://i4c102.p.ssafy.io:8082/api/chat/room', {
           name: title, // title로 변경 필요
           publisher: rootState.user.nickname, // 항상 자신 (닉네임 가져오기)
           hashtagList,
@@ -57,7 +57,7 @@ const actions = {
     }
   },
   findAllRoom({ state }) {
-    return liveAxios.get('chat/rooms/0').then((res) => {
+    return axios.get('http://i4c102.p.ssafy.io:8082/api/chat/rooms/0').then((res) => {
       if (Object.prototype.toString.call(res.data) === '[object Array]') {
         console.log(res.data);
       }
