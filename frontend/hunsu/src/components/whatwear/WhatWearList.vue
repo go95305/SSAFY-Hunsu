@@ -14,14 +14,9 @@
         <!-- <div class="mt-2"></div> -->
         <v-avatar class="mt-5 ml-2">
           <v-img
-            v-if="whatwear.profileImage"
+            v-if="whatwear.profileImage!=null"
             :src="whatwear.profileImage"
-            alt="John"
-            id="profile"
-          />
-          <v-img
-            v-else
-            src="https://s.pstatic.net/mimgnews/image/upload/office_logo/018/2017/01/05/logo_018_18_20170105111205.png?type=nf40_40"
+            @click="goToWhatwearDetail(whatwear)"
           />
           <!--유저닉네임-->
         </v-avatar>
@@ -79,23 +74,32 @@ export default {
     await this.getWhatWearList();
   },
   methods: {
-    ...mapActions(["getWhatwearInfoApi", "getProfiles", "getProfileImage"]),
+    ...mapActions([
+      "getWhatwearInfoApi",
+      "getProfiles",
+      "getProfileImage",
+      "getImageList"
+    ]),
     ...mapMutations(["setWhatwearInfoImages"]),
     goToWhatwearDetail(whatwear) {
       // console.log('글번호', whatwear.wear_idx)
-      const wearIdx = whatwear.wear_idx;
-      const nickname = whatwear.nickname;
-      this.getWhatwearInfoApi({ wearIdx, nickname }) // 유저정보 닉네임으로 변경, 현재는 글 작성자로 들어감
-        .then(() => {
-          this.getProfileImage({
-            nickname: nickname,
-            target: "target",
-          });
-          this.getImageList({ prefix: "whatwear/" + wearIdx }).then((res) => {
+      this.getWhatwearInfoApi({
+        wearIdx: whatwear.wear_idx,
+        nickname: this.getNickname,
+        // 유저정보 닉네임으로 변경, 현재는 글 작성자로 들어감
+      }).then(() => {
+        this
+          .getImageList({ prefix: "whatwear/" + whatwear.wear_idx })
+          .then((res) => {
             this.setWhatwearInfoImages(res);
-          });
-        });
-      this.$router.push({ name: "WhatWearDetail" });
+          })
+          .then(() => {
+            this.getProfileImage({ uid: whatwear.uid, target: "target" });
+          })
+          .then(() => {
+            this.$router.push({ name: "WhatWearDetail" });
+          })
+      });
     },
     getWhatWearList() {
       const pageNum = 1;
@@ -106,11 +110,9 @@ export default {
           this.whatwearList = res.data.wearMainDTOList;
           this.length = parseInt(res.data.count / 10) + 1;
 
-          this.getProfiles(this.whatwearList);
+          this.getProfile(this.whatwearList);
         })
-        .then(() => {
-          root.$foreceUpdate();
-        })
+        .then(() => root.$foreceUpdate())
         .catch((err) => {
           console.error(err);
         });
