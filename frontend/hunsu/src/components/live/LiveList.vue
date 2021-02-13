@@ -63,6 +63,7 @@ export default {
   },
   created() {
     const _this = this;
+    //뭘입을까 참고
     this.findAllRoom()
       .then(() => {
         this.getChatRooms.forEach((room) => {

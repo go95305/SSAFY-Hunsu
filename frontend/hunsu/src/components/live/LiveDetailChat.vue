@@ -29,10 +29,10 @@
     <!-- 참여자 채팅 -->
     <v-container fluid>
       <!--참가자 채팅 -->
-      <v-virtual-scroll :items="joinerMsgs" height="150" item-height="64">
+      <v-virtual-scroll :items="joinerMsgs" height="90" item-height="30">
         <template v-slot:default="{ item }">
           <v-list-item :key="item">
-            <li>{{ msg }}</li>
+            {{ item.sender }} - {{ item.message }}
           </v-list-item>
           <!-- <v-row>
           <li v-for="(msg, i) in joinerMsgs" :key="i">{{ msg }}</li>
@@ -199,7 +199,6 @@ export default {
           });
         } else {
           // 참여자 메세지 일 때
-
           this.joinerMsgs.unshift({
             type: recv.type,
             sender: recv.sender,
