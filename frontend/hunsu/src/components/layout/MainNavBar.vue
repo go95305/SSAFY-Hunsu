@@ -81,22 +81,9 @@ export default {
       "getRefreshToken",
       "getMyProfileImage",
       "getTargetProfileImage",
+      "getUid",
     ]),
   },
-  // mounted() {
-  //   if (this.getAccessToken) {
-  //     this.kakaoLogin().then(() => {
-  //       // console.log(this.getNickname);
-  //       this.getProfileImage({
-  //         nickname: this.getNickname,
-  //         target: "my",
-  //       });
-  //     });
-  //   } else {
-  //     this.setAllInfoClear();
-  //     this.$router.push("/login");
-  //   }
-  // },
   data() {
     return {
       items: [
@@ -120,22 +107,21 @@ export default {
       "logout",
     ]),
     ...mapMutations(["setMyProfileImage", "setAllInfoClear"]),
-    goToPage(item) {
+    async goToPage(item) {
       // console.log(item.text)
       if (item.text === "MyPage") {
         // 여기선 자기 자신의 마이페이지로 이동
-        this.getProfileInfoInApi({
+        await this.getProfileInfoInApi({
           // 타겟 유저의 프로필 정보 가져오기
           myNickname: this.getNickname,
           yourNickname: this.getNickname,
-        }).then(() => {
-          this.getProfileImage({
-            // 타겟 유저의 이미지 정보 가져오기
-            nickname: this.getNickname,
-            target: "target",
-          });
-          this.$router.push({ name: "MyPage" });
         });
+        await this.getProfileImage({
+          // 타겟 유저의 이미지 정보 가져오기
+          nickname: this.getNickname,
+          target: "target",
+        });
+        this.$router.push({ name: "MyPage" });
       } else if (item.text === "Logout") {
         this.logout();
       }
@@ -150,7 +136,9 @@ export default {
         "tokens",
         this.getAccessToken,
         "refresh",
-        this.getRefreshToken
+        this.getRefreshToken,
+        "uid",
+        this.getUid
       );
     },
     goToHome() {

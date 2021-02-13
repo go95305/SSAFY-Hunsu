@@ -79,19 +79,33 @@ export default {
   computed: {
     ...mapGetters(["getOotdList", "getNickname", "getOotdInfo"]),
   },
-  created() {
+  async created() {
     // let ootdList;
     let root = this;
-    this.getOotdListInApi({ sort: 0, pageNum: this.pageNum }).then((res) => {
-      root.getProfiles(res);
-      res.forEach((info) => {
-        console.log(info);
-        root.getImageList({ prefix: "ootd/" + info.ootdIdx }).then((res) => {
-          info.imageUrls = res;
-          // });
-        });
-      });
+    await this.getOotdListInApi({
+      sort: 0,
+      pageNum: this.pageNum,
     });
+    root.getProfiles(this.getOotdList);
+    this.getOotdList.forEach((info) => {
+      root.getImageList({ prefix: "ootd/" + info.ootdIdx }).then((res) => {
+        info.imageUrls = res;
+      });
+      // uid 로 받아와야 프로필 이미지들 가져올 수 있음
+      // root.getProfileImage({
+      //   nickname: info.nickname,
+      // });
+    });
+    // .then((res) => {
+    //   root.getProfiles(res);
+    //   res.forEach((info) => {
+    //     console.log(info);
+    //     root.getImageList({ prefix: "ootd/" + info.ootdIdx }).then((res) => {
+    //       info.imageUrls = res;
+    //       // });
+    //     });
+    //   });
+    // });
   },
   methods: {
     ...mapActions([
@@ -110,7 +124,6 @@ export default {
       console.log(ootd);
       this.getOotdInfoInApi({
         ootdIdx: ootd.ootdIdx,
-        nickname: this.getNickname,
       }).then(() => {
         root
           .getImageList({ prefix: "ootd/" + ootd.ootdIdx })

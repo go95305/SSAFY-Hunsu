@@ -23,7 +23,12 @@ export default {
     // MainBottomBar
   },
   computed: {
-    ...mapGetters(["getNickname", "getAccessToken", "getRefreshToken"]),
+    ...mapGetters([
+      "getNickname",
+      "getAccessToken",
+      "getRefreshToken",
+      "getUid",
+    ]),
     nickname() {
       return this.getNickname;
     },
@@ -35,28 +40,27 @@ export default {
       }
     },
   },
-  mounted() {
+  async mounted() {
     console.log(
       "mounted",
       this.getNickname,
-      this.getAccessTOken,
+      this.getAccessToken,
       this.getRefreshToken
     );
-    console.log(this.typeCheck(this.getAccessToken));
-    console.log(this.typeCheck(this.getNickname));
-    console.log(this.typeCheck(this.getRefreshToken));
+    // console.log(this.typeCheck(this.getAccessToken));
+    // console.log(this.typeCheck(this.getNickname));
+    // console.log(this.typeCheck(this.getRefreshToken));
+    // 자동로그인 처리
     if (!this.typeCheck(this.getAccessToken)) {
       this.$router.push("/login");
     } else if (
       this.typeCheck(this.getNickname) &&
       this.typeCheck(this.getAccessToken)
     ) {
-      this.kakaoLogin().then(() => {
-        // console.log(this.getNickname);
-        this.getProfileImage({
-          nickname: this.getNickname,
-          target: "my",
-        });
+      await this.kakaoLogin();
+      console.log("in app uid", this.getUid);
+      await this.getImageList({
+        prefix: `mypage/${this.getUid}/${this.getUid}`,
       });
     }
   },
@@ -64,9 +68,9 @@ export default {
     return {};
   },
   methods: {
-    ...mapActions(["kakaoLogin", "getProfileImage"]),
+    ...mapActions(["kakaoLogin", "getProfileImage", "getImageList"]),
     typeCheck(str) {
-      console.log("typeCheck", typeof str);
+      // console.log("typeCheck", typeof str);
       if (
         typeof str === "undefined" ||
         str == null ||

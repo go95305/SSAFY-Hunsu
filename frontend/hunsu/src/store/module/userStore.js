@@ -16,11 +16,11 @@ const getters = {
     }
     return state.accessToken;
   },
-  getRefreshToken() {
-    // if (!state.refreshToken) {
-    return localStorage.getItem('hunsu-refresh-token');
-    // }
-    // return state.refreshToken;
+  getRefreshToken(state) {
+    if (!state.refreshToken) {
+      return localStorage.getItem('hunsu-refresh-token');
+    }
+    return state.refreshToken;
   },
   getAllToken(state) {
     return { accessToken: state.accessToken, refreshToken: state.refreshToken };
@@ -90,31 +90,21 @@ const mutations = {
 
 const actions = {
   // 카카오 로그인 후 회원가입이 되어있는지 확인 후 유무에 따라 회원가입 절차 or 로그인 유도
-  userCheck({ commit }, { accessToken, refreshToken }) {
-    return new Promise((resolve) => {
-      axios
-        .post('http://i4c102.p.ssafy.io:8081/api/v1/auth/usercheck', {
-          accessToken,
-          refreshToken,
-        })
-        .then((res) => {
-          console.log('in usercheck', res.data);
-          if (res.data.code === 1) {
-            // 회원정보 있음
-            commit('setAllInfo', {
-              accessToken: res.data.jwtToken,
-              refreshToken: res.data.jwtRefresh,
-              nickname: res.data.nickname,
-              uid: res.data.uid,
-            });
-          }
-          resolve(res.data.code);
-          //return -1 or 1;
-        })
-        .catch((err) => {
-          console.log('usercheck err : ', err);
-        });
+  async userCheck({ commit }, { accessToken, refreshToken }) {
+    const res = await axios.post('http://i4c102.p.ssafy.io:8081/api/v1/auth/usercheck', {
+      accessToken,
+      refreshToken,
     });
+    if (res.data.code === 1) {
+      commit('setAllInfo', {
+        accessToken: res.data.jwtToken,
+        refreshToken: res.data.jwtRefresh,
+        nickname: res.data.nickname,
+        uid: res.data.uid,
+      });
+    }
+    console.log('in usercheck ', res);
+    return res.data.code;
   },
   signUpInApi({ commit }, params) {
     // 회원가입 api
@@ -126,7 +116,6 @@ const actions = {
       })
       .then((res) => {
         if (res.data.code === 1) {
-          console.log('in singupinapi 1', res.data);
           commit('setAllInfo', {
             accessToken: res.data.jwtToken,
             refreshToken: res.data.jwtRefresh,
@@ -141,28 +130,35 @@ const actions = {
         console.log('err in signUpInApi ', err);
       });
   },
-  kakaoLogin({ state, commit }) {
+  async kakaoLogin({ state, commit }) {
     // 로그인 API
-    console.log('rootState ', state);
-    console.log('in kakaoLogin 3', state.accessToken); //jwtAccessToken
-    console.log('in kakaoLogin 3', state.refreshToken); //jwtAccessToken
+    // console.log('rootState ', state);
+    // console.log('in kakaoLogin 3 a', state.accessToken); //jwtAccessToken
+    // console.log('in kakaoLogin 3', state.refreshToken); //jwtAccessToken
 
-    new Promise((resolve) => {
-      axios
-        .post('http://i4c102.p.ssafy.io:8081/api/v1/auth/tokenlogin', {
-          jwtToken: state.accessToken,
-          jwtRefresh: state.refreshToken,
-        })
-        .then((res) => {
-          console.log(res);
-          commit('setAllInfo', {
-            accessToken: res.data.jwtToken,
-            refreshToken: res.data.jwtRefresh,
-            nickname: res.data.nickname,
-          });
-          resolve();
-        });
+    const res = await axios.post('http://i4c102.p.ssafy.io:8081/api/v1/auth/tokenlogin', {
+      jwtToken: state.accessToken,
+      jwtRefresh: state.refreshToken,
     });
+    // console.log('in kakaologin result ', res);
+    commit('setAllInfo', {
+      accessToken: res.data.jwtToken,
+      refreshToken: res.data.jwtRefresh,
+      nickname: res.data.nickname,
+      uid: res.data.uid,
+    });
+
+    console.log('in tokenLogin', res);
+
+    // .then((res) => {
+    //   console.log(res);
+    //   commit('setAllInfo', {
+    //     accessToken: res.data.jwtToken,
+    //     refreshToken: res.data.jwtRefresh,
+    //     nickname: res.data.nickname,
+    //   });
+    //   resolve();
+    // });
   },
   getProfileInfoInApi(context, { myNickname, yourNickname }) {
     return axios
