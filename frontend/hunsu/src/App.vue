@@ -24,6 +24,16 @@ export default {
   },
   computed: {
     ...mapGetters(["getNickname", "getAccessToken", "getRefreshToken"]),
+    nickname() {
+      return this.getNickname;
+    },
+  },
+  watch: {
+    nickname(val) {
+      if (!this.typeCheck(val)) {
+        this.$router.push("/login");
+      }
+    },
   },
   mounted() {
     console.log(
