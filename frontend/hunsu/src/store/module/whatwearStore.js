@@ -56,34 +56,7 @@ const mutations = {
   }
 };
 const actions = {
-  getWhatwearInfoApi(context, { wearIdx, nickname }) {
-    const endTime = (res) => {
-      // 현재시간값
-      let nowTime = new Date().getTime()
-      console.log('현재', nowTime)
-
-      // 마감시간값
-      let endTime = res.end_time
-
-      let endYear = endTime.slice(0, 4)
-      let endMonth = endTime.slice(5,7)
-      let endDay = endTime.slice(8,10)
-      let endHours = endTime.slice(11, 13)
-      let endMinute = endTime.slice(14, 16)
-      let endSecond = endTime.slice(17,19)
-
-      // console.log(endYear, endMonth, endDay, endHours, endMinute, endSecond)
-      // Date에서 월값은 0부터 시작함
-      let endTimeValue = new Date(endYear, Number(endMonth)-1, Number(endDay), Number(endHours), Number(endMinute), Number(endSecond)).getTime()
-      console.log('마감', endTimeValue)
-
-      // 현재시간이 마감시간보다 커지면 마감
-      if (nowTime > endTimeValue) {
-        state.endTimeCheck = true
-      }
-
-      return state.endTimeCheck
-    }
+  getWhatwearInfoApi(context, { wearIdx, nickname, voteCheck }) {
     return (
       resource({
         url: `wear/detail/${wearIdx}/${nickname}`,
@@ -91,8 +64,6 @@ const actions = {
       })
       .then((res) => {
         console.log('wwstore', res.data)
-        console.log('함수값', endTime(res.data))
-        
         let replyCount = 0
         res.data.replyList.map((v) => {
           if (v.flag) {
@@ -100,7 +71,38 @@ const actions = {
           }
         })
         // console.log('댓글합', replyCount)
-        context.commit('setWhatwearVoteTime', endTime(res.data))
+
+        // 투표활성화가 되어있으면 그때 실행
+        if (voteCheck) {
+          const endTime = (res) => {
+            // 현재시간값
+            let nowTime = new Date().getTime()
+            console.log('현재', nowTime)
+      
+            // 마감시간값
+            let endTime = res.end_time
+      
+            let endYear = endTime.slice(0, 4)
+            let endMonth = endTime.slice(5,7)
+            let endDay = endTime.slice(8,10)
+            let endHours = endTime.slice(11, 13)
+            let endMinute = endTime.slice(14, 16)
+            let endSecond = endTime.slice(17,19)
+      
+            // console.log(endYear, endMonth, endDay, endHours, endMinute, endSecond)
+            // Date에서 월값은 0부터 시작함
+            let endTimeValue = new Date(endYear, Number(endMonth)-1, Number(endDay), Number(endHours), Number(endMinute), Number(endSecond)).getTime()
+            console.log('마감', endTimeValue)
+      
+            // 현재시간이 마감시간보다 커지면 마감
+            if (nowTime > endTimeValue) {
+              state.endTimeCheck = true
+            }
+      
+            return state.endTimeCheck
+          }
+          context.commit('setWhatwearVoteTime', endTime(res.data))
+        }
         context.commit('setReplyCount', replyCount)
         context.commit('setWhatwearInfo', res.data)
         context.commit('setWhatwearReplyInfo', res.data.replyList)

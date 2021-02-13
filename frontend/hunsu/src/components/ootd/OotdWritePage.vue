@@ -86,7 +86,7 @@ export default {
       rules: {
         required: (v) => !!v || "Required",
         min: (v) => v.trim().length > 0 || "공백안됨",
-        contentMax: (v) => v.length <= 300 || "300자이하",
+        contentMax: (v) => v.length <= 250 || "250자이하",
       },
       imageUrls: [],
       ootd_content: "",
