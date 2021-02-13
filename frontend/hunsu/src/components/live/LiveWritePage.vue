@@ -107,9 +107,15 @@ export default {
   computed: {
     ...mapGetters(["getChatRooms"]),
   },
+
   methods: {
     ...mapActions(["createRoom", "findAllRoom", "uploadImage", "getImageList"]),
     async create() {
+      //작성 시 닉네임 체크
+      if (this.getNickname == null || this.getNickname == undefined) {
+        alert("로그인 후 다시 시도해주세요!");
+        this.$router.push("/login");
+      }
       const _this = this;
       await this.createRoom({
         title: this.title,
@@ -139,14 +145,6 @@ export default {
       });
     },
 
-    // onClickImageUpload() {
-    //   this.$refs.imageInput.click();
-    // },
-    // onChangeImages(e) {
-    //   console.log(e.target.files);
-    //   const file = e.target.files[0];
-    //   this.imageUrl = URL.createObjectURL(file);
-    // },
     addHashtag() {
       this.hashtagList.push(this.hashtag);
       this.hashtag = "";
