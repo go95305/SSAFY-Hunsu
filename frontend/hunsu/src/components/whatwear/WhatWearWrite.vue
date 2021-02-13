@@ -44,7 +44,7 @@
                 clearable
                 clear-icon="mdi-close-circle"
                 :rules="[rules.required, rules.min, rules.contentMax]"
-                counter="300"
+                counter="250"
                 label="내용"
               ></v-textarea>
             </v-list-item-content>
@@ -224,12 +224,12 @@ export default {
         this.num = this.getUploadImageFiles.length
       }
       // 투표비활성화 일때 글작성 체크(사진은 부가적이므로 체크제외)
-      if (this.vote === false && this.whatwearTitle.length > 0 && this.whatwearContent.length > 0) {
+      if (this.vote === false && 30 >= this.whatwearTitle.length > 0 && 250 >= this.whatwearContent.length > 0) {
         this.isValid = true
       }
       
       // 투표활성화일때 글작성 체크(제목, 내용, 사진갯수)
-      if (this.vote === true && this.whatwearTitle.length > 0 && this.whatwearContent.length > 0 && this.num > 0) {
+      if (this.vote === true && 30 >= this.whatwearTitle.length > 0 && 250 >= this.whatwearContent.length > 0 && this.num > 0) {
         this.isValid = true
       }
       
