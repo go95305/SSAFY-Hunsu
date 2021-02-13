@@ -77,12 +77,10 @@ export default {
   computed: {
     ...mapGetters([
       "getNickname",
-      // "getAccessToken",
-      // "getRefreshToken",
-      // "getOotdList",
+      "getAccessToken",
+      "getRefreshToken",
       "getMyProfileImage",
       "getTargetProfileImage",
-      // "getChatRooms",
     ]),
   },
   // mounted() {
@@ -119,6 +117,7 @@ export default {
       "getImages",
       "getImageList",
       "getProfileImage",
+      "logout",
     ]),
     ...mapMutations(["setMyProfileImage", "setAllInfoClear"]),
     goToPage(item) {
@@ -137,6 +136,8 @@ export default {
           });
           this.$router.push({ name: "MyPage" });
         });
+      } else if (item.text === "Logout") {
+        this.logout();
       }
     },
     getName() {
@@ -146,10 +147,10 @@ export default {
         this.getMyProfileImage,
         "nickname",
         this.getNickname,
-        "targetName",
-        this.getTargetProfileImage,
-        "liveList",
-        this.getChatRooms
+        "tokens",
+        this.getAccessToken,
+        "refresh",
+        this.getRefreshToken
       );
     },
     goToHome() {
