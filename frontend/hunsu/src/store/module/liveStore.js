@@ -3,6 +3,7 @@ import axios from 'axios';
 const state = {
   chatRooms: {},
   chatRoomDetail: {},
+  stompClient: '',
 };
 
 const getters = {
@@ -11,6 +12,9 @@ const getters = {
   },
   getChatRoomDetail(state) {
     return state.chatRoomDetail;
+  },
+  getStompClient(state) {
+    return state.stompClient;
   },
 };
 
@@ -23,6 +27,9 @@ const mutations = {
   },
   setChatImageFiles(state, payload) {
     state.chatRoomDetail.images = payload;
+  },
+  setStompClient(state, payload) {
+    state.stompClient = payload;
   },
 };
 
@@ -63,6 +70,11 @@ const actions = {
       }
       state.chatRooms = res.data;
     });
+  },
+  endMyRoom({ state }) {
+    return axios
+      .post('http://i4c102.p.ssafy.io:8082/api/chat/room/remove/' + state.chatRoomDetail.roomId)
+      .then(() => {});
   },
 };
 

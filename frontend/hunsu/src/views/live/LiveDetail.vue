@@ -12,7 +12,14 @@
         <!-- 라이브 제목 -->
         <div class="text-truncate">{{ getChatRoomDetail.name }}</div>
         <!--개설자면 종료, 참여자는 나가기로 표시-->
-        <v-btn text class="mb-1">종료</v-btn>
+        <v-btn
+          text
+          v-if="getChatRoomDetail.publisher === getNickname"
+          class="mb-1"
+          @click="endRoom"
+          >종료</v-btn
+        >
+        <v-btn text v-else class="mb-1" @click="exitRoom">방 나가기</v-btn>
       </div>
       <v-list-item style="height: 50px">
         <v-list-item-avatar>
@@ -40,7 +47,7 @@
 
 <script>
 import LiveDetailChat from "@/components/live/LiveDetailChat";
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 export default {
   components: {
     LiveDetailChat,
@@ -59,9 +66,10 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getChatRoomDetail"]),
+    ...mapGetters(["getChatRoomDetail", "getStompClient", "getNickname"]),
   },
   methods: {
+    ...mapActions(["endMyRoom"]),
     goToLiveMain() {
       this.$router.push("/live");
     },
@@ -73,6 +81,19 @@ export default {
     },
     goToLogin() {
       this.$router.push("/login");
+    },
+    endRoom() {
+      this.exitRoom();
+      this.endMyRoom();
+    },
+    exitRoom() {
+      const _this = this;
+      this.getStompClient.disconnect(
+        () => {
+          _this.$router.push("/live");
+        },
+        { nickname: _this.getNickname }
+      );
     },
   },
 };

@@ -66,7 +66,7 @@
 import Stomp from "webstomp-client";
 import SockJS from "sockjs-client";
 import ImageView from "@/components/module/ImageView";
-import { mapGetters } from "vuex";
+import { mapGetters, mapMutations } from "vuex";
 
 export default {
   name: "LiveDetailChat",
@@ -79,25 +79,25 @@ export default {
     likeCount: 0,
     joinerMsgs: [],
     publisherMsgs: [],
-    stompClient: "",
     connected: false,
     show: true,
   }),
   computed: {
-    ...mapGetters(["getChatRoomDetail", "getNickname"]),
+    ...mapGetters(["getChatRoomDetail", "getNickname", "getStompClient"]),
   },
   created() {
     let sock = new SockJS("http://i4c102.p.ssafy.io:8082/api/ws-stomp");
-    this.stompClient = Stomp.over(sock);
+    // this.stompClient = Stomp.over(sock);
+    this.setStompClient(Stomp.over(sock));
 
     const _this = this;
-    this.stompClient.connect(
+    this.getStompClient.connect(
       {},
       function (frame) {
         console.log("frame", frame);
         console.log(_this.getNickname);
         _this.connected = true;
-        _this.stompClient.subscribe(
+        _this.getStompClient.subscribe(
           "/sub/chat/room/" + _this.getChatRoomDetail.roomId,
           function (msg) {
             let recv = JSON.parse(msg.body);
@@ -118,9 +118,10 @@ export default {
     this.exitChatRoom();
   },
   methods: {
+    ...mapMutations(["setStompClient"]),
     exitChatRoom() {
       const _this = this;
-      this.stompClient.disconnect(
+      this.getStompClient.disconnect(
         () => {
           _this.$router.push("/live");
         },
@@ -128,13 +129,13 @@ export default {
       );
     },
     plusLike() {
-      if (!this.stompClient || !this.connected) {
+      if (!this.getStompClient || !this.connected) {
         console.log("연결안됐는데 왜 좋아요보내?");
         return;
       }
       this.show = !this.show;
       const _this = this;
-      this.stompClient.send(
+      this.getStompClient.send(
         "/pub/chat/like",
         JSON.stringify({
           type: "LIKE",
@@ -145,13 +146,13 @@ export default {
       );
     },
     sendMessage() {
-      if (!this.stompClient || !this.connected) {
+      if (!this.getStompClient || !this.connected) {
         console.log("연결안됐는데 왜 메세지보내?");
         return;
       }
       const _this = this;
 
-      this.stompClient.send(
+      this.getStompClient.send(
         "/pub/chat/message",
         JSON.stringify({
           type: "TALK",
@@ -167,8 +168,12 @@ export default {
       this.msg = "";
     },
     imageUpdate() {
+      if (!this.getStompClient || !this.connected) {
+        console.log("연결안됐는데 왜 이미지보내?");
+        return;
+      }
       const _this = this;
-      this.stompClient.send(
+      this.getStompClient.send(
         "/pub/chat/message",
         JSON.stringify({
           type: "IMAGE",
@@ -192,14 +197,14 @@ export default {
       } else {
         if (recv.sender === this.getChatRoomDetail.publisher) {
           // 개설자 메세지 일 때
-          this.publisherMsgs.unshift({
+          this.publisherMsgs.push({
             type: recv.type,
             sender: recv.sender,
             message: recv.message,
           });
         } else {
           // 참여자 메세지 일 때
-          this.joinerMsgs.unshift({
+          this.joinerMsgs.push({
             type: recv.type,
             sender: recv.sender,
             message: recv.message,
