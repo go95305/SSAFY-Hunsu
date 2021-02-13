@@ -4,6 +4,7 @@ const state = {
   refreshToken: null,
   nickname: null,
   userInfo: {},
+  uid: null,
   myProfileImage: '',
   targetProfileImage: '',
 };
@@ -36,6 +37,9 @@ const getters = {
   getTargetProfileImage(state) {
     return state.targetProfileImage;
   },
+  getUid(state) {
+    return state.uid;
+  },
 };
 const mutations = {
   //모든 토큰은 jwt 의미함
@@ -57,12 +61,13 @@ const mutations = {
   setNickname(state, nickname) {
     state.nickname = nickname;
   },
-  setAllInfo(state, { accessToken, refreshToken, nickname }) {
+  setAllInfo(state, { accessToken, refreshToken, nickname, uid }) {
     state.accessToken = accessToken;
     state.refreshToken = refreshToken;
     state.nickname = nickname;
-    localStorage.setItem('hunsu-access-token', accessToken);
-    localStorage.setItem('hunsu-refresh-token', refreshToken);
+    state.uid = uid;
+    // localStorage.setItem('hunsu-access-token', accessToken);
+    // localStorage.setItem('hunsu-refresh-token', refreshToken);
   },
   setUserInfo(state, userInfo) {
     state.userInfo = userInfo;
@@ -100,6 +105,7 @@ const actions = {
               accessToken: res.data.jwtToken,
               refreshToken: res.data.jwtRefresh,
               nickname: res.data.nickname,
+              uid: res.data.uid,
             });
           }
           resolve(res.data.code);
@@ -125,6 +131,7 @@ const actions = {
             accessToken: res.data.jwtToken,
             refreshToken: res.data.jwtRefresh,
             nickname: res.data.nickname,
+            uid: res.data.uid,
           });
         } else {
           console.log('signup error');
@@ -150,7 +157,7 @@ const actions = {
           console.log(res);
           commit('setAllInfo', {
             accessToken: res.data.jwtToken,
-            refreshToken: res.data.refreshToken,
+            refreshToken: res.data.jwtRefresh,
             nickname: res.data.nickname,
           });
           resolve();
@@ -166,6 +173,30 @@ const actions = {
       })
       .catch((err) => {
         console.error(err);
+      });
+  },
+  logout({ state }) {
+    return axios
+      .post(`http://i4c102.p.ssafy.io:8081/api/v1/auth/logout?jwtToken=` + state.accessToken)
+      .then((res) => {
+        if (res.data.code === 1) {
+          console.log('logout success');
+          state.accessToken = null;
+          state.refreshToken = null;
+          state.nickname = null;
+          state.userInfo = null;
+          state.myProfileImage = null;
+        } else {
+          console.log('logout fail');
+          console.log(
+            'access',
+            state.accessToken,
+            'refresh',
+            state.refreshToken,
+            'nick',
+            state.nickname
+          );
+        }
       });
   },
 };
