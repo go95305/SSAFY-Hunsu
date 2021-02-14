@@ -1,6 +1,8 @@
 import { rscApi } from '@/services/api';
 
 const state = {
+  whatwearListInfo: {},
+  whatwearListCount: 0,
   whatwearInfo: {},
   whatwearReplyInfo: {},
   WhatwearVoteInfo: {},
@@ -13,6 +15,12 @@ const state = {
 };
 
 const getters = {
+  getWhatwearListInfo(state) {
+    return state.whatwearListInfo
+  },
+  getWhatwearListCount(state) {
+    return state.whatwearListCount
+  },
   getWhatwearInfo(state) {
     return state.whatwearInfo;
   },
@@ -33,6 +41,12 @@ const getters = {
   },
 };
 const mutations = {
+  setWhatwearListInfo(state, whatwearListInfo) {
+    state.whatwearListInfo = whatwearListInfo
+  },
+  setWhatwearListCount(state, WhatwearListCount) {
+    state.whatwearListCount = WhatwearListCount
+  },
   setWhatwearInfo(state, whatwearInfo) {
     state.whatwearInfo = whatwearInfo;
   },
@@ -56,6 +70,18 @@ const mutations = {
   },
 };
 const actions = {
+  getWhatwearListInfoApi(context, pageNum) {
+    rscApi
+    .get(`wear/${pageNum}`)
+    .then((res) => {
+      console.log(res)
+      context.commit('setWhatwearListInfo', res.data.wearMainDTOList);
+      context.commit('setWhatwearListCount', res.data.count);
+    })
+    .catch((err) => {
+      console.error(err)
+    })
+  },
   getWhatwearInfoApi(context, { wearIdx, voteCheck }) {
     return rscApi
       .get(`wear/detail/${wearIdx}`)
