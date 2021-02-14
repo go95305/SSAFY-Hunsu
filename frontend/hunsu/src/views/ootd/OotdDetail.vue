@@ -45,15 +45,7 @@
     <v-carousel :show-arrows="false" v-if="!getOotdInfoImages">
       <p>loading..</p>
     </v-carousel>
-    <v-carousel
-      v-else
-      :continuous="false"
-      :cycle="cycle"
-      :show-arrows="true"
-      hide-delimiter-background
-      delimiter-icon="mdi-minus"
-      height="330"
-    >
+    <v-carousel v-else :continuous="false" :cycle="cycle" :show-arrows="true" hide-delimiter-background delimiter-icon="mdi-minus" height="330">
       <v-carousel-item v-for="(imageUrl, i) in getOotdInfoImages" :key="i">
         <v-sheet height="100%" tile>
           <v-row class="fill-height" align="center" justify="center">

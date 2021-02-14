@@ -27,7 +27,7 @@ import { mapGetters, mapActions, mapMutations } from "vuex";
 export default {
   name: "Login",
   computed: {
-    ...mapGetters(["getAccessToken, getRefreshToken", "getNickname"]),
+    ...mapGetters(["getAccessToken, getRefreshToken", "getNickname", "getUid"]),
   },
   components: {
     // SignupInfo,
@@ -41,44 +41,56 @@ export default {
       "getProfileImage",
     ]),
     ...mapMutations(["setMyProfileImage"]),
-    onSuccess(authObj) {
+    async onSuccess(authObj) {
       // console.log("auth", authObj);
       let router = this.$router; // 임시방편
       // let root = this;
-      this.userCheck({
+      const res = await this.userCheck({
         //카카오 초기 로그인 시 사용
         accessToken: authObj.access_token,
         refreshToken: authObj.refresh_token,
-      })
-        .then((res) => {
-          // console.log("return userchk 2", res);
-          console.log("usercheck", res);
-          if (res === -1) {
-            // 가입정보 없으면 회원가입으로
-            console.log("signup");
-            router.push({
-              name: "SignUp",
-              params: {
-                accessToken: authObj.access_token,
-                refreshToken: authObj.refresh_token,
-              },
-            });
-          }
-          return res;
-        })
-        .then((res) => {
-          // console.log("2 res", res, this.getNickname);
-          if (res !== -1) {
-            this.getProfileImage({
-              nickname: this.getNickname,
-              target: "my",
-            });
-            router.push("/");
-          }
-        })
-        .catch((err) => {
-          console.log("error in userCheck ", err);
+      });
+      if (res === -1) {
+        // 가입정보 없으면 회원가입으로
+        console.log("signup");
+        router.push({
+          name: "SignUp",
+          params: {
+            accessToken: authObj.access_token,
+            refreshToken: authObj.refresh_token,
+          },
         });
+      } else {
+        this.getProfileImage({
+          uid: this.getUid,
+          target: "my",
+        });
+        router.push("/");
+      }
+
+      // .then((res) => {
+      //   // console.log("return userchk 2", res);
+      //   console.log("usercheck", res);
+      //   if (res === -1) {
+      //     // 가입정보 없으면 회원가입으로
+      //     console.log("signup");
+      //     router.push({
+      //       name: "SignUp",
+      //       params: {
+      //         accessToken: authObj.access_token,
+      //         refreshToken: authObj.refresh_token,
+      //       },
+      //     });
+      //   }
+      //   return res;
+      // })
+      // .then((res) => {
+      //   // console.log("2 res", res, this.getNickname);
+      //   if (res !== -1) {
+      // })
+      // .catch((err) => {
+      //   console.log("error in userCheck ", err);
+      // });
     },
     onFailure(res) {
       console.log(res);

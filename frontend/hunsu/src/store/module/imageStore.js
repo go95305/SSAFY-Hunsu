@@ -7,6 +7,7 @@ const state = {
   uploadImageUrls: [],
   uploadImageFiles: [],
   ootdInfoImages: [],
+  wearInfoImages: [],
 };
 const getters = {
   getUploadImageUrls(state) {
@@ -17,6 +18,9 @@ const getters = {
   },
   getOotdInfoImages(state) {
     return state.ootdInfoImages;
+  },
+  getWhatwearInfoImages(state) {
+    return state.wearInfoImages;
   },
 };
 
@@ -40,6 +44,9 @@ const mutations = {
   },
   setOotdInfoImages(state, payload) {
     state.ootdInfoImages = payload;
+  },
+  setWhatwearInfoImages(state, payload) {
+    state.wearInfoImages = payload;
   },
 };
 
@@ -83,7 +90,11 @@ const actions = {
 
       s3.upload(
         {
+<<<<<<< HEAD
           Key: 'mypage/' + rootState.user.uid + '/' + rootState.user.uid,
+=======
+          Key: 'mypage/' + rootState.user.uid + '/' + '1.jpg',
+>>>>>>> frontend/imageupload
           Body: imageFile,
           ACL: 'public-read',
           ContentType: 'image/' + fileExt,
@@ -137,7 +148,7 @@ const actions = {
         'getObject',
         {
           Bucket: this.albumBucketName,
-          Key: 'mypage/' + info.publisher + '/' + info.publisher,
+          Key: 'mypage/' + info.uid + '/1.jpg',
         },
         (err, data) => {
           if (err) {
@@ -145,59 +156,40 @@ const actions = {
           } else {
             // console.log('getImage', data);
             info.profileImage = data;
+            // this.$set(info, 'profileImage', data);
           }
         }
       );
     });
   },
-  async getProfileImage(context, { uid }) {
+  getProfileImage({ rootState }, { uid, target }) {
     // 마이페이지 및 디테일에서의 프로필 이미지 가져오기
-    // 확장자를 고정할 수 없어 리스트로 가져와야함
-    let prefix = 'mypage/' + uid;
-    let image = null;
-    await s3.listObjectsV2({ Prefix: prefix }, (err, data) => {
-      if (data.Contents.length === 0) {
-        return;
-      }
-      if (err) {
-        // reject('getImageList err', err);
-        console.log(err);
-      } else {
-        // console.log(data.Contents[1]);
-        s3.getSignedUrl(
-          'getObject',
-          {
-            Bucket: this.albumBucketName,
-            Key: data.Contents[1].Key,
-          },
-          (err, data) => {
-            if (err) {
-              return alert('There was an error listing your photo: ', err.message);
-            } else {
-              // console.log('in profile data', data);
-              image = data;
-            }
+    let key = `mypage/${uid}/${uid}`;
+    s3.getSignedUrl(
+      'getObject',
+      {
+        Bucket: this.albumBucketName,
+        Key: key,
+      },
+      (err, data) => {
+        if (err) {
+          if (target === 'my') {
+            rootState.user.myProfileImage = null;
+          } else {
+            rootState.user.targetProfileImage = null;
           }
-        );
+          alert('There was an error listing your photo: ', err.message);
+        } else {
+          console.log('in profile data', data);
+          // image = data;
+          if (target === 'my') {
+            rootState.user.myProfileImage = data;
+          } else if (target === 'target') {
+            rootState.user.targetProfileImage = data;
+          }
+        }
       }
-    });
-    console.log('in getprofile', image);
-    // getImages
-    //   .then((image) => {
-    //     if (target === 'my') {
-    //       rootState.user.myProfileImage = image;
-    //     } else if (target === 'target') {
-    //       rootState.user.targetProfileImage = image;
-    //     }
-    //     return image;
-    //   })
-    //   .catch(() => {
-    //     if (target === 'my') {
-    //       rootState.user.myProfileImage = null;
-    //     } else {
-    //       rootState.user.targetProfileImage = null;
-    //     }
-    //   });
+    );
   },
 };
 AWS.config.update({
