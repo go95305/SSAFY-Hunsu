@@ -104,7 +104,7 @@ public class AuthController {
             // 토큰 값들 수정 !!
             String jwtToken=jwtTokenProvider.generateToken(profile.getUid(),user.get().getRoles());
             String jwtRefresh=jwtTokenProvider.generateRefreshToken(profile.getUid(),user.get().getRoles());
-            userService.setAllTokens(profile.getUid(),tokens.getAccessToken(),tokens.getAccessToken(),jwtRefresh,jwtToken);
+            userService.setAllTokens(profile.getUid(),tokens.getAccessToken(),tokens.getAccessToken(),jwtToken,jwtRefresh);
             System.out.println("토큰수정완료");
             /////////////////////////////////////////////////////////////////////////////////
             result.setSuccess(true);
@@ -113,6 +113,7 @@ public class AuthController {
             result.setJwtToken(jwtToken);
             result.setJwtRefresh(jwtRefresh);
             result.setNickname(user.get().getNickname());
+            result.setUid(user.get().getUid());
                   //로그인
         }else{
             System.out.println("회원가입!!!");
@@ -122,7 +123,7 @@ public class AuthController {
             result.setSuccess(true);
             result.setCode(-1);
             result.setMsg("회원가입");
-            result.setUid(uid);
+//            result.setUid(uid);
 //            result.setAccessToken(tokens.getAccessToken());
             System.out.println("SetCode2");
             ///////////////////////////////////////////////////////////////
@@ -161,6 +162,7 @@ public class AuthController {
             result.setJwtToken(tokens.getJwtToken());
             result.setJwtRefresh(tokens.getJwtRefresh());
             result.setNickname(user.getNickname());
+            result.setUid(user.getUid());
 
             return result;
 
@@ -188,6 +190,7 @@ public class AuthController {
                 result.setJwtToken(jwtToken);
                 result.setJwtRefresh(tokens.getJwtRefresh());
                 result.setNickname(user.getNickname());
+                result.setUid(user.getUid());
                 return result;
 
             }else{
@@ -233,6 +236,7 @@ public class AuthController {
         result.setJwtToken(jwtAccess);
         result.setJwtRefresh(jwtRefresh);
         result.setNickname(form.getNickname());
+        result.setUid(user.getUid());
         return result;
     }
 
@@ -258,7 +262,7 @@ public class AuthController {
 
     }
 
-    @ApiOperation(value = "로그아웃(~)",notes = "jwtToken으로 로그아웃 요청, 성공시 로컬스토리지 토큰 값 날리기\n" +
+    @ApiOperation(value = "로그아웃(O)",notes = "jwtToken으로 로그아웃 요청, 성공시 로컬스토리지 토큰 값 날리기\n" +
             "\n" +
             "Parameter\n" +
             "- jwtToken\n" +
