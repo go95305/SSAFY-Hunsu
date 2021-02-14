@@ -173,7 +173,7 @@
 </template>
 
 <script>
-import { rscApi } from "@/services/api"
+import { rscApi } from "@/services/api";
 import { mapGetters, mapActions, mapMutations } from "vuex";
 import ImageUpload from "@/components/module/ImageUpload";
 
@@ -233,19 +233,38 @@ export default {
       }
       // 원래는 투표이미지 갯수인데 우선 투표체크박스 활성화하면 숫자가 3이 들어가도록 구현함
       if (this.vote) {
-        this.num = this.getUploadImageFiles.length
+        this.num = this.getUploadImageFiles.length;
       }
       // 투표비활성화 일때 글작성 체크(사진은 부가적이므로 체크제외)
-      if (this.vote === false && this.whatwearTitle.length > 0 && this.whatwearTitle.length <= 30 && this.whatwearContent.length > 0 && this.whatwearContent.length <= 250) {
-        this.isValid = true
+      if (
+        this.vote === false &&
+        this.whatwearTitle.length > 0 &&
+        this.whatwearTitle.length <= 30 &&
+        this.whatwearContent.length > 0 &&
+        this.whatwearContent.length <= 250
+      ) {
+        this.isValid = true;
       }
-      
+
       // 투표활성화일때 글작성 체크(제목, 내용, 사진갯수)
-      if (this.vote === true && this.whatwearTitle.length > 0 && this.whatwearTitle.length <= 30 && this.whatwearContent.length > 0 && this.whatwearContent.length <= 250 && this.num > 0) {
-        this.isValid = true
+      if (
+        this.vote === true &&
+        this.whatwearTitle.length > 0 &&
+        this.whatwearTitle.length <= 30 &&
+        this.whatwearContent.length > 0 &&
+        this.whatwearContent.length <= 250 &&
+        this.num > 0
+      ) {
+        this.isValid = true;
       }
-      
-      console.log('널값체크', this.endtime, this.getNickname, this.num, this.isVaild)
+
+      console.log(
+        "널값체크",
+        this.endtime,
+        this.getNickname,
+        this.num,
+        this.isVaild
+      );
 
       const params = {
         content: this.whatwearContent,
@@ -299,12 +318,12 @@ export default {
     // },
     inputDate(dates) {
       this.dates = dates;
-      this.daycheck = true
+      this.daycheck = true;
       // console.log(this.dates)
     },
     inputTime(time) {
       this.time = time;
-      this.timecheck =true
+      this.timecheck = true;
       // console.log(this.time)
     },
   },
