@@ -18,7 +18,7 @@
       <v-card>
         <!--작성창 상단바-->
         <v-toolbar dark color="black">
-          <v-btn icon dark @click="dialog = false">
+          <v-btn icon dark @click="closeWritePage">
             <v-icon>mdi-close</v-icon>
           </v-btn>
           <v-toolbar-title class="text-subtitle-1"
@@ -215,19 +215,24 @@ export default {
     ...mapGetters(["getNickname", "getUploadImageUrls", "getUploadImageFiles"]),
   },
   methods: {
-    ...mapActions(["uploadImage"]),
+    ...mapActions(["uploadImage", "getWhatwearListInfoApi"]),
     ...mapMutations([
       "setUploadImageUrls",
       "setUploadImageFiles",
       "clearUploads",
       "setWhatwearInfo",
     ]),
-    createWhatWear() {
+    closeWritePage() {
+      this.whatwearTitle = "";
+      this.whatwearContent = "";
+      this.endtime = "";
+      this.vote = false;
+      this.clearUploads();
+      this.dialog = false;
+    },
+    async createWhatWear() {
       // dialog창 닫기 + 입력데이터 보내기
       this.dialog = false;
-      let imageFiles = this.getUploadImageFiles;
-      let clearUploads = this.clearUploads;
-      console.log("여기야", imageFiles);
       if (this.timeDialog && this.dateDialog) {
         this.endtime = this.dates.concat("T", this.time, ":00");
       }
@@ -258,73 +263,35 @@ export default {
         this.isValid = true;
       }
 
-      console.log(
-        "널값체크",
-        this.endtime,
-        this.getNickname,
-        this.num,
-        this.isVaild
-      );
-
-      const params = {
+      // 작성폼 초기화
+      const res = await rscApi.post("/wear", {
         content: this.whatwearContent,
         endtime: this.endtime,
-        nickname: "감자탕볶음밥",
+        nickname: this.getNickname,
         num: this.num,
         title: this.whatwearTitle,
-      };
-      // 작성폼 초기화
+      });
+      // console.log('뭘입을까글쓰기성공')
+      // console.log("resres", res);
+      console.log("hi", res.data);
+
       (this.whatwearTitle = ""), (this.whatwearContent = ""), (this.num = 0);
-      rscApi
-        .post("/wear", params)
-        .then((res) => {
-          // console.log('뭘입을까글쓰기성공')
-          console.log("resres", res);
+      if (this.getUploadImageFiles.length !== 0) {
+        // console.log("in wear file", imageFiles);
+        await this.uploadImage({ key: "whatwear/", articleIdx: res.data });
+        this.clearUploads();
+      }
 
-          if (imageFiles.length !== 0) {
-            console.log("in wear file", imageFiles);
-            this.uploadImage({ key: "whatwear/", articleIdx: res.data }).then(
-              () => {
-                clearUploads();
-              }
-            );
-          }
-
-          // this.uploadImage({
-          //   key: "whatwear/",
-          //   articleIdx: res.data.whatwaerIdx,
-          // }).then(() => {
-          //   // this.setUploadImageFiles(this.voteImage);
-          //   // this.setUploadImageUrls();
-          //   // //추후 개별업로드 필요
-          //   // this.uploadImage({ key: "vote/", article: res.data.voteIdx });
-          // });
-
-          // console.log(params);
-        })
-        .catch((err) => {
-          console.error(err);
-        });
+      this.getWhatwearListInfoApi(1);
     },
-    // previewImage() {
-    //   this.imageUrl = URL.createObjectURL(this.image);
-    // },
-    // previewVoteImage() {
-    //   console.log(this.voteImage);
-    //   this.voteImage.forEach((e) =>
-    //     this.voteImageUrls.push(URL.createObjectURL(e))
-    //   );
-    //   console.log(this.voteImageUrls);
-    // },
+
     inputDate(dates) {
       this.dates = dates;
       this.daycheck = true;
-      // console.log(this.dates)
     },
     inputTime(time) {
       this.time = time;
       this.timecheck = true;
-      // console.log(this.time)
     },
   },
 };

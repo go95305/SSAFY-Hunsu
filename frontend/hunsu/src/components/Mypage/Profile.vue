@@ -192,7 +192,6 @@
                     <ImageView
                       :images="ootd.img"
                       @click.native="goToOotdDetail(ootd.ootdIdx)"
-                      style="height: 180px"
                     />
                   </v-card>
                 </v-col>

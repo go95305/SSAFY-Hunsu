@@ -3,13 +3,35 @@
   <div>
     <h2>회원가입 추가정보 컴포넌트</h2>
     <!-- 프로필 사진 -->
-    <v-avatar>
+    <div id="profile_image">
+      <v-avatar width="100px" height="100px">
+        <v-img
+          v-if="getUploadImageUrls.length !== 0"
+          :src="getUploadImageUrls[getUploadImageUrls.length - 1]"
+        />
+        <!-- <v-img v-else-if="getMyProfileImage" :src="getMyProfileImage" /> -->
+        <v-img
+          v-else
+          src="https://cdn.vuetifyjs.com/images/john.jpg"
+          alt="John"
+        />
+      </v-avatar>
+      <!-- 프로필 이미지 업로드 부분 -->
+      <!-- <v-file-input truncate-length="15" hide-input></v-file-input> -->
+      <input ref="imageInput" type="file" hidden @change="onChangeImages" />
+      <div class="display: inline-block;">
+        <v-btn class="mx-5 my-2" type="button" @click="onClickImageUpload"
+          >사진 업로드</v-btn
+        >
+      </div>
+    </div>
+    <!-- <v-avatar>
       <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
     </v-avatar>
-    <v-row align="center" justify="space-around">
-      <!-- 프로필 사진 변경 버튼 -->
-      <v-btn tile color="success"> Edit </v-btn>
-    </v-row>
+    <v-row align="center" justify="space-around"> -->
+    <!-- 프로필 사진 변경 버튼 -->
+    <!-- <v-btn tile color="success"> Edit </v-btn>
+    </v-row> -->
     <!-- 닉네임 입력 -->
     <v-text-field
       label="닉네임을 입력해주세요(필수)"
@@ -45,6 +67,7 @@ import { mapActions, mapGetters, mapMutations } from "vuex";
 
 export default {
   name: "SignupInfo",
+
   props: {
     accessToken: {
       type: String,
@@ -52,9 +75,6 @@ export default {
     refreshToken: {
       type: String,
     },
-  },
-  computed: {
-    ...mapGetters(["getAccessToken"]),
   },
   data: () => ({
     nickname: "",
@@ -78,21 +98,48 @@ export default {
     // }
     console.log("signup mount", this.accessToken, this.refreshToken);
   },
+  computed: {
+    ...mapGetters([
+      "getAccessToken",
+      "getUploadImageFiles",
+      "getUploadImageUrls",
+      "getUid",
+    ]),
+  },
   methods: {
-    ...mapActions(["signUpInApi", "kakaoLogin"]),
-    ...mapMutations(["setAllToken"]),
-    signUp() {
+    ...mapActions(["signUpInApi", "kakaoLogin", "uploadProfile"]),
+    ...mapMutations([
+      "setAllToken",
+      "setUploadImageFiles",
+      "setUploadImageUrls",
+      "clearUploads",
+    ]),
+    async signUp() {
       console.log(this.nickname, this.height, this.size);
-      this.signUpInApi({
+      await this.signUpInApi({
         accessToken: this.accessToken,
         height: this.height,
         nickname: this.nickname,
         size: this.size,
-      }).then(() => {
-        console.log("in signupinfo 2");
-        this.$router.push("/");
-        // this.kakaoLogin();
       });
+      if (this.getUploadImageFiles.length !== 0) {
+        await this.uploadProfile();
+        this.clearUploads();
+      }
+      console.log("in signupinfo 2");
+      alert("회원가입 감사합니다!!");
+      this.$router.push("/");
+      // this.kakaoLogin();
+    },
+    onClickImageUpload() {
+      this.$refs.imageInput.click();
+    },
+    onChangeImages(e) {
+      console.log(e.target.files);
+
+      this.setUploadImageFiles(e.target.files);
+      this.setUploadImageUrls();
+      console.log("onChange imageURl ", this.getUploadImageUrls);
     },
   },
 };
