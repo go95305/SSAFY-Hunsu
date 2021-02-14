@@ -169,7 +169,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import { rscApi } from "@/services/api"
 import { mapGetters, mapActions, mapMutations } from "vuex";
 import ImageUpload from "@/components/module/ImageUpload";
 
@@ -247,8 +247,8 @@ export default {
       // isValid가 true일때만 작성, 아닐 때는 알림창
       if (this.isValid) {
         this.dialog = false;
-        axios
-          .post("http://i4c102.p.ssafy.io:8080/api/wear", params)
+        rscApi
+          .post('wear', params)
           .then((res) => {
             // console.log('뭘입을까글쓰기성공')
             console.log(res);

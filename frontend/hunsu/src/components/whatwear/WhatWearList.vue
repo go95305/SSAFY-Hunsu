@@ -67,7 +67,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import { rscApi } from "@/services/api"
 import { mapActions, mapMutations } from "vuex";
 
 export default {
@@ -93,12 +93,11 @@ export default {
     goToWhatwearDetail(whatwear) {
       // console.log('글번호', whatwear.wear_idx)
       const wearIdx = whatwear.wear_idx;
-      const nickname = whatwear.nickname;
       const voteCheck = whatwear.voteActivated
-      this.getWhatwearInfoApi({ wearIdx, nickname, voteCheck}) // 유저정보 닉네임으로 변경, 현재는 글 작성자로 들어감
+      this.getWhatwearInfoApi({ wearIdx, voteCheck}) // 유저정보 닉네임으로 변경, 현재는 글 작성자로 들어감
         .then(() => {
           this.getProfileImage({
-            nickname: nickname,
+            nickname: whatwear.nickname,
             target: "target",
           });
           this.getImageList({ prefix: "whatwear/" + wearIdx }).then((res) => {
@@ -110,8 +109,8 @@ export default {
     getWhatWearList() {
       const pageNum = 1;
       let root = this;
-      axios
-        .get(`http://i4c102.p.ssafy.io:8080/api/wear/${pageNum}`)
+      rscApi
+        .get(`wear/${pageNum}`)
         .then((res) => {
           this.whatwearList = res.data.wearMainDTOList;
           this.length = parseInt(res.data.count / 10) + 1;
@@ -128,8 +127,8 @@ export default {
     async pageWhatwear() {
       console.log(this.page)
       const pageNum = this.page;
-      await axios
-        .get(`http://i4c102.p.ssafy.io:8080/api/wear/${pageNum}`)
+      await rscApi
+        .get(`wear/${pageNum}`)
         .then((res) => {
           this.whatwearList = res.data.wearMainDTOList;
           // console.log('test', res)

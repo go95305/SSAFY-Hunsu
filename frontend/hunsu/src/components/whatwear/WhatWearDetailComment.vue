@@ -209,9 +209,8 @@ export default {
       // } else {
       //   this.iconName = "mdi-heart-outline"
       // }
-      const nickname = this.getNickname
       const replyIdx = reply.idx
-      this.likeWhatwearReplyInfo({replyIdx, nickname});
+      this.likeWhatwearReplyInfo(replyIdx);
     },
     // 대댓글작성함수
     clickWhatwearReReply(nickname, groupNum) {
