@@ -18,7 +18,7 @@
         <v-toolbar-title>프로필수정</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-toolbar-items>
-          <v-btn dark text @click="updateProfile"> 완료 </v-btn>
+          <v-btn dark text @click="updateProfile(getNickname, newNickname, height, size)"> 완료 </v-btn>
         </v-toolbar-items>
       </v-toolbar>
       <div id="profile_image">
@@ -45,8 +45,8 @@
       </div>
       <div id="info_input">
         <v-text-field
-          label="닉네임"
-          value="닉네임"
+          :label="getNickname"
+          v-model="newNickname"
           hint="닉네임 중복불가안내, 규칙안내"
           outlined
         ></v-text-field>
@@ -54,11 +54,12 @@
         <p class="text-subtitle2">추천서비스 제공에 쓰이는 정보입니다.</p>
         <!-- 숫자만 가능하게 필터링 -->
         <v-text-field
-          label="키"
+          :label="getMyProfileInfo.height"
+          v-model="height"
           hint="cm를 제외하고 적어주세요"
           outlined
         ></v-text-field>
-        <v-select :items="items" label="체형" outlined></v-select>
+        <v-select :items="items" v-model="size" :label="getMyProfileInfo.size" outlined></v-select>
       </div>
     </v-card>
   </v-dialog>
@@ -74,6 +75,7 @@ export default {
       "getUploadImageFiles",
       "getUploadImageUrls",
       "getNickname",
+      "getMyProfileInfo",
     ]),
   },
 
@@ -84,10 +86,13 @@ export default {
       sound: true,
       widgets: false,
       items: ["XS", "S", "M", "L", "XL", "XXL"],
-    };
+      newNickname: "",
+      height: "",
+      size: "",
+    }
   },
   methods: {
-    ...mapActions(["uploadProfile", "getProfileImage"]),
+    ...mapActions(["uploadProfile", "getProfileImage", "updateMyProfileInfoInApi", "getProfileInfoInApi"]),
     ...mapMutations([
       "setUploadImageFiles",
       "setUploadImageUrls",
@@ -104,8 +109,8 @@ export default {
       this.setUploadImageUrls();
       console.log("onChange imageURl ", this.getUploadImageUrls);
     },
-    updateProfile() {
-      // 프로필사진 업로드
+    updateProfile(getNickname, newNickname, height, size) {
+      // 프로필사진 업로드, 정보수정
       this.dialog = false;
       this.uploadProfile()
         .then(() => {
@@ -119,6 +124,17 @@ export default {
           this.clearUploads();
           this.$forceUpdate();
         });
+      this.updateMyProfileInfoInApi({getNickname, newNickname, height, size})
+      .then(() => {
+        console.log("수정후내정보", this.getMyProfileInfo)
+        const myNickname = newNickname
+        const yourNickname = newNickname
+        this.getProfileInfoInApi({myNickname, yourNickname})
+        console.log('겟성공?')
+        this.$router.push({name: "Home"}).catch(() => {})
+
+
+      })
     },
   },
 };

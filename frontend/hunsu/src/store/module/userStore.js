@@ -7,6 +7,7 @@ const state = {
   uid: null,
   myProfileImage: '',
   targetProfileImage: '',
+  myProfileInfo: {}, // 내 프로필(키, 사이즈, 닉네임 등)
 };
 const getters = {
   // 모든 토큰은 jwt 의미함
@@ -86,6 +87,9 @@ const mutations = {
     state.targetProfileImage = payload;
     console.log('int targetprofile', payload);
   },
+  setMyProfileInfo(state, myProfileInfo) {
+    state.myProfileInfo = myProfileInfo;
+  }
 };
 
 const actions = {
@@ -164,7 +168,7 @@ const actions = {
     return axios
       .get(`http://i4c102.p.ssafy.io:8080/api/user/mypage/${myNickname}/${yourNickname}`)
       .then((res) => {
-        console.log(res.data);
+        console.log("스토어", res.data);
         context.commit('setUserInfo', res.data);
       })
       .catch((err) => {

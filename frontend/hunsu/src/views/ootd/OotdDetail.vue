@@ -83,7 +83,7 @@
             </p>
           </v-list-item-subtitle>
         </v-list-item-content>
-        <!-- ### Follow button -->
+        <!-- ### 좋아요 button -->
         <v-list-item-action>
           <v-btn icon @click="toggleLikeInDetail">
             <v-icon v-model="iconName" color="red">{{ iconName }}</v-icon>

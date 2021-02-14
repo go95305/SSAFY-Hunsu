@@ -140,12 +140,12 @@
           <p class="font-weight-black text-h5 hidden-sm-and-down" style="margin: 10px 80px 10px 30px">{{getUserInfo.mypageNickname}}</p>
           <p class="d-inline-block font-weight-black subtitle-1 hidden-sm-and-up" style="margin: 10px 80px 10px 30px">{{getUserInfo.mypageNickname}}</p>
           </div>
+          <!--팔로우버튼-->
           <div class="d-inline-block">
             <v-btn small v-model="followName" v-if="getUserInfo.mypageNickname !== getNickname" @click="followThisUser()" style="color: white" color="deep-purple accent-1">{{followName}}</v-btn>
-            <!-- <v-btn small v-model="followName" v-if="(getUserInfo.mypageNickname !== getNickname) & (followStatus === true)" @click="followThisUser()" style="color: white" color="deep-purple accent-1">Unfollow</v-btn> -->
           </div>
         </div>
-
+        <!--ootd, 좋아요 탭-->
         <v-tabs
           v-model="tab"
           background-color="white"
@@ -165,9 +165,13 @@
               style="padding: 0px"
             >
               <v-row no-gutters>
-                <v-col v-for="i in ootdListLength" :key="i" cols="4">
+                <v-col v-for="(img, idx) in profileData.imageList" :key="idx" cols="4">
                   <v-card outlined tile>
-                    <v-img src="@/assets/ootdtest.png"> </v-img>
+                      <ImageView
+                        :images="img"
+                        @click.native="goToOotdDetail(idx)"
+                        style="height: 180px"
+                      />
                   </v-card>
                 </v-col>
               </v-row>
@@ -196,19 +200,22 @@
 <script>
 import axios from "axios";
 import ProfileSetting from "@/components/Mypage/ProfileSetting";
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions, mapMutations } from "vuex";
+import ImageView from "@/components/module/ImageView";
+
 
 export default {
   name: "Profile",
   components: {
     ProfileSetting,
+    ImageView
   },
   data() {
     return {
       tab: null,
       items: ["OOTD", "좋아요"],
       profileData: {},
-      followName: "",
+      followName: "", // 팔로우 상태에 따른 버튼내용
     }
   },
   created() {
@@ -225,7 +232,12 @@ export default {
       "getUserInfo",
       "getMyProfileImage",
       "getTargetProfileImage",
+      "getOotdList",
+      "getOotdInfo",
+      "getMyProfileInfo"
+
     ]),
+    // v-for에 쓰일 length값들
     ootdListLength() {
       if (this.profileData.ootd_list) {
         return this.profileData.ootd_list.length;
@@ -252,22 +264,37 @@ export default {
     },
   },
   methods: {
+    ...mapMutations(["setOotdInfoImages", "setTargetProfileImage"]),
+    ...mapActions([
+      "getOotdInfoInApi",
+      "getProfileImage",
+      "getOotdListInApi",
+      "getImageList",
+      "getProfileInfoInApi",
+      "getProfiles",
+      ]),
     getProfile(getUserInfo) {
-      axios
-        .get(
-          `http://i4c102.p.ssafy.io:8080/api/user/mypage/${this.getNickname}/${getUserInfo.mypageNickname}`
-        )
-        .then((res) => {
-
-          this.profileData = res.data
-          console.log(getUserInfo.mypageNickname)
-          console.log(this.getNickname)
-          console.log(this.profileData)
-          console.log('마이페이지보기')
+      const myNickname = this.getNickname
+      const yourNickname = getUserInfo.mypageNickname
+      this.getProfileInfoInApi({ myNickname, yourNickname })
+      .then(() => {
+        this.profileData = this.getUserInfo
+        this.profileData.imageList = []
+        this.profileData.ootd_list.map((idx) => {
+          this.getImageList({prefix: "ootd/" + idx}).then((res) => {
+            console.log("inImageList는???", res)
+            this.profileData.imageList.push({img: res, ootdIdx: idx})
+            
+          }).then(() => {
+            console.log(this.profileData.imageList)
+          })
         })
-        .catch((err) => {
-          console.error(err);
-        });
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+
+          
     },
     followThisUser() {
       const myNickname = this.getNickname
@@ -287,7 +314,35 @@ export default {
       .catch((err) => {
         console.error(err)
       })
-    }
+    },
+    goToOotdDetail(ootd) {
+      //idx 굳이 보여줄 필요 없을것같아서 params로 변경
+      // this.$router.push({ name: "OotdDetail", params: { no: ootd.ootdIdx } });
+      let root = this;
+      console.log(ootd);
+      this.getOotdInfoInApi({
+        ootdIdx: ootd,
+        nickname: this.getNickname,
+      }).then(() => {
+        root
+          .getImageList({ prefix: "ootd/" + ootd.ootdIdx })
+          .then((res) => {
+            console.log("imageList", res);
+            // root.getImages({ keys: res }).then((res) => {
+            // console.log("getimages", res);
+            root.setOotdInfoImages(res);
+          })
+          .then(() => {
+            this.getProfileImage({
+              nickname: ootd.nickname,
+              target: "target",
+            });
+          })
+          .then(() => {
+            this.$router.push({ name: "OotdDetail" });
+          });
+      });
+    },
   },
 };
 </script>
