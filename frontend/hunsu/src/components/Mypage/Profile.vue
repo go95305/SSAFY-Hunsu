@@ -294,10 +294,8 @@ export default {
       "getProfiles",
     ]),
     getProfile(getUserInfo) {
-      const myNickname = this.getNickname;
       const yourNickname = getUserInfo.mypageNickname;
-      // const _this = this;
-      this.getProfileInfoInApi({ myNickname, yourNickname })
+      this.getProfileInfoInApi(yourNickname)
         .then(() => {
           this.profileData = this.getUserInfo;
           this.profileData.imageList = [];
@@ -309,10 +307,6 @@ export default {
                   img: res,
                   ootdIdx: idx,
                 });
-                // _this.$set(this.profileData, "imageList", {
-                //   img: res,
-                //   ootdIdx: idx,
-                // });
               })
               .then(() => {
                 console.log(this.profileData.imageList);
@@ -324,14 +318,9 @@ export default {
         });
     },
     followThisUser() {
-      const myNickname = this.getNickname;
       const yourNickname = this.getUserInfo.mypageNickname;
-      console.log(myNickname, yourNickname);
       axios
-        .post("http://i4c102.p.ssafy.io:8080/api/user/follow", {
-          myNickname,
-          yourNickname,
-        })
+        .post("http://i4c102.p.ssafy.io:8080/api/user/follow", yourNickname)
         .then((res) => {
           if (res.data) {
             console.log("팔로우성공");

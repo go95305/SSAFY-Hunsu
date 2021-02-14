@@ -38,29 +38,35 @@
         <!-- <v-file-input truncate-length="15" hide-input></v-file-input> -->
         <input ref="imageInput" type="file" hidden @change="onChangeImages" />
         <div class="display: inline-block;">
-          <v-btn class="mx-5" type="button" @click="onClickImageUpload"
+          <v-btn class="mx-5 my-2" type="button" @click="onClickImageUpload"
             >사진 업로드</v-btn
           >
         </div>
       </div>
       <div id="info_input">
+        <div class="mt-3">
         <v-text-field
+          class="d-inline-block mx-5"
           :label="getNickname"
           v-model="newNickname"
           hint="닉네임 중복불가안내, 규칙안내"
           outlined
         ></v-text-field>
+        <v-btn class="d-inline-block">중복체크</v-btn>
+        </div>
+        <div class="mx-5">
         <p class="text-h6 font-weight-bold">추가정보</p>
         <p class="text-subtitle2">추천서비스 제공에 쓰이는 정보입니다.</p>
         <!-- 숫자만 가능하게 필터링 -->
         <v-text-field
           label="키"
           v-model="height"
-          :placeholder="getMyProfileInfo.height"
+          :placeholder="String(getMyProfileInfo.height)"
           hint="cm를 제외하고 적어주세요"
           outlined
         ></v-text-field>
         <v-select :items="items" v-model="size" :label="getMyProfileInfo.size" outlined></v-select>
+        </div>
       </div>
     </v-card>
   </v-dialog>
@@ -88,7 +94,7 @@ export default {
       widgets: false,
       items: ["XXS", "XS", "S", "M", "L", "XL", "XXL"],
       newNickname: "",
-      height: 0,
+      height: "",
       size: "",
     }
   },

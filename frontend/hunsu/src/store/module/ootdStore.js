@@ -1,6 +1,5 @@
 import { rscApi } from '@/services/api';
 
-// import axios from 'axios';
 const state = {
   ootdInfo: {},
   ootdReplyInfo: {},
@@ -81,12 +80,9 @@ const actions = {
   },
   async getOotdInfoInApi(context, info) {
     // ootd 디테일 가져오기
-    // console.log(info.ootdIdx, info.nickname);
     await rscApi.get(`ootd/detail/${info.ootdIdx}`).then((res) => {
-      // console.log('getOotdInfo', res);
       state.ootdInfo = res.data;
       context.commit('setOotdInfo', res.data);
-      // console.log(res.data.ootdReplyDTOList);
       context.commit('setOotdReplyInfo', res.data.ootdReplyDTOList);
     });
   },
@@ -103,7 +99,7 @@ const actions = {
   async deleteOotdInfo(context, ootdIdx) {
     // ootd 삭제
     return await rscApi
-      .delete(`ootd/${ootdIdx}`)
+      .put(`ootd/del`, ootdIdx)
       .then((res) => {
         console.log(res);
         if (res.data === 'success') {
@@ -134,15 +130,14 @@ const actions = {
     return (
       rscApi
         .post('ootd', params)
-        // .post('http://i4c102.p.ssafy.io:8080/api/ootd', params)
         .then((res) => {
-          console.log(res.status);
           if (res.status === 200) {
             return res.data;
           } else {
             return false;
           }
           // 추후 자기가 쓴 페이지로 이동하는 것 수정 요망
+
         })
         .catch(() => {
           return false;
