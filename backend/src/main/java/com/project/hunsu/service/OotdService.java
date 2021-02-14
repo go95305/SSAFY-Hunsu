@@ -259,7 +259,7 @@ public class OotdService {
     }
 
     public List<OotdReplyDTO> writeReply(OotdReplyDTO ootdReplyDTO) {
-        List<OotdReplyDTO> ootdReplyDTOList = new ArrayList<>();
+        List<OotdReplyDTO> ootdDTOList = new ArrayList<>();
         //1. 우선 댓글을 작성
         //2. 댓글 그룹은 일단 넣고 나서 업데이트!
         OotdReply ootdReply = new OotdReply();
@@ -282,26 +282,25 @@ public class OotdService {
 
             ootdReplyRepository.save(savedReply);
 
-//        List<OotdReplyDTO> ootdreplyDTOList = new ArrayList<>();
-//
-//        replyDTOList = replyList(ootdReplyDTO.getOotd_idx(), ootdReplyDTO.getNickname());
+
+            ootdDTOList = replyList(ootdReplyDTO.getOotdIdx(), ootdReplyDTO.getNickname());
 
             //2. 전체 댓글을 리턴
-            List<OotdReply> ootdReplyList = ootdReplyRepository.findOotdReplyByOotdIdx(ootdReplyDTO.getOotdIdx());
-            for (int i = 0; i < ootdReplyList.size(); i++) {
-                OotdReplyDTO ootdreplDTO = new OotdReplyDTO();
-                ootdreplDTO.setReplyIdx(ootdReplyList.get(i).getIdx());
-                ootdreplDTO.setOotdIdx(ootdReplyList.get(i).getOotd().getIdx());
-                ootdreplDTO.setNickname(ootdReplyList.get(i).getUser().getNickname());
-                ootdreplDTO.setContent(ootdReplyList.get(i).getContent());
-                ootdreplDTO.setDepth(ootdReplyList.get(i).getDepth());
-                ootdreplDTO.setGroupNum(ootdReplyList.get(i).getGroupNum());
-                ootdreplDTO.setWrite_date(ootdReplyList.get(i).getWriteDate());
-                ootdreplDTO.setIsDeleted(ootdReplyList.get(i).getFlag());
-                ootdReplyDTOList.add(ootdreplDTO);
-            }
+//            List<OotdReply> ootdReplyList = ootdReplyRepository.findOotdReplyByOotdIdx(ootdReplyDTO.getOotdIdx());
+//            for (int i = 0; i < ootdReplyList.size(); i++) {
+//                OotdReplyDTO ootdreplDTO = new OotdReplyDTO();
+//                ootdreplDTO.setReplyIdx(ootdReplyList.get(i).getIdx());
+//                ootdreplDTO.setOotdIdx(ootdReplyList.get(i).getOotd().getIdx());
+//                ootdreplDTO.setNickname(ootdReplyList.get(i).getUser().getNickname());
+//                ootdreplDTO.setContent(ootdReplyList.get(i).getContent());
+//                ootdreplDTO.setDepth(ootdReplyList.get(i).getDepth());
+//                ootdreplDTO.setGroupNum(ootdReplyList.get(i).getGroupNum());
+//                ootdreplDTO.setWrite_date(ootdReplyList.get(i).getWriteDate());
+//                ootdreplDTO.setIsDeleted(ootdReplyList.get(i).getFlag());
+//                ootdReplyDTOList.add(ootdreplDTO);
+//            }
         }
-        return ootdReplyDTOList;
+        return ootdDTOList;
     }
 
     public List<OotdReplyDTO> updateReply(OotdReplyUpdateDTO ootdReplyUpdateDTO) {
