@@ -73,18 +73,23 @@ export default {
     return {
       cycle: false,
       imageUrls: [],
-      pageNum: 2,
     };
   },
   computed: {
     ...mapGetters(["getOotdList", "getNickname", "getOotdInfo"]),
+    pageNumCount() {
+      if (this.getOotdList) {
+        return parseInt(this.getOotdList.length / 6) + 1
+      }
+      return "";
+    }
   },
   async created() {
     // let ootdList;
     let root = this;
     await this.getOotdListInApi({
       sort: 0,
-      pageNum: this.pageNum,
+      pageNum: this.pageNumCount,
     });
     root.getProfiles(this.getOotdList);
     this.getOotdList.forEach((info) => {
@@ -147,10 +152,7 @@ export default {
     goToProfilePage(infoNickname) {
       // let root = this;
       // console.log("this", this);
-      this.getProfileInfoInApi({
-        myNickname: this.getNickname,
-        yourNickname: infoNickname,
-      }).then(() => {
+      this.getProfileInfoInApi(infoNickname).then(() => {
         this.getProfileImage({
           nickname: infoNickname,
           target: "target",

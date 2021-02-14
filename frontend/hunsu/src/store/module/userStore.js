@@ -1,5 +1,4 @@
 import { rscApi, authApi } from '@/services/api';
-
 const state = {
   accessToken: null,
   refreshToken: null,
@@ -168,9 +167,9 @@ const actions = {
     //   resolve();
     // });
   },
-  getProfileInfoInApi(context, { myNickname, yourNickname }) {
+  getProfileInfoInApi(context, yourNickname) {
     return rscApi
-      .get(`/user/mypage/${myNickname}/${yourNickname}`)
+      .get(`/user/mypage/${yourNickname}`)
       .then((res) => {
         console.log('스토어', res.data);
         context.commit('setUserInfo', res.data);
@@ -207,6 +206,7 @@ const actions = {
         console.error(err);
       });
   },
+
   logout({ state }) {
     return authApi.post(`/v1/auth/logout?jwtToken=` + state.accessToken).then((res) => {
       if (res.data.code === 1) {
