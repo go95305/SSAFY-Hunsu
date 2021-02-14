@@ -1,9 +1,9 @@
 import AWS from 'aws-sdk';
 
 const state = {
-  albumBucketName: 'hunsutest',
-  bucketRegion: 'ap-northeast-2',
-  IdentityPoolId: 'ap-northeast-2:05f4caec-c58a-480d-9d25-8cacd2e2dea0',
+  albumBucketName: process.env.VUE_APP_BUCKET_NAME,
+  bucketRegion: process.env.VUE_APP_BUCKET_REGION,
+  IdentityPoolId: process.env.VUE_APP_IDENTITY_POOL_ID,
   uploadImageUrls: [],
   uploadImageFiles: [],
   ootdInfoImages: [],
@@ -83,7 +83,7 @@ const actions = {
 
       s3.upload(
         {
-          Key: 'mypage/' + rootState.user.nickname + '/' + rootState.user.nickname,
+          Key: 'mypage/' + rootState.user.uid + '/' + rootState.user.uid,
           Body: imageFile,
           ACL: 'public-read',
           ContentType: 'image/' + fileExt,
@@ -101,6 +101,7 @@ const actions = {
   },
   getImageList(context, { prefix }) {
     // prefix에 위치한 이미지 리스트 가져오기
+    // console.log('prefix', prefix);
     let images = [];
     return new Promise((resolve, reject) => {
       s3.listObjectsV2({ Prefix: prefix }, (err, data) => {
@@ -131,74 +132,72 @@ const actions = {
   },
   async getProfiles(context, list) {
     // 게시글 내에 위치할 프로필사진들 가져오기
-    console.log('list', list);
     await list.map((info) => {
-      console.log(info);
       s3.getSignedUrl(
         'getObject',
         {
           Bucket: this.albumBucketName,
-          Key: 'mypage/' + info.nickname + '/' + info.nickname,
+          Key: 'mypage/' + info.publisher + '/' + info.publisher,
         },
         (err, data) => {
           if (err) {
             return alert('There was an error listing your photo: ', err.message);
           } else {
-            console.log('getImage', data);
+            // console.log('getImage', data);
             info.profileImage = data;
           }
         }
       );
     });
   },
-  getProfileImage({ rootState }, { nickname, target }) {
+  async getProfileImage(context, { uid }) {
     // 마이페이지 및 디테일에서의 프로필 이미지 가져오기
-    let prefix = 'mypage/' + nickname;
-    let getImages = new Promise((resolve, reject) => {
-      s3.listObjectsV2({ Prefix: prefix }, (err, data) => {
-        if (data.Contents.length === 0) {
-          reject(null);
-          return;
-        }
-        if (err) {
-          // reject('getImageList err', err);
-          console.log(err);
-        } else {
-          // console.log(data.Contents[1]);
-          s3.getSignedUrl(
-            'getObject',
-            {
-              Bucket: this.albumBucketName,
-              Key: data.Contents[1].Key,
-            },
-            (err, data) => {
-              if (err) {
-                return alert('There was an error listing your photo: ', err.message);
-              } else {
-                // console.log('in profile data', data);
-                resolve(data);
-              }
+    // 확장자를 고정할 수 없어 리스트로 가져와야함
+    let prefix = 'mypage/' + uid;
+    let image = null;
+    await s3.listObjectsV2({ Prefix: prefix }, (err, data) => {
+      if (data.Contents.length === 0) {
+        return;
+      }
+      if (err) {
+        // reject('getImageList err', err);
+        console.log(err);
+      } else {
+        // console.log(data.Contents[1]);
+        s3.getSignedUrl(
+          'getObject',
+          {
+            Bucket: this.albumBucketName,
+            Key: data.Contents[1].Key,
+          },
+          (err, data) => {
+            if (err) {
+              return alert('There was an error listing your photo: ', err.message);
+            } else {
+              // console.log('in profile data', data);
+              image = data;
             }
-          );
-        }
-      });
+          }
+        );
+      }
     });
-    getImages
-      .then((image) => {
-        if (target === 'my') {
-          rootState.user.myProfileImage = image;
-        } else if (target === 'target') {
-          rootState.user.targetProfileImage = image;
-        }
-        return image;
-      })
-      .catch(() => {
-        if (target === 'my') {
-          rootState.user.myProfileImage = null;
-        } else {
-          rootState.user.targetProfileImage = null;
-        }
-      });
+    console.log('in getprofile', image);
+    // getImages
+    //   .then((image) => {
+    //     if (target === 'my') {
+    //       rootState.user.myProfileImage = image;
+    //     } else if (target === 'target') {
+    //       rootState.user.targetProfileImage = image;
+    //     }
+    //     return image;
+    //   })
+    //   .catch(() => {
+    //     if (target === 'my') {
+    //       rootState.user.myProfileImage = null;
+    //     } else {
+    //       rootState.user.targetProfileImage = null;
+    //     }
+    //   });
   },
 };
 AWS.config.update({

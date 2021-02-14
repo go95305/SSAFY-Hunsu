@@ -24,11 +24,7 @@
       <v-menu left bottom v-if="getNickname">
         <template v-slot:activator="{ on, attrs }">
           <v-avatar v-bind="attrs" v-on="on">
-            <v-img
-              v-model="getMyProfileImage"
-              v-if="getMyProfileImage"
-              :src="getMyProfileImage"
-            />
+            <v-img v-if="getMyProfileImage" :src="getMyProfileImage" />
             <v-img v-else src="https://cdn.vuetifyjs.com/images/john.jpg" />
           </v-avatar>
         </template>
@@ -83,27 +79,10 @@ export default {
       "getNickname",
       "getAccessToken",
       "getRefreshToken",
-      "getOotdList",
       "getMyProfileImage",
       "getTargetProfileImage",
+      "getUid",
     ]),
-  },
-  mounted() {
-    console.log("navbar mount ", this.getAccessToken, this.getRefreshToken);
-    // let root = this;
-    if (this.getAccessToken && this.getRefreshToken) {
-      // uid로 설계해야하는데, 임시적으로 닉네임으로 처리
-      this.kakaoLogin().then(() => {
-        // console.log(this.getNickname);
-        this.getProfileImage({
-          nickname: this.getNickname,
-          target: "my",
-        });
-      });
-    } else {
-      this.setAllInfoClear();
-      this.$router.push("/login");
-    }
   },
   data() {
     return {
@@ -125,24 +104,26 @@ export default {
       "getImages",
       "getImageList",
       "getProfileImage",
+      "logout",
     ]),
     ...mapMutations(["setMyProfileImage", "setAllInfoClear"]),
-    goToPage(item) {
+    async goToPage(item) {
       // console.log(item.text)
       if (item.text === "MyPage") {
         // 여기선 자기 자신의 마이페이지로 이동
-        this.getProfileInfoInApi({
+        await this.getProfileInfoInApi({
           // 타겟 유저의 프로필 정보 가져오기
           myNickname: this.getNickname,
           yourNickname: this.getNickname,
-        }).then(() => {
-          this.getProfileImage({
-            // 타겟 유저의 이미지 정보 가져오기
-            nickname: this.getNickname,
-            target: "target",
-          });
-          this.$router.push({ name: "MyPage" });
         });
+        await this.getProfileImage({
+          // 타겟 유저의 이미지 정보 가져오기
+          nickname: this.getNickname,
+          target: "target",
+        });
+        this.$router.push({ name: "MyPage" });
+      } else if (item.text === "Logout") {
+        this.logout();
       }
     },
     getName() {
@@ -152,8 +133,12 @@ export default {
         this.getMyProfileImage,
         "nickname",
         this.getNickname,
-        "targetName",
-        this.getTargetProfileImage
+        "tokens",
+        this.getAccessToken,
+        "refresh",
+        this.getRefreshToken,
+        "uid",
+        this.getUid
       );
     },
     goToHome() {

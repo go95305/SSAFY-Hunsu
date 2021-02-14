@@ -7,9 +7,9 @@ import store from './store/store';
 import axios from 'axios';
 import VueAxios from 'vue-axios';
 import VueCookies from 'vue-cookies';
-
 import 'chart.js';
 import 'hchs-vue-charts';
+// 아이콘 리스트
 
 Vue.use(window.VueCharts);
 

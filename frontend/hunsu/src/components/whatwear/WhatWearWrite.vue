@@ -21,10 +21,10 @@
           <v-btn icon dark @click="dialog = false">
             <v-icon>mdi-close</v-icon>
           </v-btn>
-          <v-toolbar-title>뭘입을까 작성</v-toolbar-title>
+          <v-toolbar-title class="text-subtitle-1">뭘입을까 작성</v-toolbar-title>
           <v-spacer></v-spacer>
           <v-toolbar-items>
-            <v-btn text @click="createWhatWear()"> 완료 </v-btn>
+            <v-btn text @click="createWhatWear()" class="text-subtitle-1"> 완료 </v-btn>
           </v-toolbar-items>
         </v-toolbar>
         <v-list three-line subheader>
@@ -44,7 +44,7 @@
                 clearable
                 clear-icon="mdi-close-circle"
                 :rules="[rules.required, rules.min, rules.contentMax]"
-                counter="300"
+                counter="250"
                 label="내용"
               ></v-textarea>
             </v-list-item-content>
@@ -193,35 +193,48 @@ export default {
         required: (v) => !!v || "Required",
         min: (v) => v.trim().length > 0 || "공백안됨",
         titleMax: (v) => v.length <= 30 || "30자이하",
-        contentMax: (v) => v.length <= 300 || "300자이하",
+        contentMax: (v) => v.length <= 250 || "250자이하",
       },
       time: "",
       menu2: false,
       timeDialog: false,
       dateDialog: false,
       dates: "",
-      isVaild: false,
+      isValid: false,
       endtime: "",
       num: 0,
+      daycheck: false,
+      timecheck: false,
     };
   },
   computed: {
-    ...mapGetters(["getNickname"]),
+    ...mapGetters(["getNickname", "getUploadImageFiles"]),
   },
   methods: {
     ...mapActions(["uploadImage"]),
     ...mapMutations(["setUploadImageUrls", "setUploadImageFiles"]),
     createWhatWear() {
-      // dialog창 닫기 + 입력데이터 보내기
-      this.dialog = false;
-      
-      this.endtime = this.dates.concat("T", this.time, ":00");
-      
-      console.log('왜안뜨냐고', this.endtime)
-      // 원래는 투표이미지 갯수인데 우선 투표체크박스 활성화하면 숫자가 3이 들어가도록 구현함
-      if (this.vote) {
-        this.num = 3;
+      // 입력데이터체크, dialog창 닫기 + 입력데이터 보내기
+      // 투표엔드타임값 채우기
+      if (this.daycheck && this.timecheck) {
+        this.endtime = this.dates.concat("T", this.time, ":00");
       }
+
+      if (this.vote) {
+        this.num = this.getUploadImageFiles.length
+      }
+      // 투표비활성화 일때 글작성 체크(사진은 부가적이므로 체크제외)
+      if (this.vote === false && 30 >= this.whatwearTitle.length > 0 && 250 >= this.whatwearContent.length > 0) {
+        this.isValid = true
+      }
+      
+      // 투표활성화일때 글작성 체크(제목, 내용, 사진갯수)
+      if (this.vote === true && 30 >= this.whatwearTitle.length > 0 && 250 >= this.whatwearContent.length > 0 && this.num > 0) {
+        this.isValid = true
+      }
+      
+      console.log('널값체크', this.endtime, this.getNickname, this.num, this.isVaild)
+
       const params = {
         content: this.whatwearContent,
         endtime: this.endtime,
@@ -230,28 +243,37 @@ export default {
         title: this.whatwearTitle,
       };
       // 작성폼 초기화
-      (this.whatwearTitle = ""), (this.whatwearContent = ""), (this.num = 0);
-      axios
-        .post("http://i4c102.p.ssafy.io:8080/api/wear", params)
-        .then((res) => {
-          // console.log('뭘입을까글쓰기성공')
-          console.log(res);
 
-          this.uploadImage({
-            key: "whatwear/",
-            articleIdx: res.data.whatwaerIdx,
-          }).then(() => {
-            // this.setUploadImageFiles(this.voteImage);
-            // this.setUploadImageUrls();
-            // //추후 개별업로드 필요
-            // this.uploadImage({ key: "vote/", article: res.data.voteIdx });
+      // isValid가 true일때만 작성, 아닐 때는 알림창
+      if (this.isValid) {
+        this.dialog = false;
+        axios
+          .post("http://i4c102.p.ssafy.io:8080/api/wear", params)
+          .then((res) => {
+            // console.log('뭘입을까글쓰기성공')
+            console.log(res);
+  
+            this.uploadImage({
+              key: "whatwear/",
+              articleIdx: res.data.whatwaerIdx,
+            }).then(() => {
+              // this.setUploadImageFiles(this.voteImage);
+              // this.setUploadImageUrls();
+              // //추후 개별업로드 필요
+              // this.uploadImage({ key: "vote/", article: res.data.voteIdx });
+            });
+  
+            console.log(params);
+          })
+          .catch((err) => {
+            console.error(err);
           });
-
-          console.log(params);
-        })
-        .catch((err) => {
-          console.error(err);
-        });
+      } else {
+        alert('제목, 내용, 투표값을 확인해주세요')
+      }
+      // 작성폼, 체크값 초기화
+      (this.whatwearTitle = ""), (this.whatwearContent = ""), (this.num = 0);
+      (this.isValid = false), (this.vote = false), (this.daycheck = false), (this.timecheck = false);
     },
     previewImage() {
       this.imageUrl = URL.createObjectURL(this.image);
@@ -265,11 +287,13 @@ export default {
     },
     inputDate(dates) {
       this.dates = dates;
-      console.log(this.dates)
+      this.daycheck = true
+      // console.log(this.dates)
     },
     inputTime(time) {
       this.time = time;
-      console.log(this.time)
+      this.timecheck =true
+      // console.log(this.time)
     },
   },
 };
@@ -278,5 +302,13 @@ export default {
 <style>
 #votebtn {
   display: flex;
+}
+
+
+#whatwear_writebtn {
+  position: fixed;
+  bottom: 5%;
+  left: 85%;
+  z-index: 100;
 }
 </style>

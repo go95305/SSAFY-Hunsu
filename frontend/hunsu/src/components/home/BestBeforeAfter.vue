@@ -2,7 +2,8 @@
 <!-- 베스트 전후 -->
   <v-card
     elevation="24"
-    class="mx-auto"
+    class="mx-auto mt-3"
+    flat
   >
     <v-system-bar lights-out></v-system-bar>
     <v-carousel

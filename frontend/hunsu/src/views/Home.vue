@@ -1,23 +1,25 @@
 <template>
   <div>
-    <!--코디추천버튼-->
     <Bestootd />
+    <AboutUsCard />
     <BestBeforeAfter />
-    <RecommendBtn />
+    <!-- <RecommendBtn /> -->
   </div>
 </template>
 
 <script>
 import Bestootd from "@/components/home/Bestootd";
+import AboutUsCard from "@/components/home/AboutUsCard";
 import BestBeforeAfter from "@/components/home/BestBeforeAfter";
-import RecommendBtn from "@/components/home/RecommendBtn";
+// import RecommendBtn from "@/components/home/RecommendBtn";
 
 export default {
   name: "Home",
   components: {
     Bestootd,
     BestBeforeAfter,
-    RecommendBtn,
+    // RecommendBtn,
+    AboutUsCard,
   },
 };
 </script>
