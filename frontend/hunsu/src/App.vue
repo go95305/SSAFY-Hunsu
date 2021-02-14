@@ -59,8 +59,9 @@ export default {
     ) {
       await this.kakaoLogin();
       console.log("in app uid", this.getUid);
-      await this.getImageList({
-        prefix: `mypage/${this.getUid}/${this.getUid}`,
+      await this.getProfileImage({
+        uid: this.getUid,
+        target: "my",
       });
     }
   },

@@ -293,29 +293,19 @@ export default {
       "getProfileInfoInApi",
       "getProfiles",
     ]),
-    getProfile(getUserInfo) {
-      const yourNickname = getUserInfo.mypageNickname;
-      this.getProfileInfoInApi(yourNickname)
-        .then(() => {
-          this.profileData = this.getUserInfo;
-          this.profileData.imageList = [];
-          this.profileData.ootd_list.map((idx) => {
-            this.getImageList({ prefix: "ootd/" + idx })
-              .then((res) => {
-                console.log("inImageList는???", res, idx);
-                this.profileData.imageList.push({
-                  img: res,
-                  ootdIdx: idx,
-                });
-              })
-              .then(() => {
-                console.log(this.profileData.imageList);
-              });
-          });
-        })
-        .catch((err) => {
-          console.error(err);
-        });
+    async getProfile(getUserInfo) {
+      // const yourNickname = getUserInfo.mypageNickname;
+      // console.log("hi", getUserInfo);
+      await this.getProfileInfoInApi(getUserInfo.mypageNickname);
+      this.profileData = this.getUserInfo;
+      let imageList = [];
+      //이미지 받아온 후
+      this.profileData.ootd_list.map(async (idx) => {
+        let img = await this.getImageList({ prefix: "ootd/" + idx });
+        imageList.push({ img, ootdIdx: idx });
+      });
+      //마지막에 this.$set으로 넣어주면, 리스트가 나중에 들어가도 데이터바인딩 됩니당
+      this.$set(this.profileData, "imageList", imageList);
     },
     followThisUser() {
       const yourNickname = this.getUserInfo.mypageNickname;
@@ -343,14 +333,11 @@ export default {
       await this.getOotdInfoInApi({
         ootdIdx: idx,
       });
-      root.getImageList({ prefix: "ootd/" + idx }).then((res) => {
-        console.log("imageList", res);
-        // root.getImages({ keys: res }).then((res) => {
-        // console.log("getimages", res);
-        root.setOotdInfoImages(res);
-      });
+      const images = await root.getImageList({ prefix: "ootd/" + idx });
+      root.setOotdInfoImages(images);
+      console.log(this.getOotdInfo);
       await this.getProfileImage({
-        nickname: this.getOotdInfo.nickname,
+        uid: this.getOotdInfo.uid,
         target: "target",
       });
       this.$router.push({ name: "OotdDetail" });
