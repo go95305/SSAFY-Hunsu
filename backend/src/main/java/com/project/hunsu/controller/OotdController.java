@@ -194,7 +194,7 @@ public class OotdController {
     @Transactional
     @ApiOperation(value = "Ootd글 댓글 삭제 (프론트 수정 필요: uri수정도)", notes = "Parameter\n" +
             "- jwtToken(RequestHeader)      --수정\n" +
-            "- replyIdx: 댓글 번호      --수정(path -> requestbody)\n" +
+            "- replyIdx: 댓글 번호      --수정(path -> requestParam)\n" +
             "Response\n" +
             "- 해당 글의 댓글 리스트 목록 전체")
     public List<OotdReplyDTO> ootdReplyDelete(@RequestHeader("X-AUTH-ACCESS") String jwtToken, @RequestParam Long replyIdx) {
@@ -203,10 +203,10 @@ public class OotdController {
     }
 
     @Transactional
-    @PutMapping("/ootd/reply/like/{replyIdx}")
+    @PutMapping("/ootd/reply/like")
     @ApiOperation(value = "Ootd 댓글에 대한 좋아요 설정 (프론트 수정 필요: uri수정도)", notes = "Parameter\n" +
             "- jwtToken(RequestHeader)      --수정\n" +
-            "- replyIdx: 댓글 번호      --수정(path -> requestbody)\n" +
+            "- replyIdx: 댓글 번호      --수정(path -> requestParam)\n" +
             "Response\n" +
             "- 해당 글의 댓글 리스트 목록 전체")
     public List<OotdReplyDTO> ootdReplyLike(@RequestHeader("X-AUTH-ACCESS") String jwtToken, @RequestParam Long replyIdx) {
