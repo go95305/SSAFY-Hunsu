@@ -220,6 +220,27 @@ export default {
       "getTargetProfileImage",
     ]),
   },
+  async created() {
+    let root = this
+      this.getOotdInfoInApi({
+        ootdIdx: this.getOotdInfo.ootdIdx,
+      }).then(() => {
+        root
+          .getImageList({ prefix: "ootd/" + this.getOotdInfo.ootdIdx })
+          .then((res) => {
+            root.setOotdInfoImages(res);
+          })
+          .then(() => {
+            this.getProfileImage({
+              nickname: this.getOotdInfo.nickname,
+              target: "target",
+            });
+          })
+          .then(() => {
+            this.$router.push({ name: "OotdDetail" }).catch(() => {})
+          });
+      });
+    },
   data() {
     return {
       dialog: false,
@@ -262,7 +283,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(["setOotdInfo", "setTargetProfileImage"]),
+    ...mapMutations(["setOotdInfo", "setTargetProfileImage", "setOotdInfoImages"]),
     ...mapActions([
       "getOotdInfoInApi",
       "updateOotdInfo",
@@ -271,6 +292,8 @@ export default {
       "getProfileInfoInApi",
       "getImageList",
       "getProfileImage",
+      "getOotdListInApi",
+      "getProfiles",
     ]),
     onoffUpdateDialog() {
       // 수정 dialog 활성화
@@ -355,6 +378,18 @@ export default {
     },
   },
 };
+
+
+
+
+
+
+
+
+
+
+
+
 </script>
 
 <style>

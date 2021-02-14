@@ -88,7 +88,8 @@ export default {
           groupNum: this.groupNum,
           nickname: this.getNickname,
           ootdIdx: ootd_idx,
-        });
+        })
+
         console.log('댓글작성성공')
       }
 
@@ -96,12 +97,10 @@ export default {
       this.depth = 0
       this.groupNum = 0
       this.update = false
-      console.log(this.getOotdReplyInfo)
     },
     // 댓글좋아요 함수
     likeOotdReply(replyIdx) {
-      const nickname = this.getNickname
-      this.likeOotdReplyInfo({replyIdx, nickname})
+      this.likeOotdReplyInfo(replyIdx)
       console.log(this.getOotdReplyInfo)
     },
 
