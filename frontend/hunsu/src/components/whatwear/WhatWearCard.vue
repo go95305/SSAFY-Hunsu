@@ -8,7 +8,7 @@
           show-arrows-on-hover 
           hide-delimiter-background>
           <v-carousel-item>
-          <v-img src="@/assets/sample.png">
+          <v-img src="@/assets/whatwear2.png">
           </v-img>
           </v-carousel-item>
           <v-carousel-item>
@@ -47,6 +47,6 @@ export default {
 
 <style>
 #ww_carousel {
-  height: 200px !important;
+  height: 190px !important;
 }
 </style>

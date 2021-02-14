@@ -1,41 +1,50 @@
 <template>
   <!-- 회원가입 후 추가정보 입력할 컴포넌트 -->
   <div>
-    <h2>회원가입 추가정보 컴포넌트</h2>
+    <v-toolbar dark color="black">
+      <v-toolbar-title class="text-subtitle-1"
+        >회원가입</v-toolbar-title
+      >
+    </v-toolbar>
     <!-- 프로필 사진 -->
-    <v-avatar>
-      <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
-    </v-avatar>
-    <v-row align="center" justify="space-around">
-      <!-- 프로필 사진 변경 버튼 -->
-      <v-btn tile color="success"> Edit </v-btn>
-    </v-row>
+    <div class="d-flex justify-center mt-7">
+      <v-avatar width="100px" height="100px">
+        <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
+      </v-avatar>
+        <!-- 프로필 사진 변경 버튼 -->
+    </div>
+    <div class="d-flex justify-center">
+      <v-btn icon x-large class="mx"><v-icon>mdi-camera</v-icon></v-btn>
+    </div>
     <!-- 닉네임 입력 -->
     <v-text-field
-      label="닉네임을 입력해주세요(필수)"
+      class="mx-auto mb-7"
+      label="닉네임"
       :rules="rules"
       hide-details="auto"
-      style="width: 250px"
+      style="width: 350px"
       v-model="nickname"
+      outlined
     ></v-text-field>
-
-    <h3>추가정보(선택)</h3>
-    추천 서비스제공에 사용되는 정보입니다.
+    <v-divider></v-divider>
+    <h3 class="ml-3 mt-5 mb-4">추가정보(선택)</h3>
     <!-- 키 입력, 사이즈 선택 , 숫자만 입력하게 값검증 필요-->
     <v-text-field
+      class="mx-auto"
       label="키(cm)"
       hide-details="auto"
-      style="width: 250px"
+      style="width: 350px"
       v-model="height"
+      outlined
     ></v-text-field>
     <v-container fluid>
       <v-row align="center">
         <v-col class="d-flex" cols="12" sm="6">
-          <v-select v-model="size" :items="items" label="사이즈"></v-select>
+          <v-select style="width: 350px" outlined v-model="size" :items="items" label="사이즈"></v-select>
         </v-col>
       </v-row>
     </v-container>
-    <v-btn primary @click="signUp">회원가입 하기!</v-btn>
+    <v-btn depressed class="" x-large style="width: 375px" dark @click="signUp">회원가입</v-btn>
   </div>
 </template>
 
