@@ -52,7 +52,7 @@ export default {
     // console.log(this.typeCheck(this.getRefreshToken));
     // 자동로그인 처리
     if (!this.typeCheck(this.getAccessToken)) {
-      this.$router.push("/login");
+      // this.$router.push("/login");
     } else if (
       this.typeCheck(this.getNickname) &&
       this.typeCheck(this.getAccessToken)
