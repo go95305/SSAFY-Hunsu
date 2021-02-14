@@ -56,11 +56,12 @@ const mutations = {
   },
 };
 const actions = {
-  getWhatwearInfoApi(context, { wearIdx, nickname, voteCheck }) {
+  getWhatwearInfoApi(context, { wearIdx, voteCheck }) {
     return rscApi
-      .get(`wear/detail/${wearIdx}/${nickname}`)
+      .get(`wear/detail/${wearIdx}`)
       .then((res) => {
         console.log('wwstore', res.data);
+
         let replyCount = 0;
         res.data.replyList.map((v) => {
           if (v.flag) {
@@ -136,9 +137,9 @@ const actions = {
         console.error(err);
       });
   },
-  likeWhatwearReplyInfo(context, { replyIdx, nickname }) {
+  likeWhatwearReplyInfo(context, replyIdx) {
     rscApi
-      .put(`wear/reply/like/${replyIdx}/${nickname}`)
+      .put(`wear/reply/like?reply_idx=${replyIdx}`)
       .then((res) => {
         context.commit('setWhatwearReplyInfo', res.data);
       })
@@ -148,7 +149,7 @@ const actions = {
   },
   deleteWhatwearReplyInfo(context, replyIdx) {
     rscApi
-      .put(`wear/reply/${replyIdx}`)
+      .put(`wear/reply/del?idx=${replyIdx}`)
       .then((res) => {
         let replyCount = 0;
         res.data.map((v) => {
@@ -165,7 +166,7 @@ const actions = {
   },
   updateWhatwearReplyInfo(context, replyInfo) {
     rscApi
-      .put('wear/reply', replyInfo)
+      .put('wear/reply/modi', replyInfo)
       .then((res) => {
         context.commit('setWhatwearReplyInfo', res.data);
       })
@@ -173,9 +174,9 @@ const actions = {
         console.error(err);
       });
   },
-  voteWhatwearInfo(context, { voteIdx, nickname }) {
+  voteWhatwearInfo(context, voteIdx) {
     rscApi
-      .put(`wear/reply/vote/${voteIdx}/${nickname}`)
+      .put(`wear/reply/vote?vote_item_idx=${voteIdx}`)
       .then((res) => {
         context.commit('setWhatwearVoteInfo', res.data);
         let voteTotal = 0;
