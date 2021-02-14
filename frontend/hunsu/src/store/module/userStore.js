@@ -1,4 +1,5 @@
-import axios from 'axios';
+import { rscApi, authApi } from '@/services/api';
+
 const state = {
   accessToken: null,
   refreshToken: null,
@@ -92,13 +93,13 @@ const mutations = {
   },
   setMyProfileInfo(state, myProfileInfo) {
     state.myProfileInfo = myProfileInfo;
-  }
+  },
 };
 
 const actions = {
   // 카카오 로그인 후 회원가입이 되어있는지 확인 후 유무에 따라 회원가입 절차 or 로그인 유도
   async userCheck({ commit }, { accessToken, refreshToken }) {
-    const res = await axios.post('http://i4c102.p.ssafy.io:8081/api/v1/auth/usercheck', {
+    const res = await authApi.post('/v1/auth/usercheck', {
       accessToken,
       refreshToken,
     });
@@ -115,8 +116,8 @@ const actions = {
   },
   signUpInApi({ commit }, params) {
     // 회원가입 api
-    return axios
-      .post('http://i4c102.p.ssafy.io:8081/api/v1/auth/signup?accessToken=' + params.accessToken, {
+    return authApi
+      .post('/v1/auth/signup?accessToken=' + params.accessToken, {
         height: params.height,
         size: params.size,
         nickname: params.nickname,
@@ -143,7 +144,7 @@ const actions = {
     // console.log('in kakaoLogin 3 a', state.accessToken); //jwtAccessToken
     // console.log('in kakaoLogin 3', state.refreshToken); //jwtAccessToken
 
-    const res = await axios.post('http://i4c102.p.ssafy.io:8081/api/v1/auth/tokenlogin', {
+    const res = await authApi.post('/v1/auth/tokenlogin', {
       jwtToken: state.accessToken,
       jwtRefresh: state.refreshToken,
     });
@@ -168,10 +169,10 @@ const actions = {
     // });
   },
   getProfileInfoInApi(context, { myNickname, yourNickname }) {
-    return axios
-      .get(`http://i4c102.p.ssafy.io:8080/api/user/mypage/${myNickname}/${yourNickname}`)
+    return rscApi
+      .get(`/user/mypage/${myNickname}/${yourNickname}`)
       .then((res) => {
-        console.log("스토어", res.data);
+        console.log('스토어', res.data);
         context.commit('setUserInfo', res.data);
       })
       .catch((err) => {
@@ -179,58 +180,55 @@ const actions = {
       });
   },
   getMyProfileInfoInApi(context, myNickname) {
-    return axios
-    .get(`http://i4c102.p.ssafy.io:8080/api/user/mypage/profile/${myNickname}`)
-    .then((res) => {
-      context.commit('setMyProfileInfo', res.data)
-      console.log('수정후마이페이지')
-    })
-    .catch((err) => {
-      console.error(err)
-    })
-  },
-  updateMyProfileInfoInApi(context, {getNickname, newNickname, height, size}) {
-    console.log(getNickname, newNickname, height, size)
-    return axios
-    .put(`http://i4c102.p.ssafy.io:8080/api/user/mypage/modify/${getNickname}`, {
-      nickname: newNickname,
-      height: height,
-      size: size,
-    })
-    .then((res) => {
-      console.log(res.data)
-      context.commit('setMyProfileInfo', res.data)
-      console.log('프로필수정성공')
-    })
-    .catch((err) => {
-      console.error(err)
-    })
-  },
-  logout({ state }) {
-    return axios
-      .post(`http://i4c102.p.ssafy.io:8081/api/v1/auth/logout?jwtToken=` + state.accessToken)
+    return rscApi
+      .get(`/user/mypage/profile/${myNickname}`)
       .then((res) => {
-        if (res.data.code === 1) {
-          console.log('logout success');
-          state.accessToken = null;
-          state.refreshToken = null;
-          state.nickname = null;
-          state.userInfo = null;
-          state.myProfileImage = null;
-        } else {
-          console.log('logout fail');
-          console.log(
-            'access',
-            state.accessToken,
-            'refresh',
-            state.refreshToken,
-            'nick',
-            state.nickname
-          );
-        }
+        context.commit('setMyProfileInfo', res.data);
+        console.log('수정후마이페이지');
+      })
+      .catch((err) => {
+        console.error(err);
       });
   },
-
+  updateMyProfileInfoInApi(context, { getNickname, newNickname, height, size }) {
+    console.log(getNickname, newNickname, height, size);
+    return rscApi
+      .put(`/user/mypage/modify/${getNickname}`, {
+        nickname: newNickname,
+        height: height,
+        size: size,
+      })
+      .then((res) => {
+        console.log(res.data);
+        context.commit('setMyProfileInfo', res.data);
+        console.log('프로필수정성공');
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+  },
+  logout({ state }) {
+    return authApi.post(`/v1/auth/logout?jwtToken=` + state.accessToken).then((res) => {
+      if (res.data.code === 1) {
+        console.log('logout success');
+        state.accessToken = null;
+        state.refreshToken = null;
+        state.nickname = null;
+        state.userInfo = null;
+        state.myProfileImage = null;
+      } else {
+        console.log('logout fail');
+        console.log(
+          'access',
+          state.accessToken,
+          'refresh',
+          state.refreshToken,
+          'nick',
+          state.nickname
+        );
+      }
+    });
+  },
 };
 
 export default {
