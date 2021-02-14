@@ -51,7 +51,11 @@
                   <v-card-text>게시글을 삭제하시겠어요?</v-card-text>
                   <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="blue darken-4" text @click="deleteDialog = false">
+                    <v-btn
+                      color="blue darken-4"
+                      text
+                      @click="deleteDialog = false"
+                    >
                       취소
                     </v-btn>
                     <v-btn
@@ -76,11 +80,19 @@
     </div>
     <!--투표x 사진-->
     <div v-if="!getWhatwearInfo.vote_activated">
-      <v-carousel v-model="model" hide-delimiter-background>
-        <v-carousel-item v-for="(color, i) in colors" :key="color">
-          <v-sheet :color="color" height="100%" tile>
+      <v-carousel
+        v-if="getWhatwearInfoImages"
+        v-model="model"
+        hide-delimiter-background
+      >
+        <v-carousel-item
+          v-for="(imageUrl, i) in getWhatwearInfoImages"
+          :key="i"
+        >
+          <v-sheet height="100%" tile>
             <v-row class="fill-height" align="center" justify="center">
-              <div class="display-3">Slide {{ i + 1 }}</div>
+              <!-- <div class="display-3">Slide {{ i + 1 }}</div> -->
+              <v-img :src="imageUrl" />
             </v-row>
           </v-sheet>
         </v-carousel-item>
@@ -124,7 +136,14 @@
         <v-dialog v-model="dialog" scrollable max-width="300px">
           <template v-slot:activator="{ on, attrs }">
             <!--마감이 true면 버튼을 안보여준다. false일때만 보여준다.-->
-            <v-btn v-if="getVoteTime === false" color="black" dark v-bind="attrs" v-on="on" text>
+            <v-btn
+              v-if="getVoteTime === false"
+              color="black"
+              dark
+              v-bind="attrs"
+              v-on="on"
+              text
+            >
               Choice✨
             </v-btn>
             <v-btn v-else text disabled>투표가 마감되었습니다</v-btn>
@@ -196,7 +215,7 @@
 import WhatWearDetailComment from "@/components/whatwear/WhatWearDetailComment";
 import { mapActions, mapGetters, mapMutations } from "vuex";
 // import ImageView from "@/components/module/ImageView";
-import { rscApi } from '@/services/api';
+import { rscApi } from "@/services/api";
 
 export default {
   name: "WhatWearDetail",
@@ -212,22 +231,26 @@ export default {
       "getVoteTotal",
       "getTargetProfileImage",
       "getVoteTime",
+      "getWhatwearInfoImages",
     ]),
   },
+  created() {},
   data() {
     return {
       model: 0,
+      cycle: false,
       colors: ["primary", "secondary", "yellow darken-2"],
       dialog: false,
       deleteDialog: false,
       vote_activated: false,
       voteImages: [],
-      endTimeCheck: this.getVoteTime
+      endTimeCheck: this.getVoteTime,
+      images: [],
     };
   },
   methods: {
     ...mapMutations(["setWhatwearInfo"]),
-    ...mapActions(["getWhatwearInfoApi", "voteWhatwearInfo"]),
+    ...mapActions(["getWhatwearInfoApi", "voteWhatwearInfo", "getImageList"]),
     // 글 삭제 함수
     deleteWhatWear(wear_idx) {
       // const wearIdx = wear_idx;
@@ -258,5 +281,4 @@ export default {
   margin-left: 40px;
   margin-right: 40px;
 }
-
 </style>

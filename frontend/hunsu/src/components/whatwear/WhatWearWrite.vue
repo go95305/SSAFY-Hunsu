@@ -1,5 +1,5 @@
 <template>
-  <v-layout justify-end >
+  <v-layout justify-end>
     <v-dialog
       v-model="dialog"
       fullscreen
@@ -21,10 +21,14 @@
           <v-btn icon dark @click="dialog = false">
             <v-icon>mdi-close</v-icon>
           </v-btn>
-          <v-toolbar-title class="text-subtitle-1">뭘입을까 작성</v-toolbar-title>
+          <v-toolbar-title class="text-subtitle-1"
+            >뭘입을까 작성</v-toolbar-title
+          >
           <v-spacer></v-spacer>
           <v-toolbar-items>
-            <v-btn text @click="createWhatWear()" class="text-subtitle-1"> 완료 </v-btn>
+            <v-btn text @click="createWhatWear()" class="text-subtitle-1">
+              완료
+            </v-btn>
           </v-toolbar-items>
         </v-toolbar>
         <v-list three-line subheader>
@@ -54,9 +58,9 @@
         <v-list three-line subheader>
           <v-list-item>
             <v-list-item-content>
-              <v-list-item-title class="text-h6 font-weight-bold"
-                >사진업로드</v-list-item-title
-              >
+              <v-list-item-title class="text-h6 font-weight-bold">
+                사진업로드
+              </v-list-item-title>
               <ImageUpload />
               <!-- <v-img
                 v-if="image" :src="imageUrl" id="test" contain>
@@ -208,18 +212,26 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getNickname", "getUploadImageFiles"]),
+    ...mapGetters(["getNickname", "getUploadImageUrls", "getUploadImageFiles"]),
   },
   methods: {
-    ...mapActions(["uploadImage", "getWhatwearListInfoApi"]),
-    ...mapMutations(["setUploadImageUrls", "setUploadImageFiles"]),
+    ...mapActions(["uploadImage"]),
+    ...mapMutations([
+      "setUploadImageUrls",
+      "setUploadImageFiles",
+      "clearUploads",
+      "setWhatwearInfo",
+    ]),
     createWhatWear() {
-      // 입력데이터체크, dialog창 닫기 + 입력데이터 보내기
-      // 투표엔드타임값 채우기
-      if (this.daycheck && this.timecheck) {
+      // dialog창 닫기 + 입력데이터 보내기
+      this.dialog = false;
+      let imageFiles = this.getUploadImageFiles;
+      let clearUploads = this.clearUploads;
+      console.log("여기야", imageFiles);
+      if (this.timeDialog && this.dateDialog) {
         this.endtime = this.dates.concat("T", this.time, ":00");
       }
-
+      // 원래는 투표이미지 갯수인데 우선 투표체크박스 활성화하면 숫자가 3이 들어가도록 구현함
       if (this.vote) {
         this.num = this.getUploadImageFiles.length
       }
@@ -238,57 +250,56 @@ export default {
       const params = {
         content: this.whatwearContent,
         endtime: this.endtime,
-        nickname: this.getNickname,
+        nickname: "감자탕볶음밥",
         num: this.num,
         title: this.whatwearTitle,
       };
       // 작성폼 초기화
-
-      // isValid가 true일때만 작성, 아닐 때는 알림창
-      if (this.isValid) {
-        this.dialog = false;
-        rscApi
-          .post('wear', params)
-          .then((res) => {
-            // console.log('뭘입을까글쓰기성공')
-            console.log(res);
-
-  
-            this.uploadImage({
-              key: "whatwear/",
-              articleIdx: res.data.whatwaerIdx,
-            }).then(() => {
-              // this.setUploadImageFiles(this.voteImage);
-              // this.setUploadImageUrls();
-              // //추후 개별업로드 필요
-              // this.uploadImage({ key: "vote/", article: res.data.voteIdx });
-            });
-            this.getWhatwearListInfoApi(1)
-
-            console.log(params);
-          })
-          .catch((err) => {
-            console.error(err);
-          });
-      } else {
-        alert('제목, 내용, 투표값을 확인해주세요')
-      }
-      // 작성폼, 체크값 초기화
       (this.whatwearTitle = ""), (this.whatwearContent = ""), (this.num = 0);
-      (this.isValid = false), (this.vote = false), (this.daycheck = false), (this.timecheck = false);
+      axios
+        .post("http://i4c102.p.ssafy.io:8080/api/wear", params)
+        .then((res) => {
+          // console.log('뭘입을까글쓰기성공')
+          console.log("resres", res);
+
+          if (imageFiles.length !== 0) {
+            console.log("in wear file", imageFiles);
+            this.uploadImage({ key: "whatwear/", articleIdx: res.data }).then(
+              () => {
+                clearUploads();
+              }
+            );
+          }
+
+          // this.uploadImage({
+          //   key: "whatwear/",
+          //   articleIdx: res.data.whatwaerIdx,
+          // }).then(() => {
+          //   // this.setUploadImageFiles(this.voteImage);
+          //   // this.setUploadImageUrls();
+          //   // //추후 개별업로드 필요
+          //   // this.uploadImage({ key: "vote/", article: res.data.voteIdx });
+          // });
+
+          // console.log(params);
+        })
+        .catch((err) => {
+          console.error(err);
+        });
     },
-    previewImage() {
-      this.imageUrl = URL.createObjectURL(this.image);
-    },
-    previewVoteImage() {
-      console.log(this.voteImage);
-      this.voteImage.forEach((e) =>
-        this.voteImageUrls.push(URL.createObjectURL(e))
-      );
-      console.log(this.voteImageUrls);
-    },
+    // previewImage() {
+    //   this.imageUrl = URL.createObjectURL(this.image);
+    // },
+    // previewVoteImage() {
+    //   console.log(this.voteImage);
+    //   this.voteImage.forEach((e) =>
+    //     this.voteImageUrls.push(URL.createObjectURL(e))
+    //   );
+    //   console.log(this.voteImageUrls);
+    // },
     inputDate(dates) {
       this.dates = dates;
+<<<<<<< HEAD
       this.daycheck = true
       // console.log(this.dates)
     },
@@ -296,6 +307,13 @@ export default {
       this.time = time;
       this.timecheck =true
       // console.log(this.time)
+=======
+      console.log(this.dates);
+    },
+    inputTime(time) {
+      this.time = time;
+      console.log(this.time);
+>>>>>>> frontend/imageupload
     },
   },
 };
@@ -305,7 +323,6 @@ export default {
 #votebtn {
   display: flex;
 }
-
 
 #whatwear_writebtn {
   position: fixed;

@@ -7,6 +7,7 @@ const state = {
   uploadImageUrls: [],
   uploadImageFiles: [],
   ootdInfoImages: [],
+  wearInfoImages: [],
 };
 const getters = {
   getUploadImageUrls(state) {
@@ -17,6 +18,9 @@ const getters = {
   },
   getOotdInfoImages(state) {
     return state.ootdInfoImages;
+  },
+  getWhatwearInfoImages(state) {
+    return state.wearInfoImages;
   },
 };
 
@@ -40,6 +44,9 @@ const mutations = {
   },
   setOotdInfoImages(state, payload) {
     state.ootdInfoImages = payload;
+  },
+  setWhatwearInfoImages(state, payload) {
+    state.wearInfoImages = payload;
   },
 };
 
@@ -83,7 +90,11 @@ const actions = {
 
       s3.upload(
         {
+<<<<<<< HEAD
           Key: 'mypage/' + rootState.user.uid + '/' + rootState.user.uid,
+=======
+          Key: 'mypage/' + rootState.user.uid + '/' + '1.jpg',
+>>>>>>> frontend/imageupload
           Body: imageFile,
           ACL: 'public-read',
           ContentType: 'image/' + fileExt,
@@ -137,7 +148,7 @@ const actions = {
         'getObject',
         {
           Bucket: this.albumBucketName,
-          Key: 'mypage/' + info.publisher + '/' + info.publisher,
+          Key: 'mypage/' + info.uid + '/1.jpg',
         },
         (err, data) => {
           if (err) {
@@ -145,6 +156,7 @@ const actions = {
           } else {
             // console.log('getImage', data);
             info.profileImage = data;
+            // this.$set(info, 'profileImage', data);
           }
         }
       );
