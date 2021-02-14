@@ -211,7 +211,7 @@ export default {
     ...mapGetters(["getNickname", "getUploadImageFiles"]),
   },
   methods: {
-    ...mapActions(["uploadImage"]),
+    ...mapActions(["uploadImage", "getWhatwearListInfoApi"]),
     ...mapMutations(["setUploadImageUrls", "setUploadImageFiles"]),
     createWhatWear() {
       // 입력데이터체크, dialog창 닫기 + 입력데이터 보내기
@@ -224,12 +224,12 @@ export default {
         this.num = this.getUploadImageFiles.length
       }
       // 투표비활성화 일때 글작성 체크(사진은 부가적이므로 체크제외)
-      if (this.vote === false && 30 >= this.whatwearTitle.length > 0 && 250 >= this.whatwearContent.length > 0) {
+      if (this.vote === false && this.whatwearTitle.length > 0 && this.whatwearTitle.length <= 30 && this.whatwearContent.length > 0 && this.whatwearContent.length <= 250) {
         this.isValid = true
       }
       
       // 투표활성화일때 글작성 체크(제목, 내용, 사진갯수)
-      if (this.vote === true && 30 >= this.whatwearTitle.length > 0 && 250 >= this.whatwearContent.length > 0 && this.num > 0) {
+      if (this.vote === true && this.whatwearTitle.length > 0 && this.whatwearTitle.length <= 30 && this.whatwearContent.length > 0 && this.whatwearContent.length <= 250 && this.num > 0) {
         this.isValid = true
       }
       
@@ -252,6 +252,7 @@ export default {
           .then((res) => {
             // console.log('뭘입을까글쓰기성공')
             console.log(res);
+
   
             this.uploadImage({
               key: "whatwear/",
@@ -262,7 +263,8 @@ export default {
               // //추후 개별업로드 필요
               // this.uploadImage({ key: "vote/", article: res.data.voteIdx });
             });
-  
+            this.getWhatwearListInfoApi(1)
+
             console.log(params);
           })
           .catch((err) => {

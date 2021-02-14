@@ -4,7 +4,7 @@
   <v-card flat>
     <!-- <v-btn @click="testa">test</v-btn> -->
     <v-card
-      v-for="(whatwear, idx) in whatwearList"
+      v-for="(whatwear, idx) in getWhatwearListInfo"
       :key="idx"
       @click="goToWhatwearDetail(whatwear)"
       flat
@@ -57,7 +57,7 @@
       <div class="text-center">
         <v-pagination
           v-model="page"
-          :length="length"
+          :length="parseInt(getWhatwearListCount / 10) + 1"
           :total-visible="6"
           @click.native="pageWhatwear()"
         ></v-pagination>
@@ -67,28 +67,28 @@
 </template>
 
 <script>
-import { rscApi } from "@/services/api"
-import { mapActions, mapMutations } from "vuex";
+// import { rscApi } from "@/services/api"
+import { mapActions, mapMutations, mapGetters } from "vuex";
 
 export default {
   name: "WhatWearList",
   data() {
     return {
-      whatwearList: [],
       page: 1,
-      length: 0,
+      // length: parseInt(this.getWhatwearListInfo.length / 10) + 1 
     };
   },
   computed: {
-    test() {
-      return this.pageWhatwear();
-    },
+    ...mapGetters(["getWhatwearListInfo", "getWhatwearListCount"]),
+    // test() {
+    //   return this.pageWhatwear();
+    // },
   },
   async created() {
     await this.getWhatWearList();
   },
   methods: {
-    ...mapActions(["getWhatwearInfoApi", "getProfiles", "getProfileImage"]),
+    ...mapActions(["getWhatwearListInfoApi", "getWhatwearInfoApi", "getProfiles", "getProfileImage"]),
     ...mapMutations(["setWhatwearInfoImages"]),
     goToWhatwearDetail(whatwear) {
       // console.log('글번호', whatwear.wear_idx)
@@ -108,36 +108,37 @@ export default {
     },
     getWhatWearList() {
       const pageNum = 1;
-      let root = this;
-      rscApi
-        .get(`wear/${pageNum}`)
-        .then((res) => {
-          this.whatwearList = res.data.wearMainDTOList;
-          this.length = parseInt(res.data.count / 10) + 1;
+      this.getWhatwearListInfoApi(pageNum)
+      // let root = this;
+      // rscApi
+      //   .get(`wear/${pageNum}`)
+      //   .then((res) => {
+      //     this.whatwearList = res.data.wearMainDTOList;
+      //     this.length = parseInt(res.data.count / 10) + 1;
 
-          this.getProfiles(this.whatwearList);
-        })
-        .then(() => {
-          root.$foreceUpdate();
-        })
-        .catch((err) => {
-          console.error(err);
-        });
+      //     this.getProfiles(this.whatwearList);
+      //   })
+      //   .then(() => {
+      //     root.$foreceUpdate();
+      //   })
+      //   .catch((err) => {
+      //     console.error(err);
+      //   });
     },
     async pageWhatwear() {
-      console.log(this.page)
       const pageNum = this.page;
-      await rscApi
-        .get(`wear/${pageNum}`)
-        .then((res) => {
-          this.whatwearList = res.data.wearMainDTOList;
-          // console.log('test', res)
-          this.getProfiles(this.whatwearList);
-        })
-        .then(() => this.$foreceUpdate())
-        .catch((err) => {
-          console.error(err);
-        });
+      this.getWhatwearListInfoApi(pageNum)
+      // await rscApi
+      //   .get(`wear/${pageNum}`)
+      //   .then((res) => {
+      //     this.whatwearList = res.data.wearMainDTOList;
+      //     // console.log('test', res)
+      //     this.getProfiles(this.whatwearList);
+      //   })
+      //   .then(() => this.$foreceUpdate())
+      //   .catch((err) => {
+      //     console.error(err);
+      //   });
     },
     testa() {
       this.whatwearList.map((info) => {
