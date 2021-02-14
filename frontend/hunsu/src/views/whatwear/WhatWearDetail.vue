@@ -22,11 +22,6 @@
             <v-list-item-title class="text-subtitle-1">
               {{ getWhatwearInfo.nickname }}
             </v-list-item-title>
-            <!--작성시간-->
-            <v-list-item-title class="text-caption">
-              {{ getWhatwearInfo.write_date.slice(0, 10) }}
-              {{ getWhatwearInfo.write_date.slice(12, 16) }}
-            </v-list-item-title>
           </v-list-item-content>
 
           <!--작성자nickname과 로그인nickname이 같을때만 삭제버튼 출력-->
@@ -201,7 +196,7 @@
 import WhatWearDetailComment from "@/components/whatwear/WhatWearDetailComment";
 import { mapActions, mapGetters, mapMutations } from "vuex";
 // import ImageView from "@/components/module/ImageView";
-import axios from "axios";
+import { rscApi } from '@/services/api';
 
 export default {
   name: "WhatWearDetail",
@@ -235,9 +230,9 @@ export default {
     ...mapActions(["getWhatwearInfoApi", "voteWhatwearInfo"]),
     // 글 삭제 함수
     deleteWhatWear(wear_idx) {
-      const wearIdx = wear_idx;
-      axios
-        .put(`http://i4c102.p.ssafy.io:8080/api/wear/${wearIdx}`)
+      // const wearIdx = wear_idx;
+      rscApi
+        .put(`wear?wear_idx=${wear_idx}`)
         .then((res) => {
           console.log(res);
           this.$router.push({ name: "WhatWear" });
@@ -247,8 +242,8 @@ export default {
         });
     },
     // 투표하는 함수
-    voteWhatwear(voteIdx, nickname) {
-      this.voteWhatwearInfo({ voteIdx, nickname });
+    voteWhatwear(voteIdx) {
+      this.voteWhatwearInfo(voteIdx);
     },
   },
 };
