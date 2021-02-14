@@ -38,7 +38,7 @@ public class WearService {
     //return: title, nickname, wear_idx, voteActivated
     public WearMainTotalDTO sortByRecent(Integer page) {
         WearMainTotalDTO wearMainTotalDTO = new WearMainTotalDTO();
-        PageRequest pageRequest = PageRequest.of(page-1,10, Sort.by("WriteDate"));
+        PageRequest pageRequest = PageRequest.of(page-1,10, Sort.by("WriteDate").descending());
         List<WearMainDTO> wearMainDTOList = new ArrayList<>();
         List<Wear> wearList = wearRepository.findByFlag(true, pageRequest);
         Long count = wearRepository.countByFlag(true);
