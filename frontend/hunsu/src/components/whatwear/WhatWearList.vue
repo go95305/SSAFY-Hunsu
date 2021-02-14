@@ -2,7 +2,7 @@
   <!-- WHATWEAR 메인 페이지 -->
   <!--v-for 사용을 위한 최상위 div-->
   <v-card flat>
-    <v-btn @click="testa">test</v-btn>
+    <!-- <v-btn @click="testa">test</v-btn> -->
     <v-card
       v-for="(whatwear, idx) in whatwearList"
       :key="idx"
@@ -94,7 +94,8 @@ export default {
       // console.log('글번호', whatwear.wear_idx)
       const wearIdx = whatwear.wear_idx;
       const nickname = whatwear.nickname;
-      this.getWhatwearInfoApi({ wearIdx, nickname }) // 유저정보 닉네임으로 변경, 현재는 글 작성자로 들어감
+      const voteCheck = whatwear.voteActivated
+      this.getWhatwearInfoApi({ wearIdx, nickname, voteCheck}) // 유저정보 닉네임으로 변경, 현재는 글 작성자로 들어감
         .then(() => {
           this.getProfileImage({
             nickname: nickname,

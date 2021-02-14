@@ -71,11 +71,11 @@ export default {
     items: ["XXS", "XS", "S", "M", "L", "XL", "XXL"],
   }),
   mounted() {
-    if (this.accessToken == null || this.refreshToken == null) {
-      //회원가입 창에서 새로고침 시 홈으로 이동 처리 (카카오 액세스 토큰을 따로 저장하지 않아 새로고침하면 무효회됨)
-      //vuex에 저장하면되지만, 서버측에선 카카오 액세스토큰 관리를 전적으로 서버에서 하길 원해, 저장 비권장
-      this.$router.push("/");
-    }
+    // if (this.accessToken == null || this.refreshToken == null) {
+    //   //회원가입 창에서 새로고침 시 홈으로 이동 처리 (카카오 액세스 토큰을 따로 저장하지 않아 새로고침하면 무효회됨)
+    //   //vuex에 저장하면되지만, 서버측에선 카카오 액세스토큰 관리를 전적으로 서버에서 하길 원해, 저장 비권장
+    //   this.$router.push("/");
+    // }
     console.log("signup mount", this.accessToken, this.refreshToken);
   },
   methods: {

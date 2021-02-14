@@ -1,5 +1,5 @@
 <template>
-  <v-card>
+  <v-card height="100%">
     <div id="whatwear_profile">
       <v-list one-line>
         <v-list-item>
@@ -250,49 +250,6 @@ export default {
     voteWhatwear(voteIdx, nickname) {
       this.voteWhatwearInfo({ voteIdx, nickname });
     },
-    // endTime() {
-    //   let today = new Date()
-    //   let year = today.getFullYear()
-    //   let month = this.leadingZeros(today.getMonth() + 1, 2)
-    //   let date = today.getDate()
-    //   let nowDay = year + '.' + month + '.' + date
-
-    //   let hours = today.getHours()
-    //   let minutes = today.getMinutes()
-    //   let seconds = today.getSeconds()
-    //   let nowTime = hours + ':' + minutes + ':' + seconds
-
-
-    //   let endTime = this.getWhatwearInfo.end_time
-    //   let endDay = endTime.slice(0, 10)
-    //   let endHours = endTime.slice(11, 19)
-      
-
-    //   if (nowDay > endDay) {
-    //     this.dayCheck = true
-    //   }
-
-    //   if (nowTime > endHours) {
-    //     this.timeCheck = true
-    //   }
-
-    //   if (this.dayCheck && this.timeCheck) {
-    //     this.endTimeCheck = true
-
-    //   console.log('확인', this.dayCheck, this.timeCheck)
-    //   }
-    // }, 
-    // leadingZeros(n, digits) {
-    //   let zero = ''
-    //   n = n.toString()
-
-    //   if (n.length < digits) {
-    //     for (let i = 0; i < digits - n.length; i++) {
-    //       zero += '0'
-    //     }
-    //   }
-    //   return zero + n
-    // },
   },
 };
 </script>
@@ -306,4 +263,5 @@ export default {
   margin-left: 40px;
   margin-right: 40px;
 }
+
 </style>

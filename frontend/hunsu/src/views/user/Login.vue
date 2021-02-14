@@ -52,8 +52,10 @@ export default {
       })
         .then((res) => {
           // console.log("return userchk 2", res);
+          console.log("usercheck", res);
           if (res === -1) {
             // 가입정보 없으면 회원가입으로
+            console.log("signup");
             router.push({
               name: "SignUp",
               params: {
@@ -64,13 +66,15 @@ export default {
           }
           return res;
         })
-        .then(() => {
+        .then((res) => {
           // console.log("2 res", res, this.getNickname);
-          this.getProfileImage({
-            nickname: this.getNickname,
-            target: "my",
-          });
-          router.push("/");
+          if (res !== -1) {
+            this.getProfileImage({
+              nickname: this.getNickname,
+              target: "my",
+            });
+            router.push("/");
+          }
         })
         .catch((err) => {
           console.log("error in userCheck ", err);
