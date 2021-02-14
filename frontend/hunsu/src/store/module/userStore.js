@@ -39,6 +39,7 @@ const getters = {
     return state.targetProfileImage;
   },
 <<<<<<< HEAD
+<<<<<<< HEAD
   getMyProfileInfo(state) {
     return state.myProfileInfo;
   }
@@ -47,6 +48,11 @@ const getters = {
     return state.uid;
   },
 >>>>>>> 9715d00cfe1eef4a93d53a010f36ca0655d0b1fc
+=======
+  getUid(state) {
+    return state.uid;
+  },
+>>>>>>> f0fe60c91afd0e89a317ca1bd69102de255ab1f4
 };
 const mutations = {
   //모든 토큰은 jwt 의미함
@@ -182,6 +188,7 @@ const actions = {
       });
   },
 <<<<<<< HEAD
+<<<<<<< HEAD
   getMyProfileInfoInApi(context, myNickname) {
     return axios
     .get(`http://i4c102.p.ssafy.io:8080/api/user/mypage/profile/${myNickname}`)
@@ -211,6 +218,8 @@ const actions = {
     })
   }
 =======
+=======
+>>>>>>> f0fe60c91afd0e89a317ca1bd69102de255ab1f4
   logout({ state }) {
     return axios
       .post(`http://i4c102.p.ssafy.io:8081/api/v1/auth/logout?jwtToken=` + state.accessToken)
@@ -235,7 +244,10 @@ const actions = {
         }
       });
   },
+<<<<<<< HEAD
 >>>>>>> 9715d00cfe1eef4a93d53a010f36ca0655d0b1fc
+=======
+>>>>>>> f0fe60c91afd0e89a317ca1bd69102de255ab1f4
 };
 
 export default {
