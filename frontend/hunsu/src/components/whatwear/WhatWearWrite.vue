@@ -256,8 +256,8 @@ export default {
       };
       // 작성폼 초기화
       (this.whatwearTitle = ""), (this.whatwearContent = ""), (this.num = 0);
-      axios
-        .post("http://i4c102.p.ssafy.io:8080/api/wear", params)
+      rscApi
+        .post("/wear", params)
         .then((res) => {
           // console.log('뭘입을까글쓰기성공')
           console.log("resres", res);
@@ -299,7 +299,6 @@ export default {
     // },
     inputDate(dates) {
       this.dates = dates;
-<<<<<<< HEAD
       this.daycheck = true
       // console.log(this.dates)
     },
@@ -307,13 +306,6 @@ export default {
       this.time = time;
       this.timecheck =true
       // console.log(this.time)
-=======
-      console.log(this.dates);
-    },
-    inputTime(time) {
-      this.time = time;
-      console.log(this.time);
->>>>>>> frontend/imageupload
     },
   },
 };

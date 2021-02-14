@@ -90,11 +90,7 @@ const actions = {
 
       s3.upload(
         {
-<<<<<<< HEAD
           Key: 'mypage/' + rootState.user.uid + '/' + rootState.user.uid,
-=======
-          Key: 'mypage/' + rootState.user.uid + '/' + '1.jpg',
->>>>>>> frontend/imageupload
           Body: imageFile,
           ACL: 'public-read',
           ContentType: 'image/' + fileExt,
