@@ -7,6 +7,7 @@ const state = {
   uploadImageUrls: [],
   uploadImageFiles: [],
   ootdInfoImages: [],
+  wearInfoImages: [],
 };
 const getters = {
   getUploadImageUrls(state) {
@@ -17,6 +18,9 @@ const getters = {
   },
   getOotdInfoImages(state) {
     return state.ootdInfoImages;
+  },
+  getWhatwearInfoImages(state) {
+    return state.wearInfoImages;
   },
 };
 
@@ -40,6 +44,9 @@ const mutations = {
   },
   setOotdInfoImages(state, payload) {
     state.ootdInfoImages = payload;
+  },
+  setWhatwearInfoImages(state, payload) {
+    state.wearInfoImages = payload;
   },
 };
 
@@ -83,7 +90,7 @@ const actions = {
 
       s3.upload(
         {
-          Key: 'mypage/' + rootState.user.nickname + '/' + rootState.user.nickname,
+          Key: 'mypage/' + rootState.user.uid + '/' + '1.jpg',
           Body: imageFile,
           ACL: 'public-read',
           ContentType: 'image/' + fileExt,
@@ -133,12 +140,11 @@ const actions = {
     // 게시글 내에 위치할 프로필사진들 가져오기
     console.log('list', list);
     await list.map((info) => {
-      console.log(info);
       s3.getSignedUrl(
         'getObject',
         {
           Bucket: this.albumBucketName,
-          Key: 'mypage/' + info.publisher + '/' + info.publisher,
+          Key: 'mypage/' + info.uid + '/1.jpg',
         },
         (err, data) => {
           if (err) {
@@ -146,17 +152,19 @@ const actions = {
           } else {
             console.log('getImage', data);
             info.profileImage = data;
+            // this.$set(info, 'profileImage', data);
           }
         }
       );
     });
   },
-  getProfileImage({ rootState }, { nickname, target }) {
+  getProfileImage({ rootState }, { uid, target }) {
     // 마이페이지 및 디테일에서의 프로필 이미지 가져오기
-    let prefix = 'mypage/' + nickname;
+    let prefix = 'mypage/' + uid + '/1.jpg';
     let getImages = new Promise((resolve, reject) => {
       s3.listObjectsV2({ Prefix: prefix }, (err, data) => {
         if (data.Contents.length === 0) {
+          console.log('??????????????????');
           reject(null);
           return;
         }
@@ -175,7 +183,7 @@ const actions = {
               if (err) {
                 return alert('There was an error listing your photo: ', err.message);
               } else {
-                // console.log('in profile data', data);
+                console.log('in profile data', data);
                 resolve(data);
               }
             }
@@ -186,6 +194,7 @@ const actions = {
     getImages
       .then((image) => {
         if (target === 'my') {
+          console.log('여기2여기2', image);
           rootState.user.myProfileImage = image;
         } else if (target === 'target') {
           rootState.user.targetProfileImage = image;

@@ -6,6 +6,8 @@ const state = {
   userInfo: {},
   myProfileImage: '',
   targetProfileImage: '',
+  uid: '1622477086',
+  //여기 3
 };
 const getters = {
   // 모든 토큰은 jwt 의미함
@@ -35,6 +37,9 @@ const getters = {
   },
   getTargetProfileImage(state) {
     return state.targetProfileImage;
+  },
+  getUid() {
+    return state.uid;
   },
 };
 const mutations = {
@@ -81,6 +86,10 @@ const mutations = {
     state.targetProfileImage = payload;
     console.log('int targetprofile', payload);
   },
+  setUid(state, payload) {
+    state.uid = payload;
+    console.log('Long uid', payload);
+  }
 };
 
 const actions = {

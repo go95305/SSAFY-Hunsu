@@ -82,23 +82,28 @@ export default {
       // "getOotdList",
       "getMyProfileImage",
       "getTargetProfileImage",
-      // "getChatRooms",
+      "getUid",
     ]),
   },
-  // mounted() {
-  //   if (this.getAccessToken) {
-  //     this.kakaoLogin().then(() => {
-  //       // console.log(this.getNickname);
-  //       this.getProfileImage({
-  //         nickname: this.getNickname,
-  //         target: "my",
-  //       });
-  //     });
-  //   } else {
-  //     this.setAllInfoClear();
-  //     this.$router.push("/login");
-  //   }
-  // },
+  mounted() {
+    console.log("navbar mount ", this.getAccessToken, this.getRefreshToken);
+    // let root = this;
+    if (this.getAccessToken) {
+      // uid로 설계해야하는데, 임시적으로 닉네임으로 처리
+      this.kakaoLogin().then(() => {
+        console.log(this.uid);
+        this.getProfileImage({
+          uid: "1622477086",
+          //임시값
+          target: "my",
+        });
+      });
+      console.log("여기여기여기여기여기", this.getMyProfileImage);
+    } else {
+      this.setAllInfoClear();
+      this.$router.push("/login");
+    }
+  },
   data() {
     return {
       items: [

@@ -11,44 +11,31 @@
     >
       <div class="d-flex align-center pt-4 mb-4">
         <!--프로필사진-->
-        <div>
-          <v-avatar class="ml-2">
-            <v-img
-              v-if="whatwear.profileImage"
-              :src="whatwear.profileImage"
-              alt="John"
-              id="profile"
-            />
-            <v-img
-              v-else
-              src="https://s.pstatic.net/mimgnews/image/upload/office_logo/018/2017/01/05/logo_018_18_20170105111205.png?type=nf40_40"
-            />
-          </v-avatar>
-        </div>
-        <div class="ml-2">
-          <div>
-            <div class="d-flex">
-              <!--뭘입을까 글제목-->
-              <v-card-subtitle class="font-weight-bold" id="title">
-                {{ whatwear.title }}
-              </v-card-subtitle>
-              <!--투표기능뱃지-->
-              <v-badge
-                v-if="whatwear.voteActivated"
-                color="red accent-3"
-                content="투표"
-                inline
-                class="ml-2"
-              >
-              </v-badge>
-            </div>
-            <!--유저닉네임-->
-            <v-card-subtitle class="font-weight-light text-caption" id="nickname">
-              {{ whatwear.nickname }}
-            </v-card-subtitle>
-          </div>
-
-        </div>
+        <!-- <div class="mt-2"></div> -->
+        <v-avatar class="mt-5 ml-2">
+          <v-img
+            v-if="whatwear.profileImage != null"
+            :src="whatwear.profileImage"
+            @click="goToWhatwearDetail(whatwear)"
+          />
+          <!--유저닉네임-->
+        </v-avatar>
+        <v-card-subtitle class="mt-4 font-weight-bold" id="nickname">
+          {{ whatwear.nickname }}
+        </v-card-subtitle>
+        <!--뭘입을까 글제목-->
+        <v-card-subtitle class="mt-4 font-weight-bold">
+          {{ whatwear.title }}
+        </v-card-subtitle>
+        <!--투표기능뱃지-->
+        <v-badge
+          v-if="whatwear.voteActivated"
+          color="red accent-3"
+          content="투표"
+          inline
+          class="mt-8"
+        >
+        </v-badge>
         <!-- <div class="mb-2"></div> -->
       </div>
     </v-card>
@@ -88,23 +75,31 @@ export default {
     await this.getWhatWearList();
   },
   methods: {
-    ...mapActions(["getWhatwearInfoApi", "getProfiles", "getProfileImage"]),
+    ...mapActions([
+      "getWhatwearInfoApi",
+      "getProfiles",
+      "getProfileImage",
+      "getImageList",
+    ]),
     ...mapMutations(["setWhatwearInfoImages"]),
     goToWhatwearDetail(whatwear) {
       // console.log('글번호', whatwear.wear_idx)
-      const wearIdx = whatwear.wear_idx;
-      const nickname = whatwear.nickname;
-      this.getWhatwearInfoApi({ wearIdx, nickname }) // 유저정보 닉네임으로 변경, 현재는 글 작성자로 들어감
-        .then(() => {
-          this.getProfileImage({
-            nickname: nickname,
-            target: "target",
-          });
-          this.getImageList({ prefix: "whatwear/" + wearIdx }).then((res) => {
+      this.getWhatwearInfoApi({
+        wearIdx: whatwear.wear_idx,
+        nickname: this.getNickname,
+        // 유저정보 닉네임으로 변경, 현재는 글 작성자로 들어감
+      }).then(() => {
+        this.getImageList({ prefix: "whatwear/" + whatwear.wear_idx })
+          .then((res) => {
             this.setWhatwearInfoImages(res);
+          })
+          .then(() => {
+            this.getProfileImage({ uid: whatwear.uid, target: "target" });
+          })
+          .then(() => {
+            this.$router.push({ name: "WhatWearDetail" });
           });
-        });
-      this.$router.push({ name: "WhatWearDetail" });
+      });
     },
     getWhatWearList() {
       const pageNum = 1;
@@ -115,17 +110,15 @@ export default {
           this.whatwearList = res.data.wearMainDTOList;
           this.length = parseInt(res.data.count / 10) + 1;
 
-          this.getProfiles(this.whatwearList);
+          this.getProfile(this.whatwearList);
         })
-        .then(() => {
-          root.$foreceUpdate();
-        })
+        .then(() => root.$foreceUpdate())
         .catch((err) => {
           console.error(err);
         });
     },
     async pageWhatwear() {
-      console.log(this.page)
+      console.log(this.page);
       const pageNum = this.page;
       await axios
         .get(`http://i4c102.p.ssafy.io:8080/api/wear/${pageNum}`)
