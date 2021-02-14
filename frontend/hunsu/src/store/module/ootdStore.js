@@ -48,31 +48,17 @@ const actions = {
         info.imageUrls = [];
       });
       commit('setOotdList', ootdList.data);
+      console.log('정렬완료', sort, pageNum)
     } else {
       console.log(ootdList);
     }
-
-    // .get(`http://i4c102.p.ssafy.io:8080/api/ootd/${sort}/${pageNum}`)
-    // .then((res) => {
-    //   console.log(res);
-    //   res.data.forEach((info) => {
-    //     info.imageUrls = [];
-    //   });
-    //   commit('setOotdList', res.data);
-    //   return res.data;
-    // })
-    // .catch((err) => {
-    //   console.error(err);
-    // })
   },
   getSearchedListInApi(context, hashtag) {
     rscApi
       .get(`ootd/hashtag/search/${hashtag}`)
-      // (`http://i4c102.p.ssafy.io:8080/api/ootd/hashtag/search/${hashtag}`)
 
       .then((res) => {
         context.commit('setOotdList', res.data);
-        // console.log(res.data);
       })
       .catch((err) => {
         console.error(err);
@@ -99,9 +85,8 @@ const actions = {
   async deleteOotdInfo(context, ootdIdx) {
     // ootd 삭제
     return await rscApi
-      .put(`ootd/del`, ootdIdx)
+      .put(`ootd/del?ootdIdx=${ootdIdx}`)
       .then((res) => {
-        console.log(res);
         if (res.data === 'success') {
           return true;
         } else {
@@ -151,14 +136,15 @@ const actions = {
       .post('ootd/reply', OotdReplyInfo)
       .then((res) => {
         context.commit('setOotdReplyInfo', res.data);
+        console.log('스토어에서 확인하기', res.data)
       })
       .catch((err) => {
         console.error(err);
       });
   },
-  likeOotdReplyInfo(context, { replyIdx, nickname }) {
+  likeOotdReplyInfo(context, replyIdx) {
     rscApi
-      .put(`ootd/reply/like/${replyIdx}/${nickname}`)
+      .put(`ootd/reply/like?replyIdx=${replyIdx}`)
       .then((res) => {
         context.commit('setOotdReplyInfo', res.data);
       })
@@ -168,7 +154,7 @@ const actions = {
   },
   deleteOotdReplyInfo(context, replyIdx) {
     rscApi
-      .delete(`ootd/reply/${replyIdx}`)
+      .put(`ootd/reply/del?replyIdx=${replyIdx}`)
       .then((res) => {
         context.commit('setOotdReplyInfo', res.data);
       })
@@ -178,7 +164,7 @@ const actions = {
   },
   updateOotdReplyInfo(context, replyInfo) {
     rscApi
-      .put('ootd/reply', replyInfo)
+      .put('ootd/reply/modi', replyInfo)
       .then((res) => {
         context.commit('setOotdReplyInfo', res.data);
       })

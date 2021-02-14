@@ -1,20 +1,62 @@
 <template>
   <!-- 정렬 버튼 -->
   <v-btn-toggle tile color="red accent-3" group>
-    <v-btn value="left" @click="getOotdListInApi(0)"> 최신순 </v-btn>
+    <v-btn v-model="sort" @click="getRecentOotdListInApi()"> 최신순 </v-btn>
 
-    <v-btn value="center" @click="getOotdListInApi(1)"> 인기순 </v-btn>
+    <v-btn v-model="sort" @click="getPopularOotdListInApi()"> 인기순 </v-btn>
   </v-btn-toggle>
 </template>
 
 <script>
 // import axios from "axios";
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 export default {
   name: "OotdFilter",
-
+  computed: {
+    ...mapGetters(["getOotdList"]),
+    pageNumCount() {
+      if (this.getOotdList) {
+        return parseInt(this.getOotdList.length / 6) + 1
+      }
+      return "";
+    }
+  },
   methods: {
-    ...mapActions(["getOotdListInApi"]),
+    ...mapActions([
+      "getOotdListInApi",
+      "getOotdInfoInApi",
+      "getImageList",
+      "getProfileInfoInApi",
+      "getProfileImage",
+      "getProfiles",
+      ]),
+    async getRecentOotdListInApi() {
+    let root = this;
+      await this.getOotdListInApi({
+        sort: 0,
+        pageNum: this.pageNumCount
+      })
+      root.getProfiles(this.getOotdList);
+    this.getOotdList.forEach((info) => {
+      root.getImageList({ prefix: "ootd/" + info.ootdIdx }).then((res) => {
+        info.imageUrls = res;
+      });
+      });
+    },
+    async getPopularOotdListInApi() {
+      let root = this;
+      await this.getOotdListInApi({
+        sort: 1,
+        pageNum: this.pageNumCount
+      })
+      root.getProfiles(this.getOotdList);
+    this.getOotdList.forEach((info) => {
+      root.getImageList({ prefix: "ootd/" + info.ootdIdx }).then((res) => {
+        info.imageUrls = res;
+      });
+      });
+    }
+    
   },
 };
 </script>

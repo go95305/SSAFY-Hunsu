@@ -35,7 +35,7 @@
               clearable
               clear-icon="mdi-close-circle"
               :rules="[rules.required, rules.min, rules.contentMax]"
-              counter="300"
+              counter="250"
               label="내용"
               class="px-5"
             ></v-textarea>
