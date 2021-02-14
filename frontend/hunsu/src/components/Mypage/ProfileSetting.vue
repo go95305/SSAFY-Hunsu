@@ -54,8 +54,9 @@
         <p class="text-subtitle2">추천서비스 제공에 쓰이는 정보입니다.</p>
         <!-- 숫자만 가능하게 필터링 -->
         <v-text-field
-          :label="getMyProfileInfo.height"
+          label="키"
           v-model="height"
+          :placeholder="getMyProfileInfo.height"
           hint="cm를 제외하고 적어주세요"
           outlined
         ></v-text-field>
@@ -85,9 +86,9 @@ export default {
       notifications: false,
       sound: true,
       widgets: false,
-      items: ["XS", "S", "M", "L", "XL", "XXL"],
+      items: ["XXS", "XS", "S", "M", "L", "XL", "XXL"],
       newNickname: "",
-      height: "",
+      height: 0,
       size: "",
     }
   },

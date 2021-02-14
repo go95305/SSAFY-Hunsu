@@ -165,11 +165,11 @@
               style="padding: 0px"
             >
               <v-row no-gutters>
-                <v-col v-for="(img, idx) in profileData.imageList" :key="idx" cols="4">
+                <v-col v-for="(ootd, idx) in profileData.imageList" :key="idx" cols="4">
                   <v-card outlined tile>
                       <ImageView
-                        :images="img"
-                        @click.native="goToOotdDetail(idx)"
+                        :images="ootd.img"
+                        @click.native="goToOotdDetail(ootd.idx)"
                         style="height: 180px"
                       />
                   </v-card>
@@ -315,17 +315,17 @@ export default {
         console.error(err)
       })
     },
-    goToOotdDetail(ootd) {
+    goToOotdDetail(idx) {
       //idx 굳이 보여줄 필요 없을것같아서 params로 변경
       // this.$router.push({ name: "OotdDetail", params: { no: ootd.ootdIdx } });
       let root = this;
-      console.log(ootd);
+      console.log(idx);
       this.getOotdInfoInApi({
-        ootdIdx: ootd,
+        ootdIdx: idx,
         nickname: this.getNickname,
       }).then(() => {
         root
-          .getImageList({ prefix: "ootd/" + ootd.ootdIdx })
+          .getImageList({ prefix: "ootd/" + idx })
           .then((res) => {
             console.log("imageList", res);
             // root.getImages({ keys: res }).then((res) => {
