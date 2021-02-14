@@ -90,7 +90,7 @@ public class OotdController {
             "- ootdIdx: 글 번호      --수정\n" +
             "Response\n" +
             "- 글 비활성화 성공여부(success or fail)")
-    public String deleteOotd(@RequestHeader("X-AUTH-ACCESS") String jwtToken, @RequestBody Long ootdIdx) {
+    public String deleteOotd(@RequestHeader("X-AUTH-ACCESS") String jwtToken, @RequestParam Long ootdIdx) {
         boolean flag = ootdService.deleteOotd(ootdIdx); //글 비활성화
         if (flag)
             return "success";
@@ -197,7 +197,7 @@ public class OotdController {
             "- replyIdx: 댓글 번호      --수정(path -> requestbody)\n" +
             "Response\n" +
             "- 해당 글의 댓글 리스트 목록 전체")
-    public List<OotdReplyDTO> ootdReplyDelete(@RequestHeader("X-AUTH-ACCESS") String jwtToken, @RequestBody Long replyIdx) {
+    public List<OotdReplyDTO> ootdReplyDelete(@RequestHeader("X-AUTH-ACCESS") String jwtToken, @RequestParam Long replyIdx) {
         List<OotdReplyDTO> ootdReplyDTOList = ootdService.deleteReply(replyIdx);
         return ootdReplyDTOList;
     }
@@ -209,7 +209,7 @@ public class OotdController {
             "- replyIdx: 댓글 번호      --수정(path -> requestbody)\n" +
             "Response\n" +
             "- 해당 글의 댓글 리스트 목록 전체")
-    public List<OotdReplyDTO> ootdReplyLike(@RequestHeader("X-AUTH-ACCESS") String jwtToken, @RequestBody Long replyIdx) {
+    public List<OotdReplyDTO> ootdReplyLike(@RequestHeader("X-AUTH-ACCESS") String jwtToken, @RequestParam Long replyIdx) {
         String nickname=userRepository.findUserByJwtAccess(jwtToken).getNickname();
         List<OotdReplyDTO> ootdReplyDTOList = ootdService.ootdReplyLike(replyIdx, nickname);
         return ootdReplyDTOList;

@@ -100,7 +100,7 @@ public class WearController {
             "- jwtToken(RequestHeader)\n" +
             "- wear_idx(RequestBody) \n" +
             "Response(x)")
-    public void deleteWear(@RequestBody Long wear_idx,@RequestHeader("X-AUTH-ACCESS") String jwtToken) {
+    public void deleteWear(@RequestParam Long wear_idx,@RequestHeader("X-AUTH-ACCESS") String jwtToken) {
         wearService.deleteWear(wear_idx);
     }
 
@@ -175,7 +175,7 @@ public class WearController {
             "-----count: 해당 댓글에 대한 좋아요 수\n" +
             "-----like: 좋아요 활성화 여부(true or false)\n" +
             "-----flag: 댓글이 유효 여부(true or false(삭제))")
-    public List<WearReplyDTO> deleteReply(@RequestBody Long idx,@RequestHeader("X-AUTH-ACCESS") String jwtToken) {
+    public List<WearReplyDTO> deleteReply(@RequestParam Long idx,@RequestHeader("X-AUTH-ACCESS") String jwtToken) {
         List<WearReplyDTO> replyDTOList = wearService.deleteReply(idx);
 
         return replyDTOList;
@@ -199,7 +199,7 @@ public class WearController {
             "-----count: 해당 댓글에 대한 좋아요 수\n" +
             "-----like: 좋아요 활성화 여부(true or false)\n" +
             "-----flag: 댓글이 유효 여부(true or false(삭제))")
-    public List<WearReplyDTO> likeReply(@RequestBody Long reply_idx,@RequestHeader("X-AUTH-ACCESS") String jwtToken) {
+    public List<WearReplyDTO> likeReply(@RequestParam Long reply_idx,@RequestHeader("X-AUTH-ACCESS") String jwtToken) {
         String nickname=userRepository.findUserByJwtAccess(jwtToken).getNickname();
         List<WearReplyDTO> replyDTOList = wearService.replyLike(reply_idx, nickname);
 
@@ -218,7 +218,7 @@ public class WearController {
             "-----idx: 투표 항목의 idx\n" +
             "-----count: 투표 항목의 투표 수\n" +
             "-----choice: 해당 항목을 선택 했는지 여부(true or false)")
-    public List<VoteDTO> voteChoice(@RequestBody Long vote_item_idx,@RequestHeader("X-AUTH-ACCESS") String jwtToken) {
+    public List<VoteDTO> voteChoice(@RequestParam Long vote_item_idx,@RequestHeader("X-AUTH-ACCESS") String jwtToken) {
         String nickname=userRepository.findUserByJwtAccess(jwtToken).getNickname();
         List<VoteDTO> voteDTOList = wearService.voteChoice(vote_item_idx, nickname);
 

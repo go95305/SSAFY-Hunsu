@@ -44,7 +44,7 @@ public class UserController {
             "-nickname: 팔로우 하고자 하는 대상의 닉네임      --수정(path->requestbody)\n" +
             "Response\n" +
             "-isActivated: 팔로우 버튼 활성화 여부(true or false)")
-    public boolean userFollowAdd(@RequestHeader("X-AUTH-ACCESS") String jwtToken, @RequestBody String nickname) {
+    public boolean userFollowAdd(@RequestHeader("X-AUTH-ACCESS") String jwtToken, @RequestParam String nickname) {
         String myNickname=userRepository.findUserByJwtAccess(jwtToken).getNickname();
         boolean isActivated = userService.follow(myNickname,nickname);
 
