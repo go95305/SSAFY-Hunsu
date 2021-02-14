@@ -127,7 +127,7 @@ export default {
           console.log("글 작성 실패");
         } else {
           // 이미지 업로드
-          console.log('글 작성 성공')
+          console.log("글 작성 성공 res");
           if (imageFiles.length !== 0) {
             console.log("in ootd file", imageFiles);
             this.uploadImage({ key: "ootd/", articleIdx: res.ootdIdx }).then(

@@ -2,20 +2,38 @@
   <!-- 회원가입 후 추가정보 입력할 컴포넌트 -->
   <div>
     <v-toolbar dark color="black">
-      <v-toolbar-title class="text-subtitle-1"
-        >회원가입</v-toolbar-title
-      >
+      <v-toolbar-title class="text-subtitle-1">회원가입</v-toolbar-title>
     </v-toolbar>
     <!-- 프로필 사진 -->
-    <div class="d-flex justify-center mt-7">
+    <div id="profile_image">
       <v-avatar width="100px" height="100px">
-        <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
+        <v-img
+          v-if="getUploadImageUrls.length !== 0"
+          :src="getUploadImageUrls[getUploadImageUrls.length - 1]"
+        />
+        <!-- <v-img v-else-if="getMyProfileImage" :src="getMyProfileImage" /> -->
+        <v-img
+          v-else
+          src="https://cdn.vuetifyjs.com/images/john.jpg"
+          alt="John"
+        />
       </v-avatar>
-        <!-- 프로필 사진 변경 버튼 -->
+      <!-- 프로필 이미지 업로드 부분 -->
+      <!-- <v-file-input truncate-length="15" hide-input></v-file-input> -->
+      <input ref="imageInput" type="file" hidden @change="onChangeImages" />
+      <div class="display: inline-block;">
+        <v-btn class="mx-5 my-2" type="button" @click="onClickImageUpload"
+          >사진 업로드</v-btn
+        >
+      </div>
     </div>
-    <div class="d-flex justify-center">
-      <v-btn icon x-large class="mx"><v-icon>mdi-camera</v-icon></v-btn>
-    </div>
+    <!-- <v-avatar>
+      <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
+    </v-avatar>
+    <v-row align="center" justify="space-around"> -->
+    <!-- 프로필 사진 변경 버튼 -->
+    <!-- <v-btn tile color="success"> Edit </v-btn>
+    </v-row> -->
     <!-- 닉네임 입력 -->
     <v-text-field
       class="mx-auto mb-7"
@@ -40,11 +58,19 @@
     <v-container fluid>
       <v-row align="center">
         <v-col class="d-flex" cols="12" sm="6">
-          <v-select style="width: 350px" outlined v-model="size" :items="items" label="사이즈"></v-select>
+          <v-select
+            style="width: 350px"
+            outlined
+            v-model="size"
+            :items="items"
+            label="사이즈"
+          ></v-select>
         </v-col>
       </v-row>
     </v-container>
-    <v-btn depressed class="" x-large style="width: 375px" dark @click="signUp">회원가입</v-btn>
+    <v-btn depressed class="" x-large style="width: 375px" dark @click="signUp"
+      >회원가입</v-btn
+    >
   </div>
 </template>
 
@@ -54,6 +80,7 @@ import { mapActions, mapGetters, mapMutations } from "vuex";
 
 export default {
   name: "SignupInfo",
+
   props: {
     accessToken: {
       type: String,
@@ -61,9 +88,6 @@ export default {
     refreshToken: {
       type: String,
     },
-  },
-  computed: {
-    ...mapGetters(["getAccessToken"]),
   },
   data: () => ({
     nickname: "",
@@ -87,21 +111,48 @@ export default {
     // }
     console.log("signup mount", this.accessToken, this.refreshToken);
   },
+  computed: {
+    ...mapGetters([
+      "getAccessToken",
+      "getUploadImageFiles",
+      "getUploadImageUrls",
+      "getUid",
+    ]),
+  },
   methods: {
-    ...mapActions(["signUpInApi", "kakaoLogin"]),
-    ...mapMutations(["setAllToken"]),
-    signUp() {
+    ...mapActions(["signUpInApi", "kakaoLogin", "uploadProfile"]),
+    ...mapMutations([
+      "setAllToken",
+      "setUploadImageFiles",
+      "setUploadImageUrls",
+      "clearUploads",
+    ]),
+    async signUp() {
       console.log(this.nickname, this.height, this.size);
-      this.signUpInApi({
+      await this.signUpInApi({
         accessToken: this.accessToken,
         height: this.height,
         nickname: this.nickname,
         size: this.size,
-      }).then(() => {
-        console.log("in signupinfo 2");
-        this.$router.push("/");
-        // this.kakaoLogin();
       });
+      if (this.getUploadImageFiles.length !== 0) {
+        await this.uploadProfile();
+        this.clearUploads();
+      }
+      console.log("in signupinfo 2");
+      alert("회원가입 감사합니다!!");
+      this.$router.push("/");
+      // this.kakaoLogin();
+    },
+    onClickImageUpload() {
+      this.$refs.imageInput.click();
+    },
+    onChangeImages(e) {
+      console.log(e.target.files);
+
+      this.setUploadImageFiles(e.target.files);
+      this.setUploadImageUrls();
+      console.log("onChange imageURl ", this.getUploadImageUrls);
     },
   },
 };

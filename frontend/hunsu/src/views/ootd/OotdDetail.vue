@@ -45,7 +45,15 @@
     <v-carousel :show-arrows="false" v-if="!getOotdInfoImages">
       <p>loading..</p>
     </v-carousel>
-    <v-carousel v-else :continuous="false" :cycle="cycle" :show-arrows="true" hide-delimiter-background delimiter-icon="mdi-minus" height="330">
+    <v-carousel
+      v-else
+      :continuous="false"
+      :cycle="cycle"
+      :show-arrows="true"
+      hide-delimiter-background
+      delimiter-icon="mdi-minus"
+      height="330"
+    >
       <v-carousel-item v-for="(imageUrl, i) in getOotdInfoImages" :key="i">
         <v-sheet height="100%" tile>
           <v-row class="fill-height" align="center" justify="center">
@@ -212,27 +220,6 @@ export default {
       "getTargetProfileImage",
     ]),
   },
-  async created() {
-    let root = this
-      this.getOotdInfoInApi({
-        ootdIdx: this.getOotdInfo.ootdIdx,
-      }).then(() => {
-        root
-          .getImageList({ prefix: "ootd/" + this.getOotdInfo.ootdIdx })
-          .then((res) => {
-            root.setOotdInfoImages(res);
-          })
-          .then(() => {
-            this.getProfileImage({
-              nickname: this.getOotdInfo.nickname,
-              target: "target",
-            });
-          })
-          .then(() => {
-            this.$router.push({ name: "OotdDetail" }).catch(() => {})
-          });
-      });
-    },
   data() {
     return {
       dialog: false,
@@ -275,7 +262,11 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(["setOotdInfo", "setTargetProfileImage", "setOotdInfoImages"]),
+    ...mapMutations([
+      "setOotdInfo",
+      "setTargetProfileImage",
+      "setOotdInfoImages",
+    ]),
     ...mapActions([
       "getOotdInfoInApi",
       "updateOotdInfo",
@@ -370,18 +361,6 @@ export default {
     },
   },
 };
-
-
-
-
-
-
-
-
-
-
-
-
 </script>
 
 <style>

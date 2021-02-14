@@ -81,30 +81,29 @@ const actions = {
   },
   uploadProfile({ rootState, state }) {
     // 프로필사진 업로드
-    state.uploadImageFiles.forEach((imageFile) => {
-      console.log('profilefile', imageFile);
-      //파일 확장자
-      let fileExtList = imageFile.name.split('.');
-      let fileExt = fileExtList[fileExtList.length - 1];
-      console.log(fileExt);
+    const imageFile = state.uploadImageFiles[state.uploadImageFiles.length - 1];
+    console.log('profilefile', imageFile);
+    //파일 확장자
+    let fileExtList = imageFile.name.split('.');
+    let fileExt = fileExtList[fileExtList.length - 1];
+    console.log(fileExt);
 
-      s3.upload(
-        {
-          Key: 'mypage/' + rootState.user.uid + '/' + rootState.user.uid,
-          Body: imageFile,
-          ACL: 'public-read',
-          ContentType: 'image/' + fileExt,
-        },
-        (err, data) => {
-          if (err) {
-            console.log(err);
-            return alert('There was an error uploading your photo: ', err.message);
-          }
-          console.log('Successfully uploaded photo.');
-          console.log(data);
+    s3.upload(
+      {
+        Key: 'mypage/' + rootState.user.uid + '/' + rootState.user.uid,
+        Body: imageFile,
+        ACL: 'public-read',
+        ContentType: 'image/' + fileExt,
+      },
+      (err, data) => {
+        if (err) {
+          console.log(err);
+          return alert('There was an error uploading your photo: ', err.message);
         }
-      );
-    });
+        console.log('Successfully uploaded photo.');
+        console.log(data);
+      }
+    );
   },
   getImageList(context, { prefix }) {
     // prefix에 위치한 이미지 리스트 가져오기
@@ -140,19 +139,18 @@ const actions = {
   async getProfiles(context, list) {
     // 게시글 내에 위치할 프로필사진들 가져오기
     await list.map((info) => {
+      console.log('in info', info);
       s3.getSignedUrl(
         'getObject',
         {
           Bucket: this.albumBucketName,
-          Key: 'mypage/' + info.uid + '/1.jpg',
+          Key: 'mypage/' + info.uid + '/' + info.uid,
         },
         (err, data) => {
           if (err) {
             return alert('There was an error listing your photo: ', err.message);
           } else {
-            // console.log('getImage', data);
             info.profileImage = data;
-            // this.$set(info, 'profileImage', data);
           }
         }
       );
@@ -180,12 +178,33 @@ const actions = {
           // image = data;
           if (target === 'my') {
             rootState.user.myProfileImage = data;
+            // commit('user/setMyProfileImage', data, { root: true });
           } else if (target === 'target') {
             rootState.user.targetProfileImage = data;
+            // commit('userStorer/setTargetProfileImage', data, { root: true });
           }
         }
       }
     );
+  },
+  getWhatwearProfile(context, uid) {
+    return new Promise((resolve, reject) => {
+      s3.getSignedUrl(
+        'getObject',
+        {
+          Bucket: this.albumBucketName,
+          Key: 'mypage/' + uid + '/' + uid,
+        },
+        (err, data) => {
+          if (err) {
+            alert('There was an error listing your photo: ', err.message);
+            reject(err);
+          } else {
+            resolve(data);
+          }
+        }
+      );
+    });
   },
 };
 AWS.config.update({

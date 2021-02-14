@@ -48,7 +48,6 @@ const actions = {
         info.imageUrls = [];
       });
       commit('setOotdList', ootdList.data);
-      console.log('정렬완료', sort, pageNum)
     } else {
       console.log(ootdList);
     }
@@ -112,22 +111,19 @@ const actions = {
   createOotdInfo(context, params) {
     // ootd 작성
 
-    return (
-      rscApi
-        .post('ootd', params)
-        .then((res) => {
-          if (res.status === 200) {
-            return res.data;
-          } else {
-            return false;
-          }
-          // 추후 자기가 쓴 페이지로 이동하는 것 수정 요망
-
-        })
-        .catch(() => {
+    return rscApi
+      .post('ootd', params)
+      .then((res) => {
+        if (res.status === 200) {
+          return res.data;
+        } else {
           return false;
-        })
-    );
+        }
+        // 추후 자기가 쓴 페이지로 이동하는 것 수정 요망
+      })
+      .catch(() => {
+        return false;
+      });
   },
 
   // 댓글
@@ -136,7 +132,7 @@ const actions = {
       .post('ootd/reply', OotdReplyInfo)
       .then((res) => {
         context.commit('setOotdReplyInfo', res.data);
-        console.log('스토어에서 확인하기', res.data)
+        console.log('스토어에서 확인하기', res.data);
       })
       .catch((err) => {
         console.error(err);

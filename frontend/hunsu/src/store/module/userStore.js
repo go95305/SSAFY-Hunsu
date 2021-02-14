@@ -159,6 +159,7 @@ const actions = {
   },
   getProfileInfoInApi(context, targetNickname) {
     // 상대 프로필 정보 가져오기
+    console.log(targetNickname);
     return rscApi
       .get(`/user/mypage/${targetNickname}`)
       .then((res) => {
@@ -175,7 +176,6 @@ const actions = {
       .get(`/user/mypage/profile`)
       .then((res) => {
         context.commit('setMyProfileInfo', res.data);
-        console.log('수정후마이페이지');
       })
       .catch((err) => {
         console.error(err);

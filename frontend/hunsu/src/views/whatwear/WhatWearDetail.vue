@@ -100,16 +100,7 @@
     </div>
     <!--투표사진-->
     <div id="vote" v-if="getWhatwearInfo.vote_activated">
-      <ImageView :images="getWhatwearInfo.imageUrls" />
-      <!-- <v-carousel v-model="model" hide-delimiter-background>
-        <v-carousel-item v-for="(color, i) in colors" :key="color">
-          <v-sheet :color="color" height="100%" tile>
-            <v-row class="fill-height" align="center" justify="center">
-              <div class="display-3">Slide {{ i + 1 }}</div>
-            </v-row>
-          </v-sheet>
-        </v-carousel-item>
-      </v-carousel> -->
+      <!-- <ImageView :images="getWhatwearInfo.imageUrls" /> -->
     </div>
 
     <!--글 내용-->
@@ -234,7 +225,6 @@ export default {
       "getWhatwearInfoImages",
     ]),
   },
-  created() {},
   data() {
     return {
       model: 0,
@@ -247,6 +237,9 @@ export default {
       endTimeCheck: this.getVoteTime,
       images: [],
     };
+  },
+  mounted() {
+    console.log(this.getWhatwearInfo);
   },
   methods: {
     ...mapMutations(["setWhatwearInfo"]),

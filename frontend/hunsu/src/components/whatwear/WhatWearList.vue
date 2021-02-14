@@ -3,6 +3,7 @@
   <!--v-for 사용을 위한 최상위 div-->
   <v-card flat>
     <!-- <v-btn @click="testa">test</v-btn> -->
+    <v-btn @click="getImages">test</v-btn>
     <v-card
       v-for="(whatwear, idx) in getWhatwearListInfo"
       :key="idx"
@@ -14,9 +15,13 @@
         <!-- <div class="mt-2"></div> -->
         <v-avatar class="mt-5 ml-2">
           <v-img
-            v-if="whatwear.profileImage != null"
+            v-if="whatwear.profileImage"
             :src="whatwear.profileImage"
             @click="goToWhatwearDetail(whatwear)"
+          />
+          <v-img
+            v-else
+            src="https://s.pstatic.net/static/newsstand/2020/logo/dark/0604/018.png"
           />
           <!--유저닉네임-->
         </v-avatar>
@@ -67,80 +72,54 @@ export default {
   },
   computed: {
     ...mapGetters(["getWhatwearListInfo", "getWhatwearListCount"]),
-    // test() {
-    //   return this.pageWhatwear();
-    // },
   },
-  async created() {
-    await this.getWhatWearList();
+  async mounted() {
+    await this.pageWhatwear();
   },
   methods: {
     ...mapActions([
       "getWhatwearListInfoApi",
       "getWhatwearInfoApi",
-      "getProfiles",
       "getProfileImage",
+      "getImageList",
+      "getWhatwearProfile",
     ]),
     ...mapMutations(["setWhatwearInfoImages"]),
-    goToWhatwearDetail(whatwear) {
-      // console.log('글번호', whatwear.wear_idx)
-      const wearIdx = whatwear.wear_idx;
-      const voteCheck = whatwear.voteActivated;
-      this.getWhatwearInfoApi({ wearIdx, voteCheck }) // 유저정보 닉네임으로 변경, 현재는 글 작성자로 들어감
-        .then(() => {
-          this.getProfileImage({
-            nickname: whatwear.nickname,
-            target: "target",
-          });
-          this.getImageList({ prefix: "whatwear/" + wearIdx })
-            .then((res) => {
-              this.setWhatwearInfoImages(res);
-            })
-            .then(() => {
-              this.getProfileImage({ uid: whatwear.uid, target: "target" });
-            })
-            .then(() => {
-              this.$router.push({ name: "WhatWearDetail" });
-            });
-        });
-    },
-    getWhatWearList() {
-      const pageNum = 1;
-      this.getWhatwearListInfoApi(pageNum);
-      // let root = this;
-      // rscApi
-      //   .get(`wear/${pageNum}`)
-      //   .then((res) => {
-      //     this.whatwearList = res.data.wearMainDTOList;
-      //     this.length = parseInt(res.data.count / 10) + 1;
+    async goToWhatwearDetail(whatwear) {
+      console.log("go detail", whatwear);
+      // 뭘입을까 상세정보 가져오기
+      await this.getWhatwearInfoApi({
+        wearIdx: whatwear.wear_idx,
+        voteCheck: whatwear.voteActivated,
+      });
 
-      //     this.getProfiles(this.whatwearList);
-      //   })
-      //   .then(() => {
-      //     root.$foreceUpdate();
-      //   })
-      //   .catch((err) => {
-      //     console.error(err);
-      //   });
+      // 이미지 업로드 및 세팅
+      const images = await this.getImageList({
+        prefix: "whatwear/" + whatwear.wear_idx,
+      });
+      this.setWhatwearInfoImages(images);
+
+      // 작성자 프로필사진 가져오기
+      await this.getProfileImage({ uid: whatwear.uid, target: "target" });
+      this.$router.push({ name: "WhatWearDetail" });
     },
+
     async pageWhatwear() {
+      // durldrudlrudrljdruldrldrldlr
       const pageNum = this.page;
-      this.getWhatwearListInfoApi(pageNum);
-      // await rscApi
-      //   .get(`wear/${pageNum}`)
-      //   .then((res) => {
-      //     this.whatwearList = res.data.wearMainDTOList;
-      //     // console.log('test', res)
-      //     this.getProfiles(this.whatwearList);
-      //   })
-      //   .then(() => this.$foreceUpdate())
-      //   .catch((err) => {
-      //     console.error(err);
-      //   });
+      await this.getWhatwearListInfoApi(pageNum);
+      this.getImages();
+      // await this.getWhatwearListInfo.forEach(async (info) => {
+      //   const profile = await this.getWhatwearProfile(info.uid);
+      //   this.$set(info, "profileImage", profile);
+      // });
+      console.log(this.getWhatwearListInfo);
     },
-    testa() {
-      this.whatwearList.map((info) => {
-        console.log(info.profileImage);
+    getImages() {
+      this.getWhatwearListInfo.forEach(async (info) => {
+        const profile = await this.getWhatwearProfile(info.uid);
+        console.log(profile);
+        this.$set(info, "profileImage", profile);
       });
     },
   },

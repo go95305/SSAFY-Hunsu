@@ -158,12 +158,8 @@ export default {
         height,
         size,
       }).then(() => {
-        console.log("수정후내정보", this.getMyProfileInfo);
-        const myNickname = newNickname;
-        const yourNickname = newNickname;
-        this.getProfileInfoInApi({ myNickname, yourNickname });
-        console.log("겟성공?");
-        this.$router.push({ name: "Home" }).catch(() => {});
+        this.getProfileInfoInApi(this.newNickname);
+        // this.$router.push({ name: "Home" }).catch(() => {});
       });
     },
   },
