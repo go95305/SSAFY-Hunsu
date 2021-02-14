@@ -38,9 +38,21 @@ const getters = {
   getTargetProfileImage(state) {
     return state.targetProfileImage;
   },
+<<<<<<< HEAD
+<<<<<<< HEAD
+  getMyProfileInfo(state) {
+    return state.myProfileInfo;
+  }
+=======
   getUid(state) {
     return state.uid;
   },
+>>>>>>> 9715d00cfe1eef4a93d53a010f36ca0655d0b1fc
+=======
+  getUid(state) {
+    return state.uid;
+  },
+>>>>>>> f0fe60c91afd0e89a317ca1bd69102de255ab1f4
 };
 const mutations = {
   //모든 토큰은 jwt 의미함
@@ -175,6 +187,39 @@ const actions = {
         console.error(err);
       });
   },
+<<<<<<< HEAD
+<<<<<<< HEAD
+  getMyProfileInfoInApi(context, myNickname) {
+    return axios
+    .get(`http://i4c102.p.ssafy.io:8080/api/user/mypage/profile/${myNickname}`)
+    .then((res) => {
+      context.commit('setMyProfileInfo', res.data)
+      console.log('수정후마이페이지')
+    })
+    .catch((err) => {
+      console.error(err)
+    })
+  },
+  updateMyProfileInfoInApi(context, {getNickname, newNickname, height, size}) {
+    console.log(getNickname, newNickname, height, size)
+    return axios
+    .put(`http://i4c102.p.ssafy.io:8080/api/user/mypage/modify/${getNickname}`, {
+      nickname: newNickname,
+      height: height,
+      size: size,
+    })
+    .then((res) => {
+      console.log(res.data)
+      context.commit('setMyProfileInfo', res.data)
+      console.log('프로필수정성공')
+    })
+    .catch((err) => {
+      console.error(err)
+    })
+  }
+=======
+=======
+>>>>>>> f0fe60c91afd0e89a317ca1bd69102de255ab1f4
   logout({ state }) {
     return axios
       .post(`http://i4c102.p.ssafy.io:8081/api/v1/auth/logout?jwtToken=` + state.accessToken)
@@ -199,6 +244,10 @@ const actions = {
         }
       });
   },
+<<<<<<< HEAD
+>>>>>>> 9715d00cfe1eef4a93d53a010f36ca0655d0b1fc
+=======
+>>>>>>> f0fe60c91afd0e89a317ca1bd69102de255ab1f4
 };
 
 export default {
