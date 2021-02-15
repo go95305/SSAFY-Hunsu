@@ -176,6 +176,7 @@
 import { rscApi } from "@/services/api";
 import { mapGetters, mapActions, mapMutations } from "vuex";
 import ImageUpload from "@/components/module/ImageUpload";
+import { EventBus } from "@/services/eventBus";
 
 export default {
   name: "WhatWearWrite",
@@ -284,7 +285,8 @@ export default {
       }
 
       (this.whatwearTitle = ""), (this.whatwearContent = ""), (this.num = 0);
-      this.getWhatwearListInfoApi(1);
+      EventBus.$emit("WhatwearWriteSuccess");
+      // this.getWhatwearListInfoApi(1);
     },
 
     inputDate(dates) {

@@ -58,11 +58,13 @@
 <script>
 // import { rscApi } from "@/services/api"
 import { mapActions, mapMutations, mapGetters } from "vuex";
+import { EventBus } from "@/services/eventBus";
 
 export default {
   name: "WhatWearList",
   data() {
     return {
+      page: 1,
       whatwearList: [],
       // length: parseInt(this.getWhatwearListInfo.length / 10) + 1
     };
@@ -70,8 +72,11 @@ export default {
   computed: {
     ...mapGetters(["getWhatwearListInfo", "getWhatwearListCount"]),
   },
-  async mounted() {
+  async created() {
     await this.pageWhatwear();
+    EventBus.$on("WhatwearWriteSuccess", async () => {
+      await this.pageWhatwear();
+    });
   },
   methods: {
     ...mapActions([
