@@ -94,7 +94,8 @@ export default {
     root.getProfiles(this.getOotdList);
     this.getOotdList.forEach((info) => {
       root.getImageList({ prefix: "ootd/" + info.ootdIdx }).then((res) => {
-        info.imageUrls = res;
+        // info.imageUrls = res;
+        this.$set(info, "imageUrls", res);
       });
       // uid 로 받아와야 프로필 이미지들 가져올 수 있음
       // root.getProfileImage({

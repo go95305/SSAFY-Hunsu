@@ -107,7 +107,7 @@ const actions = {
     // console.log('prefix', prefix);
     let images = [];
     return new Promise((resolve, reject) => {
-      s3.listObjectsV2({ Prefix: prefix }, (err, data) => {
+      s3.listObjectsV2({ Prefix: prefix + '/' }, (err, data) => {
         if (err) {
           reject('getImageList err', err);
         } else {
