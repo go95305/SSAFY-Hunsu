@@ -56,23 +56,36 @@
         </v-list-item>
       </v-list>
     </v-card>
+    <infinite-loading @infinite="infiniteHandler" spinner="waveDots">
+      <div 
+        slot="no-more" 
+        style="color: rgb(102, 102, 102); 
+              font-size: 14px; 
+              padding: 10px 0px;">
+        목록의 끝입니다 :)</div>
+    </infinite-loading>
   </div>
+  
 </template>
 
 
 <script>
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import ImageView from "@/components/module/ImageView";
+import infiniteLoading from 'vue-infinite-loading';
 
 export default {
   name: "OotdList",
   components: {
     ImageView,
+    infiniteLoading,
   },
   data() {
     return {
       cycle: false,
       imageUrls: [],
+      limit: 0,
+      check: 0,
     };
   },
   computed: {
@@ -114,6 +127,35 @@ export default {
     //   });
     // });
   },
+  // async created() {
+  //   // let ootdList;
+  //   let root = this;
+  //   await this.getOotdListInApi({
+  //     sort: 0,
+  //     pageNum: 0,
+  //   });
+  //   root.getProfiles(this.getOotdList);
+  //   this.getOotdList.forEach((info) => {
+  //     root.getImageList({ prefix: "ootd/" + info.ootdIdx }).then((res) => {
+  //       info.imageUrls = res;
+  //     });
+  //     // uid 로 받아와야 프로필 이미지들 가져올 수 있음
+  //     // root.getProfileImage({
+  //     //   nickname: info.nickname,
+  //     // });
+  //   });
+  //   console.log(this.getOotdList);
+  //   // .then((res) => {
+  //   //   root.getProfiles(res);
+  //   //   res.forEach((info) => {
+  //   //     console.log(info);
+  //   //     root.getImageList({ prefix: "ootd/" + info.ootdIdx }).then((res) => {
+  //   //       info.imageUrls = res;
+  //   //       // });
+  //   //     });
+  //   //   });
+  //   // });
+  // },
   methods: {
     ...mapActions([
       "getOotdInfoInApi",
@@ -151,6 +193,32 @@ export default {
         this.$router.push({ name: "MyPage" });
       });
     },
+    infiniteHandler($state) {
+      setTimeout(() => {
+        // console.log('무한스크롤')
+        let root = this;
+        // console.log('리미트체크', this.limit, this.check, this.getOotdList.length)
+        this.getOotdListInApi({
+          sort: 0,
+          pageNum: this.limit,
+        });
+        
+        root.getProfiles(this.getOotdList);
+        this.getOotdList.forEach((info) => {
+        root.getImageList({ prefix: "ootd/" + info.ootdIdx }).then((res) => {
+        info.imageUrls = res;
+        });
+    });
+    console.log(this.getOotdList);
+        $state.loaded();
+        this.limit += 1
+        this.check += 4
+
+        if (this.check >= this.getOotdList.length) {
+          $state.complete()
+        }
+      }, 1000)
+    }
   },
 };
 </script>
