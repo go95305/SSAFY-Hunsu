@@ -93,6 +93,7 @@ export default {
       ootd_hashtag: "",
       ootd_hashtag_array: [],
       imageFiles: [],
+      isValid: false,
     };
   },
   computed: {
@@ -111,35 +112,38 @@ export default {
       this.ootd_hashtag_array.splice(index, 1);
     },
     createOotd() {
-      this.dialog = false;
       // let uploadImage = this.uploadImage;
       let imageFiles = this.getUploadImageFiles;
       let clearUploads = this.clearUploads;
       console.log("before send", imageFiles);
+      console.log("사진갯수", this.getUploadImageFiles.length)
       // Ootd 글 내용들
       const params = {
         content: this.ootd_content,
         hashtagList: this.ootd_hashtag_array,
         nickName: this.getNickname,
       };
-      this.createOotdInfo(params).then((res) => {
-        if (!res) {
-          console.log("글 작성 실패");
-        } else {
-          // 이미지 업로드
-          console.log("글 작성 성공 res");
-          if (imageFiles.length !== 0) {
-            console.log("in ootd file", imageFiles);
-            this.uploadImage({ key: "ootd/", articleIdx: res.ootdIdx }).then(
-              () => {
-                clearUploads();
-              }
-            );
 
-            // this.$router.go(this.$router.currentRoute); // 현재 페이지 리로드
+      // 파일이 하나이상, 0 < 글자수 <= 250
+      if ( 
+        this.getUploadImageFiles.length > 0 &&
+        this.ootd_content.length <= 250 &&
+        this.ootd_content.length > 0 
+      ) {
+        // 아무것도 없는 공백막아주기
+        if (this.ootd_content.trim().length > 0) {
+          this.isValid = true
+        } 
+      }
+
+      if (this.isValid) {
+        this.dialog = false;
+        this.createOotdInfo(params).then((res) => {
+          if (!res) {
+            console.log("글 작성 실패");
           } else {
             // 이미지 업로드
-            console.log('글 작성 성공')
+            console.log("글 작성 성공 res");
             if (imageFiles.length !== 0) {
               console.log("in ootd file", imageFiles);
               this.uploadImage({ key: "ootd/", articleIdx: res.ootdIdx }).then(
@@ -150,13 +154,27 @@ export default {
   
               // this.$router.go(this.$router.currentRoute); // 현재 페이지 리로드
             } else {
-              console.log("file X");
+              // 이미지 업로드
+              console.log('글 작성 성공')
+              if (imageFiles.length !== 0) {
+                console.log("in ootd file", imageFiles);
+                this.uploadImage({ key: "ootd/", articleIdx: res.ootdIdx }).then(
+                  () => {
+                    clearUploads();
+                  }
+                );
+    
+                // this.$router.go(this.$router.currentRoute); // 현재 페이지 리로드
+              } else {
+                console.log("file X");
+              }
             }
-          }
-        }});
-        // 추후 자기가 쓴 페이지로 이동하는 것 수정 요망
-        this.ootd_hastag_array = [];
-        
+          }});
+          // 추후 자기가 쓴 페이지로 이동하는 것 수정 요망
+          this.ootd_hastag_array = [];
+      }
+      
+      this.isValid = false  
       },
   fileDeleteButton(e, idx) {
     console.log("delete ", idx);
