@@ -15,14 +15,13 @@
         <!-- <div class="mt-2"></div> -->
         <v-avatar class="mt-5 ml-2">
           <v-img
-            v-if="whatwear.profileImage"
             :src="whatwear.profileImage"
             @click="goToWhatwearDetail(whatwear)"
           />
-          <v-img
+          <!-- <v-img
             v-else
             src="https://s.pstatic.net/static/newsstand/2020/logo/dark/0604/018.png"
-          />
+          /> -->
           <!--유저닉네임-->
         </v-avatar>
         <v-card-subtitle class="mt-4 font-weight-bold" id="nickname">
@@ -106,8 +105,7 @@ export default {
 
     async pageWhatwear() {
       // durldrudlrudrljdruldrldrldlr
-      const pageNum = this.page;
-      await this.getWhatwearListInfoApi(pageNum);
+      await this.getWhatwearListInfoApi(this.page);
       this.getImages();
       // await this.getWhatwearListInfo.forEach(async (info) => {
       //   const profile = await this.getWhatwearProfile(info.uid);

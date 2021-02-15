@@ -10,8 +10,8 @@
     :show-arrows="true"
     hide-delimiter-background
     delimiter-icon="mdi-minus"
-    height="335"
-    width="335"
+    width="116.99"
+    height="116.99"
   >
     <v-carousel-item v-for="(imageUrl, i) in images" :key="i">
       <v-sheet height="100%" tile>
@@ -28,8 +28,9 @@
 
 <script>
 export default {
-  data() {
-    return {};
+  name: "ImageViewForMypage",
+  mounted() {
+    console.log("inImageViewForMypage", this.images)
   },
   props: {
     images: {

@@ -18,7 +18,7 @@
         <v-toolbar-title>프로필수정</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-toolbar-items>
-          <v-btn dark text @click="updateProfile(newNickname, height, size)">
+          <v-btn :disabled="nicknameStatus === 'nope' " dark text @click="updateProfile(newNickname, height, size)">
             완료
           </v-btn>
         </v-toolbar-items>
@@ -54,7 +54,7 @@
             hint="닉네임 중복불가안내, 규칙안내"
             outlined
           ></v-text-field>
-          <v-btn class="d-inline-block">중복체크</v-btn>
+          <v-btn :disabled="getNickname === newNickname" class="d-inline-block" @click="nicknameCheck(newNickname)">중복체크</v-btn>
         </div>
         <div class="mx-5">
           <p class="text-h6 font-weight-bold">추가정보</p>
@@ -80,6 +80,8 @@
 </template>
 <script>
 import { mapActions, mapGetters, mapMutations } from "vuex";
+import { authApi } from '@/services/api';
+
 export default {
   name: "ProfileSetting",
 
@@ -104,6 +106,7 @@ export default {
       newNickname: "",
       height: "",
       size: "",
+      nicknameStatus: '',
     };
   },
   mounted() {
@@ -162,6 +165,20 @@ export default {
         // this.$router.push({ name: "Home" }).catch(() => {});
       });
     },
+    nicknameCheck(nickname) {
+      return authApi.post(`/v1/auth/nickname?nickname=${nickname}`)
+      .then((res) => {
+        console.log(res, '트루니?')
+        if (res.data) {
+          alert('사용가능한 닉네임입니다.')
+          this.nicknameStatus = "yes"
+        } else {
+          alert('이미 사용중인 닉네임입니다.')
+          this.nicknameStatus = "nope"
+
+        }
+      })
+  }
   },
 };
 </script>

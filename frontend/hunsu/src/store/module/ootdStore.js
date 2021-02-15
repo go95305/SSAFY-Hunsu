@@ -52,16 +52,30 @@ const actions = {
       console.log(ootdList);
     }
   },
-  getSearchedListInApi(context, hashtag) {
-    rscApi
+  async getSearchedListInApi(context, hashtag) {
+    const ootdList = await rscApi
       .get(`ootd/hashtag/search/${hashtag}`)
-
-      .then((res) => {
-        context.commit('setOotdList', res.data);
+    if (ootdList) {
+      ootdList.data.forEach((info) => {
+        info.imageUrls = []
       })
-      .catch((err) => {
-        console.error(err);
-      });
+      context.commit('setOotdList', ootdList.data);
+    } else {
+      console.log(ootdList)
+    }
+  },
+  async getClickedHashtagListInApi(context, hashtag) {
+    const ootdList = await rscApi
+      .get(`ootd/hashtag/${hashtag}`)
+    if (ootdList) {
+      ootdList.data.forEach((info) => {
+        info.imageUrls = []
+      })
+      context.commit('setOotdList', ootdList.data);
+      console.log('해시태그검색완료', ootdList.data)
+    } else {
+      console.log(ootdList)
+    }
   },
   async getOotdInfoInApi(context, info) {
     // ootd 디테일 가져오기

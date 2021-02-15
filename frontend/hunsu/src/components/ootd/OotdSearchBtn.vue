@@ -4,7 +4,7 @@
   <!-- 검색어 입력 -->
   <v-text-field color="deep-purple accent-1" v-model="searchWord" label="해시태그 OR 단어 검색" class="d-inline-block pl-3" width="100" @keydown.enter="getSearchedListInApi(searchWord)"></v-text-field>
   <!-- 검색어 입력 후 클릭하는 버튼 -->
-  <v-btn icon class="d-inline-block" @click="getSearchedListInApi(searchWord)">
+  <v-btn icon class="d-inline-block" @click="searchHashtag(searchWord)">
     <v-icon>mdi-magnify</v-icon>
   </v-btn>
   
@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapGetters } from "vuex";
 
 export default {
   name: "OotdSearchBtn",
@@ -21,9 +21,32 @@ export default {
       searchWord: ''
     }
   },
+  computed: {
+    ...mapGetters(["getOotdList"]),
+  },
   methods: {
-    ...mapActions(["getSearchedListInApi"]),
+    ...mapActions([
+      "getSearchedListInApi",
+      "getOotdListInApi",
+      "getOotdInfoInApi",
+      "getImageList",
+      "getProfileInfoInApi",
+      "getProfileImage",
+      "getProfiles",
+      ]),
+    async searchHashtag(searchWord) {
+      let root = this;
+      await this.getSearchedListInApi(searchWord)
+      root.getProfiles(this.getOotdList);
+      this.getOotdList.forEach((info) => {
+        root.getImageList({ prefix: "ootd/" + info.ootdIdx }).then((res) => {
+          info.imageUrls = res;
+        });
+      });
+    }
   }
+
+
 }
 </script>
 

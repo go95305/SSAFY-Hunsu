@@ -90,17 +90,42 @@ export default {
   },
   computed: {
     ...mapGetters(["getOotdList", "getNickname", "getOotdInfo"]),
-    // pageNumCount() {
-    //   if (this.getOotdList) {
-    //     return parseInt(this.getOotdList.length / 6) + 1;
-    //   }
-    //   return "";
-    // },
-    // ootdListLength() {
-    //   if (this.getOotdList) {
-    //     return this.getOotdList.length
-    //   }
-    // }
+    pageNumCount() {
+      if (this.getOotdList) {
+        return parseInt(this.getOotdList.length / 6) + 1;
+      }
+      return "";
+    },
+  },
+  async created() {
+    // let ootdList;
+    let root = this;
+    await this.getOotdListInApi({
+      sort: 0,
+      pageNum: this.pageNumCount,
+    });
+    root.getProfiles(this.getOotdList);
+    this.getOotdList.forEach((info) => {
+      root.getImageList({ prefix: "ootd/" + info.ootdIdx }).then((res) => {
+        // info.imageUrls = res;
+        this.$set(info, "imageUrls", res);
+      });
+      // uid 로 받아와야 프로필 이미지들 가져올 수 있음
+      // root.getProfileImage({
+      //   nickname: info.nickname,
+      // });
+    });
+    console.log(this.getOotdList);
+    // .then((res) => {
+    //   root.getProfiles(res);
+    //   res.forEach((info) => {
+    //     console.log(info);
+    //     root.getImageList({ prefix: "ootd/" + info.ootdIdx }).then((res) => {
+    //       info.imageUrls = res;
+    //       // });
+    //     });
+    //   });
+    // });
   },
   // async created() {
   //   // let ootdList;
