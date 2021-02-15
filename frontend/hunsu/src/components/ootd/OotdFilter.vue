@@ -1,9 +1,8 @@
 <template>
   <!-- 정렬 버튼 -->
-  <v-btn-toggle tile color="red accent-3" group>
-    <v-btn @click="getRecentOotdListInApi()"> 최신순 </v-btn>
-
-    <v-btn @click="getPopularOotdListInApi()"> 인기순 </v-btn>
+  <v-btn-toggle id="ootd_filter" tile color="red accent-3">
+    <v-btn small @click="getRecentOotdListInApi()"> 최신순 </v-btn>
+    <v-btn small @click="getPopularOotdListInApi()"> 인기순 </v-btn>
   </v-btn-toggle>
 </template>
 
@@ -61,4 +60,9 @@ export default {
 </script>
 
 <style>
+#ootd_filter {
+  height: 28px;
+  margin-left: 5%;
+  margin-top: 3%;
+}
 </style>

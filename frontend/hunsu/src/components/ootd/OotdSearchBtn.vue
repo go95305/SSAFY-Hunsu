@@ -1,6 +1,6 @@
 <template>
   <!-- OOTD 검색 버튼 -->
-  <div class="d-inline-block">
+  <div id="searchbar">
     <!-- 검색어 입력 -->
     <v-text-field
       color="deep-purple accent-1"
@@ -57,4 +57,7 @@ export default {
 </script>
 
 <style>
+#searchbar {
+  margin-top: 5%;
+}
 </style>
