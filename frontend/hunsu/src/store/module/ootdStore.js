@@ -27,6 +27,9 @@ const mutations = {
   setOotdReplyInfo(state, ootdReplyInfo) {
     state.ootdReplyInfo = ootdReplyInfo;
   },
+  setOotdReplySetProfile(state, payload) {
+    state.ootdReplyInfo = payload;
+  },
   setOotdList(state, ootdList) {
     state.ootdList = ootdList;
   },
@@ -139,7 +142,7 @@ const actions = {
 
   // 댓글
   createOotdReplyInfo(context, OotdReplyInfo) {
-    rscApi
+    return rscApi
       .post('ootd/reply', OotdReplyInfo)
       .then((res) => {
         context.commit('setOotdReplyInfo', res.data);
@@ -150,7 +153,7 @@ const actions = {
       });
   },
   likeOotdReplyInfo(context, replyIdx) {
-    rscApi
+    return rscApi
       .put(`ootd/reply/like?replyIdx=${replyIdx}`)
       .then((res) => {
         context.commit('setOotdReplyInfo', res.data);
@@ -160,7 +163,7 @@ const actions = {
       });
   },
   deleteOotdReplyInfo(context, replyIdx) {
-    rscApi
+    return rscApi
       .put(`ootd/reply/del?replyIdx=${replyIdx}`)
       .then((res) => {
         context.commit('setOotdReplyInfo', res.data);
@@ -170,7 +173,7 @@ const actions = {
       });
   },
   updateOotdReplyInfo(context, replyInfo) {
-    rscApi
+    return rscApi
       .put('ootd/reply/modi', replyInfo)
       .then((res) => {
         context.commit('setOotdReplyInfo', res.data);

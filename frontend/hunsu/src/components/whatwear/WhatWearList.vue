@@ -2,10 +2,8 @@
   <!-- WHATWEAR 메인 페이지 -->
   <!--v-for 사용을 위한 최상위 div-->
   <v-card flat>
-    <!-- <v-btn @click="testa">test</v-btn> -->
-    <v-btn @click="getImages">test</v-btn>
     <v-card
-      v-for="(whatwear, idx) in getWhatwearListInfo"
+      v-for="(whatwear, idx) in whatwearList"
       :key="idx"
       @click="goToWhatwearDetail(whatwear)"
       flat
@@ -65,7 +63,7 @@ export default {
   name: "WhatWearList",
   data() {
     return {
-      page: 1,
+      whatwearList: [],
       // length: parseInt(this.getWhatwearListInfo.length / 10) + 1
     };
   },
@@ -106,6 +104,7 @@ export default {
     async pageWhatwear() {
       // durldrudlrudrljdruldrldrldlr
       await this.getWhatwearListInfoApi(this.page);
+      this.whatwearList = this.getWhatwearListInfo;
       this.getImages();
       // await this.getWhatwearListInfo.forEach(async (info) => {
       //   const profile = await this.getWhatwearProfile(info.uid);
@@ -114,7 +113,7 @@ export default {
       console.log(this.getWhatwearListInfo);
     },
     getImages() {
-      this.getWhatwearListInfo.forEach(async (info) => {
+      this.whatwearList.forEach(async (info) => {
         const profile = await this.getWhatwearProfile(info.uid);
         console.log(profile);
         this.$set(info, "profileImage", profile);
