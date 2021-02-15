@@ -34,7 +34,7 @@
               </v-avatar>
             </template>
             <v-list>
-              <v-dialog v-model="deleteDialog" persistent max-width="290">
+              <v-dialog v-model="deleteDialog" persistent>
                 <template v-slot:activator="{ on, attrs }">
                   <v-btn
                     color="red accent-4"
@@ -47,19 +47,21 @@
                   </v-btn>
                 </template>
                 <v-card>
-                  <v-card-title class="headline"> 삭제하기 </v-card-title>
-                  <v-card-text>게시글을 삭제하시겠어요?</v-card-text>
+                  <v-card-title class="mb-3 font-weight-bold">해당 글을 삭제하시겠습니까?</v-card-title>
+                  <v-card-subtitle>사진과 글이 삭제됩니다.</v-card-subtitle>
                   <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn
-                      color="blue darken-4"
+                      class="font-weight-bold"
+                      color="primary"
                       text
                       @click="deleteDialog = false"
                     >
                       취소
                     </v-btn>
                     <v-btn
-                      color="red accent-4"
+                      class="font-weight-bold"
+                      color="error"
                       text
                       @click="
                         [
