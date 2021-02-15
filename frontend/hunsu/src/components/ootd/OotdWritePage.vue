@@ -174,6 +174,7 @@ export default {
           this.ootd_hastag_array = [];
       }
       
+      this.$router.push({name: 'OotdDetail' }).catch(() => {})
       this.isValid = false  
       },
   fileDeleteButton(e, idx) {
