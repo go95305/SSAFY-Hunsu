@@ -48,10 +48,12 @@
           <!-- <v-list-item-content>{{ootd.ootdLike}}개의</v-list-item-content> -->
           <v-list-item-action>
             <!-- 좋아요 버튼 -->
-            {{ ootd.ootdLike }}개
-            <v-btn icon class="mr-1">
+            <div>
+            {{ ootd.ootdLike }}
+            <v-btn icon>
               <v-icon color="red">mdi-heart</v-icon>
             </v-btn>
+            </div>
           </v-list-item-action>
         </v-list-item>
       </v-list>

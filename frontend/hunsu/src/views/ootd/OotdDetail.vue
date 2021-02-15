@@ -89,11 +89,14 @@
         </v-list-item-content>
         <!-- ### 좋아요 button -->
         <v-list-item-action>
+          <div>
+            {{ getOotdInfo.likeCount }}
           <v-btn icon @click="toggleLikeInDetail">
             <v-icon v-model="iconName" color="red">{{ iconName }}</v-icon>
-            <!-- <v-icon v-model="iconName" v-else>{{ iconName }}</v-icon> -->
-            <div>{{ getOotdInfo.likeCount }}</div>
           </v-btn>
+          </div>
+            <!-- <v-icon v-model="iconName" v-else>{{ iconName }}</v-icon> -->
+            <!-- <div>{{ getOotdInfo.likeCount }}</div> -->
         </v-list-item-action>
       </v-list-item>
     </v-list>

@@ -1,6 +1,6 @@
 <template>
   <!-- OOTD 작성 페이지 (연필모양 버튼 포함) -->
-  <v-row justify="center" class="d-inline-block">
+  <div id="ootd_write">
     <v-dialog
       v-model="dialog"
       fullscreen
@@ -63,7 +63,7 @@
         </v-list>
       </v-card>
     </v-dialog>
-  </v-row>
+  </div>
 </template>
 
 <script>
@@ -104,8 +104,11 @@ export default {
     ...mapMutations(["clearUploads"]),
 
     addHashtag() {
-      this.ootd_hashtag_array.push(this.ootd_hashtag);
-      this.ootd_hashtag = "";
+      // 해시태그 작성시 빈값이 들어가지않게 막아주기
+      if (this.ootd_hashtag.replace(/(\s*)/g,"").length > 0) {
+        this.ootd_hashtag_array.push(this.ootd_hashtag);
+        this.ootd_hashtag = "";
+      }
     },
     deleteHashtag(hashtag) {
       const index = this.ootd_hashtag_array.indexOf(hashtag);
@@ -131,7 +134,7 @@ export default {
         this.ootd_content.length > 0 
       ) {
         // 아무것도 없는 공백막아주기
-        if (this.ootd_content.trim().length > 0) {
+        if (this.ootd_content.replace(/(\s*)/g,"") > 0) {
           this.isValid = true
         } 
       }
@@ -172,10 +175,10 @@ export default {
           }});
           // 추후 자기가 쓴 페이지로 이동하는 것 수정 요망
           this.ootd_hastag_array = [];
-      }
       
       this.$router.push({name: 'OotdDetail' }).catch(() => {})
       this.isValid = false  
+      }
       },
   fileDeleteButton(e, idx) {
     console.log("delete ", idx);
@@ -196,4 +199,7 @@ export default {
   display: inline-block;
   border: 1px solid #6e1d1d;
 } */
+#ootd_write {
+  margin-right: 5%;
+}
 </style>
