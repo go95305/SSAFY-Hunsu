@@ -251,9 +251,9 @@ public class AuthController {
             "- True / False\n" +
             "** true : 닉네임 사용가능 , false : 닉네임 사용불가")
     @PostMapping(value ="/nickname")
-    public boolean nicknamecheck(@ApiParam("nickname") @RequestParam String nickanme){
+    public boolean nicknamecheck(@ApiParam("nickname") @RequestParam String nickname){
 
-        Optional<User> user = userJpaRepo.findUserByNickname(nickanme);
+        Optional<User> user = userJpaRepo.findUserByNickname(nickname);
         if (user.isPresent()){
             return false;
         }else{
