@@ -43,16 +43,20 @@ public class OotdService {
 
 
     // 최신순 혹은 인기순으로 Ootd값을 정렬해서 가져오는 메소드 QueryDSL을 사용.
-    public List<OotdMainDTO> SortByRecentOrPopularity(int sort, int count) {
+    public OotdMainTotalDTO SortByRecentOrPopularity(int sort, int count) {
+        OotdMainTotalDTO ootdMainTotalDTO = new OotdMainTotalDTO();
         List<OotdMainDTO> ootdMainDTOList = new ArrayList<>();
+        Long totalCount = ootdRepository.countByFlag(true);
         List<Ootd> ootdList = new ArrayList<>();
         if (sort == 0) {
-            PageRequest pageRequest = PageRequest.of(0,6 * (count + 1), Sort.by("WriteDate").descending());
+            PageRequest pageRequest = PageRequest.of(0,4 * (count + 1), Sort.by("WriteDate").descending());
             ootdList = ootdRepository.findByFlag(true, pageRequest);
         } else {
-            PageRequest pageRequest = PageRequest.of(0,6 * (count + 1), Sort.by("Count").descending());
+            PageRequest pageRequest = PageRequest.of(0,4 * (count + 1), Sort.by("Count").descending());
             ootdList = ootdRepository.findByFlag(true, pageRequest);
         }
+
+        System.out.println(ootdList.size());
 
         for (int i = 0; i < ootdList.size(); i++) {
             if (ootdList.get(i).getFlag()) {
@@ -70,7 +74,9 @@ public class OotdService {
                 ootdMainDTOList.add(ootdMainDTO);
             }
         }
-        return ootdMainDTOList;
+        ootdMainTotalDTO.setOotdMainDTOList(ootdMainDTOList);
+        ootdMainTotalDTO.setCount(totalCount);
+        return ootdMainTotalDTO;
     }
 
 
@@ -145,7 +151,7 @@ public class OotdService {
     //해시태그를 눌렀을때 해당해시태그가 포함된 모든 Ootd글들을 가져온다.
     public List<OotdMainDTO> searchByHashtagClick(String hashtag) {
         //우선 hashtag를 포함하는 모든 해시태그 테이블의 레코드를 가져온다.
-        List<Hashtag> hashtagList = hashtagRepository.findByContent(hashtag); // 1. 우선 해시태그가 포함된 모든 hashtag 레코드 가져오기
+        List<Hashtag> hashtagList = hashtagRepository.findByContentAndFlag(hashtag, true); // 1. 우선 해시태그가 포함된 모든 hashtag 레코드 가져오기
         List<OotdMainDTO> ootdMainDTOList = hashtagSearch(hashtagList);
         return ootdMainDTOList;
     }
@@ -167,6 +173,7 @@ public class OotdService {
                 ootdMainDTO.setNickname(ootd.getUser().getNickname());
                 ootdMainDTO.setOotdContent(ootd.getContent());
                 ootdMainDTO.setOotdLike(ootd.getCount());
+                ootdMainDTO.setUid(ootd.getUser().getUid());
                 List<Hashtag> hashtagDTOList = hashtagRepository.findHashtagByOotdIdx(ootd.getIdx());
                 for (int j = 0; j < hashtagDTOList.size(); j++) {
                     if (hashtagDTOList.get(j).getFlag())
@@ -175,6 +182,8 @@ public class OotdService {
                 ootdMainDTOList.add(ootdMainDTO);
             }
         }
+
+
         return ootdMainDTOList;
     }
 

@@ -33,6 +33,7 @@ public class OotdController {
             "- sort(path): 최신순(0)/인기순(1) 정렬\n" +
             "- count(Path): 더보기 클릭된 횟수\n\n" +
             "Response\n" +
+            "- count: ootd글 카운트" +
             "- OotdMainDTO\n" +
             "-- ootdIdx: ootd의 idx(글번호)\n" +
             "-- nickname: ootd글 작성자 닉네임\n" +
@@ -40,9 +41,9 @@ public class OotdController {
             "-- uid: ootd글 작성자의 uid(이미지에 필요)\n" +
             "-- ootdLike: ootd글 좋아요 카운트\n" +
             "-- hashtagList(String 배열): ootd글 해시태그 리스트\n")
-    public List<OotdMainDTO> ootdSortedList(@RequestHeader("X-AUTH-ACCESS") String jwtToken,  @PathVariable int sort, @PathVariable int count) {
-        List<OotdMainDTO> ootdMainDTOList = ootdService.SortByRecentOrPopularity(sort, count);
-        return ootdMainDTOList;
+    public OotdMainTotalDTO ootdSortedList(@RequestHeader("X-AUTH-ACCESS") String jwtToken,  @PathVariable int sort, @PathVariable int count) {
+        OotdMainTotalDTO ootdMainTotalDTO = ootdService.SortByRecentOrPopularity(sort, count);
+        return ootdMainTotalDTO;
     }
 
     @GetMapping("/ootd/detail/{ootdIdx}") // ootd_idx,content,count,is_updated,write_date,nickname
