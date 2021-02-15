@@ -63,6 +63,7 @@ export default {
   name: "WhatWearList",
   data() {
     return {
+      page: 1,
       whatwearList: [],
       // length: parseInt(this.getWhatwearListInfo.length / 10) + 1
     };
