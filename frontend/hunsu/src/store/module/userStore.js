@@ -148,14 +148,13 @@ const actions = {
       jwtToken: state.accessToken,
       jwtRefresh: state.refreshToken,
     });
-    // console.log('in kakaologin result ', res);
     commit('setAllInfo', {
       accessToken: res.data.jwtToken,
       refreshToken: res.data.jwtRefresh,
       nickname: res.data.nickname,
       uid: res.data.uid,
     });
-    // console.log('in tokenLogin', res);
+    console.log('in tokenLogin', res);
   },
   getProfileInfoInApi(context, targetNickname) {
     // 상대 프로필 정보 가져오기
@@ -218,7 +217,6 @@ const actions = {
       }
     });
   },
-
 };
 
 export default {
