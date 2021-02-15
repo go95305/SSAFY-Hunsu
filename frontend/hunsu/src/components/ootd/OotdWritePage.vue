@@ -131,7 +131,7 @@ export default {
         this.ootd_content.length > 0 
       ) {
         // 아무것도 없는 공백막아주기
-        if (this.ootd_content.trim().length > 0) {
+        if (this.ootd_content.replace(/(\s*)/g,"") > 0) {
           this.isValid = true
         } 
       }
@@ -172,10 +172,10 @@ export default {
           }});
           // 추후 자기가 쓴 페이지로 이동하는 것 수정 요망
           this.ootd_hastag_array = [];
-      }
       
       this.$router.push({name: 'OotdDetail' }).catch(() => {})
       this.isValid = false  
+      }
       },
   fileDeleteButton(e, idx) {
     console.log("delete ", idx);
