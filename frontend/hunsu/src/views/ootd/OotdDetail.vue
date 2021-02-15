@@ -52,7 +52,8 @@
       :show-arrows="true"
       hide-delimiter-background
       delimiter-icon="mdi-minus"
-      height="330"
+      width="375"
+      height="375"
     >
       <v-carousel-item v-for="(imageUrl, i) in getOotdInfoImages" :key="i">
         <v-sheet height="100%" tile>
@@ -74,13 +75,16 @@
           <!-- ### Hashtag -->
           <v-list-item-subtitle>
             <!-- 추후 해쉬태그에 검색 링크 걸 예정 -->
-            <p
+            <v-btn
               v-for="(hashtag, i) in getOotdInfo.hashtagList"
               :key="i"
               style="display: inline"
+              text
+              class="px-0"
+              @click="searchHashtag(hashtag)"
             >
               {{ "#" + hashtag }}
-            </p>
+            </v-btn>
           </v-list-item-subtitle>
         </v-list-item-content>
         <!-- ### 좋아요 button -->
@@ -277,6 +281,7 @@ export default {
       "getProfileImage",
       "getOotdListInApi",
       "getProfiles",
+      "getClickedHashtagListInApi"
     ]),
     onoffUpdateDialog() {
       // 수정 dialog 활성화
@@ -359,6 +364,10 @@ export default {
       }
       this.toggleLike(this.getNickname);
     },
+    searchHashtag(hashtag) {
+      this.$router.push({ name: "Ootd" }).catch(() => {});
+      this.getClickedHashtagListInApi(hashtag)
+    }
   },
 };
 </script>

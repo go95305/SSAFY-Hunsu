@@ -153,19 +153,19 @@ export default {
               console.log("file X");
             }
           }
-        });
+        }});
         // 추후 자기가 쓴 페이지로 이동하는 것 수정 요망
         this.ootd_hastag_array = [];
         
-      }
-    },
+      },
   fileDeleteButton(e, idx) {
     console.log("delete ", idx);
     const targetIdx = e.target.getAttribute("idx");
     this.imageFiles = this.imageFIles.filter((data, idx) => idx !== targetIdx);
   },
-  },
-};
+    },
+  }
+
 </script>
 
 <style>

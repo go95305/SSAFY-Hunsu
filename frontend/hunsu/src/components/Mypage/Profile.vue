@@ -189,7 +189,7 @@
                   cols="4"
                 >
                   <v-card outlined tile>
-                    <ImageView
+                    <ImageViewForMypage
                       :images="ootd.img"
                       @click.native="goToOotdDetail(ootd.ootdIdx)"
                     />
@@ -205,9 +205,12 @@
               style="padding: 0px"
             >
               <v-row no-gutters>
-                <v-col v-for="i in ootdLikeListLength" :key="i" cols="4">
+                <v-col v-for="(like, idx) in profileData.imageListForLike" :key="idx" cols="4">
                   <v-card outlined tile>
-                    <v-img src="@/assets/ootdtest.png"> </v-img>
+                    <ImageViewForMypage
+                      :images="like.imglike"
+                      @click.native="goToOotdDetailForLike(like.ootdIdx)"
+                    />
                   </v-card>
                 </v-col>
               </v-row>
@@ -219,16 +222,17 @@
   </v-container>
 </template>
 <script>
-import axios from "axios";
 import ProfileSetting from "@/components/Mypage/ProfileSetting";
 import { mapGetters, mapActions, mapMutations } from "vuex";
-import ImageView from "@/components/module/ImageView";
+import ImageViewForMypage from "@/components/module/ImageViewForMypage";
+import { rscApi } from '@/services/api';
+
 
 export default {
   name: "Profile",
   components: {
     ProfileSetting,
-    ImageView,
+    ImageViewForMypage,
   },
   data() {
     return {
@@ -298,18 +302,24 @@ export default {
       await this.getProfileInfoInApi(getUserInfo.mypageNickname);
       this.profileData = this.getUserInfo;
       let imageList = [];
+      let imageListForLike = []
       //이미지 받아온 후
       this.profileData.ootd_list.map(async (idx) => {
         let img = await this.getImageList({ prefix: "ootd/" + idx });
         imageList.push({ img, ootdIdx: idx });
       });
+      this.profileData.ootd_like_list.map(async (idx) => {
+        let imglike = await this.getImageList({ prefix: "ootd/" + idx });
+        imageListForLike.push({ imglike, ootdIdx: idx });
+      });
       //마지막에 this.$set으로 넣어주면, 리스트가 나중에 들어가도 데이터바인딩 됩니당
       this.$set(this.profileData, "imageList", imageList);
+      this.$set(this.profileData, "imageListForLike", imageListForLike);
     },
     followThisUser() {
       const yourNickname = this.getUserInfo.mypageNickname;
-      axios
-        .post("http://i4c102.p.ssafy.io:8080/api/user/follow", yourNickname)
+      rscApi
+        .post(`http://i4c102.p.ssafy.io:8080/api/user/follow?nickname=${yourNickname}`)
         .then((res) => {
           if (res.data) {
             console.log("팔로우성공");
@@ -335,6 +345,19 @@ export default {
       const images = await root.getImageList({ prefix: "ootd/" + idx });
       root.setOotdInfoImages(images);
       console.log(this.getOotdInfo);
+      await this.getProfileImage({
+        uid: this.getOotdInfo.uid,
+        target: "target",
+      });
+      this.$router.push({ name: "OotdDetail" });
+    },
+    async goToOotdDetailForLike(idx) {
+      let root = this;
+      await this.getOotdInfoInApi({
+        ootdIdx: idx,
+      });
+      const images = await root.getImageList({ prefix: "ootd/" + idx });
+      root.setOotdInfoImages(images);
       await this.getProfileImage({
         uid: this.getOotdInfo.uid,
         target: "target",

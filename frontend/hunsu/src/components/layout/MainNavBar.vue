@@ -121,7 +121,7 @@ export default {
           uid: this.getUid,
           target: "target",
         });
-        this.$router.push({ name: "MyPage" });
+        this.$router.push({ name: "MyPage" }).catch(() => {})
       } else if (item.text === "Logout") {
         this.logout();
       }
