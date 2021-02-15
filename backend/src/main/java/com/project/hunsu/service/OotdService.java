@@ -48,10 +48,10 @@ public class OotdService {
         List<Ootd> ootdList = new ArrayList<>();
         if (sort == 0) {
             PageRequest pageRequest = PageRequest.of(0,6 * (count + 1), Sort.by("WriteDate").descending());
-            ootdList = ootdRepository.findBy(pageRequest);
+            ootdList = ootdRepository.findByFlag(true, pageRequest);
         } else {
             PageRequest pageRequest = PageRequest.of(0,6 * (count + 1), Sort.by("Count").descending());
-            ootdList = ootdRepository.findBy(pageRequest);
+            ootdList = ootdRepository.findByFlag(true, pageRequest);
         }
 
         for (int i = 0; i < ootdList.size(); i++) {
