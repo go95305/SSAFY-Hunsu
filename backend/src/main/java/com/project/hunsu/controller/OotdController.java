@@ -28,33 +28,49 @@ public class OotdController {
     private EntityManager entityManager;
 
     @GetMapping("/ootd/{sort}/{count}")  //ootd_idx, 닉네임, 글내용, 해시태그, 좋아요 개수
-    @ApiOperation(value = "마이페이지 (프론트 수정 필요)", notes = "\n\n" +
-            "Parameter\n" +
-            "- jwtToken(RequestHeader)      --수정\n" +
-            "- sort(path): 최신순(0)/인기순(1) 정렬" +
-            "- count(Path): 더보기 클릭된 횟수\n" +
+    @ApiOperation(value = "Ootd 리스트 출력", notes = "Parameter\n" +
+            "- jwtToken(RequestHeader)\n" +
+            "- sort(path): 최신순(0)/인기순(1) 정렬\n" +
+            "- count(Path): 더보기 클릭된 횟수\n\n" +
             "Response\n" +
-            "- 모든 ootd글을 정렬된 상태로 리턴\n")
+            "- OotdMainDTO\n" +
+            "-- ootdIdx: ootd의 idx(글번호)\n" +
+            "-- nickname: ootd글 작성자 닉네임\n" +
+            "-- ootdContent: ootd글 내용\n" +
+            "-- uid: ootd글 작성자의 uid(이미지에 필요)\n" +
+            "-- ootdLike: ootd글 좋아요 카운트\n" +
+            "-- hashtagList(String 배열): ootd글 해시태그 리스트\n")
     public List<OotdMainDTO> ootdSortedList(@RequestHeader("X-AUTH-ACCESS") String jwtToken,  @PathVariable int sort, @PathVariable int count) {
         List<OotdMainDTO> ootdMainDTOList = ootdService.SortByRecentOrPopularity(sort, count);
         return ootdMainDTOList;
     }
 
     @GetMapping("/ootd/detail/{ootdIdx}") // ootd_idx,content,count,is_updated,write_date,nickname
-    @ApiOperation(value = "상세페이지 (프론트 수정 필요)", notes = "\n\n" +
-            "Parameter\n" +
-            "- jwtToken(RequestHeader)      --수정\n" +
-            "- ootdIdx(path): 보고자하는 글의 idx" +
-            "Response \n" +
-            "- ootdIdx: ootd글번호\n" +
-            "- content: 해당 ootd글 내용\n" +
-            "- likeCount: ootd글 좋아요 개수\n" +
-            "- isUpdated: ootd글의 수정 여부\n" +
-            "- writeDate: 글 작성 날짜\n" +
-            "- nickname\n" +
-            "- hashtagList: 해당 글의 해시태그들\n" +
-            "- ootdReplyList: 해당 글의 댓글 리스트\n" +
-            "- likeChk: 상세페이지에 들어간 유저가 해당글을 좋아요 눌렀는지 여부")
+    @ApiOperation(value = "Ootd 상세페이지", notes = "Parameter\n" +
+            "- jwtToken(RequestHeader)\n" +
+            "- ootdIdx(path): 선택된 ootd의 idx(글번호)\n\n" +
+            "Response\n" +
+            "- ootdIdx: ootd의 idx(글번호)\n" +
+            "- content: ootd글 내용\n" +
+            "- likeCount: ootd글 좋아요 카운트\n" +
+            "- uid: ootd글 작성자의 uid(이미지에 필요)" +
+            "- isUpdated: ootd글 수정 여부\n" +
+            "- writeDate: ootd글 작성 날짜\n" +
+            "- nickname: ootd글 작성자 닉네임\n" +
+            "- hashtagList(String 배열): ootd글 해시태그 리스트\n" +
+            "- likeChk: 사용자(페이지 보는사람)의 해당글에 대한 좋아요 활성화 여부\n" +
+            "- ootdReplyDTOList(OotdReplyDTO 배열): 해당 글의 댓글 리스트\n" +
+            "-- replyIdx: 댓글의 idx\n" +
+            "-- ootdIdx: 댓글이 게시된 ootd글 idx(글번호)\n" +
+            "-- nickname: 댓글 작성자 닉네임\n" +
+            "-- uid: 댓글 작성자 uid\n" +
+            "-- depth: 댓글 종류(댓글-0, 대댓글-1)\n" +
+            "-- write_date: 댓글 작성 날짜\n" +
+            "-- content: 댓글 내용\n" +
+            "-- groupNum: 댓글의 그룹 넘버(어떤 글의 댓글, 대댓글인지 그룹 구분)\n" +
+            "-- likeCount: 댓글 좋아요 카운트\n" +
+            "-- like: 사용자(페이지 보는사람)의 해당댓글에 대한 좋아요 활성화 여부\n" +
+            "-- isDeleted: 댓글의 삭제 여부\n")
     public OotdDetailDTO detailOotd(@RequestHeader("X-AUTH-ACCESS") String jwtToken, @PathVariable("ootdIdx") Long ootdIdx) {
         String nickname=userRepository.findUserByJwtAccess(jwtToken).getNickname();
         OotdDetailDTO ootdDetailDTO = ootdService.SpecificOotd(ootdIdx, nickname);
@@ -64,14 +80,15 @@ public class OotdController {
 
     @PutMapping("/ootd/modi")
     @Transactional
-    @ApiOperation(value = "Ootd 글수정 (프론트 수정 필요)", notes = "\n\n" +
+    @ApiOperation(value = "Ootd 글수정", notes = "\n\n" +
             "Parameter\n" +
-            "- jwtToken(RequestHeader)      --수정\n" +
-            "- ootdIdx: 글 번호\n" +
-            "- hashtag: 새로 수정할 해시태그\n" +
-            "- content: 새로 수정할 글 내용\n" +
+            "- jwtToken(RequestHeader)\n" +
+            "- RequestBody\n" +
+            "-- ootdIdx: ootd의 idx(글번호)\n" +
+            "-- hashtagList(String 배열): 수정할 ootd글 해시태그 리스트\n" +
+            "-- content: 수정할 ootd글 내용\n\n" +
             "Response \n" +
-            "- 수정 성공 혹은 실패 여부(success or fail)")
+            "- state: 수정 성공(success) 혹은 실패(fail) 여부\n")
     public String updateOotd(@RequestHeader("X-AUTH-ACCESS") String jwtToken, @Valid @RequestBody OotdUpdateDTO ootdUpdateDTO) {
         Ootd ootd = entityManager.find(Ootd.class, ootdUpdateDTO.getOotdIdx());
         String state = "";
@@ -85,17 +102,19 @@ public class OotdController {
 
     @PutMapping("/ootd/del")
     @Transactional
-    @ApiOperation(value = "Ootd 글삭제(비활성화) (프론트 수정 필요: uri 수정 + delete->put)", notes = "Parameter\n" +
-            "- jwtToken(RequestHeader)      --수정\n" +
-            "- ootdIdx: 글 번호      --수정\n" +
+    @ApiOperation(value = "Ootd 글삭제", notes = "Parameter\n" +
+            "- jwtToken(RequestHeader)\n" +
+            "- ootdIdx(param): ootd의 idx(글번호)\n\n" +
             "Response\n" +
-            "- 글 비활성화 성공여부(success or fail)")
+            "- state: 수정 성공(success) 혹은 실패(fail) 여부")
     public String deleteOotd(@RequestHeader("X-AUTH-ACCESS") String jwtToken, @RequestParam Long ootdIdx) {
         boolean flag = ootdService.deleteOotd(ootdIdx); //글 비활성화
+        String state = "";
         if (flag)
-            return "success";
+            state = "success";
         else
-            return "fail";
+            state = "fail";
+        return state;
     }
 
     /**
@@ -103,12 +122,13 @@ public class OotdController {
      */
     @PutMapping("/ootd/like")
     @Transactional
-    @ApiOperation(value = "Ootd글 좋아요 (프론트 수정 필요)", notes = "Parameter\n" +
-            "- jwtToken(RequestHeader)      --수정\n" +
-            "- nickname: 닉네임\n" +
-            "- ootdIdx: 글 번호\n" +
+    @ApiOperation(value = "Ootd글 좋아요", notes = "Parameter\n" +
+            "- jwtToken(RequestHeader)\n" +
+            "- RequestBody\n" +
+            "-- nickname: 사용자(좋아요 누르는 사람)의 닉네임\n" +
+            "-- ootdIdx: ootd의 idx(글번호)\n\n" +
             "Response\n" +
-            "- 좋아요 추가 - true  좋아요 해제 - false") // 성공
+            "- chk: 좋아요 활성화(true) 비활성화(false)") // 성공
     public Boolean ootdLike(@RequestHeader("X-AUTH-ACCESS") String jwtToken, @Valid @RequestBody OotdLikeDTO ootdLikeDTO) {
         Ootd ootd = entityManager.find(Ootd.class, ootdLikeDTO.getOotdIdx());
         List<OotdLikeDTO> ootdLikeDTOList = null;
@@ -121,22 +141,34 @@ public class OotdController {
 
 
     @GetMapping("/ootd/hashtag/{hashtag}") //
-    @ApiOperation(value = "Ootd 해시태그기반 검색(해시태그 클릭) (프론트 수정 필요)", notes = "Parameter\n" +
-            "- jwtToken(RequestHeader)      --수정\n" +
-            "- hashtag(path): 검색할 해시태그\n" +
+    @ApiOperation(value = "Ootd 해시태그기반 검색(해시태그 클릭)", notes = "Parameter\n" +
+            "- jwtToken(RequestHeader)\n" +
+            "- hashtag(path): 검색할 해시태그\n\n" +
             "Response\n" +
-            "- List<OotdMainDTO>(해시태그가 포함된 모든 ootd글)")
+            "- ootdMainDTOList(OotdMainDTO 배열)\n" +
+            "-- ootdIdx: ootd의 idx(글번호)\n" +
+            "-- nickname: ootd글 작성자 닉네임\n" +
+            "-- ootdContent: ootd글 내용\n" +
+            "-- uid: ootd글 작성자의 uid(이미지에 필요)\n" +
+            "-- ootdLike: ootd글 좋아요 카운트\n" +
+            "-- hashtagList(String 배열): ootd글 해시태그 리스트\n")
     public List<OotdMainDTO> hashtagSearchByClick(@RequestHeader("X-AUTH-ACCESS") String jwtToken, @PathVariable String hashtag) {
         List<OotdMainDTO> ootdMainDTOList = ootdService.searchByHashtagClick(hashtag);
         return ootdMainDTOList;
     }
 
     @GetMapping("/ootd/hashtag/search/{hashtag}") //
-    @ApiOperation(value = "Ootd 해시태그기반 검색(해시태그 입력) (프론트 수정 필요)", notes = "Parameter\n" +
-            "- jwtToken(RequestHeader)      --수정\n" +
-            "- hashtag(path): 검색할 해시태그 문자열\n" +
+    @ApiOperation(value = "Ootd 해시태그기반 검색(해시태그 입력)", notes = "Parameter\n" +
+            "- jwtToken(RequestHeader)\n" +
+            "- hashtag(path): 검색할 해시태그 문자열\n\n" +
             "Response\n" +
-            "- List<OotdMainDTO>(해시태그 문자열이 포함된 모든 ootd글)")
+            "- ootdMainDTOList(OotdMainDTO 배열)\n" +
+            "-- ootdIdx: ootd의 idx(글번호)\n" +
+            "-- nickname: ootd글 작성자 닉네임\n" +
+            "-- ootdContent: ootd글 내용\n" +
+            "-- uid: ootd글 작성자의 uid(이미지에 필요)\n" +
+            "-- ootdLike: ootd글 좋아요 카운트\n" +
+            "-- hashtagList(String 배열): ootd글 해시태그 리스트\n")
     public List<OotdMainDTO> hashtagSearchByInput(@RequestHeader("X-AUTH-ACCESS") String jwtToken, @PathVariable String hashtag) {
         List<OotdMainDTO> ootdMainDTOList = ootdService.searchByHashtagInput(hashtag);
         return ootdMainDTOList;
@@ -144,33 +176,59 @@ public class OotdController {
 
     @Transactional(rollbackOn = RuntimeException.class)
     @PostMapping("/ootd") // 내용, 닉네임 같은것 입력하면 ootd에만 들어가고 해시태그 안들어가는 오류발생
-    @ApiOperation(value = "Ootd글 작성 (프론트 수정 필요)", notes = "Parameter\n" +
-            "- jwtToken(RequestHeader)      --수정\n" +
-            "- nickName(닉네임)\n" +
-            "- content(작성할 내용)\n" +
-            "- hashtag(작성할 해시태그)\n" +
+    @ApiOperation(value = "Ootd글 작성", notes = "Parameter\n" +
+            "- jwtToken(RequestHeader)\n" +
+            "- RequestBody\n" +
+            "-- nickName: ootd글 작성자 닉네임\n" +
+            "-- content: ootd글 내용\n" +
+            "-- hashtagList(String 배열): ootd글 해시태그 리스트\n\n" +
             "Response\n" +
-            "- 작성한 ootd글 정보(ootdIdx,hastagList,writeDate,content,nickname,likeChk,likecount)")
+            "- ootdIdx: ootd의 idx(글번호)\n" +
+            "- content: ootd글 내용\n" +
+            "- likeCount: ootd글 좋아요 카운트\n" +
+            "- uid: ootd글 작성자의 uid(이미지에 필요)" +
+            "- isUpdated: ootd글 수정 여부\n" +
+            "- writeDate: ootd글 작성 날짜\n" +
+            "- nickname: ootd글 작성자 닉네임\n" +
+            "- hashtagList(String 배열): ootd글 해시태그 리스트\n" +
+            "- likeChk: 사용자(페이지 보는사람)의 해당글에 대한 좋아요 활성화 여부\n" +
+            "- ootdReplyDTOList(OotdReplyDTO 배열): 해당 글의 댓글 리스트\n" +
+            "-- replyIdx: 댓글의 idx(글번호)\n" +
+            "-- ootdIdx: 댓글이 게시된 ootd글 idx(글번호)\n" +
+            "-- nickname: 댓글 작성자 닉네임\n" +
+            "-- uid: 댓글 작성자 uid\n" +
+            "-- depth: 댓글 종류(댓글-0, 대댓글-1)\n" +
+            "-- write_date: 댓글 작성 날짜\n" +
+            "-- content: 댓글 내용\n" +
+            "-- groupNum: 댓글의 그룹 넘버(어떤 글의 댓글, 대댓글인지 그룹 구분)\n" +
+            "-- likeCount: 댓글 좋아요 카운트\n" +
+            "-- like: 사용자(페이지 보는사람)의 해당댓글에 대한 좋아요 활성화 여부\n" +
+            "-- isDeleted: 댓글의 삭제 여부\n")
     public OotdDetailDTO writeOotd(@RequestHeader("X-AUTH-ACCESS") String jwtToken, @Valid @RequestBody OotdWriteDTO ootdWriteDTO) {
         OotdDetailDTO ootdDetailDTO = ootdService.writeOotd(ootdWriteDTO);
         return ootdDetailDTO;
     }
 
     @PostMapping("/ootd/reply")
-    @ApiOperation(value = "Ootd글 댓글 작성 (프론트 수정 필요)", notes = "Parameter\n" +
-            "- jwtToken(RequestHeader)      --수정\n" +
-            "- replyIdx: 작성될 댓글 번호 - null\n" +
-            "- ootdIdx: 댓글을 작성할 ootd글 번호\n" +
-            "- nickname: 댓글 작성자 닉네임\n" +
-            "- content: 댓글 내용\n" +
-            "- depth: 댓글혹은대댓글여부 - null\n" +
-            "- write_date: 작성날짜 - null\n" +
-            "- like: 현재 유저가 좋아요 눌렀지의 여부 - null\n" +
-            "- groupNum: 어느 글에 종속된 댓글인지의 그룹 - null\n" +
-            "- likeCount: 댓글 좋아요 개수 - null\n" +
-            "- isDeleted: 댓글 삭제 여부 - null\n" +
+    @ApiOperation(value = "Ootd글 댓글 작성", notes = "Parameter\n" +
+            "- jwtToken(RequestHeader)\n" +
+            "- RequestBody\n" +
+            "-- ootdIdx: 댓글을 작성할 ootd글 번호\n" +
+            "-- nickname: 댓글 작성자 닉네임\n" +
+            "-- content: 댓글 내용\n\n" +
             "Response\n" +
-            "- 해당 글의 댓글 리스트 목록 전체")
+            "- ootdReplyDTOList(OotdReplyDTO 배열): 해당 글의 댓글 리스트\n" +
+            "-- replyIdx: 댓글의 idx(글번호)\n" +
+            "-- ootdIdx: 댓글이 게시된 ootd글 idx(글번호)\n" +
+            "-- nickname: 댓글 작성자 닉네임\n" +
+            "-- uid: 댓글 작성자 uid\n" +
+            "-- depth: 댓글 종류(댓글-0, 대댓글-1)\n" +
+            "-- write_date: 댓글 작성 날짜\n" +
+            "-- content: 댓글 내용\n" +
+            "-- groupNum: 댓글의 그룹 넘버(어떤 글의 댓글, 대댓글인지 그룹 구분)\n" +
+            "-- likeCount: 댓글 좋아요 카운트\n" +
+            "-- like: 사용자(페이지 보는사람)의 해당댓글에 대한 좋아요 활성화 여부\n" +
+            "-- isDeleted: 댓글의 삭제 여부\n")
     public List<OotdReplyDTO> ootdReplyWrite(@RequestHeader("X-AUTH-ACCESS") String jwtToken, @Valid @RequestBody OotdReplyDTO ootdreplyDTO) {
         List<OotdReplyDTO> ootdReplyDTOList = null;
         ootdReplyDTOList = ootdService.writeReply(ootdreplyDTO);
@@ -179,12 +237,24 @@ public class OotdController {
 
     @PutMapping("/ootd/reply/modi")
     @Transactional
-    @ApiOperation(value = "Ootd글 댓글 수정 (프론트 수정 필요: uri수정도)", notes = "Parameter\n" +
-            "- jwtToken(RequestHeader)      --수정\n" +
-            "- replyIdx(댓글 번호)\n" +
-            "- content(댓글 내용)\n" +
+    @ApiOperation(value = "Ootd글 댓글 수정", notes = "Parameter\n" +
+            "- jwtToken(RequestHeader)\n" +
+            "- RequestBody\n" +
+            "-- replyIdx(댓글 번호)\n" +
+            "-- content(댓글 내용)\n\n" +
             "Response\n" +
-            "- 해당 글의 댓글 리스트 목록 전체")
+            "- ootdReplyDTOList(OotdReplyDTO 배열): 해당 글의 댓글 리스트\n" +
+            "-- replyIdx: 댓글의 idx(글번호)\n" +
+            "-- ootdIdx: 댓글이 게시된 ootd글 idx(글번호)\n" +
+            "-- nickname: 댓글 작성자 닉네임\n" +
+            "-- uid: 댓글 작성자 uid\n" +
+            "-- depth: 댓글 종류(댓글-0, 대댓글-1)\n" +
+            "-- write_date: 댓글 작성 날짜\n" +
+            "-- content: 댓글 내용\n" +
+            "-- groupNum: 댓글의 그룹 넘버(어떤 글의 댓글, 대댓글인지 그룹 구분)\n" +
+            "-- likeCount: 댓글 좋아요 카운트\n" +
+            "-- like: 사용자(페이지 보는사람)의 해당댓글에 대한 좋아요 활성화 여부\n" +
+            "-- isDeleted: 댓글의 삭제 여부\n")
     public List<OotdReplyDTO> ootdReplyUpdate(@RequestHeader("X-AUTH-ACCESS") String jwtToken, @Valid @RequestBody OotdReplyUpdateDTO ootdReplyUpdateDTO) {
         List<OotdReplyDTO> ootdReplyDTOList = ootdService.updateReply(ootdReplyUpdateDTO);
         return ootdReplyDTOList;
@@ -192,11 +262,22 @@ public class OotdController {
 
     @PutMapping("/ootd/reply/del")
     @Transactional
-    @ApiOperation(value = "Ootd글 댓글 삭제 (프론트 수정 필요: uri수정도)", notes = "Parameter\n" +
-            "- jwtToken(RequestHeader)      --수정\n" +
-            "- replyIdx: 댓글 번호      --수정(path -> requestParam)\n" +
+    @ApiOperation(value = "Ootd글 댓글 삭제", notes = "Parameter\n" +
+            "- jwtToken(RequestHeader)\n" +
+            "- replyIdx(param): 댓글의 idx(글번호)\n\n" +
             "Response\n" +
-            "- 해당 글의 댓글 리스트 목록 전체")
+            "- ootdReplyDTOList(OotdReplyDTO 배열): 해당 글의 댓글 리스트\n" +
+            "-- replyIdx: 댓글의 idx(글번호)\n" +
+            "-- ootdIdx: 댓글이 게시된 ootd글 idx(글번호)\n" +
+            "-- nickname: 댓글 작성자 닉네임\n" +
+            "-- uid: 댓글 작성자 uid\n" +
+            "-- depth: 댓글 종류(댓글-0, 대댓글-1)\n" +
+            "-- write_date: 댓글 작성 날짜\n" +
+            "-- content: 댓글 내용\n" +
+            "-- groupNum: 댓글의 그룹 넘버(어떤 글의 댓글, 대댓글인지 그룹 구분)\n" +
+            "-- likeCount: 댓글 좋아요 카운트\n" +
+            "-- like: 사용자(페이지 보는사람)의 해당댓글에 대한 좋아요 활성화 여부\n" +
+            "-- isDeleted: 댓글의 삭제 여부\n")
     public List<OotdReplyDTO> ootdReplyDelete(@RequestHeader("X-AUTH-ACCESS") String jwtToken, @RequestParam Long replyIdx) {
         List<OotdReplyDTO> ootdReplyDTOList = ootdService.deleteReply(replyIdx);
         return ootdReplyDTOList;
@@ -204,11 +285,22 @@ public class OotdController {
 
     @Transactional
     @PutMapping("/ootd/reply/like")
-    @ApiOperation(value = "Ootd 댓글에 대한 좋아요 설정 (프론트 수정 필요: uri수정도)", notes = "Parameter\n" +
-            "- jwtToken(RequestHeader)      --수정\n" +
-            "- replyIdx: 댓글 번호      --수정(path -> requestParam)\n" +
+    @ApiOperation(value = "Ootd 댓글에 대한 좋아요", notes = "Parameter\n" +
+            "- jwtToken(RequestHeader)\n" +
+            "- replyIdx(param): 댓글의 idx(글번호)\n\n" +
             "Response\n" +
-            "- 해당 글의 댓글 리스트 목록 전체")
+            "- ootdReplyDTOList(OotdReplyDTO 배열): 해당 글의 댓글 리스트\n" +
+            "-- replyIdx: 댓글의 idx(글번호)\n" +
+            "-- ootdIdx: 댓글이 게시된 ootd글 idx(글번호)\n" +
+            "-- nickname: 댓글 작성자 닉네임\n" +
+            "-- uid: 댓글 작성자 uid\n" +
+            "-- depth: 댓글 종류(댓글-0, 대댓글-1)\n" +
+            "-- write_date: 댓글 작성 날짜\n" +
+            "-- content: 댓글 내용\n" +
+            "-- groupNum: 댓글의 그룹 넘버(어떤 글의 댓글, 대댓글인지 그룹 구분)\n" +
+            "-- likeCount: 댓글 좋아요 카운트\n" +
+            "-- like: 사용자(페이지 보는사람)의 해당댓글에 대한 좋아요 활성화 여부\n" +
+            "-- isDeleted: 댓글의 삭제 여부\n")
     public List<OotdReplyDTO> ootdReplyLike(@RequestHeader("X-AUTH-ACCESS") String jwtToken, @RequestParam Long replyIdx) {
         String nickname=userRepository.findUserByJwtAccess(jwtToken).getNickname();
         List<OotdReplyDTO> ootdReplyDTOList = ootdService.ootdReplyLike(replyIdx, nickname);
