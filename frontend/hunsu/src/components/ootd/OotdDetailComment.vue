@@ -16,7 +16,7 @@
         </v-col>
       </v-row>
     </v-container>
-    <div v-for="(reply, groupNum) in getOotdReplyInfo" :key="groupNum">
+    <div v-for="(reply, groupNum) in ootdReplyInfo" :key="groupNum">
       <!--댓글창-->
       <v-card
         v-if="reply.isDeleted"
@@ -82,13 +82,17 @@ export default {
     groupNum: 0,
     update: false,
     updateReplyIdx: 0,
+    ootdReplyInfo: [],
   }),
   computed: {
     ...mapGetters(["getOotdInfo", "getOotdReplyInfo", "getNickname"]),
   },
   async mounted() {
     //프로필 이미지 가져옴
-    await this.getOotdReplyInfo.map(async (reply) => {
+    this.ootdReplyInfo = this.getOotdReplyInfo;
+    console.log("info", this.ootdReplyInfo);
+
+    await this.ootdReplyInfo.map(async (reply) => {
       const image = await this.getWhatwearProfile(reply.uid);
       console.log("in reply", image);
       this.$set(reply, "profileImage", image);

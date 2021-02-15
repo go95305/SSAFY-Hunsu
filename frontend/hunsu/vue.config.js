@@ -1,11 +1,6 @@
 module.exports = {
-  "transpileDependencies": [
-    "vuetify"
-  ],
-  plugins: [
-    { src: '@/plugins/vue-infinite-loading.js', mode: 'client' }
-  ],
+  transpileDependencies: ['vuetify'],
   devServer: {
-    port: process.env.VUE_APP_PORT || 3000
-  }
-}
+    port: process.env.VUE_APP_PORT || 3000,
+  },
+};
