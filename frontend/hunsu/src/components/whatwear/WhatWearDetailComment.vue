@@ -221,7 +221,7 @@ export default {
     },
     // 댓글좋아요 함수
     async likeWhatwearReply(reply) {
-      await this.likeWhatwearReplyInfo({ replyIdx: reply.idx });
+      await this.likeWhatwearReplyInfo(reply.idx);
       this.getCommentProfileImages();
     },
     // 대댓글작성함수

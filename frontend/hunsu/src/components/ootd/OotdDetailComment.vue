@@ -114,7 +114,6 @@ export default {
       this.ootdReplyInfo = this.getOotdReplyInfo;
       await this.ootdReplyInfo.map(async (reply) => {
         const image = await this.getWhatwearProfile(reply.uid);
-        console.log("in reply", image);
         this.$set(reply, "profileImage", image);
       });
     },
