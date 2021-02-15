@@ -138,18 +138,32 @@ export default {
 
             // this.$router.go(this.$router.currentRoute); // 현재 페이지 리로드
           } else {
-            console.log("file X");
+            // 이미지 업로드
+            console.log('글 작성 성공')
+            if (imageFiles.length !== 0) {
+              console.log("in ootd file", imageFiles);
+              this.uploadImage({ key: "ootd/", articleIdx: res.ootdIdx }).then(
+                () => {
+                  clearUploads();
+                }
+              );
+  
+              // this.$router.go(this.$router.currentRoute); // 현재 페이지 리로드
+            } else {
+              console.log("file X");
+            }
           }
-        }
-      });
-      // 추후 자기가 쓴 페이지로 이동하는 것 수정 요망
-      this.ootd_hastag_array = [];
+        });
+        // 추후 자기가 쓴 페이지로 이동하는 것 수정 요망
+        this.ootd_hastag_array = [];
+        
+      }
     },
-  },
   fileDeleteButton(e, idx) {
     console.log("delete ", idx);
     const targetIdx = e.target.getAttribute("idx");
     this.imageFiles = this.imageFIles.filter((data, idx) => idx !== targetIdx);
+  },
   },
 };
 </script>
