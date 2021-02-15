@@ -8,36 +8,41 @@
       @click="goToWhatwearDetail(whatwear)"
       flat
     >
-      <div class="d-flex align-center pt-4 mb-4">
+      <div>
         <!--프로필사진-->
-        <!-- <div class="mt-2"></div> -->
-        <v-avatar class="mt-5 ml-2">
-          <v-img
-            :src="whatwear.profileImage"
-            @click="goToWhatwearDetail(whatwear)"
-          />
-          <!-- <v-img
-            v-else
-            src="https://s.pstatic.net/static/newsstand/2020/logo/dark/0604/018.png"
-          /> -->
-          <!--유저닉네임-->
-        </v-avatar>
-        <v-card-subtitle class="mt-4 font-weight-bold" id="nickname">
-          {{ whatwear.nickname }}
-        </v-card-subtitle>
-        <!--뭘입을까 글제목-->
-        <v-card-subtitle class="mt-4 font-weight-bold">
-          {{ whatwear.title }}
-        </v-card-subtitle>
-        <!--투표기능뱃지-->
-        <v-badge
-          v-if="whatwear.voteActivated"
-          color="red accent-3"
-          content="투표"
-          inline
-          class="mt-8"
-        >
-        </v-badge>
+        <div class="d-flex ml-4 pt-4">
+          <v-avatar>
+            <v-img
+              :src="whatwear.profileImage"
+              @click="goToWhatwearDetail(whatwear)"
+            />
+            <!-- <v-img
+              v-else
+              src="https://s.pstatic.net/static/newsstand/2020/logo/dark/0604/018.png"
+            /> -->
+          </v-avatar>
+            <!--유저닉네임-->
+          <v-card-subtitle class="mt-3 ml-2 font-weight-bold" id="nickname">
+            {{ whatwear.nickname }}
+          </v-card-subtitle>
+        </div>
+
+        <div class="d-flex align-center mt-3 mb-5">
+          <!--뭘입을까 글제목-->
+          <v-card-subtitle class="ml-5 text-subtitle-1 font-weight-bold" id="title">
+            {{ whatwear.title }}
+          </v-card-subtitle>
+          <!--투표기능뱃지-->
+          <v-badge
+            v-if="whatwear.voteActivated"
+            color="red accent-3"
+            content="투표"
+            inline
+            class="ml-1"
+          >
+          </v-badge>
+        </div>
+        <v-divider></v-divider>
         <!-- <div class="mb-2"></div> -->
       </div>
     </v-card>
@@ -128,11 +133,6 @@ export default {
 </script>
 
 <style>
-#profile {
-  width: 35px;
-  height: 35px;
-}
-
 #nickname {
   padding: 0 0 0 0;
 }
