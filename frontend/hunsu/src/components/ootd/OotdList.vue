@@ -73,6 +73,8 @@
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import ImageView from "@/components/module/ImageView";
 import infiniteLoading from 'vue-infinite-loading';
+// import { rscApi } from '@/services/api';
+
 
 export default {
   name: "OotdList",
@@ -86,6 +88,7 @@ export default {
       imageUrls: [],
       limit: 0,
       check: 0,
+      ootdList: []
     };
   },
   computed: {
@@ -96,19 +99,19 @@ export default {
       }
       return "";
     },
+
   },
   async created() {
     // let ootdList;
     let root = this;
     await this.getOotdListInApi({
       sort: 0,
-      pageNum: this.pageNumCount,
+      pageNum: 0,
     });
     root.getProfiles(this.getOotdList);
     this.getOotdList.forEach((info) => {
       root.getImageList({ prefix: "ootd/" + info.ootdIdx }).then((res) => {
-        // info.imageUrls = res;
-        this.$set(info, "imageUrls", res);
+        info.imageUrls = res;
       });
       // uid 로 받아와야 프로필 이미지들 가져올 수 있음
       // root.getProfileImage({
@@ -127,35 +130,6 @@ export default {
     //   });
     // });
   },
-  // async created() {
-  //   // let ootdList;
-  //   let root = this;
-  //   await this.getOotdListInApi({
-  //     sort: 0,
-  //     pageNum: 0,
-  //   });
-  //   root.getProfiles(this.getOotdList);
-  //   this.getOotdList.forEach((info) => {
-  //     root.getImageList({ prefix: "ootd/" + info.ootdIdx }).then((res) => {
-  //       info.imageUrls = res;
-  //     });
-  //     // uid 로 받아와야 프로필 이미지들 가져올 수 있음
-  //     // root.getProfileImage({
-  //     //   nickname: info.nickname,
-  //     // });
-  //   });
-  //   console.log(this.getOotdList);
-  //   // .then((res) => {
-  //   //   root.getProfiles(res);
-  //   //   res.forEach((info) => {
-  //   //     console.log(info);
-  //   //     root.getImageList({ prefix: "ootd/" + info.ootdIdx }).then((res) => {
-  //   //       info.imageUrls = res;
-  //   //       // });
-  //   //     });
-  //   //   });
-  //   // });
-  // },
   methods: {
     ...mapActions([
       "getOotdInfoInApi",
@@ -193,31 +167,8 @@ export default {
         this.$router.push({ name: "MyPage" });
       });
     },
-    infiniteHandler($state) {
-      setTimeout(() => {
-        // console.log('무한스크롤')
-        let root = this;
-        // console.log('리미트체크', this.limit, this.check, this.getOotdList.length)
-        this.getOotdListInApi({
-          sort: 0,
-          pageNum: this.limit,
-        });
-        
-        root.getProfiles(this.getOotdList);
-        this.getOotdList.forEach((info) => {
-        root.getImageList({ prefix: "ootd/" + info.ootdIdx }).then((res) => {
-        info.imageUrls = res;
-        });
-    });
-    console.log(this.getOotdList);
-        $state.loaded();
-        this.limit += 1
-        this.check += 4
+    infiniteHandler() {
 
-        if (this.check >= this.getOotdList.length) {
-          $state.complete()
-        }
-      }, 1000)
     }
   },
 };

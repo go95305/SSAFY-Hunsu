@@ -51,6 +51,7 @@ const actions = {
     } else {
       console.log(ootdList);
     }
+    
   },
   async getSearchedListInApi(context, hashtag) {
     const ootdList = await rscApi
