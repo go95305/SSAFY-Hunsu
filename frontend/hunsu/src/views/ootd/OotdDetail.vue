@@ -33,7 +33,7 @@
               </v-list-item-title>
             </v-list-item>
             <v-list-item>
-              <v-list-item-title @click="onoffDeleteDialog()" 
+              <v-list-item-title @click="onoffDeleteDialog()"
                 >삭제</v-list-item-title
               >
             </v-list-item>
@@ -105,13 +105,29 @@
       transition="dialog-bottom-transition"
     >
       <v-card>
-        <v-card-title class="mb-3 font-weight-bold">해당 글을 삭제하시겠습니까?</v-card-title>
+        <v-card-title class="mb-3 font-weight-bold"
+          >해당 글을 삭제하시겠습니까?</v-card-title
+        >
         <v-card-subtitle>사진과 글이 삭제됩니다.</v-card-subtitle>
         <v-spacer></v-spacer>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn class="font-weight-bold" color="primary" text @click="onoffDeleteDialog"> 취소 </v-btn>
-          <v-btn class="font-weight-bold" color="error" text @click="deleteOotd"> 삭제 </v-btn>
+          <v-btn
+            class="font-weight-bold"
+            color="primary"
+            text
+            @click="onoffDeleteDialog"
+          >
+            취소
+          </v-btn>
+          <v-btn
+            class="font-weight-bold"
+            color="error"
+            text
+            @click="deleteOotd"
+          >
+            삭제
+          </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -249,6 +265,27 @@ export default {
       }
     },
   },
+  async created() {
+    let root = this;
+    this.getOotdInfoInApi({
+      ootdIdx: this.getOotdInfo.ootdIdx,
+    }).then(() => {
+      root
+        .getImageList({ prefix: "ootd/" + this.getOotdInfo.ootdIdx })
+        .then((res) => {
+          root.setOotdInfoImages(res);
+        })
+        .then(() => {
+          this.getProfileImage({
+            uid: this.getOotdInfo.uid,
+            target: "target",
+          });
+        })
+        .then(() => {
+          this.$router.push({ name: "OotdDetail" }).catch(() => {});
+        });
+    });
+  },
   mounted() {
     // console.log("mounted");
     if (this.getOotdInfo.likeChk) {
@@ -274,7 +311,7 @@ export default {
       "getProfileImage",
       "getOotdListInApi",
       "getProfiles",
-      "getClickedHashtagListInApi"
+      "getClickedHashtagListInApi",
     ]),
     onoffUpdateDialog() {
       // 수정 dialog 활성화
@@ -359,8 +396,8 @@ export default {
     },
     searchHashtag(hashtag) {
       this.$router.push({ name: "Ootd" }).catch(() => {});
-      this.getClickedHashtagListInApi(hashtag)
-    }
+      this.getClickedHashtagListInApi(hashtag);
+    },
   },
 };
 </script>
