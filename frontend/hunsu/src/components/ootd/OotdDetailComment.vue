@@ -88,10 +88,12 @@ export default {
   },
   async mounted() {
     //프로필 이미지 가져옴
-    await this.getOotdReplyInfo.forEach(async (reply) => {
+    await this.getOotdReplyInfo.map(async (reply) => {
       const image = await this.getWhatwearProfile(reply.uid);
+      console.log("in reply", image);
       this.$set(reply, "profileImage", image);
     });
+    console.log(this.getOotdReplyInfo);
   },
   methods: {
     ...mapMutations(["setOotdReplyInfo"]),
