@@ -169,12 +169,20 @@ export default {
                 console.log("file X");
               }
             }
+<<<<<<< HEAD
+          }
+        }});
+        // 추후 자기가 쓴 페이지로 이동하는 것 수정 요망
+        this.ootd_hastag_array = [];
+        
+=======
           }});
           // 추후 자기가 쓴 페이지로 이동하는 것 수정 요망
           this.ootd_hastag_array = [];
       }
       
       this.isValid = false  
+>>>>>>> 1ede0e691b57382df37a99832dad76a7ad5c57c6
       },
   fileDeleteButton(e, idx) {
     console.log("delete ", idx);
@@ -183,6 +191,10 @@ export default {
   },
     },
   }
+<<<<<<< HEAD
+
+=======
+>>>>>>> 1ede0e691b57382df37a99832dad76a7ad5c57c6
 </script>
 
 <style>

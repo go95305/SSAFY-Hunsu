@@ -18,6 +18,7 @@ rscApi.interceptors.request.use(
       };
     }
     // Do something before request is sent
+    console.log('토큰이다', store.getters.getAccessToken)
     return config;
   },
   function(error) {
