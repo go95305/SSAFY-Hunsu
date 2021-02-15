@@ -185,7 +185,7 @@ public class OotdService {
             }
         }
 
-        ootdMainDTOList = ootdMainDTOList.stream().sorted(Comparator.comparing(OotdMainDTO::getOotdIdx)).collect(Collectors.toList());
+        ootdMainDTOList = ootdMainDTOList.stream().sorted(Comparator.comparing(OotdMainDTO::getOotdIdx).reversed()).collect(Collectors.toList());
 
         return ootdMainDTOList;
     }
