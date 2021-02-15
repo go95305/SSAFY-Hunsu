@@ -33,7 +33,7 @@
               </v-list-item-title>
             </v-list-item>
             <v-list-item>
-              <v-list-item-title @click="onoffDeleteDialog()"
+              <v-list-item-title @click="onoffDeleteDialog()" 
                 >삭제</v-list-item-title
               >
             </v-list-item>
@@ -101,20 +101,13 @@
       transition="dialog-bottom-transition"
     >
       <v-card>
-        <v-toolbar dark color="black">
-          <!-- 닫힘버튼 -->
-          <v-btn icon dark @click="onoffDeleteDialog">
-            <v-icon>mdi-close</v-icon>
-          </v-btn>
-          <v-toolbar-title>OOTD 삭제</v-toolbar-title>
-          <v-spacer></v-spacer>
-        </v-toolbar>
-        <v-card-title> 정말로 삭제하시겠습니까? </v-card-title>
+        <v-card-title class="mb-3 font-weight-bold">해당 글을 삭제하시겠습니까?</v-card-title>
+        <v-card-subtitle>사진과 글이 삭제됩니다.</v-card-subtitle>
         <v-spacer></v-spacer>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="error" text @click="deleteOotd"> 삭제 </v-btn>
-          <v-btn color="primary" text @click="onoffDeleteDialog"> 닫기 </v-btn>
+          <v-btn class="font-weight-bold" color="primary" text @click="onoffDeleteDialog"> 취소 </v-btn>
+          <v-btn class="font-weight-bold" color="error" text @click="deleteOotd"> 삭제 </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
