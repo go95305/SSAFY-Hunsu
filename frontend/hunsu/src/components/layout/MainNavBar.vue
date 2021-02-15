@@ -9,7 +9,7 @@
       </v-toolbar-title>
 
       <v-spacer></v-spacer>
-      <v-btn @click="getName()">닉네임출력</v-btn>
+      <!-- <v-btn @click="getName()">닉네임출력</v-btn> -->
       <v-spacer></v-spacer>
       <!--로그인아이콘, 알림아이콘-->
       <div v-if="!getNickname">
@@ -122,7 +122,7 @@ export default {
           uid: this.getUid,
           target: "target",
         });
-        this.$router.push({ name: "MyPage" }).catch(() => {})
+        this.$router.push({ name: "MyPage" }).catch(() => {});
       } else if (item.text === "Logout") {
         this.logout();
       }
