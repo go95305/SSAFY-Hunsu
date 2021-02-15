@@ -53,13 +53,10 @@ const mutations = {
 const actions = {
   async uploadImage({ state }, { key, articleIdx }) {
     // 이미지 업로드
-    console.log('uploadImages', key);
     await state.uploadImageFiles.forEach((imageFile, idx) => {
-      console.log('file', imageFile);
       //파일 확장자
       let fileExtList = imageFile.name.split('.');
       let fileExt = fileExtList[fileExtList.length - 1];
-      console.log(fileExt);
 
       s3.upload(
         {
@@ -73,8 +70,8 @@ const actions = {
             console.log(err);
             return alert('There was an error uploading your photo: ', err.message);
           }
+          console.log('upload', data);
           console.log('Successfully uploaded photo.');
-          console.log(data);
         }
       );
     });
@@ -139,7 +136,6 @@ const actions = {
   async getProfiles(context, list) {
     // 게시글 내에 위치할 프로필사진들 가져오기
     await list.map((info) => {
-      console.log('in info', info);
       s3.getSignedUrl(
         'getObject',
         {
@@ -174,7 +170,6 @@ const actions = {
           }
           alert('There was an error listing your photo: ', err.message);
         } else {
-          console.log('in profile data', data);
           // image = data;
           if (target === 'my') {
             rootState.user.myProfileImage = data;

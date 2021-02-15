@@ -100,7 +100,7 @@
     </div>
     <!--투표사진-->
     <div id="vote" v-if="getWhatwearInfo.vote_activated">
-      <!-- <ImageView :images="getWhatwearInfo.imageUrls" /> -->
+      <ImageView :images="getWhatwearInfo.imageUrls" />
     </div>
 
     <!--글 내용-->
@@ -205,14 +205,14 @@
 <script>
 import WhatWearDetailComment from "@/components/whatwear/WhatWearDetailComment";
 import { mapActions, mapGetters, mapMutations } from "vuex";
-// import ImageView from "@/components/module/ImageView";
+import ImageView from "@/components/module/ImageView";
 import { rscApi } from "@/services/api";
 
 export default {
   name: "WhatWearDetail",
   components: {
     WhatWearDetailComment,
-    // ImageView,
+    ImageView,
   },
   computed: {
     ...mapGetters([

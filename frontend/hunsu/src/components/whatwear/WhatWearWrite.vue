@@ -232,8 +232,9 @@ export default {
     },
     async createWhatWear() {
       // dialog창 닫기 + 입력데이터 보내기
+      console.log("boolean check", this.timeDialog, this.dateDialog);
       this.dialog = false;
-      if (this.timeDialog && this.dateDialog) {
+      if (this.dates && this.time) {
         this.endtime = this.dates.concat("T", this.time, ":00");
       }
       // 원래는 투표이미지 갯수인데 우선 투표체크박스 활성화하면 숫자가 3이 들어가도록 구현함
@@ -263,6 +264,7 @@ export default {
         this.isValid = true;
       }
 
+      console.log("endtime", this.endtime);
       // 작성폼 초기화
       const res = await rscApi.post("/wear", {
         content: this.whatwearContent,
@@ -275,13 +277,13 @@ export default {
       // console.log("resres", res);
       console.log("hi", res.data);
 
-      (this.whatwearTitle = ""), (this.whatwearContent = ""), (this.num = 0);
       if (this.getUploadImageFiles.length !== 0) {
         // console.log("in wear file", imageFiles);
         await this.uploadImage({ key: "whatwear/", articleIdx: res.data });
         this.clearUploads();
       }
 
+      (this.whatwearTitle = ""), (this.whatwearContent = ""), (this.num = 0);
       this.getWhatwearListInfoApi(1);
     },
 

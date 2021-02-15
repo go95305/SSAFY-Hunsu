@@ -189,6 +189,7 @@
                   cols="4"
                 >
                   <v-card outlined tile>
+                    <!-- 이부분 이미지 뷰를 작성하시면 됩니다 -->
                     <ImageView
                       :images="ootd.img"
                       @click.native="goToOotdDetail(ootd.ootdIdx)"
