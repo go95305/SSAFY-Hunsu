@@ -81,6 +81,7 @@ const mutations = {
     state.refreshToken = null;
     state.nickname = null;
     state.userInfo = {};
+    state.myProfileImage = null;
   },
   setMyProfileImage(state, payload) {
     state.myProfileImage = payload;
@@ -154,45 +155,37 @@ const actions = {
       nickname: res.data.nickname,
       uid: res.data.uid,
     });
-
-    console.log('in tokenLogin', res);
-
-    // .then((res) => {
-    //   console.log(res);
-    //   commit('setAllInfo', {
-    //     accessToken: res.data.jwtToken,
-    //     refreshToken: res.data.jwtRefresh,
-    //     nickname: res.data.nickname,
-    //   });
-    //   resolve();
-    // });
+    // console.log('in tokenLogin', res);
   },
-  getProfileInfoInApi(context, yourNickname) {
+  getProfileInfoInApi(context, targetNickname) {
+    // 상대 프로필 정보 가져오기
+    console.log(targetNickname);
     return rscApi
-      .get(`/user/mypage/${yourNickname}`)
+      .get(`/user/mypage/${targetNickname}`)
       .then((res) => {
-        console.log('스토어', res.data);
+        // console.log('스토어', res.data);
         context.commit('setUserInfo', res.data);
       })
       .catch((err) => {
         console.error(err);
       });
   },
-  getMyProfileInfoInApi(context, myNickname) {
+  getMyProfileInfoInApi(context) {
+    // 내 프로필 정보 가져오기
     return rscApi
-      .get(`/user/mypage/profile/${myNickname}`)
+      .get(`/user/mypage/profile`)
       .then((res) => {
         context.commit('setMyProfileInfo', res.data);
-        console.log('수정후마이페이지');
       })
       .catch((err) => {
         console.error(err);
       });
   },
-  updateMyProfileInfoInApi(context, { getNickname, newNickname, height, size }) {
-    console.log(getNickname, newNickname, height, size);
+  updateMyProfileInfoInApi(context, { newNickname, height, size }) {
+    // 프로필 업데이트
+    console.log(newNickname, height, size);
     return rscApi
-      .put(`/user/mypage/modify/${getNickname}`, {
+      .put(`/user/mypage/modify`, {
         nickname: newNickname,
         height: height,
         size: size,
@@ -207,15 +200,11 @@ const actions = {
       });
   },
 
-  logout({ state }) {
+  logout({ state, commit }) {
     return authApi.post(`/v1/auth/logout?jwtToken=` + state.accessToken).then((res) => {
       if (res.data.code === 1) {
-        console.log('logout success');
-        state.accessToken = null;
-        state.refreshToken = null;
-        state.nickname = null;
-        state.userInfo = null;
-        state.myProfileImage = null;
+        // console.log('logout success');
+        commit('setAllInfoClear');
       } else {
         console.log('logout fail');
         console.log(

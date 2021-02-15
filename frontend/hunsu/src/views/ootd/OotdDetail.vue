@@ -220,27 +220,6 @@ export default {
       "getTargetProfileImage",
     ]),
   },
-  async created() {
-    let root = this
-      this.getOotdInfoInApi({
-        ootdIdx: this.getOotdInfo.ootdIdx,
-      }).then(() => {
-        root
-          .getImageList({ prefix: "ootd/" + this.getOotdInfo.ootdIdx })
-          .then((res) => {
-            root.setOotdInfoImages(res);
-          })
-          .then(() => {
-            this.getProfileImage({
-              nickname: this.getOotdInfo.nickname,
-              target: "target",
-            });
-          })
-          .then(() => {
-            this.$router.push({ name: "OotdDetail" }).catch(() => {})
-          });
-      });
-    },
   data() {
     return {
       dialog: false,
@@ -283,7 +262,11 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(["setOotdInfo", "setTargetProfileImage", "setOotdInfoImages"]),
+    ...mapMutations([
+      "setOotdInfo",
+      "setTargetProfileImage",
+      "setOotdInfoImages",
+    ]),
     ...mapActions([
       "getOotdInfoInApi",
       "updateOotdInfo",
@@ -378,18 +361,6 @@ export default {
     },
   },
 };
-
-
-
-
-
-
-
-
-
-
-
-
 </script>
 
 <style>

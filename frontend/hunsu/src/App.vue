@@ -41,26 +41,17 @@ export default {
     },
   },
   async mounted() {
-    console.log(
-      "mounted",
-      this.getNickname,
-      this.getAccessToken,
-      this.getRefreshToken
-    );
-    // console.log(this.typeCheck(this.getAccessToken));
-    // console.log(this.typeCheck(this.getNickname));
-    // console.log(this.typeCheck(this.getRefreshToken));
     // 자동로그인 처리
     if (!this.typeCheck(this.getAccessToken)) {
-      this.$router.push("/login");
+      // this.$router.push("/login");
     } else if (
       this.typeCheck(this.getNickname) &&
       this.typeCheck(this.getAccessToken)
     ) {
       await this.kakaoLogin();
-      console.log("in app uid", this.getUid);
-      await this.getImageList({
-        prefix: `mypage/${this.getUid}/${this.getUid}`,
+      await this.getProfileImage({
+        uid: this.getUid,
+        target: "my",
       });
     }
   },

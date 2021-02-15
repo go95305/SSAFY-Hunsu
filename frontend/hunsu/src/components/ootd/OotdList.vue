@@ -22,12 +22,12 @@
           <v-list-item-avatar>
             <v-img
               v-if="ootd.profileImage"
-              @click="goToProfilePage(ootd.nickname)"
+              @click="goToProfilePage(ootd)"
               :src="ootd.profileImage"
             ></v-img>
             <v-img
               v-else
-              @click="goToProfilePage(getOotdInfo.nickname)"
+              @click="goToProfilePage(ootd)"
               src="https://cdn.vuetifyjs.com/images/john.png"
             ></v-img>
           </v-list-item-avatar>
@@ -79,10 +79,10 @@ export default {
     ...mapGetters(["getOotdList", "getNickname", "getOotdInfo"]),
     pageNumCount() {
       if (this.getOotdList) {
-        return parseInt(this.getOotdList.length / 6) + 1
+        return parseInt(this.getOotdList.length / 6) + 1;
       }
       return "";
-    }
+    },
   },
   async created() {
     // let ootdList;
@@ -101,6 +101,7 @@ export default {
       //   nickname: info.nickname,
       // });
     });
+    console.log(this.getOotdList);
     // .then((res) => {
     //   root.getProfiles(res);
     //   res.forEach((info) => {
@@ -122,39 +123,28 @@ export default {
       "getProfiles",
     ]),
     ...mapMutations(["setOotdInfoImages", "setTargetProfileImage"]),
-    goToOotdDetail(ootd) {
+    async goToOotdDetail(ootd) {
       //idx 굳이 보여줄 필요 없을것같아서 params로 변경
       // this.$router.push({ name: "OotdDetail", params: { no: ootd.ootdIdx } });
-      let root = this;
-      console.log(ootd);
-      this.getOotdInfoInApi({
+      await this.getOotdInfoInApi({
         ootdIdx: ootd.ootdIdx,
-      }).then(() => {
-        root
-          .getImageList({ prefix: "ootd/" + ootd.ootdIdx })
-          .then((res) => {
-            console.log("imageList", res);
-            // root.getImages({ keys: res }).then((res) => {
-            // console.log("getimages", res);
-            root.setOotdInfoImages(res);
-          })
-          .then(() => {
-            this.getProfileImage({
-              nickname: ootd.nickname,
-              target: "target",
-            });
-          })
-          .then(() => {
-            this.$router.push({ name: "OotdDetail" });
-          });
       });
+      const res = await this.getImageList({ prefix: "ootd/" + ootd.ootdIdx });
+      // root.getImages({ keys: res }).then((res) => {
+      // console.log("getimages", res);
+      this.setOotdInfoImages(res);
+      await this.getProfileImage({
+        uid: ootd.uid,
+        target: "target",
+      });
+      this.$router.push({ name: "OotdDetail" });
     },
-    goToProfilePage(infoNickname) {
+    goToProfilePage(ootdInfo) {
       // let root = this;
       // console.log("this", this);
-      this.getProfileInfoInApi(infoNickname).then(() => {
+      this.getProfileInfoInApi(ootdInfo.nickname).then(() => {
         this.getProfileImage({
-          nickname: infoNickname,
+          uid: ootdInfo.uid,
           target: "target",
         });
         this.$router.push({ name: "MyPage" });

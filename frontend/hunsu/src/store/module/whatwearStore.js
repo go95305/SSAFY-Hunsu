@@ -16,10 +16,10 @@ const state = {
 
 const getters = {
   getWhatwearListInfo(state) {
-    return state.whatwearListInfo
+    return state.whatwearListInfo;
   },
   getWhatwearListCount(state) {
-    return state.whatwearListCount
+    return state.whatwearListCount;
   },
   getWhatwearInfo(state) {
     return state.whatwearInfo;
@@ -42,10 +42,10 @@ const getters = {
 };
 const mutations = {
   setWhatwearListInfo(state, whatwearListInfo) {
-    state.whatwearListInfo = whatwearListInfo
+    state.whatwearListInfo = whatwearListInfo;
   },
   setWhatwearListCount(state, WhatwearListCount) {
-    state.whatwearListCount = WhatwearListCount
+    state.whatwearListCount = WhatwearListCount;
   },
   setWhatwearInfo(state, whatwearInfo) {
     state.whatwearInfo = whatwearInfo;
@@ -72,22 +72,19 @@ const mutations = {
 const actions = {
   getWhatwearListInfoApi(context, pageNum) {
     rscApi
-    .get(`wear/${pageNum}`)
-    .then((res) => {
-      console.log(res)
-      context.commit('setWhatwearListInfo', res.data.wearMainDTOList);
-      context.commit('setWhatwearListCount', res.data.count);
-    })
-    .catch((err) => {
-      console.error(err)
-    })
+      .get(`wear/${pageNum}`)
+      .then((res) => {
+        context.commit('setWhatwearListInfo', res.data.wearMainDTOList);
+        context.commit('setWhatwearListCount', res.data.count);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   },
   getWhatwearInfoApi(context, { wearIdx, voteCheck }) {
     return rscApi
       .get(`wear/detail/${wearIdx}`)
       .then((res) => {
-        console.log('wwstore', res.data);
-
         let replyCount = 0;
         res.data.replyList.map((v) => {
           if (v.flag) {
@@ -101,7 +98,6 @@ const actions = {
           const endTime = (res) => {
             // 현재시간값
             let nowTime = new Date().getTime();
-            console.log('현재', nowTime);
 
             // 마감시간값
             let endTime = res.end_time;
@@ -123,7 +119,6 @@ const actions = {
               Number(endMinute),
               Number(endSecond)
             ).getTime();
-            console.log('마감', endTimeValue);
 
             // 현재시간이 마감시간보다 커지면 마감
             if (nowTime > endTimeValue) {

@@ -18,37 +18,55 @@
     </v-container>
     <div v-for="(reply, groupNum) in getOotdReplyInfo" :key="groupNum">
       <!--댓글창-->
-      <v-card v-if="reply.isDeleted" flat class="d-flex align-center justify-space-around">
+      <v-card
+        v-if="reply.isDeleted"
+        flat
+        class="d-flex align-center justify-space-around"
+      >
         <div class="d-flex">
           <div>
             <v-avatar class="mt-5">
-              <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
+              <img :src="reply.profileImage" alt="John" />
             </v-avatar>
           </div>
-          <div style="margin: 17px; margin-left: 10px;">
-            <p style="margin-bottom: 0; font-size: 14px">{{ reply.nickname }}</p>
+          <div style="margin: 17px; margin-left: 10px">
+            <p style="margin-bottom: 0; font-size: 14px">
+              {{ reply.nickname }}
+            </p>
             <p style="margin-bottom: 0; font-size: 13px">{{ reply.content }}</p>
-          <div class="d-flex">
-            <!--write_date가 null이라서 바로반영못함-->
-            <!-- <p style="margin-bottom: 0; font-size: 10px">{{ reply.write_date.slice(0, 10) }}</p> -->
-            <p style="margin-bottom: 0; font-size: 10px">좋아요 {{ reply.likeCount }}개</p>
-            <!-- <p style="margin-bottom: 0; margin-left: 10px; font-size: 10px" @click="clickWhatwearReReply(reply.nickname, reply.groupNum)">답글하기</p> -->
-            <p style="margin-bottom: 0; margin-left: 10px; font-size: 10px" 
-            v-if="reply.nickname === getNickname"
-            @click="updateOotdReply(reply)">수정</p>
-            <p style="margin-bottom: 0; margin-left: 10px; font-size: 10px" 
-            v-if="reply.nickname === getNickname"
-            @click="deleteOotdReply(reply.replyIdx)">삭제</p>
-          </div>
+            <div class="d-flex">
+              <!--write_date가 null이라서 바로반영못함-->
+              <!-- <p style="margin-bottom: 0; font-size: 10px">{{ reply.write_date.slice(0, 10) }}</p> -->
+              <p style="margin-bottom: 0; font-size: 10px">
+                좋아요 {{ reply.likeCount }}개
+              </p>
+              <!-- <p style="margin-bottom: 0; margin-left: 10px; font-size: 10px" @click="clickWhatwearReReply(reply.nickname, reply.groupNum)">답글하기</p> -->
+              <p
+                style="margin-bottom: 0; margin-left: 10px; font-size: 10px"
+                v-if="reply.nickname === getNickname"
+                @click="updateOotdReply(reply)"
+              >
+                수정
+              </p>
+              <p
+                style="margin-bottom: 0; margin-left: 10px; font-size: 10px"
+                v-if="reply.nickname === getNickname"
+                @click="deleteOotdReply(reply.replyIdx)"
+              >
+                삭제
+              </p>
+            </div>
           </div>
         </div>
-          <v-btn icon @click="likeOotdReply(reply.replyIdx)" :color="reply.like ? 'red' : 'black'"><v-icon>mdi-heart-outline</v-icon></v-btn>
-          <!-- <v-btn icon @click="deleteWhatwearReply(reply.idx)"><v-icon>mdi-close</v-icon></v-btn> -->
+        <v-btn
+          icon
+          @click="likeOotdReply(reply.replyIdx)"
+          :color="reply.like ? 'red' : 'black'"
+          ><v-icon>mdi-heart-outline</v-icon></v-btn
+        >
+        <!-- <v-btn icon @click="deleteWhatwearReply(reply.idx)"><v-icon>mdi-close</v-icon></v-btn> -->
       </v-card>
-
     </div>
-
-    
   </div>
 </template>
 
@@ -66,62 +84,72 @@ export default {
     updateReplyIdx: 0,
   }),
   computed: {
-    ...mapGetters(["getOotdInfo", "getOotdReplyInfo","getNickname"]),
-    
+    ...mapGetters(["getOotdInfo", "getOotdReplyInfo", "getNickname"]),
+  },
+  async mounted() {
+    //프로필 이미지 가져옴
+    await this.getOotdReplyInfo.forEach(async (reply) => {
+      const image = await this.getWhatwearProfile(reply.uid);
+      this.$set(reply, "profileImage", image);
+    });
   },
   methods: {
     ...mapMutations(["setOotdReplyInfo"]),
-    ...mapActions(["createOotdReplyInfo", "likeOotdReplyInfo", "deleteOotdReplyInfo", "updateOotdReplyInfo"]),
+    ...mapActions([
+      "createOotdReplyInfo",
+      "likeOotdReplyInfo",
+      "deleteOotdReplyInfo",
+      "updateOotdReplyInfo",
+      "getWhatwearProfile",
+    ]),
     // 댓글작성함수
     createOotdReply(ootd_idx) {
       if (this.update) {
         this.updateOotdReplyInfo({
           content: this.replyContent,
           replyIdx: this.updateReplyIdx,
-        })
-        console.log('수정성공')
-      }
-      else {
+        });
+        console.log("수정성공");
+      } else {
         this.createOotdReplyInfo({
           content: this.replyContent,
           depth: this.depth,
           groupNum: this.groupNum,
           nickname: this.getNickname,
           ootdIdx: ootd_idx,
-        })
+        });
 
-        console.log('댓글작성성공')
+        console.log("댓글작성성공");
       }
 
       this.replyContent = "";
-      this.depth = 0
-      this.groupNum = 0
-      this.update = false
+      this.depth = 0;
+      this.groupNum = 0;
+      this.update = false;
     },
     // 댓글좋아요 함수
     likeOotdReply(replyIdx) {
-      this.likeOotdReplyInfo(replyIdx)
-      console.log(this.getOotdReplyInfo)
+      this.likeOotdReplyInfo(replyIdx);
+      console.log(this.getOotdReplyInfo);
     },
 
     deleteOotdReply(replyIdx) {
-      const result = this.deleteOotdReplyInfo(replyIdx)
+      const result = this.deleteOotdReplyInfo(replyIdx);
       if (result) {
-        console.log('삭제됨')
-        console.log(this.getOotdReplyInfo)
+        console.log("삭제됨");
+        console.log(this.getOotdReplyInfo);
       } else {
-        console.log('삭제실패')
+        console.log("삭제실패");
       }
     },
     updateOotdReply(reply) {
-      this.replyContent = reply.content
-      this.update = true
-      this.updateReplyIdx = reply.replyIdx
-    }
+      this.replyContent = reply.content;
+      this.update = true;
+      this.updateReplyIdx = reply.replyIdx;
+    },
   },
 };
 </script>
 
 <style>
-
 </style>

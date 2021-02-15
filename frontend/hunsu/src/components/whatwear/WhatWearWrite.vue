@@ -1,5 +1,5 @@
 <template>
-  <v-layout justify-end >
+  <v-layout justify-end>
     <v-dialog
       v-model="dialog"
       fullscreen
@@ -18,13 +18,17 @@
       <v-card>
         <!--작성창 상단바-->
         <v-toolbar dark color="black">
-          <v-btn icon dark @click="dialog = false">
+          <v-btn icon dark @click="closeWritePage">
             <v-icon>mdi-close</v-icon>
           </v-btn>
-          <v-toolbar-title class="text-subtitle-1">뭘입을까 작성</v-toolbar-title>
+          <v-toolbar-title class="text-subtitle-1"
+            >뭘입을까 작성</v-toolbar-title
+          >
           <v-spacer></v-spacer>
           <v-toolbar-items>
-            <v-btn text @click="createWhatWear()" class="text-subtitle-1"> 완료 </v-btn>
+            <v-btn text @click="createWhatWear()" class="text-subtitle-1">
+              완료
+            </v-btn>
           </v-toolbar-items>
         </v-toolbar>
         <v-list three-line subheader>
@@ -54,9 +58,9 @@
         <v-list three-line subheader>
           <v-list-item>
             <v-list-item-content>
-              <v-list-item-title class="text-h6 font-weight-bold"
-                >사진업로드</v-list-item-title
-              >
+              <v-list-item-title class="text-h6 font-weight-bold">
+                사진업로드
+              </v-list-item-title>
               <ImageUpload />
               <!-- <v-img
                 v-if="image" :src="imageUrl" id="test" contain>
@@ -169,7 +173,7 @@
 </template>
 
 <script>
-import { rscApi } from "@/services/api"
+import { rscApi } from "@/services/api";
 import { mapGetters, mapActions, mapMutations } from "vuex";
 import ImageUpload from "@/components/module/ImageUpload";
 
@@ -208,94 +212,86 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getNickname", "getUploadImageFiles"]),
+    ...mapGetters(["getNickname", "getUploadImageUrls", "getUploadImageFiles"]),
   },
   methods: {
     ...mapActions(["uploadImage", "getWhatwearListInfoApi"]),
-    ...mapMutations(["setUploadImageUrls", "setUploadImageFiles"]),
-    createWhatWear() {
-      // 입력데이터체크, dialog창 닫기 + 입력데이터 보내기
-      // 투표엔드타임값 채우기
-      if (this.daycheck && this.timecheck) {
+    ...mapMutations([
+      "setUploadImageUrls",
+      "setUploadImageFiles",
+      "clearUploads",
+      "setWhatwearInfo",
+    ]),
+    closeWritePage() {
+      this.whatwearTitle = "";
+      this.whatwearContent = "";
+      this.endtime = "";
+      this.vote = false;
+      this.clearUploads();
+      this.dialog = false;
+    },
+    async createWhatWear() {
+      // dialog창 닫기 + 입력데이터 보내기
+      this.dialog = false;
+      if (this.timeDialog && this.dateDialog) {
         this.endtime = this.dates.concat("T", this.time, ":00");
       }
-
+      // 원래는 투표이미지 갯수인데 우선 투표체크박스 활성화하면 숫자가 3이 들어가도록 구현함
       if (this.vote) {
-        this.num = this.getUploadImageFiles.length
+        this.num = this.getUploadImageFiles.length;
       }
       // 투표비활성화 일때 글작성 체크(사진은 부가적이므로 체크제외)
-      if (this.vote === false && this.whatwearTitle.length > 0 && this.whatwearTitle.length <= 30 && this.whatwearContent.length > 0 && this.whatwearContent.length <= 250) {
-        this.isValid = true
+      if (
+        this.vote === false &&
+        this.whatwearTitle.length > 0 &&
+        this.whatwearTitle.length <= 30 &&
+        this.whatwearContent.length > 0 &&
+        this.whatwearContent.length <= 250
+      ) {
+        this.isValid = true;
       }
-      
-      // 투표활성화일때 글작성 체크(제목, 내용, 사진갯수)
-      if (this.vote === true && this.whatwearTitle.length > 0 && this.whatwearTitle.length <= 30 && this.whatwearContent.length > 0 && this.whatwearContent.length <= 250 && this.num > 0) {
-        this.isValid = true
-      }
-      
-      console.log('널값체크', this.endtime, this.getNickname, this.num, this.isVaild)
 
-      const params = {
+      // 투표활성화일때 글작성 체크(제목, 내용, 사진갯수)
+      if (
+        this.vote === true &&
+        this.whatwearTitle.length > 0 &&
+        this.whatwearTitle.length <= 30 &&
+        this.whatwearContent.length > 0 &&
+        this.whatwearContent.length <= 250 &&
+        this.num > 0
+      ) {
+        this.isValid = true;
+      }
+
+      // 작성폼 초기화
+      const res = await rscApi.post("/wear", {
         content: this.whatwearContent,
         endtime: this.endtime,
         nickname: this.getNickname,
         num: this.num,
         title: this.whatwearTitle,
-      };
-      // 작성폼 초기화
+      });
+      // console.log('뭘입을까글쓰기성공')
+      // console.log("resres", res);
+      console.log("hi", res.data);
 
-      // isValid가 true일때만 작성, 아닐 때는 알림창
-      if (this.isValid) {
-        this.dialog = false;
-        rscApi
-          .post('wear', params)
-          .then((res) => {
-            // console.log('뭘입을까글쓰기성공')
-            console.log(res);
-
-  
-            this.uploadImage({
-              key: "whatwear/",
-              articleIdx: res.data.whatwaerIdx,
-            }).then(() => {
-              // this.setUploadImageFiles(this.voteImage);
-              // this.setUploadImageUrls();
-              // //추후 개별업로드 필요
-              // this.uploadImage({ key: "vote/", article: res.data.voteIdx });
-            });
-            this.getWhatwearListInfoApi(1)
-
-            console.log(params);
-          })
-          .catch((err) => {
-            console.error(err);
-          });
-      } else {
-        alert('제목, 내용, 투표값을 확인해주세요')
-      }
-      // 작성폼, 체크값 초기화
       (this.whatwearTitle = ""), (this.whatwearContent = ""), (this.num = 0);
-      (this.isValid = false), (this.vote = false), (this.daycheck = false), (this.timecheck = false);
+      if (this.getUploadImageFiles.length !== 0) {
+        // console.log("in wear file", imageFiles);
+        await this.uploadImage({ key: "whatwear/", articleIdx: res.data });
+        this.clearUploads();
+      }
+
+      this.getWhatwearListInfoApi(1);
     },
-    previewImage() {
-      this.imageUrl = URL.createObjectURL(this.image);
-    },
-    previewVoteImage() {
-      console.log(this.voteImage);
-      this.voteImage.forEach((e) =>
-        this.voteImageUrls.push(URL.createObjectURL(e))
-      );
-      console.log(this.voteImageUrls);
-    },
+
     inputDate(dates) {
       this.dates = dates;
-      this.daycheck = true
-      // console.log(this.dates)
+      this.daycheck = true;
     },
     inputTime(time) {
       this.time = time;
-      this.timecheck =true
-      // console.log(this.time)
+      this.timecheck = true;
     },
   },
 };
@@ -305,7 +301,6 @@ export default {
 #votebtn {
   display: flex;
 }
-
 
 #whatwear_writebtn {
   position: fixed;

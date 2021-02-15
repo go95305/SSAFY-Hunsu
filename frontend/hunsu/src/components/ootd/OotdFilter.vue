@@ -1,9 +1,9 @@
 <template>
   <!-- 정렬 버튼 -->
   <v-btn-toggle tile color="red accent-3" group>
-    <v-btn v-model="sort" @click="getRecentOotdListInApi()"> 최신순 </v-btn>
+    <v-btn @click="getRecentOotdListInApi()"> 최신순 </v-btn>
 
-    <v-btn v-model="sort" @click="getPopularOotdListInApi()"> 인기순 </v-btn>
+    <v-btn @click="getPopularOotdListInApi()"> 인기순 </v-btn>
   </v-btn-toggle>
 </template>
 
@@ -16,10 +16,10 @@ export default {
     ...mapGetters(["getOotdList"]),
     pageNumCount() {
       if (this.getOotdList) {
-        return parseInt(this.getOotdList.length / 6) + 1
+        return parseInt(this.getOotdList.length / 6) + 1;
       }
       return "";
-    }
+    },
   },
   methods: {
     ...mapActions([
@@ -29,34 +29,33 @@ export default {
       "getProfileInfoInApi",
       "getProfileImage",
       "getProfiles",
-      ]),
+    ]),
     async getRecentOotdListInApi() {
-    let root = this;
+      let root = this;
       await this.getOotdListInApi({
         sort: 0,
-        pageNum: this.pageNumCount
-      })
-      root.getProfiles(this.getOotdList);
-    this.getOotdList.forEach((info) => {
-      root.getImageList({ prefix: "ootd/" + info.ootdIdx }).then((res) => {
-        info.imageUrls = res;
+        pageNum: this.pageNumCount,
       });
+      root.getProfiles(this.getOotdList);
+      this.getOotdList.forEach((info) => {
+        root.getImageList({ prefix: "ootd/" + info.ootdIdx }).then((res) => {
+          info.imageUrls = res;
+        });
       });
     },
     async getPopularOotdListInApi() {
       let root = this;
       await this.getOotdListInApi({
         sort: 1,
-        pageNum: this.pageNumCount
-      })
+        pageNum: this.pageNumCount,
+      });
       root.getProfiles(this.getOotdList);
-    this.getOotdList.forEach((info) => {
-      root.getImageList({ prefix: "ootd/" + info.ootdIdx }).then((res) => {
-        info.imageUrls = res;
+      this.getOotdList.forEach((info) => {
+        root.getImageList({ prefix: "ootd/" + info.ootdIdx }).then((res) => {
+          info.imageUrls = res;
+        });
       });
-      });
-    }
-    
+    },
   },
 };
 </script>
