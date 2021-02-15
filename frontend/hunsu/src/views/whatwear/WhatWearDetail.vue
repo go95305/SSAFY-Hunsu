@@ -5,7 +5,7 @@
         <v-list-item>
           <v-list-item-content class="pb-0">
             <v-list-item-title class="text-h6">
-              {{ getWhatwearInfo.title }}
+              {{ whatwearInfo.title }}
             </v-list-item-title>
           </v-list-item-content>
         </v-list-item>
@@ -20,12 +20,12 @@
           <v-list-item-content>
             <!--닉네임-->
             <v-list-item-title class="text-subtitle-1">
-              {{ getWhatwearInfo.nickname }}
+              {{ whatwearInfo.nickname }}
             </v-list-item-title>
           </v-list-item-content>
 
           <!--작성자nickname과 로그인nickname이 같을때만 삭제버튼 출력-->
-          <v-menu bottom v-if="getWhatwearInfo.nickname === getNickname">
+          <v-menu bottom v-if="whatwearInfo.nickname === getNickname">
             <template v-slot:activator="{ on, attrs }">
               <v-avatar v-bind="attrs" v-on="on">
                 <v-btn color="black" icon class="d-inline-block">
@@ -47,7 +47,9 @@
                   </v-btn>
                 </template>
                 <v-card>
-                  <v-card-title class="mb-3 font-weight-bold">해당 글을 삭제하시겠습니까?</v-card-title>
+                  <v-card-title class="mb-3 font-weight-bold"
+                    >해당 글을 삭제하시겠습니까?</v-card-title
+                  >
                   <v-card-subtitle>사진과 글이 삭제됩니다.</v-card-subtitle>
                   <v-card-actions>
                     <v-spacer></v-spacer>
@@ -66,7 +68,7 @@
                       @click="
                         [
                           (deleteDialog = false),
-                          deleteWhatWear(getWhatwearInfo.wear_idx),
+                          deleteWhatWear(whatwearInfo.wear_idx),
                         ]
                       "
                     >
@@ -81,7 +83,7 @@
       </v-list>
     </div>
     <!--투표x 사진-->
-    <div v-if="!getWhatwearInfo.vote_activated">
+    <div v-if="!whatwearInfo.vote_activated">
       <v-carousel
         v-if="getWhatwearInfoImages"
         v-model="model"
@@ -101,21 +103,21 @@
       </v-carousel>
     </div>
     <!--투표사진-->
-    <div id="vote" v-if="getWhatwearInfo.vote_activated">
-      <ImageView :images="getWhatwearInfo.imageUrls" />
+    <div id="vote" v-if="whatwearInfo.vote_activated">
+      <ImageView :images="whatwearInfo.imageUrls" />
     </div>
 
     <!--글 내용-->
     <v-list one-line>
       <v-list-item>
         <v-list-item-title class="text-body-2">
-          {{ getWhatwearInfo.content }}
+          {{ whatwearInfo.content }}
         </v-list-item-title>
       </v-list-item>
     </v-list>
 
     <!--투표창-->
-    <div v-if="getWhatwearInfo.vote_activated">
+    <div v-if="whatwearInfo.vote_activated">
       <!-- <div id="vote_input">
         <v-checkbox
           v-for="(n, index) in getWhatwearVoteInfo"
@@ -238,10 +240,12 @@ export default {
       voteImages: [],
       endTimeCheck: this.getVoteTime,
       images: [],
+      whatwearInfo: {},
     };
   },
   mounted() {
     console.log(this.getWhatwearInfo);
+    this.whatwearInfo = this.getWhatwearInfo;
   },
   methods: {
     ...mapMutations(["setWhatwearInfo"]),

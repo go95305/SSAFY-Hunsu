@@ -58,6 +58,7 @@
 <script>
 // import { rscApi } from "@/services/api"
 import { mapActions, mapMutations, mapGetters } from "vuex";
+import { EventBus } from "@/services/eventBus";
 
 export default {
   name: "WhatWearList",
@@ -70,6 +71,14 @@ export default {
   },
   computed: {
     ...mapGetters(["getWhatwearListInfo", "getWhatwearListCount"]),
+  },
+  async created() {
+    // await this.pageWhatwear();
+    EventBus.$on("WhatwearWriteSuccess", (whatwear) => {
+      this.goToWhatwearDetail(whatwear);
+      this.pageWhatwear();
+    });
+    // await this.pageWhatwear();
   },
   async mounted() {
     await this.pageWhatwear();
@@ -84,7 +93,6 @@ export default {
     ]),
     ...mapMutations(["setWhatwearInfoImages"]),
     async goToWhatwearDetail(whatwear) {
-      console.log("go detail", whatwear);
       // 뭘입을까 상세정보 가져오기
       await this.getWhatwearInfoApi({
         wearIdx: whatwear.wear_idx,
@@ -104,19 +112,14 @@ export default {
 
     async pageWhatwear() {
       // durldrudlrudrljdruldrldrldlr
+      console.log("qwer");
       await this.getWhatwearListInfoApi(this.page);
       this.whatwearList = this.getWhatwearListInfo;
       this.getImages();
-      // await this.getWhatwearListInfo.forEach(async (info) => {
-      //   const profile = await this.getWhatwearProfile(info.uid);
-      //   this.$set(info, "profileImage", profile);
-      // });
-      console.log(this.getWhatwearListInfo);
     },
     getImages() {
       this.whatwearList.forEach(async (info) => {
         const profile = await this.getWhatwearProfile(info.uid);
-        console.log(profile);
         this.$set(info, "profileImage", profile);
       });
     },

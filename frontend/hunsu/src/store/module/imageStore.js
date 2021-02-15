@@ -51,29 +51,31 @@ const mutations = {
 };
 
 const actions = {
-  async uploadImage({ state }, { key, articleIdx }) {
+  uploadImage({ state }, { key, articleIdx }) {
     // 이미지 업로드
-    await state.uploadImageFiles.forEach((imageFile, idx) => {
-      //파일 확장자
-      let fileExtList = imageFile.name.split('.');
-      let fileExt = fileExtList[fileExtList.length - 1];
+    return new Promise((resolve, reject) => {
+      state.uploadImageFiles.forEach((imageFile, idx) => {
+        //파일 확장자
+        let fileExtList = imageFile.name.split('.');
+        let fileExt = fileExtList[fileExtList.length - 1];
 
-      s3.upload(
-        {
-          Key: key + articleIdx + '/' + (idx + 1) + '.' + fileExt,
-          Body: imageFile,
-          ACL: 'public-read',
-          ContentType: 'image/' + fileExt,
-        },
-        (err, data) => {
-          if (err) {
-            console.log(err);
-            return alert('There was an error uploading your photo: ', err.message);
+        s3.upload(
+          {
+            Key: key + articleIdx + '/' + (idx + 1) + '.' + fileExt,
+            Body: imageFile,
+            ACL: 'public-read',
+            ContentType: 'image/' + fileExt,
+          },
+          (err, data) => {
+            if (err) {
+              console.log(err);
+              reject(err);
+            }
+            console.log('upload', data);
+            resolve(data);
           }
-          console.log('upload', data);
-          console.log('Successfully uploaded photo.');
-        }
-      );
+        );
+      });
     });
   },
   uploadProfile({ rootState, state }) {

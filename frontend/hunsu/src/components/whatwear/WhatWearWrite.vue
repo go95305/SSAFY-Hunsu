@@ -176,6 +176,7 @@
 import { rscApi } from "@/services/api";
 import { mapGetters, mapActions, mapMutations } from "vuex";
 import ImageUpload from "@/components/module/ImageUpload";
+import { EventBus } from "@/services/eventBus";
 
 export default {
   name: "WhatWearWrite",
@@ -212,7 +213,12 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getNickname", "getUploadImageUrls", "getUploadImageFiles"]),
+    ...mapGetters([
+      "getNickname",
+      "getUploadImageUrls",
+      "getUploadImageFiles",
+      "getUid",
+    ]),
   },
   methods: {
     ...mapActions(["uploadImage", "getWhatwearListInfoApi"]),
@@ -264,7 +270,6 @@ export default {
         this.isValid = true;
       }
 
-      console.log("endtime", this.endtime);
       // 작성폼 초기화
       const res = await rscApi.post("/wear", {
         content: this.whatwearContent,
@@ -273,18 +278,18 @@ export default {
         num: this.num,
         title: this.whatwearTitle,
       });
-      // console.log('뭘입을까글쓰기성공')
-      // console.log("resres", res);
-      console.log("hi", res.data);
 
       if (this.getUploadImageFiles.length !== 0) {
-        // console.log("in wear file", imageFiles);
         await this.uploadImage({ key: "whatwear/", articleIdx: res.data });
         this.clearUploads();
       }
 
       (this.whatwearTitle = ""), (this.whatwearContent = ""), (this.num = 0);
-      this.getWhatwearListInfoApi(1);
+      EventBus.$emit("WhatwearWriteSuccess", {
+        wear_idx: res.data,
+        voteActivated: this.vote,
+        uid: this.getUid,
+      });
     },
 
     inputDate(dates) {
