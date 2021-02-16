@@ -2,10 +2,16 @@
   <v-app id="app">
     <SubNavBar v-if="($route.name == 'SignUp') || ($route.name == 'Login')"/>
     <MainNavBar v-else/>
-    <v-app id="content">
-      <!--margin-top 걸려있음(네브바가 스크롤기능이 되면서 화면이 위로 올라가는걸 방지하기위해)-->
+    <div v-if="($route.name == 'SignUp') || ($route.name == 'Login')">
+    <v-app  id="userContent">
       <router-view />
     </v-app>
+    </div>
+    <div v-else>
+      <v-app id="content" >
+        <router-view />
+      </v-app>
+    </div>
     <!-- <MainBottomBar /> bottom navigationbar -->
     <SubNavBar v-if="($route.name == 'SignUp') || ($route.name == 'Login')"/>
     <MainFooter v-else/>
@@ -93,7 +99,11 @@ export default {
 
 <style>
 #content {
+  background-color: whitesmoke;
   margin-top: 100px;
 }
-
+#userContent {
+  background-color: whitesmoke;
+  margin-top: 50px;
+}
 </style>

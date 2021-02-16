@@ -79,6 +79,7 @@ import { mapActions, mapGetters, mapMutations } from "vuex";
 import ImageView from "@/components/module/ImageView";
 import infiniteLoading from "vue-infinite-loading";
 import { rscApi } from "@/services/api";
+import { EventBus } from "@/services/eventBus";
 
 export default {
   name: "OotdList",
@@ -98,6 +99,11 @@ export default {
   },
   computed: {
     ...mapGetters(["getOotdList", "getNickname", "getOotdInfo"]),
+  },
+  created() {
+    EventBus.$on("searchHashtag", getOotdList => {
+      this.ootdList = getOotdList
+    })
   },
   methods: {
     ...mapActions([
