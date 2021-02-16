@@ -13,17 +13,25 @@
       :limitNum="limit"
       style="margin: 20px"
     />
-    <!-- <OotdScroll /> -->
+    <OotdListForHashtag
+    v-if="getOotdSearchedList.length"
+      :key="key"
+      style="margin: 20px"
+    />
+
   </div>
 </template>
 
 <script>
 import OotdList from "@/components/ootd/OotdList";
+import OotdListForHashtag from "@/components/ootd/OotdListForHashtag";
 import OotdSearchBtn from "@/components/ootd/OotdSearchBtn";
 import OotdWritePage from "@/components/ootd/OotdWritePage";
 import OotdFilter from "@/components/ootd/OotdFilter";
 import { EventBus } from "@/services/eventBus";
+import { mapGetters } from "vuex";
 // import OotdScroll from '@/components/ootd/OotdScroll'
+
 
 export default {
   name: "Ootd",
@@ -32,6 +40,7 @@ export default {
     OotdSearchBtn,
     OotdWritePage,
     OotdFilter,
+    OotdListForHashtag
     // OotdScroll
   },
   data() {
@@ -40,6 +49,10 @@ export default {
       limit: 0,
       key: 0,
     };
+  },
+  computed: {
+    ...mapGetters(["getOotdSearchedList"]),
+
   },
   created() {
     EventBus.$on("recent", () => {

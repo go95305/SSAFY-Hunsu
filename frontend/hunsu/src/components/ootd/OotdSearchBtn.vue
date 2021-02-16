@@ -22,7 +22,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getOotdList"]),
+    ...mapGetters(["getOotdSearchedList"]),
   },
   methods: {
     ...mapActions([
@@ -37,14 +37,14 @@ export default {
     async searchHashtag(searchWord) {
       let root = this;
       await this.getSearchedListInApi(searchWord);
-      root.getProfiles(this.getOotdList);
-      this.getOotdList.forEach((info) => {
+      root.getProfiles(this.getOotdSearchedList);
+      this.getOotdSearchedList.forEach((info) => {
         root.getImageList({ prefix: "ootd/" + info.ootdIdx }).then((res) => {
           this.$set(info, "imageUrls", res);
           // info.imageUrls = res;
         });
       });
-      console.log(this.getOotdList);
+      console.log(this.getOotdSearchedList, '해시태그검색완료입니당');
     },
   },
 };
