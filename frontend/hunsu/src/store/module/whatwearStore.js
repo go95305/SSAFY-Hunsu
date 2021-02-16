@@ -71,7 +71,7 @@ const mutations = {
 };
 const actions = {
   getWhatwearListInfoApi(context, pageNum) {
-    rscApi
+    return rscApi
       .get(`wear/${pageNum}`)
       .then((res) => {
         context.commit('setWhatwearListInfo', res.data.wearMainDTOList);
@@ -141,7 +141,7 @@ const actions = {
       });
   },
   createWhatwearReplyInfo(context, whatwearReplyInfo) {
-    rscApi
+    return rscApi
       .post('wear/reply', whatwearReplyInfo)
       .then((res) => {
         console.log(res);
@@ -160,7 +160,7 @@ const actions = {
       });
   },
   likeWhatwearReplyInfo(context, replyIdx) {
-    rscApi
+    return rscApi
       .put(`wear/reply/like?reply_idx=${replyIdx}`)
       .then((res) => {
         context.commit('setWhatwearReplyInfo', res.data);
@@ -170,7 +170,7 @@ const actions = {
       });
   },
   deleteWhatwearReplyInfo(context, replyIdx) {
-    rscApi
+    return rscApi
       .put(`wear/reply/del?idx=${replyIdx}`)
       .then((res) => {
         let replyCount = 0;

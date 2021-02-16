@@ -354,6 +354,7 @@ export default {
         uid: this.getOotdInfo.uid,
         target: "target",
       });
+      window.scrollTo({ top: "0", behavior: "smooth" });
       this.$router.push({ name: "OotdDetail" });
     },
     async goToOotdDetailForLike(idx) {
@@ -367,6 +368,7 @@ export default {
         uid: this.getOotdInfo.uid,
         target: "target",
       });
+      window.scrollTo({ top: "0", behavior: "smooth" });
       this.$router.push({ name: "OotdDetail" });
     },
   },

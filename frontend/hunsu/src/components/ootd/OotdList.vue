@@ -97,6 +97,9 @@ export default {
   computed: {
     ...mapGetters(["getOotdList", "getNickname", "getOotdInfo"]),
   },
+  created() {
+    // window.scrollTo({ top: "0", behavior: "smooth" });
+  },
   // async created() {
   //   // let ootdList;
   //   let root = this;
@@ -149,6 +152,7 @@ export default {
         uid: ootd.uid,
         target: "target",
       });
+      window.scrollTo({ top: "0", behavior: "smooth" });
       this.$router.push({ name: "OotdDetail" });
     },
     goToProfilePage(ootdInfo) {
@@ -157,6 +161,7 @@ export default {
           uid: ootdInfo.uid,
           target: "target",
         });
+        window.scrollTo({ top: "0", behavior: "smooth" });
         this.$router.push({ name: "MyPage" });
       });
     },
