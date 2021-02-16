@@ -21,7 +21,7 @@
         <v-btn @click="goToLogin()">로그인</v-btn>
       </div> -->
       <!--로그인 후 알림아이콘 옆에 표시할 프로필사진 + mypage, logout menu바-->
-      <div class="mt-1">{{ getNickname }}님</div>
+          <div class="mt-1" v-if="getNickname">{{getNickname}}님 </div>
       <v-menu left bottom v-if="getNickname">
         <template v-slot:activator="{ on, attrs }">
           <v-avatar v-bind="attrs" v-on="on">
