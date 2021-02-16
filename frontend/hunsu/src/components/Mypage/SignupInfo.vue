@@ -1,11 +1,13 @@
 <template>
   <!-- 회원가입 후 추가정보 입력할 컴포넌트 -->
-  <div>
+  <div style="height: 100%">
     <v-toolbar dark color="black">
       <v-toolbar-title class="text-subtitle-1">회원가입</v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-toolbar-title class="text-subtitle-1" @click="signUp">완료</v-toolbar-title>
     </v-toolbar>
     <!-- 프로필 사진 -->
-    <div id="profile_image">
+    <div class="d-flex justify-center ml-1 mt-6">
       <v-avatar width="100px" height="100px">
         <v-img
           v-if="getUploadImageUrls.length !== 0"
@@ -18,15 +20,15 @@
           alt="John"
         />
       </v-avatar>
+      </div>
       <!-- 프로필 이미지 업로드 부분 -->
       <!-- <v-file-input truncate-length="15" hide-input></v-file-input> -->
       <input ref="imageInput" type="file" hidden @change="onChangeImages" />
-      <div class="display: inline-block;">
-        <v-btn class="mx-5 my-2" type="button" @click="onClickImageUpload"
-          >사진 업로드</v-btn
+        <v-btn id="profileInput" x-large icon @click="onClickImageUpload"
+          ><v-icon>mdi-camera</v-icon></v-btn
         >
-      </div>
-    </div>
+      
+    
     <!-- <v-avatar>
       <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
     </v-avatar>
@@ -40,7 +42,7 @@
       label="닉네임"
       :rules="rules"
       hide-details="auto"
-      style="width: 350px"
+      style="width: 94%"
       v-model="nickname"
       outlined
     ></v-text-field>
@@ -51,26 +53,21 @@
       class="mx-auto"
       label="키(cm)"
       hide-details="auto"
-      style="width: 350px"
+      style="width: 94%"
       v-model="height"
       outlined
     ></v-text-field>
-    <v-container fluid>
-      <v-row align="center">
-        <v-col class="d-flex" cols="12" sm="6">
-          <v-select
-            style="width: 350px"
-            outlined
-            v-model="size"
-            :items="items"
-            label="사이즈"
-          ></v-select>
-        </v-col>
-      </v-row>
-    </v-container>
-    <v-btn depressed class="" x-large style="width: 375px" dark @click="signUp"
-      >회원가입</v-btn
-    >
+    <v-select
+      class="mx-auto mt-5"
+      style="width: 94%"
+      outlined
+      v-model="size"
+      :items="items"
+      label="사이즈"
+    ></v-select>
+
+
+
   </div>
 </template>
 
@@ -159,4 +156,8 @@ export default {
 </script>
 
 <style>
+#profileInput {
+  display: flex;
+  margin: 0 auto;
+}
 </style>

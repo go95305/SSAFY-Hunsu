@@ -105,14 +105,15 @@ export default {
 .all {
   /* width: 100%;
   height: 100%; */
-  top: 10%;
+  top: 20%;
   position: relative;
+  background-image: url('/assets/그림1.png/');
 }
 
 .all .loginButton {
   position: absolute;
   /* left: 50%; */
-  top: 130%;
+  top: 120%;
   margin-left: 20px;
 }
 
@@ -122,4 +123,5 @@ export default {
   text-align: center;
   top: 150%;
 }
+
 </style>

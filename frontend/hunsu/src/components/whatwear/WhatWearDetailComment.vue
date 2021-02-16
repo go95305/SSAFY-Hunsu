@@ -20,7 +20,7 @@
     <div v-for="(reply, groupNum) in whatwearReplyInfo" :key="groupNum">
       <!--댓글창-->
       <v-card
-        v-if="reply.depth === 0"
+        v-if="reply.depth === 0 && reply.flag"
         flat
         class="d-flex align-center justify-space-between"
       >
@@ -34,11 +34,8 @@
             <p style="margin-bottom: 0; font-size: 14px">
               {{ reply.nickname }}
             </p>
-            <p v-if="reply.flag" style="margin-bottom: 0; font-size: 13px">
+            <p style="margin-bottom: 0; font-size: 13px">
               {{ reply.content }}
-            </p>
-            <p v-if="!reply.flag" style="margin-bottom: 0; font-size: 13px">
-              작성자에 의해 삭제된 댓글 입니다.
             </p>
             <div class="d-flex">
               <!--write_date가 null이라서 바로반영못함-->

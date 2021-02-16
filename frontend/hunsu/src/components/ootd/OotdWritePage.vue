@@ -134,12 +134,13 @@ export default {
         this.ootd_content.length > 0 
       ) {
         // 아무것도 없는 공백막아주기
-        if (this.ootd_content.replace(/(\s*)/g,"") > 0) {
+        if (this.ootd_content.trim().length > 0) {
           this.isValid = true
         } 
       }
 
       if (this.isValid) {
+        console.log('hi')
         this.dialog = false;
         this.createOotdInfo(params).then((res) => {
           if (!res) {

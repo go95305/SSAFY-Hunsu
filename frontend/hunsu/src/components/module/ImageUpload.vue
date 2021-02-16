@@ -11,8 +11,8 @@
       @change="onChangeImages"
     />
     <div class="display: inline-block;" v-if="getUploadImageUrls.length === 0">
-      <v-btn class="mx-5" type="button" @click="onClickImageUpload"
-        >사진 업로드</v-btn
+      <v-btn class="mx-5" icon x-large @click="onClickImageUpload"
+        ><v-icon>mdi-camera</v-icon></v-btn
       >
     </div>
 
@@ -32,12 +32,11 @@
         <div>
           <br />
           <v-btn
-            class="mx-5"
-            type="button"
+            class="mx-5 mt-5"
+            icon
             @click="onClickImageUpload"
-            width="100"
-            height="100"
-            >추가 사진 업로드</v-btn
+            x-large
+            ><v-icon>mdi-camera</v-icon></v-btn
           >
           <input
             type="file"

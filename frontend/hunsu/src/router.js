@@ -9,7 +9,7 @@ import MyPage from '@/views/user/MyPage';
 import Login from '@/views/user/Login';
 import OotdDetail from '@/views/ootd/OotdDetail';
 import LiveDetail from '@/views/live/LiveDetail';
-import Description from '@/views/Description';
+// import Description from '@/views/Description';
 import SignUp from '@/components/Mypage/SignupInfo';
 import AboutUs from '@/views/AboutUs';
 // import SignUp from '@/views/user/SignUp';
@@ -18,14 +18,14 @@ import AboutUs from '@/views/AboutUs';
 Vue.use(VueRouter);
 
 const routes = [
-  {
-    path: '/',
-    name: 'Description',
-    component: Description,
-  },
+  // {
+  //   path: '/',
+  //   name: 'Description',
+  //   component: Description,
+  // },
 
   {
-    path: '/home',
+    path: '/',
     name: 'Home',
     component: Home,
   },
