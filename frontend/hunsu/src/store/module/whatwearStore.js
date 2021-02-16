@@ -144,7 +144,7 @@ const actions = {
     rscApi
       .post('wear/reply', whatwearReplyInfo)
       .then((res) => {
-        console.log(res);
+        console.log('나오냐고',res);
         let replyCount = 0;
         res.data.map((v) => {
           if (v.flag) {
