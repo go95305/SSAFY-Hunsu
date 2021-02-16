@@ -31,9 +31,6 @@ export default {
   data() {
     return {};
   },
-  mounted() {
-    console.log("inImageView", this.images)
-  },
   props: {
     images: {
       type: Array,

@@ -205,7 +205,11 @@
               style="padding: 0px"
             >
               <v-row no-gutters>
-                <v-col v-for="(like, idx) in profileData.imageListForLike" :key="idx" cols="4">
+                <v-col
+                  v-for="(like, idx) in profileData.imageListForLike"
+                  :key="idx"
+                  cols="4"
+                >
                   <v-card outlined tile>
                     <ImageViewForMypage
                       :images="like.imglike"
@@ -225,8 +229,7 @@
 import ProfileSetting from "@/components/Mypage/ProfileSetting";
 import { mapGetters, mapActions, mapMutations } from "vuex";
 import ImageViewForMypage from "@/components/module/ImageViewForMypage";
-import { rscApi } from '@/services/api';
-
+import { rscApi } from "@/services/api";
 
 export default {
   name: "Profile",
@@ -302,7 +305,7 @@ export default {
       await this.getProfileInfoInApi(getUserInfo.mypageNickname);
       this.profileData = this.getUserInfo;
       let imageList = [];
-      let imageListForLike = []
+      let imageListForLike = [];
       //이미지 받아온 후
       this.profileData.ootd_list.map(async (idx) => {
         let img = await this.getImageList({ prefix: "ootd/" + idx });
@@ -319,7 +322,9 @@ export default {
     followThisUser() {
       const yourNickname = this.getUserInfo.mypageNickname;
       rscApi
-        .post(`http://i4c102.p.ssafy.io:8080/api/user/follow?nickname=${yourNickname}`)
+        .post(
+          `http://i4c102.p.ssafy.io:8080/api/user/follow?nickname=${yourNickname}`
+        )
         .then((res) => {
           if (res.data) {
             console.log("팔로우성공");

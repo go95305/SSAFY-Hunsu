@@ -85,6 +85,7 @@ const actions = {
     return rscApi
       .get(`wear/detail/${wearIdx}`)
       .then((res) => {
+        // console.log('data', res);
         let replyCount = 0;
         res.data.replyList.map((v) => {
           if (v.flag) {

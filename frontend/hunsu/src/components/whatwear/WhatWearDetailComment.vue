@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-container fluid>      
+    <v-container fluid>
       <p>댓글 {{ getReplyCount }}개</p>
       <v-row>
         <v-col cols="12" sm="6" id="comment_input">
@@ -17,7 +17,7 @@
         </v-col>
       </v-row>
     </v-container>
-    <div v-for="(reply, groupNum) in getWhatwearReplyInfo" :key="groupNum">
+    <div v-for="(reply, groupNum) in whatwearReplyInfo" :key="groupNum">
       <!--댓글창-->
       <v-card
         v-if="reply.depth === 0"
@@ -27,15 +27,19 @@
         <div class="d-flex">
           <div>
             <v-avatar class="mt-5">
-              <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
+              <img :src="reply.profileImage" alt="John" />
             </v-avatar>
           </div>
           <div style="margin: 17px; margin-left: 10px">
             <p style="margin-bottom: 0; font-size: 14px">
               {{ reply.nickname }}
             </p>
-            <p v-if="reply.flag" style="margin-bottom: 0; font-size: 13px">{{ reply.content }}</p>
-            <p v-if="!reply.flag" style="margin-bottom: 0; font-size: 13px">작성자에 의해 삭제된 댓글 입니다.</p>
+            <p v-if="reply.flag" style="margin-bottom: 0; font-size: 13px">
+              {{ reply.content }}
+            </p>
+            <p v-if="!reply.flag" style="margin-bottom: 0; font-size: 13px">
+              작성자에 의해 삭제된 댓글 입니다.
+            </p>
             <div class="d-flex">
               <!--write_date가 null이라서 바로반영못함-->
               <!-- <p style="margin-bottom: 0; font-size: 10px">{{ reply.write_date.slice(0, 10) }}</p> -->
@@ -58,7 +62,8 @@
               <p
                 v-if="reply.nickname === getNickname"
                 style="margin-bottom: 0; margin-left: 10px; font-size: 10px"
-                @click="deleteWhatwearReply(reply.idx)">
+                @click="deleteWhatwearReply(reply.idx)"
+              >
                 삭제
               </p>
             </div>
@@ -80,13 +85,7 @@
         >
       </v-card>
 
-
-
-
-      <v-card>
-
-      </v-card>
-
+      <v-card> </v-card>
 
       <!--대댓글창-->
       <v-card
@@ -97,7 +96,7 @@
         <div class="d-flex">
           <div>
             <v-avatar class="mt-5 ml-4" width="30" height="30">
-              <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
+              <img :src="reply.profileImage" alt="John" />
             </v-avatar>
           </div>
           <div style="margin: 17px; margin-left: 10px">
@@ -127,7 +126,8 @@
               <p
                 v-if="reply.nickname === getNickname"
                 style="margin-bottom: 0; margin-left: 10px; font-size: 10px"
-                @click="deleteWhatwearReply(reply.idx)">
+                @click="deleteWhatwearReply(reply.idx)"
+              >
                 삭제
               </p>
             </div>
@@ -148,9 +148,7 @@
           ><v-icon>mdi-heart</v-icon></v-btn
         >
       </v-card>
-      </div>
-
-
+    </div>
   </div>
 </template>
 
@@ -167,9 +165,18 @@ export default {
     update: false,
     updateReplyIdx: 0,
     iconName: "",
+    whatwearReplyInfo: [],
   }),
   computed: {
-    ...mapGetters(["getWhatwearInfo", "getWhatwearReplyInfo", "getNickname", "getReplyCount"]),
+    ...mapGetters([
+      "getWhatwearInfo",
+      "getWhatwearReplyInfo",
+      "getNickname",
+      "getReplyCount",
+    ]),
+  },
+  mounted() {
+    this.getCommentProfileImages();
   },
   methods: {
     ...mapMutations(["setWhatwearReplyInfo"]),
@@ -178,7 +185,17 @@ export default {
       "likeWhatwearReplyInfo",
       "deleteWhatwearReplyInfo",
       "updateWhatwearReplyInfo",
+      "getWhatwearProfile",
     ]),
+    async getCommentProfileImages() {
+      // 댓글 내 프로필 사진 가져오기
+      this.whatwearReplyInfo = this.getWhatwearReplyInfo;
+      await this.whatwearReplyInfo.map(async (reply) => {
+        const image = await this.getWhatwearProfile(reply.uid);
+        console.log("in reply", image);
+        this.$set(reply, "profileImage", image);
+      });
+    },
     // 댓글작성함수
     createWhatwearReply(wearIdx) {
       if (this.update === true) {
@@ -197,20 +214,15 @@ export default {
           wear_idx: wearIdx,
         });
       }
-      console.log(this.replyContent, this.depth, this.groupNum, this.getNickname, wearIdx)
+      this.getCommentProfileImages();
       this.replyContent = "";
       this.depth = 0;
       this.groupNum = 0;
     },
     // 댓글좋아요 함수
-    likeWhatwearReply(reply) {
-      // if (reply.like) {
-      //   this.iconName = "mdi-heart"
-      // } else {
-      //   this.iconName = "mdi-heart-outline"
-      // }
-      const replyIdx = reply.idx
-      this.likeWhatwearReplyInfo(replyIdx);
+    async likeWhatwearReply(reply) {
+      await this.likeWhatwearReplyInfo(reply.idx);
+      this.getCommentProfileImages();
     },
     // 대댓글작성함수
     clickWhatwearReReply(nickname, groupNum) {
@@ -218,20 +230,14 @@ export default {
       this.depth = 1;
       this.groupNum = groupNum;
     },
-    deleteWhatwearReply(replyIdx) {
-      // console.log(replyIdx);
-      const result = this.deleteWhatwearReplyInfo(replyIdx);
-      if (result) {
-        console.log("삭제됨");
-      } else {
-        console.log("삭제실패");
-      }
+    async deleteWhatwearReply(replyIdx) {
+      await this.deleteWhatwearReplyInfo(replyIdx);
+      this.getCommentProfileImages();
     },
     updateWhatwearReply(reply) {
       this.replyContent = reply.content;
       this.update = true;
       this.updateReplyIdx = reply.idx;
-      // console.log(reply.idx);
     },
   },
 };

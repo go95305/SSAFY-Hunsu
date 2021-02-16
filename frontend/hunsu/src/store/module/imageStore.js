@@ -51,32 +51,31 @@ const mutations = {
 };
 
 const actions = {
-  async uploadImage({ state }, { key, articleIdx }) {
+  uploadImage({ state }, { key, articleIdx }) {
     // 이미지 업로드
-    console.log('uploadImages', key);
-    await state.uploadImageFiles.forEach((imageFile, idx) => {
-      console.log('file', imageFile);
-      //파일 확장자
-      let fileExtList = imageFile.name.split('.');
-      let fileExt = fileExtList[fileExtList.length - 1];
-      console.log(fileExt);
+    return new Promise((resolve, reject) => {
+      state.uploadImageFiles.forEach((imageFile, idx) => {
+        //파일 확장자
+        let fileExtList = imageFile.name.split('.');
+        let fileExt = fileExtList[fileExtList.length - 1];
 
-      s3.upload(
-        {
-          Key: key + articleIdx + '/' + (idx + 1) + '.' + fileExt,
-          Body: imageFile,
-          ACL: 'public-read',
-          ContentType: 'image/' + fileExt,
-        },
-        (err, data) => {
-          if (err) {
-            console.log(err);
-            return alert('There was an error uploading your photo: ', err.message);
+        s3.upload(
+          {
+            Key: key + articleIdx + '/' + (idx + 1) + '.' + fileExt,
+            Body: imageFile,
+            ACL: 'public-read',
+            ContentType: 'image/' + fileExt,
+          },
+          (err, data) => {
+            if (err) {
+              console.log(err);
+              reject(err);
+            }
+            console.log('upload', data);
+            resolve(data);
           }
-          console.log('Successfully uploaded photo.');
-          console.log(data);
-        }
-      );
+        );
+      });
     });
   },
   uploadProfile({ rootState, state }) {
@@ -110,7 +109,7 @@ const actions = {
     // console.log('prefix', prefix);
     let images = [];
     return new Promise((resolve, reject) => {
-      s3.listObjectsV2({ Prefix: prefix }, (err, data) => {
+      s3.listObjectsV2({ Prefix: prefix + '/' }, (err, data) => {
         if (err) {
           reject('getImageList err', err);
         } else {
@@ -139,7 +138,6 @@ const actions = {
   async getProfiles(context, list) {
     // 게시글 내에 위치할 프로필사진들 가져오기
     await list.map((info) => {
-      console.log('in info', info);
       s3.getSignedUrl(
         'getObject',
         {
@@ -174,7 +172,6 @@ const actions = {
           }
           alert('There was an error listing your photo: ', err.message);
         } else {
-          console.log('in profile data', data);
           // image = data;
           if (target === 'my') {
             rootState.user.myProfileImage = data;
