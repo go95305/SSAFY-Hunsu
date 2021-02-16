@@ -115,6 +115,7 @@ export default {
       this.ootd_hashtag_array.splice(index, 1);
     },
     createOotd() {
+      
       // let uploadImage = this.uploadImage;
       let imageFiles = this.getUploadImageFiles;
       let clearUploads = this.clearUploads;
@@ -134,7 +135,8 @@ export default {
         this.ootd_content.length > 0 
       ) {
         // 아무것도 없는 공백막아주기
-        if (this.ootd_content.replace(/(\s*)/g,"") > 0) {
+        if (this.ootd_content.trim().length > 0) {
+
           this.isValid = true
         } 
       }

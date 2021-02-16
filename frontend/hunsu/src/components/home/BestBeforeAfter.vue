@@ -5,7 +5,7 @@
     class="mx-auto mt-3"
     flat
   >
-    <v-card-title class="font-weight-regular ml-13" style="font-size: 1.25rem">이번 주 Best Before&After</v-card-title>
+    <v-card-title class="font-weight-regular ml-13" style="font-size: 1.25rem">Best Solution Of This Week </v-card-title>
     <v-system-bar lights-out class="d-flex justify-space-around">
       <div style="font-size: 1.25rem">BEFORE</div>
       <div style="font-size: 1.25rem">AFTER</div>  
