@@ -294,4 +294,30 @@ public class AuthController {
 
     }
 
+    @ApiOperation(value = "닉네임과 토큰으로 UID 얻기(O)",notes = "실채훈에서 사용할 APi\n" +
+            "\n" +
+            "닉네임으로 UID를 얻는다. \n" +
+            "\n" +
+            "- msg : UID값\n" +
+            "\n")
+    @PostMapping(value ="/getuid")
+    public CommonResult getUid(@ApiParam("jwtToken") @RequestParam String jwtToken, @ApiParam("nickname") @RequestParam String nickname){
+        CommonResult result = new CommonResult();
+        Optional<User> reqUser = userJpaRepo.findUserByJwtAccess(jwtToken);
+        if(!reqUser.isPresent()){
+            result.setSuccess(false);
+            result.setMsg("일치하는 jwtToken이 없습니다"); // 테스트 후 삭제
+        }else {
+            Optional<User> user = userJpaRepo.findUserByNickname(nickname);
+            if (user.isPresent()) {
+                result.setSuccess(true);
+                result.setMsg(String.valueOf(user.get().getUid()));
+            } else {
+                result.setSuccess(false);
+            }
+        }
+
+        return result;
+    }
+
 }
