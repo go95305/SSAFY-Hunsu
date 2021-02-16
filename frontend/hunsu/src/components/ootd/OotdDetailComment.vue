@@ -23,7 +23,7 @@
         flat
         class="d-flex align-center justify-space-around"
       >
-        <div class="d-flex">
+        <div class="d-flex" style="width: 270px">
           <div>
             <v-avatar class="mt-5 ml-3">
               <img :src="reply.profileImage" alt="John" />
