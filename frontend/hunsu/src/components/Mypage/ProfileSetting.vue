@@ -18,7 +18,12 @@
         <v-toolbar-title>프로필수정</v-toolbar-title>
         <v-spacer></v-spacer>
         <v-toolbar-items>
-          <v-btn :disabled="nicknameStatus === 'nope' " dark text @click="updateProfile(newNickname, height, size)">
+          <v-btn
+            :disabled="nicknameStatus === 'nope'"
+            dark
+            text
+            @click="updateProfile(newNickname, height, size)"
+          >
             완료
           </v-btn>
         </v-toolbar-items>
@@ -54,7 +59,12 @@
             hint="닉네임 중복체크 필수"
             outlined
           ></v-text-field>
-          <v-btn :disabled="getNickname === newNickname" class="d-inline-block" @click="nicknameCheck(newNickname)">중복체크</v-btn>
+          <v-btn
+            :disabled="getNickname === newNickname"
+            class="d-inline-block"
+            @click="nicknameCheck(newNickname)"
+            >중복체크</v-btn
+          >
         </div>
         <div class="mx-5">
           <p class="text-h6 font-weight-bold">추가정보</p>
@@ -76,7 +86,7 @@
         </div>
         <div class="d-flex justify-end mt-15 pt-15">
           <div>
-          <v-btn text @click="deleteUser()">회원탈퇴</v-btn>
+            <v-btn text @click="deleteUser()">회원탈퇴</v-btn>
           </div>
         </div>
       </div>
@@ -85,7 +95,7 @@
 </template>
 <script>
 import { mapActions, mapGetters, mapMutations } from "vuex";
-import { rscApi, authApi } from '@/services/api';
+import { rscApi, authApi } from "@/services/api";
 
 export default {
   name: "ProfileSetting",
@@ -111,7 +121,7 @@ export default {
       newNickname: "",
       height: "",
       size: "",
-      nicknameStatus: '',
+      nicknameStatus: "",
     };
   },
   mounted() {
@@ -130,7 +140,7 @@ export default {
       "getProfileImage",
       "updateMyProfileInfoInApi",
       "getProfileInfoInApi",
-      "logout"
+      "logout",
     ]),
     ...mapMutations([
       "setUploadImageFiles",
@@ -146,60 +156,48 @@ export default {
 
       this.setUploadImageFiles(e.target.files);
       this.setUploadImageUrls();
-      console.log("onChange imageURl ", this.getUploadImageUrls);
     },
-    updateProfile(newNickname, height, size) {
+    async updateProfile(newNickname, height, size) {
       // 프로필사진 업로드, 정보수정
-      console.log('테스트1')
       this.dialog = false;
-      this.uploadProfile()
-      console.log('테스트2')
-
-        .then(() => {
-          this.getProfileImage({
-            uid: this.getUid,
-            target: "my",
-          });
-          this.setTargetProfileImage(this.getMyProfileImage);
-        })
-        .then(() => {
-          this.clearUploads();
-        });
-      console.log('테스트3')
+      await this.uploadProfile();
+      await this.getProfileImage({
+        uid: this.getUid,
+        target: "my",
+      });
+      this.setTargetProfileImage(this.getMyProfileImage);
+      this.clearUploads();
 
       this.updateMyProfileInfoInApi({
         newNickname,
         height,
         size,
-      }).then(() => {
-      console.log('테스트4')
+      });
 
-        this.getProfileInfoInApi(this.newNickname);
+      this.getProfileInfoInApi(this.newNickname);
+      // this.$router.push({ name: "Home" }).catch(() => {});
+    },
+    nicknameCheck(nickname) {
+      return authApi
+        .post(`/v1/auth/nickname?nickname=${nickname}`)
+        .then((res) => {
+          console.log(res.data, "트루니?");
+          if (res.data) {
+            alert("사용가능한 닉네임입니다.");
+            this.nicknameStatus = "yes";
+          } else {
+            alert("이미 사용중인 닉네임입니다.");
+            this.nicknameStatus = "nope";
+          }
+        });
+    },
+    deleteUser() {
+      return rscApi.put("/user/mypage/delete").then(() => {
+        console.log("회원탈퇴성공");
+        this.logout();
         this.$router.push({ name: "Home" }).catch(() => {});
       });
     },
-    nicknameCheck(nickname) {
-      return authApi.post(`/v1/auth/nickname?nickname=${nickname}`)
-      .then((res) => {
-        console.log(res.data, '트루니?')
-        if (res.data) {
-          alert('사용가능한 닉네임입니다.')
-          this.nicknameStatus = "yes"
-        } else {
-          alert('이미 사용중인 닉네임입니다.')
-          this.nicknameStatus = "nope"
-
-        }
-      })
-      },
-    deleteUser() {
-      return rscApi.put('/user/mypage/delete')
-      .then(() => {
-        console.log('회원탈퇴성공')
-        this.logout()
-        this.$router.push({name: 'Home'}).catch(() => {})
-      })
-    }
   },
 };
 </script>

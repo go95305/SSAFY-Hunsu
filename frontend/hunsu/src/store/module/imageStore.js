@@ -78,26 +78,28 @@ const actions = {
   },
   uploadProfile({ rootState, state }) {
     // 프로필사진 업로드
-    const imageFile = state.uploadImageFiles[state.uploadImageFiles.length - 1];
-    console.log('profilefile', imageFile);
-    //파일 확장자
-    let fileExtList = imageFile.name.split('.');
-    let fileExt = fileExtList[fileExtList.length - 1];
-    s3.upload(
-      {
-        Key: 'mypage/' + rootState.user.uid + '/' + rootState.user.uid,
-        Body: imageFile,
-        ACL: 'public-read',
-        ContentType: 'image/' + fileExt,
-      },
-      (err, data) => {
-        if (err) {
-          console.log(err);
-          return alert('There was an error uploading your photo: ', err.message);
+    return new Promise((resolve, reject) => {
+      const imageFile = state.uploadImageFiles[state.uploadImageFiles.length - 1];
+      console.log('profilefile', imageFile);
+      //파일 확장자
+      let fileExtList = imageFile.name.split('.');
+      let fileExt = fileExtList[fileExtList.length - 1];
+      s3.upload(
+        {
+          Key: 'mypage/' + rootState.user.uid + '/' + rootState.user.uid,
+          Body: imageFile,
+          ACL: 'public-read',
+          ContentType: 'image/' + fileExt,
+        },
+        (err, data) => {
+          if (err) {
+            reject(err);
+            return alert('There was an error uploading your photo: ', err.message);
+          }
+          resolve(data);
         }
-        console.log(data);
-      }
-    );
+      );
+    });
   },
   getImageList(context, { prefix }) {
     // prefix에 위치한 이미지 리스트 가져오기
@@ -150,34 +152,38 @@ const actions = {
     });
   },
   getProfileImage({ rootState }, { uid, target }) {
-    // 마이페이지 및 디테일에서의 프로필 이미지 가져오기
-    let key = `mypage/${uid}/${uid}`;
-    s3.getSignedUrl(
-      'getObject',
-      {
-        Bucket: this.albumBucketName,
-        Key: key,
-      },
-      (err, data) => {
-        if (err) {
-          if (target === 'my') {
-            rootState.user.myProfileImage = null;
+    return new Promise((resolve, reject) => {
+      // 마이페이지 및 디테일에서의 프로필 이미지 가져오기
+      let key = `mypage/${uid}/${uid}`;
+      s3.getSignedUrl(
+        'getObject',
+        {
+          Bucket: this.albumBucketName,
+          Key: key,
+        },
+        (err, data) => {
+          if (err) {
+            if (target === 'my') {
+              rootState.user.myProfileImage = null;
+            } else {
+              rootState.user.targetProfileImage = null;
+            }
+            reject(err);
+            alert('There was an error listing your photo: ', err.message);
           } else {
-            rootState.user.targetProfileImage = null;
-          }
-          alert('There was an error listing your photo: ', err.message);
-        } else {
-          // image = data;
-          if (target === 'my') {
-            rootState.user.myProfileImage = data;
-            // commit('user/setMyProfileImage', data, { root: true });
-          } else if (target === 'target') {
-            rootState.user.targetProfileImage = data;
-            // commit('userStorer/setTargetProfileImage', data, { root: true });
+            // image = data;
+            if (target === 'my') {
+              rootState.user.myProfileImage = data;
+              // commit('user/setMyProfileImage', data, { root: true });
+            } else if (target === 'target') {
+              rootState.user.targetProfileImage = data;
+              // commit('userStorer/setTargetProfileImage', data, { root: true });
+              resolve(data);
+            }
           }
         }
-      }
-    );
+      );
+    });
   },
   getWhatwearProfile(context, uid) {
     return new Promise((resolve, reject) => {

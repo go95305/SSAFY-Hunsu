@@ -13,7 +13,6 @@
       :limitNum="limit"
       style="margin: 20px"
     />
-    <!-- <OotdScroll /> -->
   </div>
 </template>
 
@@ -23,7 +22,6 @@ import OotdSearchBtn from "@/components/ootd/OotdSearchBtn";
 import OotdWritePage from "@/components/ootd/OotdWritePage";
 import OotdFilter from "@/components/ootd/OotdFilter";
 import { EventBus } from "@/services/eventBus";
-// import OotdScroll from '@/components/ootd/OotdScroll'
 
 export default {
   name: "Ootd",
@@ -32,7 +30,6 @@ export default {
     OotdSearchBtn,
     OotdWritePage,
     OotdFilter,
-    // OotdScroll
   },
   data() {
     return {
