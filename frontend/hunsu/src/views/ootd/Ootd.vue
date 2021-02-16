@@ -13,12 +13,6 @@
       :limitNum="limit"
       style="margin: 20px"
     />
-    <OotdListForHashtag
-    v-if="getOotdSearchedList.length"
-      :key="key"
-      style="margin: 20px"
-    />
-
   </div>
 </template>
 
@@ -29,8 +23,6 @@ import OotdSearchBtn from "@/components/ootd/OotdSearchBtn";
 import OotdWritePage from "@/components/ootd/OotdWritePage";
 import OotdFilter from "@/components/ootd/OotdFilter";
 import { EventBus } from "@/services/eventBus";
-import { mapGetters } from "vuex";
-// import OotdScroll from '@/components/ootd/OotdScroll'
 
 
 export default {
@@ -40,8 +32,6 @@ export default {
     OotdSearchBtn,
     OotdWritePage,
     OotdFilter,
-    OotdListForHashtag
-    // OotdScroll
   },
   data() {
     return {
