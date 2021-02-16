@@ -13,6 +13,7 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+import { EventBus } from "@/services/eventBus";
 
 export default {
   name: "OotdSearchBtn",
@@ -45,6 +46,7 @@ export default {
         });
       });
       console.log(this.getOotdList);
+      EventBus.$emit("searchHashtag", this.getOotdList)
     },
   },
 };
