@@ -100,7 +100,7 @@ export default {
       // root.getProfileImage({
       //   nickname: info.nickname,
       // });
-    });
+    })
     console.log(this.getOotdList);
     // .then((res) => {
     //   root.getProfiles(res);
