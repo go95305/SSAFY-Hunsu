@@ -13,6 +13,7 @@
 
 <script>
 import { mapActions, mapGetters } from "vuex";
+import { EventBus } from "@/services/eventBus";
 
 export default {
   name: "OotdSearchBtn",
@@ -44,7 +45,12 @@ export default {
           // info.imageUrls = res;
         });
       });
+<<<<<<< HEAD
       console.log(this.getOotdSearchedList, '해시태그검색완료입니당');
+=======
+      console.log(this.getOotdList);
+      EventBus.$emit("searchHashtag", this.getOotdList)
+>>>>>>> c95928be9cbf64cb831da89a63c69638111f5b0b
     },
   },
 };
