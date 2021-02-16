@@ -22,15 +22,15 @@
       <v-card
         v-if="reply.depth === 0"
         flat
-        class="d-flex align-center justify-space-around"
+        class="d-flex align-center justify-space-between"
       >
         <div class="d-flex">
           <div>
-            <v-avatar class="mt-5">
+            <v-avatar class="mt-5 ml-3">
               <img :src="reply.profileImage" alt="John" />
             </v-avatar>
           </div>
-          <div style="margin: 17px; margin-left: 10px">
+          <div style="margin: 17px; margin-left: 10px;">
             <p style="margin-bottom: 0; font-size: 14px">
               {{ reply.nickname }}
             </p>
@@ -70,6 +70,7 @@
           </div>
         </div>
         <v-btn
+          class="mr-2"
           v-if="reply.like === false"
           icon
           @click="likeWhatwearReply(reply)"
