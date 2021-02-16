@@ -18,25 +18,29 @@ public class ChatRoom implements Serializable {
     private static final long serialVersionUID = 6494678977089006639L;
 
     private String roomId; //채팅방 ID
-    private String name; //채팅방 이름
+    private String title; //채팅방 이름
     private long userCount; // 채팅방 인원수
     private Long likeCount; //채팅방 좋아요 수
     @JsonFormat(with = JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
     private List<String> hashtagList; //해시태그
-    private String publisher;//개설자
+    private String nickname;//개설자
+    private Long uid; //개설자 uid
+    private String jwtToken;
     private String fixedComment; //고정댓글
     private Long creatDate; // 채팅방 개설 시간(날짜)
 
-    public static ChatRoom create(String name, String publisher, List<String> hashtagList, String fixedComment) {
+    public static ChatRoom create(String title, String nickname, List<String> hashtagList, String fixedComment, Long uid) {
         ChatRoom chatRoom = new ChatRoom();
         chatRoom.roomId = UUID.randomUUID().toString();
-        chatRoom.name = name;
-        chatRoom.publisher = publisher;
+        chatRoom.title = title;
+        chatRoom.nickname = nickname;
         chatRoom.hashtagList = new ArrayList<>();
         chatRoom.hashtagList = hashtagList;
         chatRoom.fixedComment = fixedComment;
         chatRoom.creatDate = System.currentTimeMillis();
         chatRoom.likeCount = (long)0;
+        chatRoom.uid = uid;
+
         return chatRoom;
     }
 }

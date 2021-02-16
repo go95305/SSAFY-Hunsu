@@ -1,13 +1,27 @@
 package com.project.chat.controller;
 
 import com.project.chat.dto.ChatRoom;
+import com.project.chat.dto.JSONResponseUtil;
+import com.project.chat.dto.UidResponse;
 import com.project.chat.repository.ChatRoomRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
@@ -18,11 +32,6 @@ import java.util.List;
 public class ChatRoomController {
 
     private final ChatRoomRepository chatRoomRepository;
-
-    @GetMapping("/room")
-    public String rooms() {
-        return "/chat/room";
-    }
 
     //실채훈 메인페이지(모든 채팅방 리스트)
     @GetMapping("/rooms/{sort}")
@@ -37,7 +46,18 @@ public class ChatRoomController {
     //채팅방 생성
     @PostMapping("/room")
     @ResponseBody
-    public ChatRoom createRoom(@RequestBody ChatRoom chatRoom) {
+    public ChatRoom createRoom(@RequestBody ChatRoom chatRoom) throws IOException {
+        RestTemplate restTemplate = new RestTemplate();
+        String url = "http://i4c102.p.ssafy.io:8081/api/v1/auth/getuid";
+        HttpHeaders headers = new HttpHeaders();
+
+        UriComponents builder = UriComponentsBuilder.fromHttpUrl(url)
+                .queryParam("jwtToken", chatRoom.getJwtToken())
+                .queryParam("nickname", chatRoom.getNickname())
+                .build(false);    //자동으로 encode해주는 것을 막기 위해 false
+        ResponseEntity<String> res = restTemplate.exchange(builder.toUriString(), HttpMethod.GET, new HttpEntity<String>(headers), String.class);
+        chatRoom.setUid(Long.parseLong(res.getBody().split("\"")[7]));
+
         return chatRoomRepository.createChatRoom(chatRoom);
     }
 

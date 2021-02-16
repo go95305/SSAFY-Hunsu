@@ -24,6 +24,7 @@ dependencies {
     implementation 'org.webjars:stomp-websocket:2.3.3-1'
     implementation 'com.google.code.gson:gson:2.8.0'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    compile group: 'com.hynnet', name: 'json-lib', version: '2.4'
 //embedded-redis
     compile group: 'it.ozimov', name: 'embedded-redis', version: '0.7.2'
 
