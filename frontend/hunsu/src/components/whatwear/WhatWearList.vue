@@ -2,45 +2,47 @@
   <!-- WHATWEAR 메인 페이지 -->
   <!--v-for 사용을 위한 최상위 div-->
   <v-card flat>
-    <!-- <v-btn @click="testa">test</v-btn> -->
-    <v-btn @click="getImages">test</v-btn>
     <v-card
-      v-for="(whatwear, idx) in getWhatwearListInfo"
+      v-for="(whatwear, idx) in whatwearList"
       :key="idx"
       @click="goToWhatwearDetail(whatwear)"
       flat
     >
-      <div class="d-flex align-center pt-4 mb-4">
+      <div>
         <!--프로필사진-->
-        <!-- <div class="mt-2"></div> -->
-        <v-avatar class="mt-5 ml-2">
-          <v-img
-            v-if="whatwear.profileImage"
-            :src="whatwear.profileImage"
-            @click="goToWhatwearDetail(whatwear)"
-          />
-          <v-img
-            v-else
-            src="https://s.pstatic.net/static/newsstand/2020/logo/dark/0604/018.png"
-          />
-          <!--유저닉네임-->
-        </v-avatar>
-        <v-card-subtitle class="mt-4 font-weight-bold" id="nickname">
-          {{ whatwear.nickname }}
-        </v-card-subtitle>
-        <!--뭘입을까 글제목-->
-        <v-card-subtitle class="mt-4 font-weight-bold">
-          {{ whatwear.title }}
-        </v-card-subtitle>
-        <!--투표기능뱃지-->
-        <v-badge
-          v-if="whatwear.voteActivated"
-          color="red accent-3"
-          content="투표"
-          inline
-          class="mt-8"
-        >
-        </v-badge>
+        <div class="d-flex ml-4 pt-4">
+          <v-avatar>
+            <v-img
+              :src="whatwear.profileImage"
+              @click="goToWhatwearDetail(whatwear)"
+            />
+            <!-- <v-img
+              v-else
+              src="https://s.pstatic.net/static/newsstand/2020/logo/dark/0604/018.png"
+            /> -->
+          </v-avatar>
+            <!--유저닉네임-->
+          <v-card-subtitle class="mt-3 ml-2 font-weight-bold" id="nickname">
+            {{ whatwear.nickname }}
+          </v-card-subtitle>
+        </div>
+
+        <div class="d-flex align-center mt-3 mb-5">
+          <!--뭘입을까 글제목-->
+          <v-card-subtitle class="ml-5 text-subtitle-1 font-weight-bold" id="title">
+            {{ whatwear.title }}
+          </v-card-subtitle>
+          <!--투표기능뱃지-->
+          <v-badge
+            v-if="whatwear.voteActivated"
+            color="red accent-3"
+            content="투표"
+            inline
+            class="ml-1"
+          >
+          </v-badge>
+        </div>
+        <v-divider></v-divider>
         <!-- <div class="mb-2"></div> -->
       </div>
     </v-card>
@@ -61,17 +63,27 @@
 <script>
 // import { rscApi } from "@/services/api"
 import { mapActions, mapMutations, mapGetters } from "vuex";
+import { EventBus } from "@/services/eventBus";
 
 export default {
   name: "WhatWearList",
   data() {
     return {
       page: 1,
+      whatwearList: [],
       // length: parseInt(this.getWhatwearListInfo.length / 10) + 1
     };
   },
   computed: {
     ...mapGetters(["getWhatwearListInfo", "getWhatwearListCount"]),
+  },
+  async created() {
+    // await this.pageWhatwear();
+    EventBus.$on("WhatwearWriteSuccess", (whatwear) => {
+      this.goToWhatwearDetail(whatwear);
+      this.pageWhatwear();
+    });
+    // await this.pageWhatwear();
   },
   async mounted() {
     await this.pageWhatwear();
@@ -86,7 +98,6 @@ export default {
     ]),
     ...mapMutations(["setWhatwearInfoImages"]),
     async goToWhatwearDetail(whatwear) {
-      console.log("go detail", whatwear);
       // 뭘입을까 상세정보 가져오기
       await this.getWhatwearInfoApi({
         wearIdx: whatwear.wear_idx,
@@ -106,19 +117,14 @@ export default {
 
     async pageWhatwear() {
       // durldrudlrudrljdruldrldrldlr
-      const pageNum = this.page;
-      await this.getWhatwearListInfoApi(pageNum);
+      console.log("qwer");
+      await this.getWhatwearListInfoApi(this.page);
+      this.whatwearList = this.getWhatwearListInfo;
       this.getImages();
-      // await this.getWhatwearListInfo.forEach(async (info) => {
-      //   const profile = await this.getWhatwearProfile(info.uid);
-      //   this.$set(info, "profileImage", profile);
-      // });
-      console.log(this.getWhatwearListInfo);
     },
     getImages() {
-      this.getWhatwearListInfo.forEach(async (info) => {
+      this.whatwearList.forEach(async (info) => {
         const profile = await this.getWhatwearProfile(info.uid);
-        console.log(profile);
         this.$set(info, "profileImage", profile);
       });
     },
@@ -127,11 +133,6 @@ export default {
 </script>
 
 <style>
-#profile {
-  width: 35px;
-  height: 35px;
-}
-
 #nickname {
   padding: 0 0 0 0;
 }

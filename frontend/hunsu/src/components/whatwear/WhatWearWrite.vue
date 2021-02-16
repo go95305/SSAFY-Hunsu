@@ -176,6 +176,7 @@
 import { rscApi } from "@/services/api";
 import { mapGetters, mapActions, mapMutations } from "vuex";
 import ImageUpload from "@/components/module/ImageUpload";
+import { EventBus } from "@/services/eventBus";
 
 export default {
   name: "WhatWearWrite",
@@ -212,7 +213,12 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getNickname", "getUploadImageUrls", "getUploadImageFiles"]),
+    ...mapGetters([
+      "getNickname",
+      "getUploadImageUrls",
+      "getUploadImageFiles",
+      "getUid",
+    ]),
   },
   methods: {
     ...mapActions(["uploadImage", "getWhatwearListInfoApi"]),
@@ -232,8 +238,9 @@ export default {
     },
     async createWhatWear() {
       // dialog창 닫기 + 입력데이터 보내기
+      console.log("boolean check", this.timeDialog, this.dateDialog);
       this.dialog = false;
-      if (this.timeDialog && this.dateDialog) {
+      if (this.dates && this.time) {
         this.endtime = this.dates.concat("T", this.time, ":00");
       }
       // 원래는 투표이미지 갯수인데 우선 투표체크박스 활성화하면 숫자가 3이 들어가도록 구현함
@@ -271,18 +278,18 @@ export default {
         num: this.num,
         title: this.whatwearTitle,
       });
-      // console.log('뭘입을까글쓰기성공')
-      // console.log("resres", res);
-      console.log("hi", res.data);
 
-      (this.whatwearTitle = ""), (this.whatwearContent = ""), (this.num = 0);
       if (this.getUploadImageFiles.length !== 0) {
-        // console.log("in wear file", imageFiles);
         await this.uploadImage({ key: "whatwear/", articleIdx: res.data });
         this.clearUploads();
       }
 
-      this.getWhatwearListInfoApi(1);
+      (this.whatwearTitle = ""), (this.whatwearContent = ""), (this.num = 0);
+      EventBus.$emit("WhatwearWriteSuccess", {
+        wear_idx: res.data,
+        voteActivated: this.vote,
+        uid: this.getUid,
+      });
     },
 
     inputDate(dates) {

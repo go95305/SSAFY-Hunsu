@@ -1,13 +1,11 @@
 <template>
 <div>
-    <OotdFilter />
-  <div class="d-flex flex-row-reverse">
-    <div class="d-inline-block mx-5 mt-4">
-    <OotdWritePage />
-    </div>
-    <div class="d-inline-block">
+  <div class="d-flex justify-center">
     <OotdSearchBtn />
-    </div>
+  </div>
+  <div class="d-flex justify-space-between">
+    <OotdFilter />
+    <OotdWritePage />
   </div>
     <OotdList style="margin: 20px" />
     <!-- <OotdScroll /> -->

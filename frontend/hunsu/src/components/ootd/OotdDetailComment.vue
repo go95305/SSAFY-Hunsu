@@ -16,7 +16,7 @@
         </v-col>
       </v-row>
     </v-container>
-    <div v-for="(reply, groupNum) in getOotdReplyInfo" :key="groupNum">
+    <div v-for="(reply, groupNum) in ootdReplyInfo" :key="groupNum">
       <!--댓글창-->
       <v-card
         v-if="reply.isDeleted"
@@ -82,16 +82,23 @@ export default {
     groupNum: 0,
     update: false,
     updateReplyIdx: 0,
+    ootdReplyInfo: [],
   }),
   computed: {
     ...mapGetters(["getOotdInfo", "getOotdReplyInfo", "getNickname"]),
   },
   async mounted() {
     //프로필 이미지 가져옴
-    await this.getOotdReplyInfo.forEach(async (reply) => {
-      const image = await this.getWhatwearProfile(reply.uid);
-      this.$set(reply, "profileImage", image);
-    });
+    this.ootdReplyInfo = this.getOotdReplyInfo;
+    console.log("info", this.ootdReplyInfo);
+
+    this.getCommentProfileImages();
+    // await this.ootdReplyInfo.map(async (reply) => {
+    //   const image = await this.getWhatwearProfile(reply.uid);
+    //   console.log("in reply", image);
+    //   this.$set(reply, "profileImage", image);
+    // });
+    // console.log(this.getOotdReplyInfo);
   },
   methods: {
     ...mapMutations(["setOotdReplyInfo"]),
@@ -102,16 +109,24 @@ export default {
       "updateOotdReplyInfo",
       "getWhatwearProfile",
     ]),
-    // 댓글작성함수
-    createOotdReply(ootd_idx) {
+    async getCommentProfileImages() {
+      // 댓글 내 프로필 사진 가져오기
+      this.ootdReplyInfo = this.getOotdReplyInfo;
+      await this.ootdReplyInfo.map(async (reply) => {
+        const image = await this.getWhatwearProfile(reply.uid);
+        this.$set(reply, "profileImage", image);
+      });
+    },
+    // 댓글 작성 및 수정
+    async createOotdReply(ootd_idx) {
       if (this.update) {
-        this.updateOotdReplyInfo({
+        await this.updateOotdReplyInfo({
           content: this.replyContent,
           replyIdx: this.updateReplyIdx,
         });
         console.log("수정성공");
       } else {
-        this.createOotdReplyInfo({
+        await this.createOotdReplyInfo({
           content: this.replyContent,
           depth: this.depth,
           groupNum: this.groupNum,
@@ -121,6 +136,7 @@ export default {
 
         console.log("댓글작성성공");
       }
+      this.getCommentProfileImages();
 
       this.replyContent = "";
       this.depth = 0;
@@ -128,20 +144,18 @@ export default {
       this.update = false;
     },
     // 댓글좋아요 함수
-    likeOotdReply(replyIdx) {
-      this.likeOotdReplyInfo(replyIdx);
+    async likeOotdReply(replyIdx) {
+      await this.likeOotdReplyInfo(replyIdx);
+      this.getCommentProfileImages();
       console.log(this.getOotdReplyInfo);
     },
 
-    deleteOotdReply(replyIdx) {
-      const result = this.deleteOotdReplyInfo(replyIdx);
-      if (result) {
-        console.log("삭제됨");
-        console.log(this.getOotdReplyInfo);
-      } else {
-        console.log("삭제실패");
-      }
+    //댓글 삭제
+    async deleteOotdReply(replyIdx) {
+      await this.deleteOotdReplyInfo(replyIdx);
+      this.getCommentProfileImages();
     },
+
     updateOotdReply(reply) {
       this.replyContent = reply.content;
       this.update = true;

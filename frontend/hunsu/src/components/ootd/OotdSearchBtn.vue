@@ -18,8 +18,8 @@ export default {
   name: "OotdSearchBtn",
   data() {
     return {
-      searchWord: ''
-    }
+      searchWord: "",
+    };
   },
   computed: {
     ...mapGetters(["getOotdList"]),
@@ -33,24 +33,25 @@ export default {
       "getProfileInfoInApi",
       "getProfileImage",
       "getProfiles",
-      ]),
+    ]),
     async searchHashtag(searchWord) {
       let root = this;
-      await this.getSearchedListInApi(searchWord)
+      await this.getSearchedListInApi(searchWord);
       root.getProfiles(this.getOotdList);
       this.getOotdList.forEach((info) => {
         root.getImageList({ prefix: "ootd/" + info.ootdIdx }).then((res) => {
-          info.imageUrls = res;
-          console.log(info.imageUrls,' 응엉')
+          this.$set(info, "imageUrls", res);
+          // info.imageUrls = res;
         });
       });
-    }
-  }
-
-
-}
+      console.log(this.getOotdList);
+    },
+  },
+};
 </script>
 
 <style>
-
+#searchbar {
+  margin-top: 5%;
+}
 </style>
