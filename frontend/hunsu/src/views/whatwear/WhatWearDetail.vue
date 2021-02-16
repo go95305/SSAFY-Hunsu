@@ -88,7 +88,7 @@
       </v-list>
     </div>
     <!--투표x 사진-->
-    <div v-if="!whatwearInfo.vote_activated">
+    <div v-if="!whatwearInfo.vote_activated && getWhatwearInfoImages.length > 0">
       <v-carousel
         v-if="getWhatwearInfoImages"
         v-model="model"

@@ -140,6 +140,7 @@ export default {
       }
 
       if (this.isValid) {
+        console.log('hi')
         this.dialog = false;
         this.createOotdInfo(params).then((res) => {
           if (!res) {

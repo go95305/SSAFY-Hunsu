@@ -44,6 +44,15 @@ export default {
       }
     },
   },
+  // created() {
+  //   if (this.$route.name === 'Login') {
+  //     this.show = false
+  //   }
+  //   if (this.$route.name === 'SignUp') {
+  //     this.show = false
+  //   }
+  //   console.log(this.show)
+  //   },
   async mounted() {
     // 자동로그인 처리
     if (!this.typeCheck(this.getAccessToken)) {
@@ -60,7 +69,9 @@ export default {
     }
   },
   data() {
-    return {};
+    return {
+      // show: true,
+    };
   },
   methods: {
     ...mapActions(["kakaoLogin", "getProfileImage", "getImageList"]),
