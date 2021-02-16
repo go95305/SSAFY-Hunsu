@@ -177,7 +177,7 @@ public class UserService {
 
         List<Ootd> ootdList = ootdRepository.findOotdByUser(user);
         List<Wear> wearList = wearRepository.findWearByUser(user);
-        List<OotdLike> ootdLikeList = ootdLikeRepository.findOotdLikeByUser(user);
+        List<OotdLike> ootdLikeList = ootdLikeRepository.findOotdLikeByUserAndFlag(user, true);
         List<OotdReplyLike> ootdReplyLikeList = ootdReplyLikeRepository.findOotdReplyLikeByUser(user);
         List<OotdReply> ootdReplyList = ootdReplyRepository.findOotdReplyByUser(user);
         List<VoteChoice> voteChoiceList = voteChoiceRepository.findVoteChoiceByUser(user);
