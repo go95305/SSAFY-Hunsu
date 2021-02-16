@@ -143,10 +143,10 @@ export default {
       );
     },
     goToHome() {
-      this.$router.push("/");
+      this.$router.push("/").catch(() => {})
     },
     goToLogin() {
-      this.$router.push("/login");
+      this.$router.push("/login").catch(() => {})
     },
 
   },

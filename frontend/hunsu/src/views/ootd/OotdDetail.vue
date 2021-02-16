@@ -215,6 +215,7 @@ export default {
       "getNickname",
       "getOotdInfoImages",
       "getTargetProfileImage",
+      "getOotdList"
     ]),
   },
   data() {
@@ -274,7 +275,7 @@ export default {
       "getProfileImage",
       "getOotdListInApi",
       "getProfiles",
-      "getClickedHashtagListInApi"
+      "getClickedHashtagListInApi",
     ]),
     onoffUpdateDialog() {
       // 수정 dialog 활성화
@@ -357,10 +358,23 @@ export default {
       }
       this.toggleLike(this.getNickname);
     },
-    searchHashtag(hashtag) {
-      this.$router.push({ name: "Ootd" }).catch(() => {});
-      this.getClickedHashtagListInApi(hashtag)
+    async searchHashtag(hashtag) {
+      let root = this;
+      await this.getClickedHashtagListInApi(hashtag)
+      root.getProfiles(this.getOotdList);
+      this.getOotdList.forEach((info) => {
+        root.getImageList({ prefix: "ootd/" + info.ootdIdx }).then((res) => {
+          info.imageUrls = res;
+          console.log(info.imageUrls,'아클릭했다고해시태그')
+        });
+      })
+      console.log('수지나와라', hashtag)
+
+      this.$router.push({ name: "Ootd" })
     }
+
+
+
   },
 };
 </script>

@@ -84,7 +84,7 @@ export default {
       return "";
     },
   },
-  async created() {
+  async mounted() {
     // let ootdList;
     let root = this;
     await this.getOotdListInApi({

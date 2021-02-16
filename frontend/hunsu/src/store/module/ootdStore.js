@@ -55,6 +55,7 @@ const actions = {
   async getSearchedListInApi(context, hashtag) {
     const ootdList = await rscApi
       .get(`ootd/hashtag/search/${hashtag}`)
+
     if (ootdList) {
       ootdList.data.forEach((info) => {
         info.imageUrls = []
