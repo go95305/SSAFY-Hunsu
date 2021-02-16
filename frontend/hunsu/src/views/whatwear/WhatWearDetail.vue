@@ -15,7 +15,12 @@
           <!--작성자정보-->
           <v-list-item-avatar>
             <!--프로필이미지-->
-            <v-img :src="getTargetProfileImage" alt="John" width="100"></v-img>
+            <v-img
+              :src="getTargetProfileImage"
+              @click="goToProfilePage"
+              alt="John"
+              width="100"
+            ></v-img>
           </v-list-item-avatar>
           <v-list-item-content>
             <!--닉네임-->
@@ -249,7 +254,17 @@ export default {
   },
   methods: {
     ...mapMutations(["setWhatwearInfo"]),
-    ...mapActions(["getWhatwearInfoApi", "voteWhatwearInfo", "getImageList"]),
+    ...mapActions([
+      "getWhatwearInfoApi",
+      "voteWhatwearInfo",
+      "getImageList",
+      "getProfileInfoInApi",
+    ]),
+    async goToProfilePage() {
+      await this.getProfileInfoInApi(this.whatwearInfo.nickname);
+      window.scrollTo({ top: "0", behavior: "smooth" });
+      this.$router.push({ name: "MyPage" });
+    },
     // 글 삭제 함수
     deleteWhatWear(wear_idx) {
       // const wearIdx = wear_idx;

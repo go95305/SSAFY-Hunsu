@@ -11,7 +11,7 @@ import OotdDetail from '@/views/ootd/OotdDetail';
 import LiveDetail from '@/views/live/LiveDetail';
 import Description from '@/views/Description';
 import SignUp from '@/components/Mypage/SignupInfo';
-import AboutUs from '@/views/AboutUs'
+import AboutUs from '@/views/AboutUs';
 // import SignUp from '@/views/user/SignUp';
 // import Auth from "@/views/user/Auth"
 

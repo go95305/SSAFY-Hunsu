@@ -112,6 +112,7 @@ export default {
 
       // 작성자 프로필사진 가져오기
       await this.getProfileImage({ uid: whatwear.uid, target: "target" });
+      window.scrollTo({ top: "0", behavior: "smooth" });
       this.$router.push({ name: "WhatWearDetail" });
     },
 
