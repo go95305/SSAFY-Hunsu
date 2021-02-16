@@ -1,6 +1,6 @@
 <template>
 <div>
-  <div class="d-flex justify-center">
+  <div class="ml-2">
     <OotdSearchBtn />
   </div>
   <div class="d-flex justify-space-between">

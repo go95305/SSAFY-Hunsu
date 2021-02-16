@@ -2,7 +2,7 @@
   <div>
     <v-container fluid>
       <v-row>
-        <v-col cols="12" sm="6">
+        <v-col cols="12" sm="6" id="comment_input">
           <v-text-field
             label="댓글쓰기"
             outlined
@@ -23,9 +23,9 @@
         flat
         class="d-flex align-center justify-space-around"
       >
-        <div class="d-flex" style="width: 270px">
+        <div class="d-flex" style="width: 310px">
           <div>
-            <v-avatar class="mt-5 ml-3">
+            <v-avatar class="mt-5 ml-2">
               <img :src="reply.profileImage" alt="John" />
             </v-avatar>
           </div>
@@ -58,12 +58,33 @@
             </div>
           </div>
         </div>
+
+
         <v-btn
+          class="mr-3"
+          v-if="reply.like === false"
+          icon
+          @click="likeOotdReply(reply.replyIdx)"
+          color="black"
+          ><v-icon>mdi-heart-outline</v-icon></v-btn
+        >
+        <v-btn
+          class="mr-3"
+          v-if="reply.like === true"
+          icon
+          @click="likeOotdReply(reply.replyIdx)"
+          color="red"
+          ><v-icon>mdi-heart</v-icon></v-btn
+        >
+
+
+        <!-- <v-btn
+          class="mr-2"
           icon
           @click="likeOotdReply(reply.replyIdx)"
           :color="reply.like ? 'red' : 'black'"
           ><v-icon>mdi-heart-outline</v-icon></v-btn
-        >
+        > -->
         <!-- <v-btn icon @click="deleteWhatwearReply(reply.idx)"><v-icon>mdi-close</v-icon></v-btn> -->
       </v-card>
     </div>
@@ -166,4 +187,8 @@ export default {
 </script>
 
 <style>
+#comment_input {
+  height: 70px;
+  margin-bottom: 10px;
+}
 </style>

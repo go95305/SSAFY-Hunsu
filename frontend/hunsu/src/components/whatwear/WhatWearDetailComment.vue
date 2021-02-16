@@ -26,7 +26,7 @@
       >
         <div class="d-flex">
           <div>
-            <v-avatar class="mt-3 ml-3">
+            <v-avatar class="mt-3 ml-2">
               <img :src="reply.profileImage" alt="John" />
             </v-avatar>
           </div>
