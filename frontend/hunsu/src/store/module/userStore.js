@@ -162,7 +162,6 @@ const actions = {
     return rscApi
       .get(`/user/mypage/${targetNickname}`)
       .then((res) => {
-        console.log('스토어', res.data);
         context.commit('setUserInfo', res.data);
       })
       .catch((err) => {

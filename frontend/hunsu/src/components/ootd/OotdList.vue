@@ -79,6 +79,7 @@ import { mapActions, mapGetters, mapMutations } from "vuex";
 import ImageView from "@/components/module/ImageView";
 import infiniteLoading from "vue-infinite-loading";
 import { rscApi } from "@/services/api";
+import { EventBus } from "@/services/eventBus";
 
 export default {
   name: "OotdList",
@@ -92,13 +93,21 @@ export default {
       imageUrls: [],
       limit: 0,
       ootdList: [],
+      sort: 0,
     };
   },
   computed: {
     ...mapGetters(["getOotdList", "getNickname", "getOotdInfo"]),
   },
   created() {
-    // window.scrollTo({ top: "0", behavior: "smooth" });
+    EventBus.$on("recent", () => {
+      this.sort = 0;
+      this.limit = 0;
+    });
+    EventBus.$on("popular", () => {
+      this.sort = 1;
+      this.limit = 0;
+    });
   },
   // async created() {
   //   // let ootdList;
@@ -113,7 +122,7 @@ export default {
   //       info.imageUrls = res;
   //     });
   //     // uid 로 받아와야 프로필 이미지들 가져올 수 있음
-  //     // root.getProfileImage({
+  //     // root.getProfileImage({=
   //     //   nickname: info.nickname,
   //     // });
   //   });
@@ -168,9 +177,9 @@ export default {
     // 무한스크롤 함수
     async infiniteHandler($state) {
       // console.log('무한', this.limit, this.check)
-      const sort = 0;
-      const count = this.limit;
-      const res = await rscApi.get(`ootd/${sort}/${count}`);
+      // const sort = 0;
+      // const count = this.limit;
+      const res = await rscApi.get(`ootd/${this.sort}/${this.limit}`);
       setTimeout(() => {
         if (res.data.ootdMainDTOList.length) {
           this.ootdList = res.data.ootdMainDTOList;

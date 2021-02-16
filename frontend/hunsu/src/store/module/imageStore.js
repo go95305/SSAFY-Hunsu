@@ -68,10 +68,8 @@ const actions = {
           },
           (err, data) => {
             if (err) {
-              console.log(err);
               reject(err);
             }
-            console.log('upload', data);
             resolve(data);
           }
         );
@@ -85,8 +83,6 @@ const actions = {
     //파일 확장자
     let fileExtList = imageFile.name.split('.');
     let fileExt = fileExtList[fileExtList.length - 1];
-    console.log(fileExt);
-
     s3.upload(
       {
         Key: 'mypage/' + rootState.user.uid + '/' + rootState.user.uid,
@@ -99,7 +95,6 @@ const actions = {
           console.log(err);
           return alert('There was an error uploading your photo: ', err.message);
         }
-        console.log('Successfully uploaded photo.');
         console.log(data);
       }
     );
