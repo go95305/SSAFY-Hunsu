@@ -150,6 +150,7 @@
           icon
           @click="likeWhatwearReply(reply)"
           color="red"
+          class="mr-2"
           ><v-icon>mdi-heart</v-icon></v-btn
         >
       </v-card>
