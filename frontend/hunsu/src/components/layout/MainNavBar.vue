@@ -21,16 +21,21 @@
         <v-btn @click="goToLogin()">로그인</v-btn>
       </div> -->
       <!--로그인 후 알림아이콘 옆에 표시할 프로필사진 + mypage, logout menu바-->
-          <div class="mt-1">{{getNickname}}님 </div>
+      <div class="mt-1">{{ getNickname }}님</div>
       <v-menu left bottom v-if="getNickname">
         <template v-slot:activator="{ on, attrs }">
           <v-avatar v-bind="attrs" v-on="on">
-            <v-img v-if="getMyProfileImage" :src="getMyProfileImage" 
+            <v-img
+              v-if="getMyProfileImage"
+              :src="getMyProfileImage"
               class="mt-1"
               max-width="40px"
               height="40px"
-              style="border-radius: 20px"/>
-            <v-img v-else src="@/assets/profilephoto.png" 
+              style="border-radius: 20px"
+            />
+            <v-img
+              v-else
+              src="@/assets/profilephoto.png"
               class="mt-1"
               max-width="40px"
               height="40px"
@@ -130,7 +135,8 @@ export default {
           uid: this.getUid,
           target: "target",
         });
-        this.$router.push({ name: "MyPage" }).catch(() => {});
+        window.scrollTo({ top: "0", behavior: "smooth" });
+        this.$router.push({ name: "MyPage" });
       } else if (item.text === "Logout") {
         this.logout();
       }
@@ -151,10 +157,12 @@ export default {
       );
     },
     goToHome() {
-      this.$router.push("/").catch(() => {});
+      window.scrollTo({ top: "0", behavior: "smooth" });
+      this.$router.push("/");
     },
     goToLogin() {
-      this.$router.push("/login").catch(() => {});
+      window.scrollTo({ top: "0", behavior: "smooth" });
+      this.$router.push("/login");
     },
   },
 };
