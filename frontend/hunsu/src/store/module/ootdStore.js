@@ -57,7 +57,9 @@ const actions = {
     
   },
   async getSearchedListInApi(context, hashtag) {
-    const ootdList = await rscApi.get(`ootd/hashtag/search/${hashtag}`);
+    const ootdList = await rscApi
+      .get(`ootd/hashtag/search/${hashtag}`)
+
     if (ootdList) {
       console.log(ootdList);
       context.commit('setOotdList', ootdList.data);

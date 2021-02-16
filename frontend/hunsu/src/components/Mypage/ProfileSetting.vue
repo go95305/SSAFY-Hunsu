@@ -51,7 +51,7 @@
             class="d-inline-block mx-5"
             :label="getNickname"
             v-model="newNickname"
-            hint="닉네임 중복불가안내, 규칙안내"
+            hint="닉네임 중복체크 필수"
             outlined
           ></v-text-field>
           <v-btn :disabled="getNickname === newNickname" class="d-inline-block" @click="nicknameCheck(newNickname)">중복체크</v-btn>
@@ -74,13 +74,18 @@
             outlined
           ></v-select>
         </div>
+        <div class="d-flex justify-end mt-15 pt-15">
+          <div>
+          <v-btn text @click="deleteUser()">회원탈퇴</v-btn>
+          </div>
+        </div>
       </div>
     </v-card>
   </v-dialog>
 </template>
 <script>
 import { mapActions, mapGetters, mapMutations } from "vuex";
-import { authApi } from '@/services/api';
+import { rscApi, authApi } from '@/services/api';
 
 export default {
   name: "ProfileSetting",
@@ -114,7 +119,7 @@ export default {
     this.height = this.getMyProfileInfo.height;
     this.size = this.getMyProfileInfo.size;
     console.log(
-      "profile setting moutned",
+      "profile setting mounted",
       this.getNickname,
       this.getMyProfileInfo
     );
@@ -125,6 +130,7 @@ export default {
       "getProfileImage",
       "updateMyProfileInfoInApi",
       "getProfileInfoInApi",
+      "logout"
     ]),
     ...mapMutations([
       "setUploadImageFiles",
@@ -144,8 +150,11 @@ export default {
     },
     updateProfile(newNickname, height, size) {
       // 프로필사진 업로드, 정보수정
+      console.log('테스트1')
       this.dialog = false;
       this.uploadProfile()
+      console.log('테스트2')
+
         .then(() => {
           this.getProfileImage({
             uid: this.getUid,
@@ -156,19 +165,23 @@ export default {
         .then(() => {
           this.clearUploads();
         });
+      console.log('테스트3')
+
       this.updateMyProfileInfoInApi({
         newNickname,
         height,
         size,
       }).then(() => {
+      console.log('테스트4')
+
         this.getProfileInfoInApi(this.newNickname);
-        // this.$router.push({ name: "Home" }).catch(() => {});
+        this.$router.push({ name: "Home" }).catch(() => {});
       });
     },
     nicknameCheck(nickname) {
       return authApi.post(`/v1/auth/nickname?nickname=${nickname}`)
       .then((res) => {
-        console.log(res, '트루니?')
+        console.log(res.data, '트루니?')
         if (res.data) {
           alert('사용가능한 닉네임입니다.')
           this.nicknameStatus = "yes"
@@ -178,7 +191,15 @@ export default {
 
         }
       })
-  }
+      },
+    deleteUser() {
+      return rscApi.put('/user/mypage/delete')
+      .then(() => {
+        console.log('회원탈퇴성공')
+        this.logout()
+        this.$router.push({name: 'Home'}).catch(() => {})
+      })
+    }
   },
 };
 </script>
