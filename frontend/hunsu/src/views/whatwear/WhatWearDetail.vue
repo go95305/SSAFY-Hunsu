@@ -265,7 +265,7 @@ export default {
     },
     // 투표하는 함수
     voteWhatwear(voteIdx) {
-      this.voteWhatwearInfo(voteIdx);
+      this.voteWhatwearInfo(voteIdx)
     },
   },
 };
