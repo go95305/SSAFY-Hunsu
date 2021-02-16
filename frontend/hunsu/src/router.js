@@ -15,6 +15,13 @@ import AboutUs from '@/views/AboutUs';
 // import SignUp from '@/views/user/SignUp';
 // import Auth from "@/views/user/Auth"
 
+const originalPush = VueRouter.prototype.push;
+VueRouter.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch(() => {
+    return window.location.reload();
+  });
+};
+
 Vue.use(VueRouter);
 
 const routes = [

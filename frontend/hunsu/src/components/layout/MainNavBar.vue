@@ -25,12 +25,17 @@
       <v-menu left bottom v-if="getNickname">
         <template v-slot:activator="{ on, attrs }">
           <v-avatar v-bind="attrs" v-on="on">
-            <v-img v-if="getMyProfileImage" :src="getMyProfileImage" 
+            <v-img
+              v-if="getMyProfileImage"
+              :src="getMyProfileImage"
               class="mt-1"
               max-width="40px"
               height="40px"
-              style="border-radius: 20px"/>
-            <v-img v-else src="@/assets/profilephoto.png" 
+              style="border-radius: 20px"
+            />
+            <v-img
+              v-else
+              src="@/assets/profilephoto.png"
               class="mt-1"
               max-width="40px"
               height="40px"
@@ -122,7 +127,7 @@ export default {
       if (item.text === "MyPage") {
         // 여기선 자기 자신의 마이페이지로 이동
         // 타겟 유저의 프로필 정보 가져오기
-        console.log('내닉네임', this.getNickname)
+        console.log("내닉네임", this.getNickname);
         await this.getProfileInfoInApi(this.getNickname);
         // await this.getMyProfileInfoInApi();
         await this.getProfileImage({
@@ -130,7 +135,8 @@ export default {
           uid: this.getUid,
           target: "target",
         });
-        this.$router.push({ name: "MyPage" }).catch(() => {});
+        window.scrollTo({ top: "0", behavior: "smooth" });
+        this.$router.push({ name: "MyPage" });
       } else if (item.text === "Logout") {
         this.logout();
       }
@@ -151,12 +157,13 @@ export default {
       );
     },
     goToHome() {
-      this.$router.push("/").catch(() => {})
+      window.scrollTo({ top: "0", behavior: "smooth" });
+      this.$router.push("/");
     },
     goToLogin() {
-      this.$router.push({name: 'Login'}).catch(() => {})
+      window.scrollTo({ top: "0", behavior: "smooth" });
+      this.$router.push("/login");
     },
-
   },
 };
 </script>

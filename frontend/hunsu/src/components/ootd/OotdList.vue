@@ -86,49 +86,19 @@ export default {
     ImageView,
     infiniteLoading,
   },
+  props: ["sortNum", "limitNum"],
   data() {
     return {
       cycle: false,
       imageUrls: [],
-      limit: 0,
       ootdList: [],
+      sort: this.sortNum,
+      limit: this.limitNum,
     };
   },
   computed: {
     ...mapGetters(["getOotdList", "getNickname", "getOotdInfo"]),
   },
-  created() {
-    // window.scrollTo({ top: "0", behavior: "smooth" });
-  },
-  // async created() {
-  //   // let ootdList;
-  //   let root = this;
-  //   await this.getOotdListInApi({
-  //     sort: 0,
-  //     pageNum: this.pageNumCount,
-  //   });
-  //   root.getProfiles(this.getOotdList);
-  //   this.getOotdList.forEach((info) => {
-  //     root.getImageList({ prefix: "ootd/" + info.ootdIdx }).then((res) => {
-  //       info.imageUrls = res;
-  //     });
-  //     // uid 로 받아와야 프로필 이미지들 가져올 수 있음
-  //     // root.getProfileImage({
-  //     //   nickname: info.nickname,
-  //     // });
-  //   });
-  //   console.log(this.getOotdList);
-  //   // .then((res) => {
-  //   //   root.getProfiles(res);
-  //   //   res.forEach((info) => {
-  //   //     console.log(info);
-  //   //     root.getImageList({ prefix: "ootd/" + info.ootdIdx }).then((res) => {
-  //   //       info.imageUrls = res;
-  //   //       // });
-  //   //     });
-  //   //   });
-  //   // });
-  // },
   methods: {
     ...mapActions([
       "getOotdInfoInApi",
@@ -168,9 +138,9 @@ export default {
     // 무한스크롤 함수
     async infiniteHandler($state) {
       // console.log('무한', this.limit, this.check)
-      const sort = 0;
-      const count = this.limit;
-      const res = await rscApi.get(`ootd/${sort}/${count}`);
+      // const sort = 0;
+      // const count = this.limit;
+      const res = await rscApi.get(`ootd/${this.sort}/${this.limit}`);
       setTimeout(() => {
         if (res.data.ootdMainDTOList.length) {
           this.ootdList = res.data.ootdMainDTOList;

@@ -91,12 +91,12 @@
         <v-list-item-action>
           <div>
             {{ getOotdInfo.likeCount }}
-          <v-btn icon @click="toggleLikeInDetail">
-            <v-icon v-model="iconName" color="red">{{ iconName }}</v-icon>
-          </v-btn>
+            <v-btn icon @click="toggleLikeInDetail">
+              <v-icon v-model="iconName" color="red">{{ iconName }}</v-icon>
+            </v-btn>
           </div>
-            <!-- <v-icon v-model="iconName" v-else>{{ iconName }}</v-icon> -->
-            <!-- <div>{{ getOotdInfo.likeCount }}</div> -->
+          <!-- <v-icon v-model="iconName" v-else>{{ iconName }}</v-icon> -->
+          <!-- <div>{{ getOotdInfo.likeCount }}</div> -->
         </v-list-item-action>
       </v-list-item>
     </v-list>
@@ -234,7 +234,7 @@ export default {
       "getNickname",
       "getOotdInfoImages",
       "getTargetProfileImage",
-      "getOotdList"
+      "getOotdList",
     ]),
   },
   data() {
@@ -269,27 +269,28 @@ export default {
       }
     },
   },
-  async created() {
-    let root = this;
-    this.getOotdInfoInApi({
-      ootdIdx: this.getOotdInfo.ootdIdx,
-    }).then(() => {
-      root
-        .getImageList({ prefix: "ootd/" + this.getOotdInfo.ootdIdx })
-        .then((res) => {
-          root.setOotdInfoImages(res);
-        })
-        .then(() => {
-          this.getProfileImage({
-            uid: this.getOotdInfo.uid,
-            target: "target",
-          });
-        })
-        .then(() => {
-          this.$router.push({ name: "OotdDetail" }).catch(() => {});
-        });
-    });
-  },
+  // async created() {
+  //   console.log("hi");
+  //   let root = this;
+  //   this.getOotdInfoInApi({
+  //     ootdIdx: this.getOotdInfo.ootdIdx,
+  //   }).then(() => {
+  //     root
+  //       .getImageList({ prefix: "ootd/" + this.getOotdInfo.ootdIdx })
+  //       .then((res) => {
+  //         root.setOotdInfoImages(res);
+  //       })
+  //       .then(() => {
+  //         this.getProfileImage({
+  //           uid: this.getOotdInfo.uid,
+  //           target: "target",
+  //         });
+  //       })
+  //       .then(() => {
+  //         // this.$router.push({ name: "OotdDetail" });
+  //       });
+  //   });
+  // },
   mounted() {
     // console.log("mounted");
     if (this.getOotdInfo.likeChk) {
@@ -400,21 +401,18 @@ export default {
     },
     async searchHashtag(hashtag) {
       let root = this;
-      await this.getClickedHashtagListInApi(hashtag)
+      await this.getClickedHashtagListInApi(hashtag);
       root.getProfiles(this.getOotdList);
       this.getOotdList.forEach((info) => {
         root.getImageList({ prefix: "ootd/" + info.ootdIdx }).then((res) => {
           info.imageUrls = res;
-          console.log(info.imageUrls,'아클릭했다고해시태그')
+          console.log(info.imageUrls, "아클릭했다고해시태그");
         });
-      })
-      console.log('수지나와라', hashtag)
+      });
+      console.log("수지나와라", hashtag);
 
-      this.$router.push({ name: "Ootd" })
-    }
-
-
-
+      this.$router.push({ name: "Ootd" });
+    },
   },
 };
 </script>

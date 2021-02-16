@@ -19,15 +19,9 @@
     <!-- <v-sheet class="mx-auto" elevation="3" max-width="300"> -->
     <!-- 현재는 사진 업로드만, 올렸던 사진 삭제는 미구현상태 -->
     <div v-else>
-      <v-slide-group
-        v-model="getUploadImageUrls"
-        class="pa-4"
-        center-active
-        show-arrows
-      >
+      <v-slide-group class="pa-4" center-active show-arrows>
         <v-slide-item v-for="(imageUrl, idx) in getUploadImageUrls" :key="idx">
-          <v-img class="mx-5 my-5" :src="imageUrl" height="100" width="100">
-          </v-img>
+          <v-img class="mx-5 my-5" :src="imageUrl" height="100" width="100" />
         </v-slide-item>
         <div>
           <br />
@@ -39,14 +33,6 @@
             height="100"
             >추가 사진 업로드</v-btn
           >
-          <input
-            type="file"
-            id="file"
-            ref="imageInput"
-            @change="onChangeImages"
-            multiple
-            hidden
-          />
         </div>
       </v-slide-group>
     </div>
@@ -64,11 +50,18 @@ export default {
       ...mapState(["uploadImageUrls"]),
     };
   },
+  mounted() {
+    this.clearUploads();
+  },
   computed: {
     ...mapGetters(["getUploadImageUrls", "getUploadImageFiles"]),
   },
   methods: {
-    ...mapMutations(["setUploadImageUrls", "setUploadImageFiles"]),
+    ...mapMutations([
+      "clearUploads",
+      "setUploadImageUrls",
+      "setUploadImageFiles",
+    ]),
     onClickImageUpload() {
       this.$refs.imageInput.click();
     },
