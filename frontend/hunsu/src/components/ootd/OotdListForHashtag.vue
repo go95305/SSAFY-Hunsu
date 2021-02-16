@@ -4,7 +4,7 @@
     <!-- OOTD 하나 클릭하면 디테일페이지 뜨는 섹션 -->
     <!-- <router-view></router-view> -->
     <v-card
-      v-for="(ootd, idx) in ootdList"
+      v-for="(ootd, idx) in getOotdSearchedList"
       :key="idx"
       elevation="24"
       max-width="450"
@@ -15,7 +15,6 @@
         :images="ootd.imageUrls"
         @click.native="goToOotdDetail(ootd)"
       />
-
       <v-list two-line>
         <v-list-item>
           <!-- 작성자 프로필 -->
@@ -31,7 +30,6 @@
               src="@/assets/profilephoto.png"
             ></v-img>
           </v-list-item-avatar>
-
           <v-list-item-content>
             <v-list-item-title>{{ ootd.ootdContent }}</v-list-item-title>
             <v-list-item-subtitle>
@@ -45,6 +43,7 @@
               </p>
             </v-list-item-subtitle>
           </v-list-item-content>
+
           <!-- <v-list-item-content>{{ootd.ootdLike}}개의</v-list-item-content> -->
           <v-list-item-action>
             <!-- 좋아요 버튼 -->
@@ -58,18 +57,6 @@
         </v-list-item>
       </v-list>
     </v-card>
-
-    <!--무한스크롤-->
-    <!--아래 문구는 데이터 모두 출력한 뒤 보이는 문구, spinner는 데이터
-    가져올 때 표시하는 바람개비아이콘으로 default, spiral, circles, bubbles, waveDots 다섯가지 있음-->
-    <infinite-loading @infinite="infiniteHandler" spinner="waveDots">
-      <div
-        slot="no-more"
-        style="color: rgb(102, 102, 102); font-size: 14px; padding: 10px 0px"
-      >
-        목록의 끝입니다 :)
-      </div>
-    </infinite-loading>
   </div>
 </template>
 
@@ -77,33 +64,23 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import ImageView from "@/components/module/ImageView";
-import infiniteLoading from "vue-infinite-loading";
-import { rscApi } from "@/services/api";
-import { EventBus } from "@/services/eventBus";
 
 export default {
-  name: "OotdList",
+  name: "OotdListForHashtag",
   components: {
     ImageView,
-    infiniteLoading,
   },
   props: ["sortNum", "limitNum"],
   data() {
     return {
       cycle: false,
       imageUrls: [],
-      ootdList: [],
       sort: this.sortNum,
       limit: this.limitNum,
     };
   },
   computed: {
-    ...mapGetters(["getOotdList", "getNickname", "getOotdInfo"]),
-  },
-  created() {
-    EventBus.$on("searchHashtag", getOotdList => {
-      this.ootdList = getOotdList
-    })
+    ...mapGetters(["getOotdSearchedList", "getNickname", "getOotdInfo"]),
   },
   methods: {
     ...mapActions([
@@ -114,7 +91,7 @@ export default {
       "getProfileImage",
       "getProfiles",
     ]),
-    ...mapMutations(["setOotdInfoImages", "setTargetProfileImage", ]),
+    ...mapMutations(["setOotdInfoImages", "setTargetProfileImage"]),
     async goToOotdDetail(ootd) {
       //idx 굳이 보여줄 필요 없을것같아서 params로 변경
       // this.$router.push({ name: "OotdDetail", params: { no: ootd.ootdIdx } });
@@ -141,31 +118,9 @@ export default {
         this.$router.push({ name: "MyPage" });
       });
     },
-    // 무한스크롤 함수
-    async infiniteHandler($state) {
-      // console.log('무한', this.limit, this.check)
-      // const sort = 0;
-      // const count = this.limit;
-      const res = await rscApi.get(`ootd/${this.sort}/${this.limit}`);
-      setTimeout(() => {
-        if (res.data.ootdMainDTOList.length) {
-          this.ootdList = res.data.ootdMainDTOList;
-          this.loadImages();
-          $state.loaded();
-          this.limit += 1;
-          if (this.ootdList.length === res.data.count) {
-            $state.complete();
-          }
-        } else {
-          // 끝 지정(No more data)
-          // console.log('sgsdg');
-          $state.complete();
-        }
-      }, 1000);
-    },
     loadImages() {
-      this.getProfiles(this.ootdList);
-      this.ootdList.forEach((info) => {
+      this.getProfiles(this.getOotdSearchedList);
+      this.getOotdSearchedList.forEach((info) => {
         this.getImageList({ prefix: "ootd/" + info.ootdIdx }).then((res) => {
           this.$set(info, "imageUrls", res);
         });

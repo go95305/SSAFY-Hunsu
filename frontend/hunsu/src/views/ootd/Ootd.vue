@@ -18,10 +18,12 @@
 
 <script>
 import OotdList from "@/components/ootd/OotdList";
+import OotdListForHashtag from "@/components/ootd/OotdListForHashtag";
 import OotdSearchBtn from "@/components/ootd/OotdSearchBtn";
 import OotdWritePage from "@/components/ootd/OotdWritePage";
 import OotdFilter from "@/components/ootd/OotdFilter";
 import { EventBus } from "@/services/eventBus";
+
 
 export default {
   name: "Ootd",
@@ -37,6 +39,10 @@ export default {
       limit: 0,
       key: 0,
     };
+  },
+  computed: {
+    ...mapGetters(["getOotdSearchedList"]),
+
   },
   created() {
     EventBus.$on("recent", () => {
