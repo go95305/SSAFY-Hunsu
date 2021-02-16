@@ -79,7 +79,6 @@ import { mapActions, mapGetters, mapMutations } from "vuex";
 import ImageView from "@/components/module/ImageView";
 import infiniteLoading from "vue-infinite-loading";
 import { rscApi } from "@/services/api";
-import { EventBus } from "@/services/eventBus";
 
 export default {
   name: "OotdList",
@@ -87,27 +86,18 @@ export default {
     ImageView,
     infiniteLoading,
   },
+  props: ["sortNum", "limitNum"],
   data() {
     return {
       cycle: false,
       imageUrls: [],
-      limit: 0,
       ootdList: [],
-      sort: 0,
+      sort: this.sortNum,
+      limit: this.limitNum,
     };
   },
   computed: {
     ...mapGetters(["getOotdList", "getNickname", "getOotdInfo"]),
-  },
-  created() {
-    EventBus.$on("recent", () => {
-      this.sort = 0;
-      this.limit = 0;
-    });
-    EventBus.$on("popular", () => {
-      this.sort = 1;
-      this.limit = 0;
-    });
   },
   methods: {
     ...mapActions([
