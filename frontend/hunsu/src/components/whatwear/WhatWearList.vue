@@ -11,16 +11,19 @@
       <div>
         <!--프로필사진-->
         <div class="d-flex ml-4 pt-4">
-          <v-avatar>
             <v-img
               :src="whatwear.profileImage"
               @click="goToWhatwearDetail(whatwear)"
+              max-width="30px"
+              height="30px"
+              style="border-radius: 15px"
+              class="mt-2"
             />
             <!-- <v-img
               v-else
               src="https://s.pstatic.net/static/newsstand/2020/logo/dark/0604/018.png"
             /> -->
-          </v-avatar>
+          
             <!--유저닉네임-->
           <v-card-subtitle class="mt-3 ml-2 font-weight-bold" id="nickname">
             {{ whatwear.nickname }}
@@ -35,7 +38,7 @@
           <!--투표기능뱃지-->
           <v-badge
             v-if="whatwear.voteActivated"
-            color="red accent-3"
+            color="red accent-2"
             content="투표"
             inline
             class="ml-1"
@@ -140,4 +143,5 @@ export default {
 #title {
   padding: 0 0 0 0;
 }
+
 </style>

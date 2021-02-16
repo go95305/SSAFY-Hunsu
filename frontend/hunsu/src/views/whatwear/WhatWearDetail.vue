@@ -4,7 +4,7 @@
       <v-list one-line>
         <v-list-item>
           <v-list-item-content class="pb-0">
-            <v-list-item-title class="text-h6">
+            <v-list-item-title class="text-subtitle-1">
               {{ whatwearInfo.title }}
             </v-list-item-title>
           </v-list-item-content>
