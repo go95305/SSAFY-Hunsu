@@ -32,7 +32,7 @@
           <v-img v-else-if="getMyProfileImage" :src="getMyProfileImage" />
           <v-img
             v-else
-            src="https://cdn.vuetifyjs.com/images/john.jpg"
+            src="@/assets/profilephoto.png" 
             alt="John"
           />
         </v-avatar>

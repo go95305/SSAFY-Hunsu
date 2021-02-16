@@ -13,7 +13,7 @@
               v-if="getTargetProfileImage"
               :src="getTargetProfileImage"
             />
-            <v-img v-else src="https://cdn.vuetifyjs.com/images/john.jpg" />
+            <v-img v-else src="@/assets/profilephoto.png"  />
           </v-avatar>
           <!--모바일-->
           <v-avatar
@@ -27,7 +27,7 @@
               v-if="getTargetProfileImage"
               :src="getTargetProfileImage"
             />
-            <v-img v-else src="https://cdn.vuetifyjs.com/images/john.jpg" />
+            <v-img v-else src="@/assets/profilephoto.png"  />
           </v-avatar>
           <!--유저닉네임-->
           <!-- <p class="font-weight-black text-h5 hidden-sm-and-down" style="margin: 60px 20px">닉네임</p>
