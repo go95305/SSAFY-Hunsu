@@ -1,24 +1,21 @@
 <template>
   <v-app id="app">
-    <div>
-      <MainNavBar />
-      <v-app id="nav_content">
-        <!--margin-top 걸려있음(네브바가 스크롤기능이 되면서 화면이 위로 올라가는걸 방지하기위해)-->
-        <router-view />
-      </v-app>
-      <!-- <MainBottomBar /> bottom navigationbar -->
-      <MainFooter />
-    </div>
-      <!-- <v-app> -->
-        <!--margin-top 걸려있음(네브바가 스크롤기능이 되면서 화면이 위로 올라가는걸 방지하기위해)-->
-        <!-- <router-view /> -->
-      <!-- </v-app> -->
+    <SubNavBar v-if="($route.name == 'SignUp') || ($route.name == 'Login')"/>
+    <MainNavBar v-else/>
+    <v-app id="content">
+      <!--margin-top 걸려있음(네브바가 스크롤기능이 되면서 화면이 위로 올라가는걸 방지하기위해)-->
+      <router-view />
+    </v-app>
+    <!-- <MainBottomBar /> bottom navigationbar -->
+    <SubNavBar v-if="($route.name == 'SignUp') || ($route.name == 'Login')"/>
+    <MainFooter v-else/>
   </v-app>
 </template>
 
 <script>
 import MainFooter from "@/components/layout/MainFooter";
 import MainNavBar from "@/components/layout/MainNavBar";
+import SubNavBar from "@/components/layout/SubNavBar";
 // import MainBottomBar from '@/components/layout/MainBottomBar'
 import { mapGetters, mapActions } from "vuex";
 export default {
@@ -26,6 +23,7 @@ export default {
   components: {
     MainFooter,
     MainNavBar,
+    SubNavBar,
     // MainBottomBar
   },
   computed: {
@@ -94,8 +92,8 @@ export default {
 </script>
 
 <style>
-#nav_content {
-  background-color: #f5f5f5;
+#content {
   margin-top: 100px;
 }
+
 </style>

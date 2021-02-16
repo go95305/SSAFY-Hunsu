@@ -21,11 +21,26 @@
         <v-btn @click="goToLogin()">로그인</v-btn>
       </div> -->
       <!--로그인 후 알림아이콘 옆에 표시할 프로필사진 + mypage, logout menu바-->
+          <div class="mt-1" v-if="getNickname">{{getNickname}}님 </div>
       <v-menu left bottom v-if="getNickname">
         <template v-slot:activator="{ on, attrs }">
           <v-avatar v-bind="attrs" v-on="on">
-            <v-img v-if="getMyProfileImage" :src="getMyProfileImage" />
-            <v-img v-else src="https://cdn.vuetifyjs.com/images/john.jpg" />
+            <v-img
+              v-if="getMyProfileImage"
+              :src="getMyProfileImage"
+              class="mt-1"
+              max-width="40px"
+              height="40px"
+              style="border-radius: 20px"
+            />
+            <v-img
+              v-else
+              src="@/assets/profilephoto.png"
+              class="mt-1"
+              max-width="40px"
+              height="40px"
+              style="border-radius: 20px"
+            />
           </v-avatar>
         </template>
 
@@ -39,9 +54,7 @@
           </v-list-item>
         </v-list>
       </v-menu>
-      <div>
-        <v-icon color="black">mdi-bell-outline</v-icon>
-      </div>
+
       <!--v-app-bar태그 밖에있던 tabs들을 안으로 가져옴 tabs에도 app을 적용하여 스크롤기능 활성화시킴-->
       <template v-slot:extension>
         <v-tabs
@@ -114,7 +127,7 @@ export default {
       if (item.text === "MyPage") {
         // 여기선 자기 자신의 마이페이지로 이동
         // 타겟 유저의 프로필 정보 가져오기
-        console.log('내닉네임', this.getNickname)
+        console.log("내닉네임", this.getNickname);
         await this.getProfileInfoInApi(this.getNickname);
         // await this.getMyProfileInfoInApi();
         await this.getProfileImage({
@@ -122,7 +135,8 @@ export default {
           uid: this.getUid,
           target: "target",
         });
-        this.$router.push({ name: "MyPage" }).catch(() => {});
+        window.scrollTo({ top: "0", behavior: "smooth" });
+        this.$router.push({ name: "MyPage" });
       } else if (item.text === "Logout") {
         this.logout();
       }
@@ -143,12 +157,13 @@ export default {
       );
     },
     goToHome() {
-      this.$router.push("/").catch(() => {})
+      window.scrollTo({ top: "0", behavior: "smooth" });
+      this.$router.push("/");
     },
     goToLogin() {
-      this.$router.push("/login").catch(() => {})
+      window.scrollTo({ top: "0", behavior: "smooth" });
+      this.$router.push("/login");
     },
-
   },
 };
 </script>

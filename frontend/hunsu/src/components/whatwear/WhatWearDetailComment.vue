@@ -26,11 +26,15 @@
       >
         <div class="d-flex">
           <div>
-            <v-avatar class="mt-3 ml-3">
-              <img :src="reply.profileImage" alt="John" />
+            <v-avatar class="mt-3 ml-2">
+              <img
+                :src="reply.profileImage"
+                alt="John"
+                @click="goToProfilePage(reply)"
+              />
             </v-avatar>
           </div>
-          <div style="margin: 17px; margin-left: 10px;">
+          <div style="margin: 17px; margin-left: 10px">
             <p style="margin-bottom: 0; font-size: 14px">
               {{ reply.nickname }}
             </p>
@@ -133,6 +137,7 @@
           </div>
         </div>
         <v-btn
+          class="mr-3"
           v-if="reply.like === false"
           icon
           @click="likeWhatwearReply(reply)"
@@ -140,6 +145,7 @@
           ><v-icon>mdi-heart-outline</v-icon></v-btn
         >
         <v-btn
+          class="mr-3"
           v-if="reply.like === true"
           icon
           @click="likeWhatwearReply(reply)"
@@ -185,7 +191,15 @@ export default {
       "deleteWhatwearReplyInfo",
       "updateWhatwearReplyInfo",
       "getWhatwearProfile",
+      "getProfileInfoInApi",
     ]),
+    async goToProfilePage(reply) {
+      console.log(reply);
+      await this.getProfileInfoInApi(reply.nickname);
+      window.scrollTo({ top: "0", behavior: "smooth" });
+      this.$router.push({ name: "MyPage" });
+    },
+
     async getCommentProfileImages() {
       // 댓글 내 프로필 사진 가져오기
       this.whatwearReplyInfo = this.getWhatwearReplyInfo;
@@ -196,16 +210,16 @@ export default {
       });
     },
     // 댓글작성함수
-    createWhatwearReply(wearIdx) {
+    async createWhatwearReply(wearIdx) {
       if (this.update === true) {
-        this.updateWhatwearReplyInfo({
+        await this.updateWhatwearReplyInfo({
           content: this.replyContent,
           nickname: this.getNickname,
           idx: this.updateReplyIdx,
         });
       }
       if (this.update === false) {
-        this.createWhatwearReplyInfo({
+        await this.createWhatwearReplyInfo({
           content: this.replyContent,
           depth: this.depth,
           groupNum: this.groupNum,
@@ -213,7 +227,7 @@ export default {
           wear_idx: wearIdx,
         });
       }
-      this.getCommentProfileImages();
+      await this.getCommentProfileImages();
       this.replyContent = "";
       this.depth = 0;
       this.groupNum = 0;
