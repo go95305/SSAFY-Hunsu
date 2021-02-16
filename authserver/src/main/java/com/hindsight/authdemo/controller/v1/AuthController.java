@@ -300,7 +300,7 @@ public class AuthController {
             "\n" +
             "- msg : UID값\n" +
             "\n")
-    @PostMapping(value ="/getuid")
+    @GetMapping(value ="/getuid")
     public CommonResult getUid(@ApiParam("jwtToken") @RequestParam String jwtToken, @ApiParam("nickname") @RequestParam String nickname){
         CommonResult result = new CommonResult();
         Optional<User> reqUser = userJpaRepo.findUserByJwtAccess(jwtToken);
