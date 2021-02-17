@@ -40,9 +40,6 @@ export default {
       key: 0,
     };
   },
-  computed: {
-    ...mapGetters(["getOotdSearchedList"]),
-  },
   created() {
     EventBus.$on("recent", () => {
       if (this.sort == 1) {
