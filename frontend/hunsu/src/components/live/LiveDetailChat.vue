@@ -7,7 +7,7 @@
     <v-container fluid>
       <v-virtual-scroll :items="publisherMsgs" height="90" item-height="30">
         <template v-slot:default="{ item }">
-          <v-list-item :key="item">
+          <v-list-item :key="item.sender">
             {{ item.sender }} - {{ item.message }}
           </v-list-item>
           <!-- <v-row>
@@ -20,18 +20,43 @@
       </v-row> -->
     </v-container>
     <!-- 좋아요 누르기 -->
-    <v-btn icon @click="plusLike">
-      <!-- <v-icon class="a" color="red">mdi-heart</v-icon> -->
-      <transition name="heart">
-        <v-icon v-if="show" class="a heart" color="red">mdi-heart</v-icon>
-      </transition>
-    </v-btn>
+    <div style="float: right; padding: 10px">
+      <v-btn icon @click="plusLike">
+        <!-- <v-icon class="a" color="red">mdi-heart</v-icon> -->
+        <!-- <transition-group>
+        <span v-for="i in 10" :key="i">
+          <v-icon v-if="show" class="a heart" color="red">mdi-heart</v-icon>
+        </span>
+      </transition-group> -->
+        <v-icon v-show="show === 0" color="red">mdi-heart</v-icon>
+        <transition-group>
+          <v-icon class="a heart" :key="1" v-show="show === 1" color="red"
+            >mdi-heart</v-icon
+          >
+          <v-icon class="a heart" :key="2" v-show="show === 2" color="red"
+            >mdi-heart</v-icon
+          >
+          <v-icon class="a heart" :key="3" v-show="show === 3" color="red"
+            >mdi-heart</v-icon
+          >
+          <v-icon class="a heart" :key="4" v-show="show === 4" color="red"
+            >mdi-heart</v-icon
+          >
+          <v-icon class="a heart" :key="5" v-show="show === 5" color="red"
+            >mdi-heart</v-icon
+          >
+          <v-icon class="a heart" :key="6" v-show="show === 6" color="red"
+            >mdi-heart</v-icon
+          >
+        </transition-group>
+      </v-btn>
+    </div>
     <!-- 참여자 채팅 -->
     <v-container fluid>
       <!--참가자 채팅 -->
       <v-virtual-scroll :items="joinerMsgs" height="90" item-height="30">
         <template v-slot:default="{ item }">
-          <v-list-item :key="item">
+          <v-list-item :key="item.sender">
             {{ item.sender }} - {{ item.message }}
           </v-list-item>
           <!-- <v-row>
@@ -80,12 +105,13 @@ export default {
     joinerMsgs: [],
     publisherMsgs: [],
     connected: false,
-    show: true,
+    show: 0,
   }),
   computed: {
     ...mapGetters(["getChatRoomDetail", "getNickname", "getStompClient"]),
   },
   created() {
+    console.log(this.getChatRoomDetail);
     let sock = new SockJS("http://i4c102.p.ssafy.io:8082/api/ws-stomp");
     // this.stompClient = Stomp.over(sock);
     this.setStompClient(Stomp.over(sock));
@@ -133,7 +159,6 @@ export default {
         console.log("연결안됐는데 왜 좋아요보내?");
         return;
       }
-      this.show = !this.show;
       const _this = this;
       this.getStompClient.send(
         "/pub/chat/like",
@@ -190,21 +215,25 @@ export default {
       this.likeCount = recv.likeCount;
       if (recv.type === "LIKE") {
         // console.log(recv);
-        this.show = !this.show;
+        this.show++;
+        if (this.show == 7) {
+          this.show = 0;
+        }
+        // this.show = !this.show;
       } else if (recv.type === "IMAGE") {
         console.log("IMAGE tlsgh");
         //이미지 리로드
       } else {
-        if (recv.sender === this.getChatRoomDetail.publisher) {
+        if (recv.sender === this.getChatRoomDetail.nickname) {
           // 개설자 메세지 일 때
-          this.publisherMsgs.push({
+          this.publisherMsgs.unshift({
             type: recv.type,
             sender: recv.sender,
             message: recv.message,
           });
         } else {
           // 참여자 메세지 일 때
-          this.joinerMsgs.push({
+          this.joinerMsgs.unshift({
             type: recv.type,
             sender: recv.sender,
             message: recv.message,
@@ -217,34 +246,64 @@ export default {
 </script>
 
 <style>
-.a {
-  float: center;
-  position: absolute;
+.heart {
+  position: relative;
+  /* bottom: -60px; */
   width: 50px;
   height: 50px;
+  background: url("https://s3.us-east-2.amazonaws.com/upload-icon/uploads/icons/png/15721583221557740359-512.png")
+    no-repeat;
+  background-size: cover;
 }
-.heart-enter-active {
+/* .heart-enter-active {
   animation: bubble 2s;
-}
-/* .a:first-of-type {
-  animation: bubble 1s 2s linear;
+} */
+
+.heart:first-of-type {
+  /* left: 10px; */
+  animation: bubble 0.5s linear;
 }
 
-.a:nth-of-type(2) {
+.heart:nth-of-type(2) {
+  /* left: 50%; */
+  animation: bubble 0.7s linear;
+}
+
+.heart:nth-of-type(3) {
+  /* left: 150px; */
+  animation: bubble 0.5s linear;
+}
+
+.heart:nth-of-type(4) {
+  /* right: 100px; */
+  animation: bubble 1s linear;
+}
+
+.heart:nth-of-type(5) {
+  /* right: 10px; */
+  animation: bubble 0.3s linear;
+}
+
+.heart:nth-of-type(6) {
+  /* right: 30px; */
+  animation: bubble 1s linear;
+}
+.heart:nth-of-type(7) {
+  /* right: 55px; */
   animation: bubble 1s 1s linear;
 }
-
-.a:nth-of-type(3) {
-  animation: bubble 3.5s 1s linear infinite;
+.heart:nth-of-type(8) {
+  /* right: 50%; */
+  animation: bubble 1s 1s linear;
 }
-
-.a:nth-of-type(4) {
-  animation: bubble 3.1s 1s linear infinite;
+.heart:nth-of-type(9) {
+  /* right: 70%; */
+  animation: bubble 1s 1s linear;
 }
-
-.a:nth-of-type(5) {
-  animation: bubble 3s 1s linear infinite;
-} */
+.heart:nth-of-type(10) {
+  /* right: 10%; */
+  animation: bubble 1s 1s linear;
+}
 
 @keyframes bubble {
   from {

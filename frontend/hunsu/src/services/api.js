@@ -9,6 +9,11 @@ const authApi = axios.create({
   baseURL: process.env.VUE_APP_BASE_URL + ':8081/api',
 });
 
+const liveApi = axios.create({
+  baseURL: process.env.VUE_APP_BASE_URL + ':8082/api',
+  // baseURL: 'http://localhost:8082',
+});
+
 // // Add a request interceptor
 rscApi.interceptors.request.use(
   function(config) {
@@ -18,7 +23,7 @@ rscApi.interceptors.request.use(
       };
     }
     // Do something before request is sent
-    console.log('토큰이다', store.getters.getAccessToken)
+    console.log('토큰이다', store.getters.getAccessToken);
     return config;
   },
   function(error) {
@@ -26,4 +31,4 @@ rscApi.interceptors.request.use(
     return Promise.reject(error);
   }
 );
-export { rscApi, authApi };
+export { rscApi, authApi, liveApi };

@@ -95,16 +95,31 @@ export default {
       ootdList: [],
       sort: this.sortNum,
       limit: this.limitNum,
+<<<<<<< HEAD
+=======
+      click: true,
+>>>>>>> 77781ff1ba7567122a5530d6d4bc3682f07750b5
     };
   },
   computed: {
     ...mapGetters(["getOotdList", "getNickname", "getOotdInfo"]),
   },
   created() {
+<<<<<<< HEAD
     EventBus.$on("searchHashtag", getOotdList => {
       this.ootdList = getOotdList
     })
     
+=======
+    EventBus.$on("searchHashtag", (getOotdList) => {
+      this.ootdList = getOotdList;
+    });
+    EventBus.$on("clickHashtag", (getOotdList) => {
+      this.ootdList = getOotdList;
+      this.click = false;
+    });
+    console.log(this.ootdList);
+>>>>>>> 77781ff1ba7567122a5530d6d4bc3682f07750b5
   },
   methods: {
     ...mapActions([
@@ -115,7 +130,7 @@ export default {
       "getProfileImage",
       "getProfiles",
     ]),
-    ...mapMutations(["setOotdInfoImages", "setTargetProfileImage", ]),
+    ...mapMutations(["setOotdInfoImages", "setTargetProfileImage"]),
     async goToOotdDetail(ootd) {
       //idx 굳이 보여줄 필요 없을것같아서 params로 변경
       // this.$router.push({ name: "OotdDetail", params: { no: ootd.ootdIdx } });
@@ -147,6 +162,13 @@ export default {
       // console.log('무한', this.limit, this.check)
       // const sort = 0;
       // const count = this.limit;
+<<<<<<< HEAD
+=======
+      // if (this.click) {
+      //   console.log(this.click);
+      //   return;
+      // }
+>>>>>>> 77781ff1ba7567122a5530d6d4bc3682f07750b5
       const res = await rscApi.get(`ootd/${this.sort}/${this.limit}`);
       setTimeout(() => {
         if (res.data.ootdMainDTOList.length) {
