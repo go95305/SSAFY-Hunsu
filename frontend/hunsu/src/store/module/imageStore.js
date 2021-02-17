@@ -132,23 +132,46 @@ const actions = {
       });
     });
   },
-  async getProfiles(context, list) {
+  getProfiles(context, list) {
     // 게시글 내에 위치할 프로필사진들 가져오기
-    await list.map((info) => {
-      s3.getSignedUrl(
-        'getObject',
-        {
-          Bucket: this.albumBucketName,
-          Key: 'mypage/' + info.uid + '/' + info.uid,
-        },
-        (err, data) => {
-          if (err) {
-            return alert('There was an error listing your photo: ', err.message);
-          } else {
-            info.profileImage = data;
+    return new Promise((resolve, reject) => {
+      if (!list.length) {
+        s3.getSignedUrl(
+          'getObject',
+          {
+            Bucket: this.albumBucketName,
+            Key: 'mypage/' + list.uid + '/' + list.uid,
+          },
+          (err, data) => {
+            if (err) {
+              reject(err);
+              // return alert('There was an error listing your photo: ', err.message);
+            } else {
+              list.profileImage = data;
+              resolve(data);
+            }
           }
-        }
-      );
+        );
+      } else {
+        list.map((info) => {
+          s3.getSignedUrl(
+            'getObject',
+            {
+              Bucket: this.albumBucketName,
+              Key: 'mypage/' + info.uid + '/' + info.uid,
+            },
+            (err, data) => {
+              if (err) {
+                reject(err);
+                // return alert('There was an error listing your photo: ', err.message);
+              } else {
+                info.profileImage = data;
+                resolve(data);
+              }
+            }
+          );
+        });
+      }
     });
   },
   getProfileImage({ rootState }, { uid, target }) {
