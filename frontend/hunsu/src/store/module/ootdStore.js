@@ -5,7 +5,6 @@ const state = {
   ootdReplyInfo: {},
   ootdList: [],
   like: false,
-  ootdSearchedList: [],
 };
 const getters = {
   getOotdInfo(state) {
@@ -20,9 +19,6 @@ const getters = {
   getLike(state) {
     return state.like;
   },
-  getOotdSearchedList(state) {
-    return state.ootdSearchedList
-  }
 };
 const mutations = {
   setOotdInfo(state, ootdInfo) {
@@ -44,34 +40,29 @@ const mutations = {
   toggleLike(state, flag) {
     state.ootdInfo.likeChk = flag;
   },
-  setOotdSearchedList(state, ootdSearchedList) {
-    state.ootdSearchedList = ootdSearchedList
-  }
 };
 
 const actions = {
   // Ootd 리스트 정렬
-  async getOotdListInApi({ commit, state }, { sort, pageNum }) {
+  async getOotdListInApi({ commit }, { sort, pageNum }) {
     const ootdList = await rscApi.get(`/ootd/${sort}/${pageNum}`);
     if (ootdList) {
       ootdList.data.forEach((info) => {
         info.imageUrls = [];
       });
       commit('setOotdList', ootdList.data);
-      console.log('정렬되나여여여?', state.ootdList)
     } else {
       console.log(ootdList);
     }
     
   },
-  async getSearchedListInApi({commit, state}, hashtag) {
+  async getSearchedListInApi(context, hashtag) {
     const ootdList = await rscApi
       .get(`ootd/hashtag/search/${hashtag}`)
 
     if (ootdList) {
       console.log(ootdList);
-      commit('setOotdSearchedList', ootdList.data);
-      console.log('검색되나여여여?', state.ootdSearchedList)
+      context.commit('setOotdList', ootdList.data);
     } else {
       console.log(ootdList);
     }
@@ -82,7 +73,7 @@ const actions = {
       ootdList.data.forEach((info) => {
         info.imageUrls = [];
       });
-      context.commit('setOotdSearchedList', ootdList.data);
+      context.commit('setOotdList', ootdList.data);
       console.log('해시태그검색완료', ootdList.data);
     } else {
       console.log(ootdList);

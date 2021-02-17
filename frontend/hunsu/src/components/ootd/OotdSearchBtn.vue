@@ -23,7 +23,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getOotdSearchedList"]),
+    ...mapGetters(["getOotdList"]),
   },
   methods: {
     ...mapActions([
@@ -38,8 +38,8 @@ export default {
     async searchHashtag(searchWord) {
       let root = this;
       await this.getSearchedListInApi(searchWord);
-      root.getProfiles(this.getOotdSearchedList);
-      this.getOotdSearchedList.forEach((info) => {
+      root.getProfiles(this.getOotdList);
+      this.getOotdList.forEach((info) => {
         root.getImageList({ prefix: "ootd/" + info.ootdIdx }).then((res) => {
           this.$set(info, "imageUrls", res);
           // info.imageUrls = res;
