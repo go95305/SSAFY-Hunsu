@@ -2,11 +2,12 @@
   <!-- 라이브 채팅창 (아직 구현안돼서 댓글로 대체해놓음)-->
   <div>
     <!-- 이미지 뷰  -->
-    <ImageView
+    <ImageView :images="getChatRoomDetail.imageUrls" @click.native="plusLike" />
+    <!-- <ImageView
       style="position: sticky; top: 90px; z-index: 99999"
       :images="getChatRoomDetail.imageUrls"
       @click.native="plusLike"
-    />
+    /> -->
     <!-- 개설자 채팅 -->
     <v-container fluid>
       <v-virtual-scroll :items="publisherMsgs" height="120" item-height="50">
@@ -237,7 +238,7 @@ export default {
         alert("메세지를 입력하세요!");
         return;
       }
-      console.log(this.msg);
+      // console.log(this.msg);
       this.getStompClient.send(
         "/pub/chat/message",
         JSON.stringify({
@@ -284,6 +285,12 @@ export default {
       } else if (recv.type === "IMAGE") {
         console.log("IMAGE tlsgh");
         //이미지 리로드
+      } else if (
+        recv.type === "QUIT" &&
+        recv.sender === this.getChatRoomDetail.nickname
+      ) {
+        alert("채팅이 종료되어 채팅방 리스트로 이동합니다.");
+        this.exitChatRoom();
       } else {
         if (recv.sender === this.getChatRoomDetail.nickname) {
           // 개설자 메세지 일 때
