@@ -23,7 +23,6 @@ import OotdWritePage from "@/components/ootd/OotdWritePage";
 import OotdFilter from "@/components/ootd/OotdFilter";
 import { EventBus } from "@/services/eventBus";
 
-
 export default {
   name: "Ootd",
   components: {
@@ -39,7 +38,6 @@ export default {
       key: 0,
     };
   },
-
   created() {
     EventBus.$on("recent", () => {
       if (this.sort == 1) {

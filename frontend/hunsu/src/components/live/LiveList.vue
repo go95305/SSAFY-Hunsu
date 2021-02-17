@@ -1,8 +1,8 @@
 <template>
   <!-- 라이브 메인페이지 -->
-  <div v-if="imageReady">
+  <div>
     <v-card
-      v-for="(room, idx) in getChatRooms"
+      v-for="(room, idx) in chatRooms"
       :key="idx"
       @click="enterRoom(room)"
     >
@@ -13,10 +13,11 @@
       <v-card-title class="text-body-1" id="writer">
         <v-list-item-avatar>
           <v-img v-if="room.profileImage" :src="room.profileImage" />
+          <v-img v-else src="@/assets/profilephoto.png" />
         </v-list-item-avatar>
-        {{ room.name }}
+        {{ room.title }}
         <v-list-item-title class="title text-body-1">
-          {{ room.publisher }}
+          {{ room.nickname }}
         </v-list-item-title>
       </v-card-title>
 
@@ -42,6 +43,7 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import ImageView from "@/components/module/ImageView";
+import { EventBus } from "@/services/eventBus";
 
 export default {
   name: "LiveList",
@@ -58,23 +60,32 @@ export default {
       publisher: "",
       hashtagList: [],
       fixedComment: "",
-      imageReady: false,
+      chatRooms: {},
     };
   },
   created() {
-    const _this = this;
+    EventBus.$on("LiveWrite", async (room) => {
+      const images = await this.getImageList({
+        prefix: "live/" + room.roomId,
+      });
+      this.$set(room, "imageUrls", images);
+      await this.getProfiles(room);
+      this.enterRoom(room);
+    });
+  },
+  async mounted() {
+    // const _this = this;
     //뭘입을까 참고
-    this.findAllRoom()
-      .then(() => {
-        this.getChatRooms.forEach((room) => {
-          _this.getImageList({ prefix: "live/" + room.roomId }).then((res) => {
-            _this.$set(room, "imageUrls", res);
-          });
-        });
-        this.getProfiles(this.getChatRooms);
-      })
-      .then(() => (this.imageReady = true));
-    console.log("images", this.getChatRooms);
+    await this.findAllRoom();
+    this.chatRooms = this.getChatRooms;
+    this.chatRooms.forEach(async (room) => {
+      const images = await this.getImageList({
+        prefix: "live/" + room.roomId,
+      });
+      this.$set(room, "imageUrls", images);
+    });
+    await this.getProfiles(this.chatRooms);
+    console.log("images", this.chatRooms);
   },
   computed: {
     ...mapGetters(["getChatRooms"]),

@@ -10,11 +10,11 @@
           </v-btn>
         </div>
         <!-- 라이브 제목 -->
-        <div class="text-truncate">{{ getChatRoomDetail.name }}</div>
+        <div class="text-truncate">{{ getChatRoomDetail.title }}</div>
         <!--개설자면 종료, 참여자는 나가기로 표시-->
         <v-btn
           text
-          v-if="getChatRoomDetail.publisher === getNickname"
+          v-if="getChatRoomDetail.nickname === getNickname"
           class="mb-1"
           @click="endRoom"
           >종료</v-btn
@@ -26,9 +26,9 @@
           <v-img :src="getChatRoomDetail.profileImage"></v-img>
         </v-list-item-avatar>
         <v-list-item-content>
-          <v-list-item-subtitle>{{
-            getChatRoomDetail.publisher
-          }}</v-list-item-subtitle>
+          <v-list-item-title>{{
+            getChatRoomDetail.nickname
+          }}</v-list-item-title>
         </v-list-item-content>
         <v-list-item-action>
           <div class="d-flex align-center">
