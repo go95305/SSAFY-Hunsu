@@ -217,6 +217,7 @@
 
 <script>
 import OotdDetailComment from "@/components/ootd/OotdDetailComment";
+import { EventBus } from "@/services/eventBus";
 // import OotdList from "@/components/ootd/OotdList";
 
 import { mapGetters, mapMutations, mapActions } from "vuex";
@@ -405,13 +406,14 @@ export default {
       root.getProfiles(this.getOotdList);
       this.getOotdList.forEach((info) => {
         root.getImageList({ prefix: "ootd/" + info.ootdIdx }).then((res) => {
-          info.imageUrls = res;
+          this.$set(info, "imageUrls", res);
           console.log(info.imageUrls, "아클릭했다고해시태그");
         });
       });
       console.log("수지나와라", hashtag);
-
+      EventBus.$emit("clickHashtag", this.getOotdList)
       this.$router.push({ name: "Ootd" });
+
     },
   },
 };
