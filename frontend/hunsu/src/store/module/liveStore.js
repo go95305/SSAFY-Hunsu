@@ -42,14 +42,15 @@ const actions = {
       console.log(rootState);
       return axios
         .post('http://i4c102.p.ssafy.io:8082/api/chat/room', {
-          name: title, // title로 변경 필요
-          publisher: rootState.user.nickname, // 항상 자신 (닉네임 가져오기)
+          title, // title로 변경 필요
+          nickname: rootState.user.nickname, // 항상 자신 (닉네임 가져오기)
           hashtagList,
           fixedComment: '', // 고정댓글 필요없었음
+          jwtToken: rootState.user.accessToken, // jwtToken
         })
         .then((res) => {
           console.log('in create', res);
-          alert(res.data.name + ' 방 개설 성공');
+          alert(res.data.title + ' 방 개설 성공');
           return res;
           //   this.room_name = '';
           //   this.hashtagList = [];

@@ -22,9 +22,11 @@
     <!-- 좋아요 누르기 -->
     <v-btn icon @click="plusLike">
       <!-- <v-icon class="a" color="red">mdi-heart</v-icon> -->
-      <transition name="heart">
-        <v-icon v-if="show" class="a heart" color="red">mdi-heart</v-icon>
-      </transition>
+      <transition-group name="heart">
+        <span v-for="i in 10" :key="i">
+          <v-icon v-if="show" class="a heart" color="red">mdi-heart</v-icon>
+        </span>
+      </transition-group>
     </v-btn>
     <!-- 참여자 채팅 -->
     <v-container fluid>
@@ -195,7 +197,7 @@ export default {
         console.log("IMAGE tlsgh");
         //이미지 리로드
       } else {
-        if (recv.sender === this.getChatRoomDetail.publisher) {
+        if (recv.sender === this.getChatRoomDetail.nickname) {
           // 개설자 메세지 일 때
           this.publisherMsgs.push({
             type: recv.type,
@@ -218,8 +220,9 @@ export default {
 
 <style>
 .a {
-  float: center;
-  position: absolute;
+  margin: 0 auto;
+  float: right;
+  position: relative;
   width: 50px;
   height: 50px;
 }

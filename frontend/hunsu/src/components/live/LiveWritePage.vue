@@ -92,7 +92,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getChatRooms"]),
+    ...mapGetters(["getChatRooms", "getNickname"]),
   },
 
   methods: {
