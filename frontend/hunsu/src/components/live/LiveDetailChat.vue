@@ -2,61 +2,74 @@
   <!-- 라이브 채팅창 (아직 구현안돼서 댓글로 대체해놓음)-->
   <div>
     <!-- 이미지 뷰  -->
-    <ImageView :images="getChatRoomDetail.imageUrls" />
+    <ImageView :images="getChatRoomDetail.imageUrls" @click.native="plusLike" />
     <!-- 개설자 채팅 -->
     <v-container fluid>
-      <v-virtual-scroll :items="publisherMsgs" height="90" item-height="30">
+      <v-virtual-scroll :items="publisherMsgs" height="120" item-height="50">
         <template v-slot:default="{ item }">
-          <v-list-item :key="item.sender">
+          <v-list-item class="publisher" :key="item.sender">
             {{ item.sender }} - {{ item.message }}
           </v-list-item>
-          <!-- <v-row>
-          <li v-for="(msg, i) in joinerMsgs" :key="i">{{ msg }}</li>
-        </v-row> -->
         </template>
       </v-virtual-scroll>
-      <!-- <v-row>
-        <li v-for="(msg, i) in publisherMsgs" :key="i">{{ msg }}</li>
-      </v-row> -->
     </v-container>
-    <!-- 좋아요 누르기 -->
-    <div style="float: right; padding: 10px">
-      <v-btn icon @click="plusLike">
-        <!-- <v-icon class="a" color="red">mdi-heart</v-icon> -->
-        <!-- <transition-group>
-        <span v-for="i in 10" :key="i">
-          <v-icon v-if="show" class="a heart" color="red">mdi-heart</v-icon>
-        </span>
-      </transition-group> -->
-        <v-icon v-show="show === 0" color="red">mdi-heart</v-icon>
-        <transition-group>
-          <v-icon class="a heart" :key="1" v-show="show === 1" color="red"
-            >mdi-heart</v-icon
-          >
-          <v-icon class="a heart" :key="2" v-show="show === 2" color="red"
-            >mdi-heart</v-icon
-          >
-          <v-icon class="a heart" :key="3" v-show="show === 3" color="red"
-            >mdi-heart</v-icon
-          >
-          <v-icon class="a heart" :key="4" v-show="show === 4" color="red"
-            >mdi-heart</v-icon
-          >
-          <v-icon class="a heart" :key="5" v-show="show === 5" color="red"
-            >mdi-heart</v-icon
-          >
-          <v-icon class="a heart" :key="6" v-show="show === 6" color="red"
-            >mdi-heart</v-icon
-          >
-        </transition-group>
-      </v-btn>
-    </div>
-    <!-- 참여자 채팅 -->
+    <v-row style="height: 20px; margin-bottom: 0px" no-gutters>
+      <!-- 좋아요 누르기 -->
+      <v-col cols="12">
+        <hr />
+      </v-col>
+      <v-col cols="11">
+        <div style="text-align: center; padding: 0px">
+          <v-btn icon @click="plusLike">
+            <v-icon v-show="show === 0" color="red">mdi-heart</v-icon>
+            <transition-group>
+              <v-icon class="a heart" :key="1" v-show="show === 1" color="red"
+                >mdi-heart</v-icon
+              >
+              <v-icon class="a heart" :key="2" v-show="show === 2" color="red"
+                >mdi-heart</v-icon
+              >
+              <v-icon class="a heart" :key="3" v-show="show === 3" color="red"
+                >mdi-heart</v-icon
+              >
+              <v-icon class="a heart" :key="4" v-show="show === 4" color="red"
+                >mdi-heart</v-icon
+              >
+              <v-icon class="a heart" :key="5" v-show="show === 5" color="red"
+                >mdi-heart</v-icon
+              >
+              <v-icon class="a heart" :key="6" v-show="show === 6" color="red"
+                >mdi-heart</v-icon
+              >
+              <v-icon class="a heart" :key="7" v-show="show === 7" color="red"
+                >mdi-heart</v-icon
+              >
+              <v-icon class="a heart" :key="8" v-show="show === 8" color="red"
+                >mdi-heart</v-icon
+              >
+              <v-icon class="a heart" :key="9" v-show="show === 9" color="red"
+                >mdi-heart</v-icon
+              >
+              <v-icon class="a heart" :key="10" v-show="show === 10" color="red"
+                >mdi-heart</v-icon
+              >
+            </transition-group>
+          </v-btn>
+        </div>
+      </v-col>
+    </v-row>
     <v-container fluid>
       <!--참가자 채팅 -->
-      <v-virtual-scroll :items="joinerMsgs" height="90" item-height="30">
+      <v-virtual-scroll :items="joinerMsgs" height="165" item-height="50">
         <template v-slot:default="{ item }">
-          <v-list-item :key="item.sender">
+          <v-list-item
+            class="mymessage"
+            v-if="item.sender === getNickname"
+            :key="item.sender"
+          >
+            {{ item.sender }} - {{ item.message }}
+          </v-list-item>
+          <v-list-item v-else class="joiner" :key="item.sender">
             {{ item.sender }} - {{ item.message }}
           </v-list-item>
           <!-- <v-row>
@@ -82,8 +95,8 @@
         </v-col>
       </v-row>
     </v-container>
-    <v-btn @click="exitChatRoom">종료</v-btn>
-    <v-btn @click="imageUpdate">이미지 수정</v-btn>
+    <!-- <v-btn @click="exitChatRoom">종료</v-btn>
+    <v-btn @click="imageUpdate">이미지 수정</v-btn> -->
   </div>
 </template>
 
@@ -176,7 +189,11 @@ export default {
         return;
       }
       const _this = this;
-
+      if (this.msg.length === 0) {
+        alert("메세지를 입력하세요!");
+        return;
+      }
+      console.log(this.msg);
       this.getStompClient.send(
         "/pub/chat/message",
         JSON.stringify({
@@ -216,7 +233,7 @@ export default {
       if (recv.type === "LIKE") {
         // console.log(recv);
         this.show++;
-        if (this.show == 7) {
+        if (this.show == 11) {
           this.show = 0;
         }
         // this.show = !this.show;
@@ -328,5 +345,53 @@ export default {
     bottom: 100px;
     opacity: 0;
   }
+}
+.publisher {
+  position: relative;
+  margin: 10px;
+  width: 320px;
+  background: #f4f4e8;
+  border-radius: 12px;
+}
+.publisher:after {
+  border-top: 10px solid #f4f4e8;
+  border-left: 15px solid transparent;
+  border-right: 0px solid transparent;
+  border-bottom: 0px solid transparent;
+  position: absolute;
+  top: 10px;
+  left: -10px;
+}
+.joiner {
+  position: relative;
+  margin: 10px;
+  width: 320px;
+  background: #e8f4ee;
+  border-radius: 12px;
+}
+.joiner:after {
+  border-top: 10px solid #e8f4ee;
+  border-left: 15px solid transparent;
+  border-right: 0px solid transparent;
+  border-bottom: 0px solid transparent;
+  position: absolute;
+  top: 10px;
+  left: -10px;
+}
+.mymessage {
+  position: relative;
+  margin: 0px 0px 0px 20px;
+  width: 320px;
+  background: #e8f4f4;
+  border-radius: 12px;
+}
+.mymessage:after {
+  border-top: 15px solid #e8f4f4;
+  border-left: 0px solid transparent;
+  border-right: 15px solid transparent;
+  border-bottom: 0px solid transparent;
+  position: absolute;
+  top: 10px;
+  right: -10px;
 }
 </style>
