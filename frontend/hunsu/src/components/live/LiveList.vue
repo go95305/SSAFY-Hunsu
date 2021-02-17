@@ -9,33 +9,40 @@
       <!-- 라이브 메인 사진 -->
       <!-- <ImageView :images="room.imageUrls" /> -->
       <ImageView :images="room.imageUrls" />
-      <!-- 작성자 프로필 -->
-      <v-card-title class="text-body-1" id="writer">
-        <v-list-item-avatar>
-          <v-img v-if="room.profileImage" :src="room.profileImage" />
-          <v-img v-else src="@/assets/profilephoto.png" />
-        </v-list-item-avatar>
-        {{ room.title }}
-        <v-list-item-title class="title text-body-1">
-          {{ room.nickname }}
-        </v-list-item-title>
-      </v-card-title>
 
-      <v-list-item-content>
-        <!-- 라이브 제목 -->
-        <!-- 해시태그 -->
-        <v-list-item-subtitle>
-          <!-- 추후 해시태그에 검색 링크 걸 예정 -->
-          <p
-            v-for="(hashtag, i) in room.hashtagList"
-            :key="i"
-            style="display: inline"
-          >
-            {{ "#" + hashtag }}
-          </p>
-        </v-list-item-subtitle>
-      </v-list-item-content>
-      <!-- 작성자, 접속자수 -->
+      <v-list two-line>
+        <v-list-item>
+          <!-- 작성자 프로필 -->
+          <v-list-item-avatar>
+            <v-img v-if="room.profileImage" :src="room.profileImage" />
+            <v-img v-else src="@/assets/profilephoto.png" />
+          </v-list-item-avatar>
+          <v-list-item-content>
+            <!-- 라이브 제목 -->
+            <v-list-item-title>{{ room.title }}</v-list-item-title>
+            <!-- 해시태그 -->
+            <v-list-item-subtitle>
+              <!-- 추후 해쉬태그에 검색 링크 걸 예정 -->
+              <p
+                v-for="(hashtag, i) in room.hashtagList"
+                :key="i"
+                style="display: inline"
+              >
+                {{ "#" + hashtag }}
+              </p>
+            </v-list-item-subtitle>
+          </v-list-item-content>
+          <v-list-item-action>
+            <!-- 작성자, 접속자수 -->
+            <div class="d-flex align-center">
+              <v-icon color="red">mdi-circle-medium</v-icon>
+              <v-list-item-subtitle
+                >참여자수 : {{ room.userCount + 1 }}</v-list-item-subtitle
+              >
+            </div>
+          </v-list-item-action>
+        </v-list-item>
+      </v-list>
     </v-card>
   </div>
 </template>

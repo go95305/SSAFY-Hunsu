@@ -2,7 +2,11 @@
   <!-- 라이브 채팅창 (아직 구현안돼서 댓글로 대체해놓음)-->
   <div>
     <!-- 이미지 뷰  -->
-    <ImageView :images="getChatRoomDetail.imageUrls" @click.native="plusLike" />
+    <ImageView
+      style="position: sticky; top: 90px; z-index: 99999"
+      :images="getChatRoomDetail.imageUrls"
+      @click.native="plusLike"
+    />
     <!-- 개설자 채팅 -->
     <v-container fluid>
       <v-virtual-scroll :items="publisherMsgs" height="120" item-height="50">
@@ -51,6 +55,36 @@
                 >mdi-heart</v-icon
               >
               <v-icon class="a heart" :key="10" v-show="show === 10" color="red"
+                >mdi-heart</v-icon
+              >
+              <v-icon class="a heart" :key="11" v-show="show === 11" color="red"
+                >mdi-heart</v-icon
+              >
+              <v-icon class="a heart" :key="12" v-show="show === 12" color="red"
+                >mdi-heart</v-icon
+              >
+              <v-icon class="a heart" :key="13" v-show="show === 13" color="red"
+                >mdi-heart</v-icon
+              >
+              <v-icon class="a heart" :key="14" v-show="show === 14" color="red"
+                >mdi-heart</v-icon
+              >
+              <v-icon class="a heart" :key="15" v-show="show === 15" color="red"
+                >mdi-heart</v-icon
+              >
+              <v-icon class="a heart" :key="16" v-show="show === 16" color="red"
+                >mdi-heart</v-icon
+              >
+              <v-icon class="a heart" :key="17" v-show="show === 17" color="red"
+                >mdi-heart</v-icon
+              >
+              <v-icon class="a heart" :key="18" v-show="show === 18" color="red"
+                >mdi-heart</v-icon
+              >
+              <v-icon class="a heart" :key="19" v-show="show === 19" color="red"
+                >mdi-heart</v-icon
+              >
+              <v-icon class="a heart" :key="20" v-show="show === 20" color="red"
                 >mdi-heart</v-icon
               >
             </transition-group>
@@ -151,6 +185,16 @@ export default {
         console.log(error);
       }
     );
+    this.publisherMsgs.unshift({
+      type: "TALK",
+      sender: this.getChatRoomDetail.nickname,
+      message: "한 훈수 배우겠습니다 ㅎ",
+    });
+    this.publisherMsgs.unshift({
+      type: "TALK",
+      sender: this.getChatRoomDetail.nickname,
+      message: this.getNickname + "님 환영합니다!",
+    });
   },
   beforeDestroyed() {
     console.log("exitroom");
@@ -233,7 +277,7 @@ export default {
       if (recv.type === "LIKE") {
         // console.log(recv);
         this.show++;
-        if (this.show == 11) {
+        if (this.show == 21) {
           this.show = 0;
         }
         // this.show = !this.show;
@@ -266,29 +310,29 @@ export default {
 .heart {
   position: relative;
   /* bottom: -60px; */
-  width: 50px;
-  height: 50px;
-  background: url("https://s3.us-east-2.amazonaws.com/upload-icon/uploads/icons/png/15721583221557740359-512.png")
-    no-repeat;
-  background-size: cover;
+  /* width: 50px; */
+  /* height: 50px; */
+  /* background: url("https://s3.us-east-2.amazonaws.com/upload-icon/uploads/icons/png/15721583221557740359-512.png")
+    no-repeat; */
+  /* background-size: cover; */
 }
-/* .heart-enter-active {
+.heart-enter-active {
   animation: bubble 2s;
-} */
+}
 
 .heart:first-of-type {
   /* left: 10px; */
-  animation: bubble 0.5s linear;
+  animation: bubble 1s linear;
 }
 
 .heart:nth-of-type(2) {
   /* left: 50%; */
-  animation: bubble 0.7s linear;
+  animation: bubble 1.2s linear;
 }
 
 .heart:nth-of-type(3) {
   /* left: 150px; */
-  animation: bubble 0.5s linear;
+  animation: bubble 1.1s linear;
 }
 
 .heart:nth-of-type(4) {
@@ -298,7 +342,7 @@ export default {
 
 .heart:nth-of-type(5) {
   /* right: 10px; */
-  animation: bubble 0.3s linear;
+  animation: bubble 1.3s linear;
 }
 
 .heart:nth-of-type(6) {
@@ -307,19 +351,59 @@ export default {
 }
 .heart:nth-of-type(7) {
   /* right: 55px; */
-  animation: bubble 1s 1s linear;
+  animation: bubble 1s linear;
 }
 .heart:nth-of-type(8) {
   /* right: 50%; */
-  animation: bubble 1s 1s linear;
+  animation: bubble 1.1s linear;
 }
 .heart:nth-of-type(9) {
   /* right: 70%; */
-  animation: bubble 1s 1s linear;
+  animation: bubble 1.3s linear;
 }
 .heart:nth-of-type(10) {
   /* right: 10%; */
-  animation: bubble 1s 1s linear;
+  animation: bubble 1.4s linear;
+}
+.heart:nth-of-type(11) {
+  /* right: 10%; */
+  animation: bubble 1.6s linear;
+}
+.heart:nth-of-type(12) {
+  /* right: 10%; */
+  animation: bubble 1.4s linear;
+}
+.heart:nth-of-type(13) {
+  /* right: 10%; */
+  animation: bubble 1.7s linear;
+}
+.heart:nth-of-type(14) {
+  /* right: 10%; */
+  animation: bubble 1.9s linear;
+}
+.heart:nth-of-type(15) {
+  /* right: 10%; */
+  animation: bubble 1.8s linear;
+}
+.heart:nth-of-type(16) {
+  /* right: 10%; */
+  animation: bubble 1.7s linear;
+}
+.heart:nth-of-type(17) {
+  /* right: 10%; */
+  animation: bubble 1.6s linear;
+}
+.heart:nth-of-type(18) {
+  /* right: 10%; */
+  animation: bubble 1.9s linear;
+}
+.heart:nth-of-type(19) {
+  /* right: 10%; */
+  animation: bubble 1s linear;
+}
+.heart:nth-of-type(20) {
+  /* right: 10%; */
+  animation: bubble 1.1s linear;
 }
 
 @keyframes bubble {
@@ -327,10 +411,14 @@ export default {
     bottom: 0px;
     left: 0%;
     right: 0%;
-    opacity: 1;
+    opacity: 0;
+  }
+  5% {
+    left: 20%;
   }
   20% {
-    right: 20%;
+    right: 40%;
+    opacity: 0.1;
   }
   40% {
     left: -20%;
@@ -343,7 +431,7 @@ export default {
   }
   to {
     bottom: 100px;
-    opacity: 0;
+    opacity: 1;
   }
 }
 .publisher {

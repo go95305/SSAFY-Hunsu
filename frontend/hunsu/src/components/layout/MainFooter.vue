@@ -2,14 +2,14 @@
   <!-- FOOTER 고정 -->
   <v-footer dark padless>
     <v-card flat tile class="dark white--text text-center" style="width: 100%">
-      <v-card-text>
+      <!-- <v-card-text>
         <v-btn v-for="icon in icons" :key="icon" class="mx-4 white--text" icon>
           <v-icon size="24px">
             {{ icon }}
           </v-icon>
         </v-btn>
-      </v-card-text>
-
+      </v-card-text> -->
+      <br />
       <v-card-text class="white--text pt-0">
         | 만든사람들 : 한재희, 고유창, 박홍균, 최진영, 이지현, 정보현<br />
         ｜ 소속 : SSAFY 4기 광주 1반 <br />
@@ -41,5 +41,4 @@ export default {
 </script>
 
 <style>
-
 </style>
