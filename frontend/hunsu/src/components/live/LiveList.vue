@@ -43,6 +43,7 @@
 <script>
 import { mapActions, mapGetters, mapMutations } from "vuex";
 import ImageView from "@/components/module/ImageView";
+import { EventBus } from "@/services/eventBus";
 
 export default {
   name: "LiveList",
@@ -61,6 +62,16 @@ export default {
       fixedComment: "",
       chatRooms: {},
     };
+  },
+  created() {
+    EventBus.$on("LiveWrite", async (room) => {
+      const images = await this.getImageList({
+        prefix: "live/" + room.roomId,
+      });
+      this.$set(room, "imageUrls", images);
+      await this.getProfiles(room);
+      this.enterRoom(room);
+    });
   },
   async mounted() {
     // const _this = this;

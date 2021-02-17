@@ -18,12 +18,10 @@
 
 <script>
 import OotdList from "@/components/ootd/OotdList";
-// import OotdListForHashtag from "@/components/ootd/OotdListForHashtag";
 import OotdSearchBtn from "@/components/ootd/OotdSearchBtn";
 import OotdWritePage from "@/components/ootd/OotdWritePage";
 import OotdFilter from "@/components/ootd/OotdFilter";
 import { EventBus } from "@/services/eventBus";
-import { mapGetters } from "vuex";
 
 export default {
   name: "Ootd",

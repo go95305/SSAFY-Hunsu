@@ -66,9 +66,9 @@
 </template>
 
 <script>
-// import axios from "axios";
 import { mapActions, mapGetters } from "vuex";
 import ImageUpload from "@/components/module/ImageUpload";
+import { EventBus } from "@/services/eventBus";
 
 export default {
   name: "LiveWritePage",
@@ -103,33 +103,23 @@ export default {
         alert("로그인 후 다시 시도해주세요!");
         this.$router.push("/login");
       }
-      const _this = this;
-      await this.createRoom({
+      const res = await this.createRoom({
         title: this.title,
         hashtagList: this.hashtagList,
-      }).then((res) => {
-        if (res.data) {
-          this.dialog = false;
-          this.title = "";
-          this.hashtagList = [];
-          this.uploadImage({
-            key: "live/",
-            articleIdx: res.data.roomId,
-          });
-          // 추후 개설된 방으로 접속하는 로직
-          this.findAllRoom().then(() => {
-            this.getChatRooms.map((room) => {
-              _this
-                .getImageList({ prefix: "live/" + room.roomId })
-                .then((res) => {
-                  room.images = res;
-                });
-            });
-          });
-        } else {
-          alert("방 개설 실패");
-        }
       });
+      if (res.data) {
+        this.dialog = false;
+        this.title = "";
+        this.hashtagList = [];
+        await this.uploadImage({
+          key: "live/",
+          articleIdx: res.data.roomId,
+        });
+
+        EventBus.$emit("LiveWrite", res.data);
+      } else {
+        alert("방 개설 실패");
+      }
     },
 
     addHashtag() {

@@ -1,4 +1,4 @@
-import axios from 'axios';
+import { liveApi } from '@/services/api';
 
 const state = {
   chatRooms: {},
@@ -39,9 +39,8 @@ const actions = {
       alert('방 제목을 입력해라');
       return;
     } else {
-      console.log(rootState);
-      return axios
-        .post('http://i4c102.p.ssafy.io:8082/api/chat/room', {
+      return liveApi
+        .post('/chat/room', {
           title, // title로 변경 필요
           nickname: rootState.user.nickname, // 항상 자신 (닉네임 가져오기)
           hashtagList,
@@ -65,7 +64,7 @@ const actions = {
     }
   },
   findAllRoom({ state }) {
-    return axios.get('http://i4c102.p.ssafy.io:8082/api/chat/rooms/0').then((res) => {
+    return liveApi.get('/chat/rooms/0').then((res) => {
       if (Object.prototype.toString.call(res.data) === '[object Array]') {
         console.log(res.data);
       }
@@ -73,9 +72,7 @@ const actions = {
     });
   },
   endMyRoom({ state }) {
-    return axios
-      .post('http://i4c102.p.ssafy.io:8082/api/chat/room/remove/' + state.chatRoomDetail.roomId)
-      .then(() => {});
+    return liveApi.post('/chat/room/remove/' + state.chatRoomDetail.roomId).then(() => {});
   },
 };
 
