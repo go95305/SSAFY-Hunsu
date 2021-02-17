@@ -5,13 +5,13 @@
     class="mx-auto mt-3"
     flat
   >
-    <v-card-title class="font-weight-regular ml-13" style="font-size: 1.25rem">Best Solution Of This Week </v-card-title>
+    <v-card-title class="font-weight-regular blue-grey darken-4 white--text mb-1 pl-9" style="font-size: 1.25rem">✨Best Solution Of This Week✨ </v-card-title>
     <v-system-bar lights-out class="d-flex justify-space-around">
       <div style="font-size: 1.25rem">BEFORE</div>
       <div style="font-size: 1.25rem">AFTER</div>  
       </v-system-bar>
     <v-carousel
-      class="mt-3"
+      class="mt-1"
       :continuous="false"
       :cycle="cycle"
       :show-arrows="false"

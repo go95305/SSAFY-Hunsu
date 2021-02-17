@@ -11,7 +11,7 @@
           </v-img>
           </v-carousel-item>
           <v-carousel-item>
-          <v-img src="@/assets/home2.png">
+          <v-img src="@/assets/home3.png">
           </v-img>
           </v-carousel-item>
               <v-row
