@@ -31,7 +31,7 @@ import java.util.Optional;
 @Api(tags = {"1. Sign"})
 @RequiredArgsConstructor
 @RestController
-@CrossOrigin(origins = {"http://localhost:3000"})
+@CrossOrigin(origins = {"http://localhost:3000", "http://i4c102.p.ssafy.io"})
 @RequestMapping(value = "/v1/auth")
 public class AuthController {
 
