@@ -11,20 +11,16 @@
       <div>
         <!--프로필사진-->
         <div class="d-flex ml-4 pt-4">
-            <v-img
-              :src="whatwear.profileImage"
-              @click="goToWhatwearDetail(whatwear)"
-              max-width="30px"
-              height="30px"
-              style="border-radius: 15px"
-              class="mt-2"
-            />
-            <!-- <v-img
-              v-else
-              src="https://s.pstatic.net/static/newsstand/2020/logo/dark/0604/018.png"
-            /> -->
-          
-            <!--유저닉네임-->
+          <v-img
+            :src="whatwear.profileImage"
+            @click="goToWhatwearDetail(whatwear)"
+            max-width="30px"
+            height="30px"
+            style="border-radius: 15px"
+            class="mt-2"
+          />
+
+          <!--유저닉네임-->
           <v-card-subtitle class="mt-3 ml-2 font-weight-bold" id="nickname">
             {{ whatwear.nickname }}
           </v-card-subtitle>
@@ -32,7 +28,10 @@
 
         <div class="d-flex align-center mt-3 mb-5">
           <!--뭘입을까 글제목-->
-          <v-card-subtitle class="ml-5 text-subtitle-1 font-weight-bold" id="title">
+          <v-card-subtitle
+            class="ml-5 text-subtitle-1 font-weight-bold"
+            id="title"
+          >
             {{ whatwear.title }}
           </v-card-subtitle>
           <!--투표기능뱃지-->
@@ -64,7 +63,6 @@
 </template>
 
 <script>
-// import { rscApi } from "@/services/api"
 import { mapActions, mapMutations, mapGetters } from "vuex";
 import { EventBus } from "@/services/eventBus";
 
@@ -74,19 +72,16 @@ export default {
     return {
       page: 1,
       whatwearList: [],
-      // length: parseInt(this.getWhatwearListInfo.length / 10) + 1
     };
   },
   computed: {
     ...mapGetters(["getWhatwearListInfo", "getWhatwearListCount"]),
   },
   async created() {
-    // await this.pageWhatwear();
     EventBus.$on("WhatwearWriteSuccess", (whatwear) => {
       this.goToWhatwearDetail(whatwear);
       this.pageWhatwear();
     });
-    // await this.pageWhatwear();
   },
   async mounted() {
     await this.pageWhatwear();
@@ -120,8 +115,6 @@ export default {
     },
 
     async pageWhatwear() {
-      // durldrudlrudrljdruldrldrldlr
-      console.log("qwer");
       await this.getWhatwearListInfoApi(this.page);
       this.whatwearList = this.getWhatwearListInfo;
       this.getImages();
@@ -144,5 +137,4 @@ export default {
 #title {
   padding: 0 0 0 0;
 }
-
 </style>

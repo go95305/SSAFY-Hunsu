@@ -21,7 +21,7 @@
         <v-btn @click="goToLogin()">로그인</v-btn>
       </div> -->
       <!--로그인 후 알림아이콘 옆에 표시할 프로필사진 + mypage, logout menu바-->
-          <div class="mt-1" v-if="getNickname">{{getNickname}}님 </div>
+      <div class="mt-1" v-if="getNickname">{{ getNickname }}님</div>
       <v-menu left bottom v-if="getNickname">
         <template v-slot:activator="{ on, attrs }">
           <v-avatar v-bind="attrs" v-on="on">
@@ -127,7 +127,7 @@ export default {
       if (item.text === "MyPage") {
         // 여기선 자기 자신의 마이페이지로 이동
         // 타겟 유저의 프로필 정보 가져오기
-        console.log("내닉네임", this.getNickname);
+        // console.log("내닉네임", this.getNickname);
         await this.getProfileInfoInApi(this.getNickname);
         // await this.getMyProfileInfoInApi();
         await this.getProfileImage({

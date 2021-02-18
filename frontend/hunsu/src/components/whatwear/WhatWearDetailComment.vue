@@ -194,7 +194,6 @@ export default {
       "getProfileInfoInApi",
     ]),
     async goToProfilePage(reply) {
-      console.log(reply);
       await this.getProfileInfoInApi(reply.nickname);
       window.scrollTo({ top: "0", behavior: "smooth" });
       this.$router.push({ name: "MyPage" });
@@ -205,7 +204,6 @@ export default {
       this.whatwearReplyInfo = this.getWhatwearReplyInfo;
       await this.whatwearReplyInfo.map(async (reply) => {
         const image = await this.getWhatwearProfile(reply.uid);
-        console.log("in reply", image);
         this.$set(reply, "profileImage", image);
       });
     },

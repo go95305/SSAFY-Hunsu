@@ -159,7 +159,6 @@ export default {
     ...mapGetters(["getChatRoomDetail", "getNickname", "getStompClient"]),
   },
   created() {
-    console.log(this.getChatRoomDetail);
     let sock = new SockJS("http://i4c102.p.ssafy.io:8082/api/ws-stomp");
     // this.stompClient = Stomp.over(sock);
     this.setStompClient(Stomp.over(sock));
@@ -167,23 +166,19 @@ export default {
     const _this = this;
     this.getStompClient.connect(
       {},
-      function (frame) {
-        console.log("frame", frame);
-        console.log(_this.getNickname);
+      function () {
         _this.connected = true;
         _this.getStompClient.subscribe(
           "/sub/chat/room/" + _this.getChatRoomDetail.roomId,
           function (msg) {
             let recv = JSON.parse(msg.body);
-            console.log("recv : ", recv);
             _this.recvMessage(recv);
           },
           { nickname: _this.getNickname } // 채팅 참석자 알림
         );
       },
       function (error) {
-        alert("서버연결 실패");
-        console.log(error);
+        alert("서버연결 실패", error);
       }
     );
     this.publisherMsgs.unshift({
@@ -198,7 +193,6 @@ export default {
     });
   },
   beforeDestroyed() {
-    console.log("exitroom");
     this.exitChatRoom();
   },
   methods: {
@@ -214,7 +208,6 @@ export default {
     },
     plusLike() {
       if (!this.getStompClient || !this.connected) {
-        console.log("연결안됐는데 왜 좋아요보내?");
         return;
       }
       const _this = this;
@@ -230,7 +223,6 @@ export default {
     },
     sendMessage() {
       if (!this.getStompClient || !this.connected) {
-        console.log("연결안됐는데 왜 메세지보내?");
         return;
       }
       const _this = this;

@@ -25,11 +25,7 @@
         </v-slide-item>
         <div>
           <br />
-          <v-btn
-            class="mx-5 mt-5"
-            icon
-            @click="onClickImageUpload"
-            x-large
+          <v-btn class="mx-5 mt-5" icon @click="onClickImageUpload" x-large
             ><v-icon>mdi-camera</v-icon></v-btn
           >
         </div>
@@ -65,11 +61,8 @@ export default {
       this.$refs.imageInput.click();
     },
     onChangeImages(e) {
-      console.log(e.target.files);
-
       this.setUploadImageFiles(e.target.files);
       this.setUploadImageUrls();
-      console.log("onChange imageURl ", this.getUploadImageUrls);
     },
   },
 };

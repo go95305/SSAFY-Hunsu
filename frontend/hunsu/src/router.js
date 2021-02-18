@@ -9,11 +9,8 @@ import MyPage from '@/views/user/MyPage';
 import Login from '@/views/user/Login';
 import OotdDetail from '@/views/ootd/OotdDetail';
 import LiveDetail from '@/views/live/LiveDetail';
-// import Description from '@/views/Description';
 import SignUp from '@/components/Mypage/SignupInfo';
 import AboutUs from '@/views/AboutUs';
-// import SignUp from '@/views/user/SignUp';
-// import Auth from "@/views/user/Auth"
 
 const originalPush = VueRouter.prototype.push;
 VueRouter.prototype.push = function push(location) {
@@ -25,12 +22,6 @@ VueRouter.prototype.push = function push(location) {
 Vue.use(VueRouter);
 
 const routes = [
-  // {
-  //   path: '/',
-  //   name: 'Description',
-  //   component: Description,
-  // },
-
   {
     path: '/',
     name: 'Home',
@@ -62,12 +53,13 @@ const routes = [
     path: '/ootd/detail',
     name: 'OotdDetail',
     component: OotdDetail,
-    // props: true,
+    props: true,
   },
   {
     path: '/whatwear',
     name: 'WhatWear',
     component: WhatWear,
+    props: true,
   },
   {
     path: '/mypage',

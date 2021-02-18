@@ -105,15 +105,18 @@ export default {
   computed: {
     ...mapGetters(["getOotdList", "getNickname", "getOotdInfo"]),
   },
+
   mounted() {
     EventBus.$on("searchHashtag", (getOotdList) => {
       this.ootdList = getOotdList;
     });
-    // EventBus.$on("clickHashtag", this.clickHashTag);
-    console.log(this.click, this.sortNum, this.limitNum, this.searchedList);
     if (this.click) {
       this.ootdList = this.searchedList;
-      console.log("클릭검색모드", this.ootdList);
+    }
+  },
+  beforeDestroy() {
+    if (this.click) {
+      this.setSearchedList([]);
     }
   },
   methods: {
@@ -124,11 +127,15 @@ export default {
       "getProfileInfoInApi",
       "getProfileImage",
       "getProfiles",
+      "getSearchedList",
     ]),
-    ...mapMutations(["setOotdInfoImages", "setTargetProfileImage"]),
+    ...mapMutations([
+      "setOotdInfoImages",
+      "setTargetProfileImage",
+      "setSearchedList",
+    ]),
     clickHashTag(ootdList) {
       this.ootdList = ootdList;
-      console.log("clicked 1", this.click);
     },
     async goToOotdDetail(ootd) {
       // 디테일로 이동

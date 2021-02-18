@@ -60,7 +60,7 @@ const mutations = {
     state.refreshToken = refreshToken;
     localStorage.setItem('hunsu-access-token', accessToken);
     localStorage.setItem('hunsu-refresh-token', refreshToken);
-    console.log('setAllToken', accessToken, state.accessToken);
+    // console.log('setAllToken', accessToken, state.accessToken);
   },
   setNickname(state, nickname) {
     state.nickname = nickname;
@@ -85,11 +85,11 @@ const mutations = {
   },
   setMyProfileImage(state, payload) {
     state.myProfileImage = payload;
-    console.log('in setprofile', payload);
+    // console.log('in setprofile', payload);
   },
   setTargetProfileImage(state, payload) {
     state.targetProfileImage = payload;
-    console.log('int targetprofile', payload);
+    // console.log('int targetprofile', payload);
   },
   setMyProfileInfo(state, myProfileInfo) {
     state.myProfileInfo = myProfileInfo;
@@ -111,7 +111,7 @@ const actions = {
         uid: res.data.uid,
       });
     }
-    console.log('in usercheck ', res);
+    // console.log('in usercheck ', res);
     return res.data.code;
   },
   signUpInApi({ commit }, params) {
@@ -154,11 +154,11 @@ const actions = {
       nickname: res.data.nickname,
       uid: res.data.uid,
     });
-    console.log('in tokenLogin', res);
+    // console.log('in tokenLogin', res);
   },
   getProfileInfoInApi(context, targetNickname) {
     // 상대 프로필 정보 가져오기
-    console.log(targetNickname);
+    // console.log(targetNickname);
     return rscApi
       .get(`/user/mypage/${targetNickname}`)
       .then((res) => {
@@ -181,7 +181,7 @@ const actions = {
   },
   updateMyProfileInfoInApi(context, { newNickname, height, size }) {
     // 프로필 업데이트
-    console.log(newNickname, height, size);
+    // console.log(newNickname, height, size);
     return rscApi
       .put(`/user/mypage/modify`, {
         nickname: newNickname,
@@ -189,9 +189,9 @@ const actions = {
         size: size,
       })
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         context.commit('setMyProfileInfo', res.data);
-        console.log('프로필수정성공');
+        // console.log('프로필수정성공');
       })
       .catch((err) => {
         console.error(err);
@@ -204,15 +204,15 @@ const actions = {
         // console.log('logout success');
         commit('setAllInfoClear');
       } else {
-        console.log('logout fail');
-        console.log(
-          'access',
-          state.accessToken,
-          'refresh',
-          state.refreshToken,
-          'nick',
-          state.nickname
-        );
+        // console.log('logout fail');
+        // console.log(
+        //   'access',
+        //   state.accessToken,
+        //   'refresh',
+        //   state.refreshToken,
+        //   'nick',
+        //   state.nickname
+        // );
       }
     });
   },

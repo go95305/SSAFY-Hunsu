@@ -36,7 +36,7 @@ const mutations = {
     payload.forEach((file) => {
       state.uploadImageFiles.push(file);
     });
-    console.log('gd ', state.uploadImageFiles);
+    // console.log('gd ', state.uploadImageFiles);
   },
   clearUploads(state) {
     state.uploadImageUrls = [];
@@ -80,7 +80,6 @@ const actions = {
     // 프로필사진 업로드
     return new Promise((resolve, reject) => {
       const imageFile = state.uploadImageFiles[state.uploadImageFiles.length - 1];
-      console.log('profilefile', imageFile);
       //파일 확장자
       let fileExtList = imageFile.name.split('.');
       let fileExt = fileExtList[fileExtList.length - 1];

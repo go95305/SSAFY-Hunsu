@@ -5,6 +5,7 @@ const state = {
   ootdReplyInfo: {},
   ootdList: [],
   like: false,
+  searchedList: [],
 };
 const getters = {
   getOotdInfo(state) {
@@ -18,6 +19,9 @@ const getters = {
   },
   getLike(state) {
     return state.like;
+  },
+  getSearchedList(state) {
+    return state.searchedList;
   },
 };
 const mutations = {
@@ -39,6 +43,9 @@ const mutations = {
   },
   toggleLike(state, flag) {
     state.ootdInfo.likeChk = flag;
+  },
+  setSearchedList(state, payload) {
+    state.searchedList = payload;
   },
 };
 
@@ -142,7 +149,6 @@ const actions = {
       .post('ootd/reply', OotdReplyInfo)
       .then((res) => {
         context.commit('setOotdReplyInfo', res.data);
-        console.log('스토어에서 확인하기', res.data);
       })
       .catch((err) => {
         console.error(err);

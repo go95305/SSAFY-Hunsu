@@ -13,7 +13,7 @@
               v-if="getTargetProfileImage"
               :src="getTargetProfileImage"
             />
-            <v-img v-else src="@/assets/profilephoto.png"  />
+            <v-img v-else src="@/assets/profilephoto.png" />
           </v-avatar>
           <!--모바일-->
           <v-avatar
@@ -27,7 +27,7 @@
               v-if="getTargetProfileImage"
               :src="getTargetProfileImage"
             />
-            <v-img v-else src="@/assets/profilephoto.png"  />
+            <v-img v-else src="@/assets/profilephoto.png" />
           </v-avatar>
           <!--유저닉네임-->
           <!-- <p class="font-weight-black text-h5 hidden-sm-and-down" style="margin: 60px 20px">닉네임</p>
@@ -300,8 +300,6 @@ export default {
       "getProfiles",
     ]),
     async getProfile(getUserInfo) {
-      // const yourNickname = getUserInfo.mypageNickname;
-      // console.log("hi", getUserInfo);
       await this.getProfileInfoInApi(getUserInfo.mypageNickname);
       this.profileData = this.getUserInfo;
       let imageList = [];
@@ -327,10 +325,8 @@ export default {
         )
         .then((res) => {
           if (res.data) {
-            console.log("팔로우성공");
             this.followName = "Unfollow";
           } else {
-            console.log("언팔로우성공");
             this.followName = "Follow";
           }
           this.getProfile(this.getUserInfo);
@@ -343,13 +339,11 @@ export default {
       //idx 굳이 보여줄 필요 없을것같아서 params로 변경
       // this.$router.push({ name: "OotdDetail", params: { no: ootd.ootdIdx } });
       let root = this;
-      console.log(idx);
       await this.getOotdInfoInApi({
         ootdIdx: idx,
       });
       const images = await root.getImageList({ prefix: "ootd/" + idx });
       root.setOotdInfoImages(images);
-      console.log(this.getOotdInfo);
       await this.getProfileImage({
         uid: this.getOotdInfo.uid,
         target: "target",

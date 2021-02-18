@@ -217,7 +217,6 @@
 
 <script>
 import OotdDetailComment from "@/components/ootd/OotdDetailComment";
-// import { EventBus } from "@/services/eventBus";
 
 import { mapGetters, mapMutations, mapActions } from "vuex";
 
@@ -283,6 +282,7 @@ export default {
       "setOotdInfo",
       "setTargetProfileImage",
       "setOotdInfoImages",
+      "setSearchedList",
     ]),
     ...mapActions([
       "getOotdInfoInApi",
@@ -386,13 +386,10 @@ export default {
         });
         this.$set(info, "imageUrls", images);
       });
+      this.setSearchedList(ootdList);
 
       this.$router.push({
-        path: "/ootd",
-        props: {
-          clicked: true,
-          searchedListed: ootdList,
-        },
+        name: "Ootd",
       });
     },
   },

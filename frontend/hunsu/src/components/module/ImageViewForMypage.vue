@@ -29,9 +29,7 @@
 <script>
 export default {
   name: "ImageViewForMypage",
-  mounted() {
-    console.log("inImageViewForMypage", this.images)
-  },
+
   props: {
     images: {
       type: Array,

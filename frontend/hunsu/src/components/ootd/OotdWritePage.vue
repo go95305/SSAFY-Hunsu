@@ -22,7 +22,16 @@
           <v-spacer></v-spacer>
           <v-toolbar-items>
             <!-- 작성완료 버튼 -->
-            <v-btn dark text @click="createOotd()" :disabled="(imageLength == 0) || (ootdLength == 0) || (ootdLength > 250)"> Save </v-btn>
+            <v-btn
+              dark
+              text
+              @click="createOotd()"
+              :disabled="
+                imageLength == 0 || ootdLength == 0 || ootdLength > 250
+              "
+            >
+              Save
+            </v-btn>
           </v-toolbar-items>
         </v-toolbar>
         <ImageUpload />
@@ -100,11 +109,11 @@ export default {
   computed: {
     ...mapGetters(["getNickname", "getUploadImageUrls", "getUploadImageFiles"]),
     imageLength() {
-      return this.getUploadImageFiles.length
+      return this.getUploadImageFiles.length;
     },
     ootdLength() {
-      return this.ootd_content.length
-    }
+      return this.ootd_content.length;
+    },
   },
   methods: {
     ...mapActions(["createOotdInfo", "getOotdInfoInApi", "uploadImage"]),
@@ -125,8 +134,6 @@ export default {
       // let uploadImage = this.uploadImage;
       let imageFiles = this.getUploadImageFiles;
       let clearUploads = this.clearUploads;
-      console.log("before send", imageFiles);
-      console.log("사진갯수", this.getUploadImageFiles.length);
       // Ootd 글 내용들
       const params = {
         content: this.ootd_content,
@@ -147,16 +154,13 @@ export default {
       }
 
       if (this.isValid) {
-        console.log('hi')
         this.dialog = false;
         this.createOotdInfo(params).then((res) => {
           if (!res) {
             console.log("글 작성 실패");
           } else {
             // 이미지 업로드
-            console.log("글 작성 성공 res");
             if (imageFiles.length !== 0) {
-              console.log("in ootd file", imageFiles);
               this.uploadImage({ key: "ootd/", articleIdx: res.ootdIdx }).then(
                 () => {
                   clearUploads();
@@ -166,9 +170,7 @@ export default {
               // this.$router.go(this.$router.currentRoute); // 현재 페이지 리로드
             } else {
               // 이미지 업로드
-              console.log("글 작성 성공");
               if (imageFiles.length !== 0) {
-                console.log("in ootd file", imageFiles);
                 this.uploadImage({
                   key: "ootd/",
                   articleIdx: res.ootdIdx,
@@ -190,8 +192,7 @@ export default {
         this.$router.push({ name: "Ootd" }).catch(() => {});
       }
     },
-    fileDeleteButton(e, idx) {
-      console.log("delete ", idx);
+    fileDeleteButton(e) {
       const targetIdx = e.target.getAttribute("idx");
       this.imageFiles = this.imageFIles.filter(
         (data, idx) => idx !== targetIdx

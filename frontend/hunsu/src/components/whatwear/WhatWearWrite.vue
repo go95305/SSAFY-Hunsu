@@ -26,12 +26,17 @@
           >
           <v-spacer></v-spacer>
           <v-toolbar-items>
-            <v-btn text @click="createWhatWear()" class="text-subtitle-1" 
-            :disabled="
-            (titleLength == 0) || 
-            (contentLength == 0) || 
-            (contentLength > 250) ||
-            (titleLength > 30)">
+            <v-btn
+              text
+              @click="createWhatWear()"
+              class="text-subtitle-1"
+              :disabled="
+                titleLength == 0 ||
+                contentLength == 0 ||
+                contentLength > 250 ||
+                titleLength > 30
+              "
+            >
               완료
             </v-btn>
           </v-toolbar-items>
@@ -225,11 +230,11 @@ export default {
       "getUid",
     ]),
     titleLength() {
-      return this.whatwearTitle.length
+      return this.whatwearTitle.length;
     },
     contentLength() {
-      return this.whatwearContent.length
-    }
+      return this.whatwearContent.length;
+    },
   },
   methods: {
     ...mapActions(["uploadImage", "getWhatwearListInfoApi"]),
@@ -249,7 +254,6 @@ export default {
     },
     async createWhatWear() {
       // dialog창 닫기 + 입력데이터 보내기
-      console.log("boolean check", this.timeDialog, this.dateDialog);
       this.dialog = false;
       if (this.dates && this.time) {
         this.endtime = this.dates.concat("T", this.time, ":00");

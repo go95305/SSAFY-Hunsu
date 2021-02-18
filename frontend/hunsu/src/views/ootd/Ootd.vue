@@ -1,6 +1,5 @@
 <template>
   <div>
-    {{ click }} {{ "1" }}{{ searchedList }}
     <LoginFilter />
     <div class="ml-2">
       <OotdSearchBtn />
@@ -16,7 +15,14 @@
       :limitNum="limit"
       style="margin: 20px"
     />
-    <OotdList v-if="click" :key="key" :sortNum="sort" :limitNum="limit" />
+    <OotdList
+      v-if="click"
+      :key="key"
+      :sortNum="sort"
+      :limitNum="limit"
+      :click="click"
+      :searchedList="ootdList"
+    />
   </div>
 </template>
 
@@ -27,26 +33,11 @@ import OotdWritePage from "@/components/ootd/OotdWritePage";
 import OotdFilter from "@/components/ootd/OotdFilter";
 import { EventBus } from "@/services/eventBus";
 import LoginFilter from "@/components/module/LoginFilter";
+import { mapGetters } from "vuex";
 
 export default {
   name: "Ootd",
-  props: {
-    clicked: {
-      default: false,
-      type: Boolean,
-    },
-    searchedListed: {
-      defualt: null,
-    },
-  },
-  computed: {
-    click() {
-      return this.clicked;
-    },
-    ootdList() {
-      return this.searchedListed;
-    },
-  },
+
   components: {
     OotdList,
     OotdSearchBtn,
@@ -59,9 +50,12 @@ export default {
       sort: 0,
       limit: 0,
       key: 0,
-      // click: this.clicked,
-      // ootdList: this.searchedListed,
+      click: false,
+      ootdList: [],
     };
+  },
+  computed: {
+    ...mapGetters(["getSearchedList"]),
   },
   created() {
     EventBus.$on("recent", () => {
@@ -76,11 +70,13 @@ export default {
         this.sort++;
       }
     });
-
-    console.log("in ootd create", this.click, this.searchedList);
-  },
-  mounted() {
-    console.log("in ootd mounted", this.click, this.searchedList);
+    console.log(this.getSearchedList);
+    if (this.getSearchedList.length !== 0) {
+      this.ootdList = this.getSearchedList;
+      this.click = true;
+    } else {
+      this.click = false;
+    }
   },
 };
 </script>
