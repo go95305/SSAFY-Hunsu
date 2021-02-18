@@ -26,6 +26,6 @@ public class SwaggerConfiguration {
     private ApiInfo swaggerInfo(){
         return new ApiInfoBuilder().title("AuthDemo API Documentation")
                 .description("인증서버 api 문서")
-                .license("hindsight").licenseUrl("xxx").version("0.1").build();
+                .license("hindsight").licenseUrl("xxx").version("0.2").build();
     }
 }

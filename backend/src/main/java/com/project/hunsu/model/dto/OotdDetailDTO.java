@@ -1,6 +1,6 @@
 package com.project.hunsu.model.dto;
 
-import com.project.hunsu.model.entity.Reply;
+import com.project.hunsu.model.entity.OotdReply;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -15,13 +15,22 @@ import java.util.List;
 public class OotdDetailDTO {
     private Long ootdIdx;
     private String content;
-    private int count;
+    private int likeCount;
+    private Long uid;
     private Boolean isUpdated;
     private LocalDateTime writeDate;
     private String nickname;
-    private List<String> hashTag= new ArrayList<>();
-    public void addHashtag(String hashtag){
-        this.hashTag.add(hashtag);
+    private List<String> hashtagList = new ArrayList<>();
+    private Boolean likeChk;
+    //    private List<OotdReplyDTO> replyDTOList = new ArrayList<>();
+    public void addHashtag(String hashtag) {
+        this.hashtagList.add(hashtag);
     }
-    private List<Reply> replyList=new ArrayList<>();
+
+
+    private List<OotdReplyDTO> ootdReplyDTOList = new ArrayList<>();
+
+    public void addReply(OotdReplyDTO ootdReplyDTO) {
+        this.ootdReplyDTOList.add(ootdReplyDTO);
+    }
 }

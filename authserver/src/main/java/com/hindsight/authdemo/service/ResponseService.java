@@ -1,7 +1,7 @@
 package com.hindsight.authdemo.service;
 
 import com.hindsight.authdemo.model.response.CommonResult;
-import com.hindsight.authdemo.model.response.MapResult;
+import com.hindsight.authdemo.model.response.TokenResult;
 import com.hindsight.authdemo.model.response.SingleResult;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +12,7 @@ public class ResponseService {
 
     // enum으로 api 요청 결과에 대한 code, message를 정의합니다.
     public enum CommonResponse {
-        SUCCESS(0, "성공하였습니디."),
+        SUCCESS(0, "성공하였습니다."),
         FAIL(-1, "실패하였습니다.");
 
         int code;
@@ -39,8 +39,16 @@ public class ResponseService {
         return result;
     }
     // 다중건 결과를 처리하는 메소드
-//    public Map<, T> MapResult<T> getMapResult(Map<T, T> map) {
+//    public Map<T> MapResult<T> getMapResult(Map<T, T> map) {
 //        MapResult<T> result = new MapResult<>();
+//        result.setMap(map);
+//        setSuccessResult(result);
+//        return result;
+//    }
+
+    // 다중건 결과를 처리하는 메소드
+//    public <T> TokenResult<T> getHashmapResult(Map<T,T> map) {
+//        TokenResult<T> result = new TokenResult<>();
 //        result.setMap(map);
 //        setSuccessResult(result);
 //        return result;

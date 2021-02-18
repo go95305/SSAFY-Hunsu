@@ -6,6 +6,9 @@ spring:
     url: jdbc:mysql://i4C102.p.ssafy.io:3306/hunsu?serverTimezone=Asia/Seoul
     username: ssafyC102
     password: durtlrhdbckd135
+#    url: jdbc:mysql://localhost:3306/hunsu2?serverTimezone=UTC&useUniCode=yes&characterEncoding=UTF-8
+#    username: ssafy
+#    password: ssafy
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
@@ -28,13 +31,13 @@ spring:
     secret: wogml23@$0@
 
   url:
-    base: http://localhost:9000
+    base: http://localhost:8081
 
   social:
     kakao:
-      client_id: 8e53809b2827c367b5aa27ac70dfd124
-      client_secret: 71TylRM4GB5dWKVAiS7Kf1rsOZZgDWGa
-      redirect: /v1/auth/login/kakao
+      client_id: dea07b77c50fd259ffad8bbe6d94165b
+      client_secret: iCCyLX3QZxCgwF1CSZfQ5fmMDZhkUgaa
+      redirect: /v1/auth/usercheck
       url:
         login: https://kauth.kakao.com/oauth/authorize
         token: https://kauth.kakao.com/oauth/token

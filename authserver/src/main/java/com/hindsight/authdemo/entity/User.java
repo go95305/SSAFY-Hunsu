@@ -15,32 +15,43 @@ import java.util.stream.Collectors;
 @Builder // builder를 사용할수 있게 합니다.
 @Entity // jpa entity임을 알립니다.
 @Getter // user 필드값의 getter를 자동으로 생성합니다.
+@Setter
 @NoArgsConstructor // 인자없는 생성자를 자동으로 생성합니다.
 @AllArgsConstructor // 인자를 모두 갖춘 생성자를 자동으로 생성합니다.
 @Table(name = "user") // 'user' 테이블과 매핑됨을 명시
 public class User implements UserDetails {
 
-    @Id // pk, 추후 uid로 변경
-    @Column(name ="nickname")
+    private static final long serialVersionUID = 1L;
+    @Id
+    @Column(name = "uid")
+    private long uid;
     private String nickname;
-    @Column(length=100)
-    private String providerName;
-    @Column(nullable = false, unique = true, length = 30)
-    private String oauthId;
+
+    private Boolean flag;
     private String gender;
+
+    @Column(name = "access_token")
+    private String accessToken;
+    private String refreshToken;
+
+    @Column
     private String age;
     private double height;
     private String size;
+    private String jwtRefresh;
+    private String jwtAccess;
 
 
-    //    @Column(nullable = false, length = 100)
-    //    private String name;
-    //    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    //    private long msrl;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
     private final List<String> roles = new ArrayList<>();
+
+    public List<String> getRoles() {
+        roles.clear();
+        roles.add("USER");
+        return roles;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

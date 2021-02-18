@@ -25,8 +25,16 @@ public class OotdLike {
     private Ootd ootd;
 
     @ManyToOne
-    @JoinColumn(name = "nickname")
+    @JoinColumn(name = "uid")
     private User user;
+
+    @Column(name = "flag")
+    private Boolean flag;
+    @PrePersist
+    void preInsert(){
+        if(this.flag==null)
+            this.flag=true;
+    }
 
 
 }

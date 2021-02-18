@@ -3,6 +3,8 @@ package com.project.hunsu.service;
 import com.project.hunsu.repository.*;
 import com.project.hunsu.model.dto.*;
 import com.project.hunsu.model.entity.*;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
@@ -17,13 +19,13 @@ public class WearService {
     EntityManager entityManager;
     private final WearRepository wearRepository;
     private final UserRepository userRepository;
-    private final ReplyRepository replyRepository;
+    private final WearReplyRepository replyRepository;
     private final VoteRepository voteRepository;
     private final VoteItemRepository voteItemRepository;
     private final VoteChoiceRepository voteChoiceRepository;
-    private final ReplyLikeRepository replyLikeRepository;
+    private final WearReplyLikeRepository replyLikeRepository;
 
-    public WearService(ReplyLikeRepository replyLikeRepository, WearRepository wearRepository, UserRepository userRepository, ReplyRepository replyRepository, VoteRepository voteRepository, VoteItemRepository voteItemRepository, VoteChoiceRepository voteChoiceRepository) {
+    public WearService(WearReplyLikeRepository replyLikeRepository, WearRepository wearRepository, UserRepository userRepository, WearReplyRepository replyRepository, VoteRepository voteRepository, VoteItemRepository voteItemRepository, VoteChoiceRepository voteChoiceRepository) {
         this.wearRepository = wearRepository;
         this.userRepository = userRepository;
         this.replyRepository = replyRepository;
@@ -33,51 +35,55 @@ public class WearService {
         this.replyLikeRepository = replyLikeRepository;
     }
 
-    public List<WearMain> SortByRecent() {
-        List<WearMain> wearMainList = new ArrayList<>();
-        List<Wear> wearList;
+    //return: title, nickname, wear_idx, voteActivated
+    public WearMainTotalDTO sortByRecent(Integer page) {
+        WearMainTotalDTO wearMainTotalDTO = new WearMainTotalDTO();
+        PageRequest pageRequest = PageRequest.of(page-1,10, Sort.by("WriteDate"));
+        List<WearMainDTO> wearMainDTOList = new ArrayList<>();
+        List<Wear> wearList = wearRepository.findByFlag(true, pageRequest);
+        Long count = wearRepository.countByFlag(true);
 
-        wearList = wearRepository.findWearByOrderByWriteDate();
         for (Wear wear : wearList) {
-            WearMain wearMain = new WearMain();
-            wearMain.setTitle(wear.getTitle());
-            wearMain.setNickname(wear.getUser().getNickname());
-            wearMain.setWear_idx(wear.getIdx());
-            wearMain.setVoteActivated(wear.isVoteActivated());
+            WearMainDTO wearMainDTO = new WearMainDTO();
+            wearMainDTO.setTitle(wear.getTitle());
+            wearMainDTO.setUid(wear.getUser().getUid());
+            wearMainDTO.setNickname(wear.getUser().getNickname());
+            wearMainDTO.setWear_idx(wear.getIdx());
+            wearMainDTO.setVoteActivated(wear.isVoteActivated());
 
-            wearMainList.add(wearMain);
+            wearMainDTOList.add(wearMainDTO);
         }
-        return wearMainList;
+
+        wearMainTotalDTO.setWearMainDTOList(wearMainDTOList);
+        wearMainTotalDTO.setCount(count);
+
+        return wearMainTotalDTO;
     }
 
-    public void InsertWear(WearValue request) {
+    public long insertWear(WearDTO request) {
         Wear wear = new Wear();
-        User user = new User();
-
-        user = userRepository.findUserByNickname(request.getNickname());
-
+        User user = userRepository.findUserByNickname(request.getNickname());
 
         wear.setUser(user);
         wear.setTitle(request.getTitle());
         wear.setContent(request.getContent());
         wear.setUser(user);
-        if(request.getNum() > 0)
+        if (request.getNum() > 0)
             wear.setVoteActivated(true);
         else
             wear.setVoteActivated(false);
 
         Wear savedWear = wearRepository.save(wear);
 
-        if(request.getNum() > 0){
+        if (request.getNum() > 0) {
             Vote vote = new Vote();
             vote.setWear(savedWear);
             vote.setEndTime(request.getEndtime());
-            //수정 필요
 
             Vote savedVote = voteRepository.save(vote);
             //vote 생성
 
-            for (int i = 0; i < request.getNum(); i++){
+            for (int i = 0; i < request.getNum(); i++) {
                 VoteItem voteItem = new VoteItem();
                 voteItem.setVote(savedVote);
 
@@ -85,119 +91,172 @@ public class WearService {
                 //vote 항목 생성
             }
         }
+        return savedWear.getIdx();
     }
 
-    public WearDetail DetailWear(long idx) {
-        WearDetail wearDetail = new WearDetail();
-        Wear wear = new Wear();
-
-        wear = wearRepository.findWearByIdx(idx);
-
-        wearDetail.setWear_idx(wear.getIdx());
-        wearDetail.setTitle(wear.getTitle());
-        wearDetail.setContent(wear.getContent());
-        wearDetail.setNickname(wear.getUser().getNickname());
-        wearDetail.setWrite_date(wear.getWriteDate());
-        wearDetail.setVote_activated(wear.isVoteActivated());
-
-        return wearDetail;
-    }
-
-    public List<VoteValue> VoteList(Long idx, String nickname) {
-        List<VoteValue> voteValueList = new ArrayList<>();
+    //return 값: wear_idx, title, content, nickname, write_date, vote_activated, List<Reply>(reply_idx, nickname, depth, writeDate, content, groupNum, count, like, flag), List<vote>(voteItem_idx, count, choice)
+    public WearDetailDTO detailWear(long idx, String nickname) {
+        WearDetailDTO wearDetailDTO = new WearDetailDTO();
         List<VoteItem> voteList;
-
         Wear wear = wearRepository.findWearByIdx(idx);
         Vote vote = voteRepository.findVoteByWear(wear);
+        User user = userRepository.findUserByNickname(nickname);
+        voteList = voteItemRepository.findVoteItemByVoteOrderByVote(vote);
+        List<WearReplyDTO> replyDTOList = replyList(idx, nickname);
+        List<VoteDTO> voteDTOList = new ArrayList<>();
+
+        for (VoteItem voteItem : voteList) {
+            VoteChoice voteChoice = voteChoiceRepository.findVoteChoiceByVoteItemAndUser(voteItem, user);
+
+            VoteDTO voteDTO = new VoteDTO();
+            voteDTO.setIdx(voteItem.getIdx());
+            voteDTO.setCount(voteItem.getCount());
+            if (voteChoice != null){
+                if(voteChoice.getFlag())
+                    voteDTO.setChoice(true);
+                else
+                    voteDTO.setChoice(false);
+            } else
+                voteDTO.setChoice(false);
+
+            voteDTOList.add(voteDTO);
+        }
+
+        wearDetailDTO.setUid(wear.getUser().getUid());
+        wearDetailDTO.setWear_idx(wear.getIdx());
+        wearDetailDTO.setTitle(wear.getTitle());
+        wearDetailDTO.setContent(wear.getContent());
+        wearDetailDTO.setNickname(wear.getUser().getNickname());
+        wearDetailDTO.setWrite_date(wear.getWriteDate());
+        wearDetailDTO.setVote_activated(wear.isVoteActivated());
+        wearDetailDTO.setReplyList(replyDTOList);
+        wearDetailDTO.setVoteList(voteDTOList);
+        if(vote != null)
+            wearDetailDTO.setEnd_time(vote.getEndTime());
+
+        return wearDetailDTO;
+    }
+
+    //return: voteItem_idx, count, choice
+    public List<VoteDTO> voteList(Long idx, String nickname) {
+        List<VoteDTO> voteDTOList = new ArrayList<>();
+        List<VoteItem> voteList;
+
+        VoteItem voteitem = voteItemRepository.findVoteItemByIdx(idx);
+        Vote vote = voteitem.getVote();
         User user = userRepository.findUserByNickname(nickname);
 
         voteList = voteItemRepository.findVoteItemByVoteOrderByVote(vote);
 
         for (VoteItem voteItem : voteList) {
-            VoteChoice voteChoice;
-            voteChoice = voteChoiceRepository.findVoteChoiceByVoteItemAndUser(voteItem, user);
-            VoteValue voteValue = new VoteValue();
-            voteValue.setIdx(voteItem.getIdx());
-            voteValue.setCount(voteItem.getCount());
-            if(voteChoice != null)
-                voteValue.setChoice(true);
-            else
-                voteValue.setChoice(false);
+            VoteChoice voteChoice = voteChoiceRepository.findVoteChoiceByVoteItemAndUser(voteItem, user);
 
-            voteValueList.add(voteValue);
+            VoteDTO voteDTO = new VoteDTO();
+            voteDTO.setIdx(voteItem.getIdx());
+            voteDTO.setCount(voteItem.getCount());
+            if (voteChoice != null){
+                if(voteChoice.getFlag())
+                    voteDTO.setChoice(true);
+                else
+                    voteDTO.setChoice(false);
+            } else
+                voteDTO.setChoice(false);
+
+            voteDTOList.add(voteDTO);
         }
 
-        return voteValueList;
+        return voteDTOList;
     }
 
-    public void DeleteWear(long idx) {
+    public void deleteWear(long idx) {
         Wear wear = wearRepository.findWearByIdx(idx);
-        Vote vote = voteRepository.findVoteByWear(wear);
-        List<VoteItem> voteItemList = voteItemRepository.findVoteItemByVoteOrderByVote(vote);
-        List<Reply> replyList = replyRepository.findReplyByWearOrderByWriteDate(wear);
 
-        for (VoteItem voteItem : voteItemList)
-            voteChoiceRepository.deleteVoteChoiceByVoteItem(voteItem);
+        wear.setFlag(false);
 
-//        for (Reply reply : replyList)
-//            replyLikeRepository.deleteReplyLikeByIdx(reply.getIdx());
-
-        voteItemRepository.deleteVoteItemByVote(vote);
-        voteRepository.deleteVoteByWear(wear);
-//        replyLikeRepository.deleteReplyLikeByIdx();
-
-        wearRepository.deleteWearByIdx(idx);
+        wearRepository.save(wear);
     }
 
-    public void InsertReply(ReplyDTO request) {
-        Reply reply = new Reply();
-        User user = new User();
-        Wear wear = new Wear();
+    //return: List<Reply>(reply_idx, nickname, depth, writeDate, content, groupNum, count, like, flag)
+    public List<WearReplyDTO> insertReply(WearReplyDTO request) {
+        WearReply wearReply = new WearReply();
+        User user = userRepository.findUserByNickname(request.getNickname());
+        Wear wear = wearRepository.findWearByIdx(request.getWear_idx());
 
-        user = userRepository.findUserByNickname(request.getNickname());
-        wear = wearRepository.findWearByIdx(request.getWear_idx());
-
-        reply.setUser(user);
-        reply.setWear(wear);
-        reply.setDepth(request.getDepth());
-        reply.setContent(request.getContent());
-        Reply savedReply = replyRepository.save(reply);
-        if(savedReply.getDepth() == 1)
+        wearReply.setUser(user);
+        wearReply.setWear(wear);
+        wearReply.setDepth(request.getDepth());
+        wearReply.setContent(request.getContent());
+        WearReply savedReply = replyRepository.save(wearReply);
+        if (savedReply.getDepth() == 1)
             savedReply.setGroupNum(request.getGroupNum());
         else
             savedReply.setGroupNum(savedReply.getIdx());
 
         replyRepository.save(savedReply);
+
+        List<WearReplyDTO> replyDTOList = new ArrayList<>();
+
+        replyDTOList = replyList(request.getWear_idx(), request.getNickname());
+
+        return replyDTOList;
+
     }
 
-    public void ModifyReply(ReplyDTO request) {
-        Reply reply = replyRepository.findReplyByIdx(request.getIdx());
+    //return: List<Reply>(reply_idx, nickname, depth, writeDate, content, groupNum, count, like, flag)
+    public List<WearReplyDTO> modifyReply(WearReplyDTO request) {
+        WearReply reply = replyRepository.findReplyByIdx(request.getIdx());
         reply.setContent(request.getContent());
 
         replyRepository.save(reply);
+
+        List<WearReplyDTO> replyDTOList = new ArrayList<>();
+
+        replyDTOList = replyList(reply.getWear().getIdx(), request.getNickname());
+
+        return replyDTOList;
+
     }
 
-    public void DeleteReply(Long idx) {
-        Reply reply = replyRepository.findReplyByIdx(idx);
+    //return: List<Reply>(reply_idx, nickname, depth, writeDate, content, groupNum, count, like, flag)
+    public List<WearReplyDTO> deleteReply(Long idx) {
+        WearReply reply = replyRepository.findReplyByIdx(idx);
 
-        if(reply.getDepth() == 0)
-            replyRepository.deleteReplyByGroupNum(reply.getGroupNum());
-        else
-            replyRepository.deleteReplyByIdx(idx);
+        reply.setFlag(false);
+
+        replyRepository.save(reply);
+
+        List<WearReplyDTO> replyDTOList = new ArrayList<>();
+
+        replyDTOList = replyList(reply.getWear().getIdx(), reply.getUser().getNickname());
+
+        return replyDTOList;
+
     }
 
-    public void VoteReply(Long idx, String nickname){
+    public List<VoteDTO> voteChoice(Long idx, String nickname) {
         VoteItem voteItem = voteItemRepository.findVoteItemByIdx(idx);
         User user = userRepository.findUserByNickname(nickname);
 
         VoteChoice voteChoice = voteChoiceRepository.findVoteChoiceByVoteItemAndUser(voteItem, user);
 
-        if(voteChoice != null) {
-            voteChoiceRepository.deleteVoteChoiceByIdx(voteChoice.getIdx());
+        if (voteChoice != null) {
+            if (voteChoice.getFlag()) {
 
-            voteItem.setCount(voteItem.getCount() - 1);
+                voteChoice.setFlag(false);
 
-            voteItemRepository.save(voteItem);
+                voteItem.setCount(voteItem.getCount() - 1);
+
+                voteItemRepository.save(voteItem);
+
+            } else {
+
+                voteChoice.setFlag(true);
+
+                voteItem.setCount(voteItem.getCount() + 1);
+
+                voteItemRepository.save(voteItem);
+
+            }
 
         } else {
             VoteChoice createVoteChoice = new VoteChoice();
@@ -213,6 +272,92 @@ public class WearService {
 
         }
 
+        List<VoteDTO> voteList = voteList(idx, nickname);
+
+        return voteList;
+
+    }
+
+    public List<WearReplyDTO> replyLike(Long idx, String nickname) {
+        WearReply reply = replyRepository.findReplyByIdx(idx);
+        User user = userRepository.findUserByNickname(nickname);
+
+        WearReplyLike replyLike = replyLikeRepository.findReplyLikeByReplyAndUser(reply, user);
+
+        if (replyLike != null) {
+            if (replyLike.getFlag()) {
+
+                replyLike.setFlag(false);
+
+                reply.setCount(reply.getCount() - 1);
+
+                replyRepository.save(reply);
+
+            } else {
+
+                replyLike.setFlag(true);
+
+                reply.setCount(reply.getCount() + 1);
+
+                replyRepository.save(reply);
+
+            }
+
+        } else {
+            WearReplyLike createReplyLike = new WearReplyLike();
+
+            createReplyLike.setReply(reply);
+            createReplyLike.setUser(user);
+
+            replyLikeRepository.save(createReplyLike);
+
+            reply.setCount(reply.getCount() + 1);
+
+            replyRepository.save(reply);
+
+        }
+
+        List<WearReplyDTO> replyDTOList = new ArrayList<>();
+
+        replyDTOList = replyList(reply.getWear().getIdx(), nickname);
+
+        return replyDTOList;
+
+    }
+
+    public List<WearReplyDTO> replyList(Long idx, String nickname) {
+        List<WearReplyDTO> replyDTOList = new ArrayList<>();
+
+        Wear wear = wearRepository.findWearByIdx(idx);
+        List<WearReply> replyList = replyRepository.findReplyByWearOrderByGroupNumAscWriteDateAsc(wear);
+        User user = userRepository.findUserByNickname(nickname);
+
+        for (WearReply reply : replyList) {
+            WearReplyLike replyLike;
+            replyLike = replyLikeRepository.findReplyLikeByReplyAndUser(reply, user);
+
+            WearReplyDTO replyDTO = new WearReplyDTO();
+            replyDTO.setIdx(reply.getIdx());
+            replyDTO.setNickname(reply.getUser().getNickname());
+            replyDTO.setUid(reply.getUser().getUid());
+            replyDTO.setDepth(reply.getDepth());
+            replyDTO.setWrite_date(reply.getWriteDate());
+            replyDTO.setContent(reply.getContent());
+            replyDTO.setGroupNum(reply.getGroupNum());
+            replyDTO.setCount(reply.getCount());
+            if (replyLike != null) {
+                if (replyLike.getFlag())
+                    replyDTO.setLike(true);
+                else
+                    replyDTO.setLike(false);
+            } else
+                replyDTO.setLike(false);
+            replyDTO.setFlag(reply.getFlag());
+
+            replyDTOList.add(replyDTO);
+        }
+
+        return replyDTOList;
     }
 
 }

@@ -23,6 +23,7 @@ bin/
 *.iml
 *.ipr
 .idea/vcs.xml
+.idea/workspace.xml
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
@@ -38,6 +39,5 @@ out/
 .vscode/
 src/main/resources/static/
 src/main/resources/templates/
-
 
 

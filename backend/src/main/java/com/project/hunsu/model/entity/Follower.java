@@ -19,10 +19,19 @@ public class Follower {
     private Long idx;
 
     @ManyToOne
-    @JoinColumn(name= "nickname")
-    private User user;
+    @JoinColumn(name= "memId")
+    private User memId;
 
-    private String followTo;
+    @ManyToOne
+    @JoinColumn(name= "targetId")
+    private User targetId;
 
+    @Column(name = "flag")
+    private Boolean flag;
+    @PrePersist
+    void preInsert(){
+        if(this.flag==null)
+            this.flag=true;
+    }
 
 }

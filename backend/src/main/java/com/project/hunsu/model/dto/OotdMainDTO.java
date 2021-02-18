@@ -16,9 +16,10 @@ public class OotdMainDTO {
     private Long ootdIdx; //ootd에서 가져오기
     private String nickname; //ootd에서 가져오기
     private String ootdContent; //ootd에서 가져오기
-    private List<String> hashtagContent = new ArrayList<>(); //hashtag에서 가져오기
+    private Long uid;
+    private List<String> hashtagList = new ArrayList<>(); //hashtag에서 가져오기
     public void addHashtag(String hashtag){
-        this.hashtagContent.add(hashtag);
+        this.hashtagList.add(hashtag);
     }
     private int ootdLike;//ootd에서 가져오기
 

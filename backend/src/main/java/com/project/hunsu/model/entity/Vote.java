@@ -26,7 +26,7 @@ public class Vote {
     @Column(columnDefinition = "timestamp not null default now()", name = "start_time",insertable = false, updatable = false)
     private LocalDateTime startTime;
 
-    @Column(name = "end_time",insertable = false, updatable = false)
+    @Column(name = "end_time",insertable = true, updatable = false)
     private LocalDateTime endTime;
 
 }

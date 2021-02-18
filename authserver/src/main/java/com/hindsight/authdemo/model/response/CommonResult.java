@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.HashMap;
+
 @Getter
 @Setter
 public class CommonResult {
@@ -17,4 +19,7 @@ public class CommonResult {
 
     @ApiModelProperty(value="응답메세지")
     private String msg;
+
+
+
 }
