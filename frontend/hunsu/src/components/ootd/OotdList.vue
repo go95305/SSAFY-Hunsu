@@ -62,7 +62,11 @@
     <!--무한스크롤-->
     <!--아래 문구는 데이터 모두 출력한 뒤 보이는 문구, spinner는 데이터
     가져올 때 표시하는 바람개비아이콘으로 default, spiral, circles, bubbles, waveDots 다섯가지 있음-->
-    <infinite-loading @infinite="infiniteHandler" spinner="waveDots">
+    <infinite-loading
+      v-if="!click"
+      @infinite="infiniteHandler"
+      spinner="waveDots"
+    >
       <div
         slot="no-more"
         style="color: rgb(102, 102, 102); font-size: 14px; padding: 10px 0px"
@@ -87,7 +91,7 @@ export default {
     ImageView,
     infiniteLoading,
   },
-  props: ["sortNum", "limitNum"],
+  props: ["sortNum", "limitNum", "click", "searchedList"],
   data() {
     return {
       cycle: false,
@@ -95,23 +99,25 @@ export default {
       ootdList: [],
       sort: this.sortNum,
       limit: this.limitNum,
-      click: true,
-
+      noResult: false,
     };
   },
   computed: {
     ...mapGetters(["getOotdList", "getNickname", "getOotdInfo"]),
   },
-  created() {
+
+  mounted() {
     EventBus.$on("searchHashtag", (getOotdList) => {
       this.ootdList = getOotdList;
     });
-    EventBus.$on("clickHashtag", (getOotdList) => {
-      this.ootdList = getOotdList;
-      this.click = false;
-    });
-    console.log(this.ootdList);
-
+    if (this.click) {
+      this.ootdList = this.searchedList;
+    }
+  },
+  beforeDestroy() {
+    if (this.click) {
+      this.setSearchedList([]);
+    }
   },
   methods: {
     ...mapActions([
@@ -121,17 +127,24 @@ export default {
       "getProfileInfoInApi",
       "getProfileImage",
       "getProfiles",
+      "getSearchedList",
     ]),
-    ...mapMutations(["setOotdInfoImages", "setTargetProfileImage"]),
+    ...mapMutations([
+      "setOotdInfoImages",
+      "setTargetProfileImage",
+      "setSearchedList",
+    ]),
+    clickHashTag(ootdList) {
+      this.ootdList = ootdList;
+    },
     async goToOotdDetail(ootd) {
-      //idx 굳이 보여줄 필요 없을것같아서 params로 변경
-      // this.$router.push({ name: "OotdDetail", params: { no: ootd.ootdIdx } });
+      // 디테일로 이동
       await this.getOotdInfoInApi({
         ootdIdx: ootd.ootdIdx,
       });
       const res = await this.getImageList({ prefix: "ootd/" + ootd.ootdIdx });
-
       this.setOotdInfoImages(res);
+
       await this.getProfileImage({
         uid: ootd.uid,
         target: "target",
@@ -139,27 +152,21 @@ export default {
       window.scrollTo({ top: "0", behavior: "smooth" });
       this.$router.push({ name: "OotdDetail" });
     },
-    goToProfilePage(ootdInfo) {
-      this.getProfileInfoInApi(ootdInfo.nickname).then(() => {
-        this.getProfileImage({
-          uid: ootdInfo.uid,
-          target: "target",
-        });
-        window.scrollTo({ top: "0", behavior: "smooth" });
-        this.$router.push({ name: "MyPage" });
+    async goToProfilePage(ootdInfo) {
+      //프로필로 이동
+      await this.getProfileInfoInApi(ootdInfo.nickname);
+      this.getProfileImage({
+        uid: ootdInfo.uid,
+        target: "target",
       });
+      window.scrollTo({ top: "0", behavior: "smooth" });
+      this.$router.push({ name: "MyPage" });
     },
-    // 무한스크롤 함수
     async infiniteHandler($state) {
-      // console.log('무한', this.limit, this.check)
-      // const sort = 0;
-      // const count = this.limit;
-
-      // if (this.click) {
-      //   console.log(this.click);
-      //   return;
-      // }
-
+      // 무한스크롤 함수
+      if (this.click) {
+        return;
+      }
       const res = await rscApi.get(`ootd/${this.sort}/${this.limit}`);
       setTimeout(() => {
         if (res.data.ootdMainDTOList.length) {
@@ -171,8 +178,6 @@ export default {
             $state.complete();
           }
         } else {
-          // 끝 지정(No more data)
-          // console.log('sgsdg');
           $state.complete();
         }
       }, 1000);

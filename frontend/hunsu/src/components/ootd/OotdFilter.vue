@@ -7,21 +7,11 @@
 </template>
 
 <script>
-// import axios from "axios";
-// import { mapGetters } from "vuex";
+// import axios from "
 import { EventBus } from "@/services/eventBus";
 
 export default {
   name: "OotdFilter",
-  computed: {
-    // ...mapGetters(["getOotdList"]),
-    // pageNumCount() {
-    //   if (this.getOotdList) {
-    //     return parseInt(this.getOotdList.length / 6) + 1;
-    //   }
-    //   return "";
-    // },
-  },
   methods: {
     recentCall() {
       EventBus.$emit("recent");
@@ -30,41 +20,6 @@ export default {
       EventBus.$emit("popular");
     },
   },
-  // ...mapActions([
-  //   "getOotdListInApi",
-  //   "getOotdInfoInApi",
-  //   "getImageList",
-  //   "getProfileInfoInApi",
-  //   "getProfileImage",
-  //   "getProfiles",
-  // ]),
-  //   async getRecentOotdListInApi() {
-  //     let root = this;
-  //     await this.getOotdListInApi({
-  //       sort: 0,
-  //       pageNum: this.pageNumCount,
-  //     });
-  //     root.getProfiles(this.getOotdList);
-  //     this.getOotdList.forEach((info) => {
-  //       root.getImageList({ prefix: "ootd/" + info.ootdIdx }).then((res) => {
-  //         info.imageUrls = res;
-  //       });
-  //     });
-  //   },
-  //   async getPopularOotdListInApi() {
-  //     let root = this;
-  //     await this.getOotdListInApi({
-  //       sort: 1,
-  //       pageNum: this.pageNumCount,
-  //     });
-  //     root.getProfiles(this.getOotdList);
-  //     this.getOotdList.forEach((info) => {
-  //       root.getImageList({ prefix: "ootd/" + info.ootdIdx }).then((res) => {
-  //         info.imageUrls = res;
-  //       });
-  //     });
-  //   },
-  // },
 };
 </script>
 

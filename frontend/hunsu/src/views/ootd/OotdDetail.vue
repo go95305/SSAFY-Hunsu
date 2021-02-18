@@ -217,8 +217,6 @@
 
 <script>
 import OotdDetailComment from "@/components/ootd/OotdDetailComment";
-import { EventBus } from "@/services/eventBus";
-// import OotdList from "@/components/ootd/OotdList";
 
 import { mapGetters, mapMutations, mapActions } from "vuex";
 
@@ -270,28 +268,6 @@ export default {
       }
     },
   },
-  // async created() {
-  //   console.log("hi");
-  //   let root = this;
-  //   this.getOotdInfoInApi({
-  //     ootdIdx: this.getOotdInfo.ootdIdx,
-  //   }).then(() => {
-  //     root
-  //       .getImageList({ prefix: "ootd/" + this.getOotdInfo.ootdIdx })
-  //       .then((res) => {
-  //         root.setOotdInfoImages(res);
-  //       })
-  //       .then(() => {
-  //         this.getProfileImage({
-  //           uid: this.getOotdInfo.uid,
-  //           target: "target",
-  //         });
-  //       })
-  //       .then(() => {
-  //         // this.$router.push({ name: "OotdDetail" });
-  //       });
-  //   });
-  // },
   mounted() {
     // console.log("mounted");
     if (this.getOotdInfo.likeChk) {
@@ -306,6 +282,7 @@ export default {
       "setOotdInfo",
       "setTargetProfileImage",
       "setOotdInfoImages",
+      "setSearchedList",
     ]),
     ...mapActions([
       "getOotdInfoInApi",
@@ -401,19 +378,19 @@ export default {
       this.toggleLike(this.getNickname);
     },
     async searchHashtag(hashtag) {
-      let root = this;
-      await this.getClickedHashtagListInApi(hashtag);
-      root.getProfiles(this.getOotdList);
-      this.getOotdList.forEach((info) => {
-        root.getImageList({ prefix: "ootd/" + info.ootdIdx }).then((res) => {
-          this.$set(info, "imageUrls", res);
-          console.log(info.imageUrls, "아클릭했다고해시태그");
+      const ootdList = await this.getClickedHashtagListInApi(hashtag);
+      this.getProfiles(ootdList);
+      ootdList.forEach(async (info) => {
+        let images = await this.getImageList({
+          prefix: "ootd/" + info.ootdIdx,
         });
+        this.$set(info, "imageUrls", images);
       });
-      console.log("수지나와라", hashtag);
-      EventBus.$emit("clickHashtag", this.getOotdList)
-      this.$router.push({ name: "Ootd" });
+      this.setSearchedList(ootdList);
 
+      this.$router.push({
+        name: "Ootd",
+      });
     },
   },
 };

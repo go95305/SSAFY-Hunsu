@@ -88,7 +88,9 @@
       </v-list>
     </div>
     <!--투표x 사진-->
-    <div v-if="!whatwearInfo.vote_activated && getWhatwearInfoImages.length > 0">
+    <div
+      v-if="!whatwearInfo.vote_activated && getWhatwearInfoImages.length > 0"
+    >
       <v-carousel
         v-if="getWhatwearInfoImages"
         v-model="model"
@@ -123,15 +125,6 @@
 
     <!--투표창-->
     <div v-if="whatwearInfo.vote_activated">
-      <!-- <div id="vote_input">
-        <v-checkbox
-          v-for="(n, index) in getWhatwearVoteInfo"
-          :key="n.idx"
-          :label="`${index + 1}번`"
-          v-model="n.choice"
-          @click="voteWhatwear(getWhatwearVoteInfo[index].idx, getNickname)"
-        ></v-checkbox>
-      </div> -->
       <v-row justify="center" class="mb-5">
         <v-dialog v-model="dialog" scrollable max-width="300px">
           <template v-slot:activator="{ on, attrs }">
@@ -249,7 +242,6 @@ export default {
     };
   },
   mounted() {
-    console.log(this.getWhatwearInfo);
     this.whatwearInfo = this.getWhatwearInfo;
   },
   methods: {
@@ -266,21 +258,13 @@ export default {
       this.$router.push({ name: "MyPage" });
     },
     // 글 삭제 함수
-    deleteWhatWear(wear_idx) {
-      // const wearIdx = wear_idx;
-      rscApi
-        .put(`wear?wear_idx=${wear_idx}`)
-        .then((res) => {
-          console.log(res);
-          this.$router.push({ name: "WhatWear" });
-        })
-        .catch((err) => {
-          console.error(err);
-        });
+    async deleteWhatWear(wear_idx) {
+      await rscApi.put(`wear?wear_idx=${wear_idx}`);
+      this.$router.push({ name: "WhatWear" });
     },
     // 투표하는 함수
     voteWhatwear(voteIdx) {
-      this.voteWhatwearInfo(voteIdx)
+      this.voteWhatwearInfo(voteIdx);
     },
   },
 };

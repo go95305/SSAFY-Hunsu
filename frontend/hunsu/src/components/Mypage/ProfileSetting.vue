@@ -12,7 +12,7 @@
     </template>
     <v-card>
       <v-toolbar dark color="dark">
-        <v-btn icon dark @click="dialog = false">
+        <v-btn icon dark @click="exitProfileUpdate">
           <v-icon>mdi-close</v-icon>
         </v-btn>
         <v-toolbar-title>프로필수정</v-toolbar-title>
@@ -35,11 +35,7 @@
             :src="getUploadImageUrls[0]"
           />
           <v-img v-else-if="getMyProfileImage" :src="getMyProfileImage" />
-          <v-img
-            v-else
-            src="@/assets/profilephoto.png" 
-            alt="John"
-          />
+          <v-img v-else src="@/assets/profilephoto.png" alt="John" />
         </v-avatar>
         <!-- 프로필 이미지 업로드 부분 -->
         <!-- <v-file-input truncate-length="15" hide-input></v-file-input> -->
@@ -128,11 +124,6 @@ export default {
     this.newNickname = this.getNickname;
     this.height = this.getMyProfileInfo.height;
     this.size = this.getMyProfileInfo.size;
-    console.log(
-      "profile setting mounted",
-      this.getNickname,
-      this.getMyProfileInfo
-    );
   },
   methods: {
     ...mapActions([
@@ -152,10 +143,15 @@ export default {
       this.$refs.imageInput.click();
     },
     onChangeImages(e) {
-      console.log(e.target.files);
-
       this.setUploadImageFiles(e.target.files);
       this.setUploadImageUrls();
+    },
+    exitProfileUpdate() {
+      this.newNickname = this.getNickname;
+      this.height = this.getMyProfileInfo.height;
+      this.size = this.getMyProfileInfo.size;
+      this.clearUploads();
+      this.dialog = false;
     },
     async updateProfile(newNickname, height, size) {
       // 프로필사진 업로드, 정보수정
@@ -181,7 +177,6 @@ export default {
       return authApi
         .post(`/v1/auth/nickname?nickname=${nickname}`)
         .then((res) => {
-          console.log(res.data, "트루니?");
           if (res.data) {
             alert("사용가능한 닉네임입니다.");
             this.nicknameStatus = "yes";
@@ -193,7 +188,6 @@ export default {
     },
     deleteUser() {
       return rscApi.put("/user/mypage/delete").then(() => {
-        console.log("회원탈퇴성공");
         this.logout();
         this.$router.push({ name: "Home" }).catch(() => {});
       });

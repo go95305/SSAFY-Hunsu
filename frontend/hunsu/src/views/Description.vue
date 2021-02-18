@@ -21,9 +21,7 @@
 <script>
 export default {
   name: "Description",
-  mounted() {
-    console.log("mo");
-  },
+
   methods: {
     goToHome() {
       this.$router.push("/Home");

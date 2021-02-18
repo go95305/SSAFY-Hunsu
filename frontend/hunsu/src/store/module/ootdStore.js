@@ -5,6 +5,7 @@ const state = {
   ootdReplyInfo: {},
   ootdList: [],
   like: false,
+  searchedList: [],
 };
 const getters = {
   getOotdInfo(state) {
@@ -18,6 +19,9 @@ const getters = {
   },
   getLike(state) {
     return state.like;
+  },
+  getSearchedList(state) {
+    return state.searchedList;
   },
 };
 const mutations = {
@@ -40,6 +44,9 @@ const mutations = {
   toggleLike(state, flag) {
     state.ootdInfo.likeChk = flag;
   },
+  setSearchedList(state, payload) {
+    state.searchedList = payload;
+  },
 };
 
 const actions = {
@@ -54,14 +61,11 @@ const actions = {
     } else {
       console.log(ootdList);
     }
-    
   },
   async getSearchedListInApi(context, hashtag) {
-    const ootdList = await rscApi
-      .get(`ootd/hashtag/search/${hashtag}`)
+    const ootdList = await rscApi.get(`ootd/hashtag/search/${hashtag}`);
 
     if (ootdList) {
-      console.log(ootdList);
       context.commit('setOotdList', ootdList.data);
     } else {
       console.log(ootdList);
@@ -70,11 +74,8 @@ const actions = {
   async getClickedHashtagListInApi(context, hashtag) {
     const ootdList = await rscApi.get(`ootd/hashtag/${hashtag}`);
     if (ootdList) {
-      ootdList.data.forEach((info) => {
-        info.imageUrls = [];
-      });
       context.commit('setOotdList', ootdList.data);
-      console.log('해시태그검색완료', ootdList.data);
+      return ootdList.data;
     } else {
       console.log(ootdList);
     }
@@ -148,7 +149,6 @@ const actions = {
       .post('ootd/reply', OotdReplyInfo)
       .then((res) => {
         context.commit('setOotdReplyInfo', res.data);
-        console.log('스토어에서 확인하기', res.data);
       })
       .catch((err) => {
         console.error(err);

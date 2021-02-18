@@ -85,14 +85,12 @@ const actions = {
     return rscApi
       .get(`wear/detail/${wearIdx}`)
       .then((res) => {
-        // console.log('data', res);
         let replyCount = 0;
         res.data.replyList.map((v) => {
           if (v.flag) {
             replyCount++;
           }
         });
-        // console.log('댓글합', replyCount)
 
         // 투표활성화가 되어있으면 그때 실행
         if (voteCheck) {
@@ -110,7 +108,6 @@ const actions = {
             let endMinute = endTime.slice(14, 16);
             let endSecond = endTime.slice(17, 19);
 
-            // console.log(endYear, endMonth, endDay, endHours, endMinute, endSecond)
             // Date에서 월값은 0부터 시작함
             let endTimeValue = new Date(
               endYear,
@@ -144,14 +141,12 @@ const actions = {
     return rscApi
       .post('wear/reply', whatwearReplyInfo)
       .then((res) => {
-        console.log('나오냐고',res);
         let replyCount = 0;
         res.data.map((v) => {
           if (v.flag) {
             replyCount++;
           }
         });
-        // console.log('댓글합', replyCount)
         context.commit('setWhatwearReplyInfo', res.data);
         context.commit('setReplyCount', replyCount);
       })

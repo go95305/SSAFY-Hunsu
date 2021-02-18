@@ -48,7 +48,6 @@ const actions = {
           jwtToken: rootState.user.accessToken, // jwtToken
         })
         .then((res) => {
-          console.log('in create', res);
           alert(res.data.title + ' 방 개설 성공');
           return res;
           //   this.room_name = '';
@@ -56,9 +55,8 @@ const actions = {
           //   this.fixedComment = '';
           //   this.findAllRoom();
         })
-        .catch((res) => {
+        .catch(() => {
           alert('채팅방개설 실패');
-          console.log(res);
           return -1;
         });
     }
@@ -66,9 +64,8 @@ const actions = {
   findAllRoom({ state }) {
     return liveApi.get('/chat/rooms/0').then((res) => {
       if (Object.prototype.toString.call(res.data) === '[object Array]') {
-        console.log(res.data);
+        state.chatRooms = res.data;
       }
-      state.chatRooms = res.data;
     });
   },
   endMyRoom({ state }) {

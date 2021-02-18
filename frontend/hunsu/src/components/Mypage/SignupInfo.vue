@@ -4,7 +4,9 @@
     <v-toolbar dark color="black">
       <v-toolbar-title class="text-subtitle-1">회원가입</v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-toolbar-title class="text-subtitle-1" @click="signUp">완료</v-toolbar-title>
+      <v-toolbar-title class="text-subtitle-1" @click="signUp"
+        >완료</v-toolbar-title
+      >
     </v-toolbar>
     <!-- 프로필 사진 -->
     <div class="d-flex justify-center ml-1 mt-6">
@@ -14,21 +16,16 @@
           :src="getUploadImageUrls[getUploadImageUrls.length - 1]"
         />
         <!-- <v-img v-else-if="getMyProfileImage" :src="getMyProfileImage" /> -->
-        <v-img
-          v-else
-          src="@/assets/profilephoto.png" 
-          alt="John"
-        />
+        <v-img v-else src="@/assets/profilephoto.png" alt="John" />
       </v-avatar>
-      </div>
-      <!-- 프로필 이미지 업로드 부분 -->
-      <!-- <v-file-input truncate-length="15" hide-input></v-file-input> -->
-      <input ref="imageInput" type="file" hidden @change="onChangeImages" />
-        <v-btn id="profileInput" x-large icon @click="onClickImageUpload"
-          ><v-icon>mdi-camera</v-icon></v-btn
-        >
-      
-    
+    </div>
+    <!-- 프로필 이미지 업로드 부분 -->
+    <!-- <v-file-input truncate-length="15" hide-input></v-file-input> -->
+    <input ref="imageInput" type="file" hidden @change="onChangeImages" />
+    <v-btn id="profileInput" x-large icon @click="onClickImageUpload"
+      ><v-icon>mdi-camera</v-icon></v-btn
+    >
+
     <!-- <v-avatar>
       <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John" />
     </v-avatar>
@@ -65,9 +62,6 @@
       :items="items"
       label="사이즈"
     ></v-select>
-
-
-
   </div>
 </template>
 
@@ -100,14 +94,6 @@ export default {
     ],
     items: ["XXS", "XS", "S", "M", "L", "XL", "XXL"],
   }),
-  mounted() {
-    // if (this.accessToken == null || this.refreshToken == null) {
-    //   //회원가입 창에서 새로고침 시 홈으로 이동 처리 (카카오 액세스 토큰을 따로 저장하지 않아 새로고침하면 무효회됨)
-    //   //vuex에 저장하면되지만, 서버측에선 카카오 액세스토큰 관리를 전적으로 서버에서 하길 원해, 저장 비권장
-    //   this.$router.push("/");
-    // }
-    console.log("signup mount", this.accessToken, this.refreshToken);
-  },
   computed: {
     ...mapGetters([
       "getAccessToken",
@@ -125,7 +111,6 @@ export default {
       "clearUploads",
     ]),
     async signUp() {
-      console.log(this.nickname, this.height, this.size);
       await this.signUpInApi({
         accessToken: this.accessToken,
         height: this.height,
@@ -136,7 +121,6 @@ export default {
         await this.uploadProfile();
         this.clearUploads();
       }
-      console.log("in signupinfo 2");
       alert("회원가입 감사합니다!!");
       this.$router.push("/");
       // this.kakaoLogin();
@@ -145,11 +129,8 @@ export default {
       this.$refs.imageInput.click();
     },
     onChangeImages(e) {
-      console.log(e.target.files);
-
       this.setUploadImageFiles(e.target.files);
       this.setUploadImageUrls();
-      console.log("onChange imageURl ", this.getUploadImageUrls);
     },
   },
 };

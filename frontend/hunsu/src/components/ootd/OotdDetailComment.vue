@@ -59,7 +59,6 @@
           </div>
         </div>
 
-
         <v-btn
           class="mr-3"
           v-if="reply.like === false"
@@ -76,16 +75,6 @@
           color="red"
           ><v-icon>mdi-heart</v-icon></v-btn
         >
-
-
-        <!-- <v-btn
-          class="mr-2"
-          icon
-          @click="likeOotdReply(reply.replyIdx)"
-          :color="reply.like ? 'red' : 'black'"
-          ><v-icon>mdi-heart-outline</v-icon></v-btn
-        > -->
-        <!-- <v-btn icon @click="deleteWhatwearReply(reply.idx)"><v-icon>mdi-close</v-icon></v-btn> -->
       </v-card>
     </div>
   </div>
@@ -111,15 +100,7 @@ export default {
   async mounted() {
     //프로필 이미지 가져옴
     this.ootdReplyInfo = this.getOotdReplyInfo;
-    console.log("info", this.ootdReplyInfo);
-
     this.getCommentProfileImages();
-    // await this.ootdReplyInfo.map(async (reply) => {
-    //   const image = await this.getWhatwearProfile(reply.uid);
-    //   console.log("in reply", image);
-    //   this.$set(reply, "profileImage", image);
-    // });
-    // console.log(this.getOotdReplyInfo);
   },
   methods: {
     ...mapMutations(["setOotdReplyInfo"]),
@@ -145,7 +126,6 @@ export default {
           content: this.replyContent,
           replyIdx: this.updateReplyIdx,
         });
-        console.log("수정성공");
       } else {
         await this.createOotdReplyInfo({
           content: this.replyContent,
@@ -154,8 +134,6 @@ export default {
           nickname: this.getNickname,
           ootdIdx: ootd_idx,
         });
-
-        console.log("댓글작성성공");
       }
       this.getCommentProfileImages();
 
@@ -168,7 +146,6 @@ export default {
     async likeOotdReply(replyIdx) {
       await this.likeOotdReplyInfo(replyIdx);
       this.getCommentProfileImages();
-      console.log(this.getOotdReplyInfo);
     },
 
     //댓글 삭제
