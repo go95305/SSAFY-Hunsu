@@ -30,7 +30,6 @@ import java.util.Optional;
 
 @Api(tags = {"1. Sign"})
 @RequiredArgsConstructor
-@CrossOrigin(origins = {"*"})
 @RestController
 @CrossOrigin(origins = {"http://localhost:3000"})
 @RequestMapping(value = "/v1/auth")
