@@ -17,9 +17,15 @@
       :show-arrows="false"
       hide-delimiter-background
       delimiter-icon="mdi-minus"
-      height="399px"
+      height="375px"
     >
-      <v-carousel-item
+    <v-carousel-item>
+      <img src="@/assets/man.jpg" alt="" width="375">
+    </v-carousel-item>
+    <v-carousel-item>
+      <img src="@/assets/woman.jpg" alt="" width="375">
+    </v-carousel-item>
+      <!-- <v-carousel-item
         v-for="(slide, i) in slides"
         :key="i"
       >
@@ -33,11 +39,11 @@
             justify="center"
           >
             <div class="display-3">
-              <img :src="slide" alt="" width="399px">
+              <img src="slide" alt="" width="399px">
             </div>
           </v-row>
         </v-sheet>
-      </v-carousel-item>
+      </v-carousel-item> -->
     </v-carousel>
     <v-list two-line>
     </v-list>
@@ -51,8 +57,8 @@ export default {
       return {
         cycle: true,
         slides: [
-          'https://postfiles.pstatic.net/MjAyMTAyMTZfNjMg/MDAxNjEzNDQzNTQwOTQ4.OaxXUeuIRgKEdz8tZuhIzmBowSDYqiow03MpA5cwCdEg.o9LJ_3KvXGZSgc8lVbHZVZPsd-frHuKM6KYy0wvq4xIg.JPEG.hidy2151/111.jpg?type=w580',
-          'https://postfiles.pstatic.net/MjAyMTAyMTZfOSAg/MDAxNjEzNDQzNTQ0MjM1.EU5RSwImw6YrCQ4kZUyw6CUAsEjuXbWltYKkPYgXwDog.VHUZMUm9kepeYPBDqQFPZaR12eq40vzswFY4YL6Q98Mg.JPEG.hidy2151/222.jpg?type=w580',
+          "@/assets/man.jpg",
+          "@/assets/woman.jpg"
         ],
       }
   }
