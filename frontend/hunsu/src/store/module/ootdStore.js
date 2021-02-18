@@ -54,14 +54,11 @@ const actions = {
     } else {
       console.log(ootdList);
     }
-    
   },
   async getSearchedListInApi(context, hashtag) {
-    const ootdList = await rscApi
-      .get(`ootd/hashtag/search/${hashtag}`)
+    const ootdList = await rscApi.get(`ootd/hashtag/search/${hashtag}`);
 
     if (ootdList) {
-      console.log(ootdList);
       context.commit('setOotdList', ootdList.data);
     } else {
       console.log(ootdList);
@@ -70,11 +67,8 @@ const actions = {
   async getClickedHashtagListInApi(context, hashtag) {
     const ootdList = await rscApi.get(`ootd/hashtag/${hashtag}`);
     if (ootdList) {
-      ootdList.data.forEach((info) => {
-        info.imageUrls = [];
-      });
       context.commit('setOotdList', ootdList.data);
-      console.log('해시태그검색완료', ootdList.data);
+      return ootdList.data;
     } else {
       console.log(ootdList);
     }

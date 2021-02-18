@@ -56,6 +56,7 @@ const routes = [
     path: '/ootd',
     name: 'Ootd',
     component: Ootd,
+    props: true,
   },
   {
     path: '/ootd/detail',
@@ -84,11 +85,7 @@ const routes = [
     component: WhatWearDetail,
     props: true,
   },
-  // {
-  //   path : '/auth',
-  //   name : "Auth",
-  //   component: Auth,
-  // },
+
   {
     path: '/aboutus',
     name: 'AboutUs',

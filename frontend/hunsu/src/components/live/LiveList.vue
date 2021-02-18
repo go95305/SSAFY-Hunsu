@@ -92,7 +92,6 @@ export default {
       this.$set(room, "imageUrls", images);
     });
     await this.getProfiles(this.chatRooms);
-    console.log("images", this.chatRooms);
   },
   computed: {
     ...mapGetters(["getChatRooms"]),
@@ -102,7 +101,6 @@ export default {
     ...mapMutations(["setChatRoomDetail", "setChatImageFiles"]),
 
     enterRoom(roomInfo) {
-      console.log(roomInfo);
       this.setChatRoomDetail(roomInfo);
       this.$router.push("/live/detail");
     },

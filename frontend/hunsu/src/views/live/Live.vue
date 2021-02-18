@@ -1,5 +1,6 @@
 <template>
   <div>
+    <LoginFilter />
     <LiveSearchBtn />
     <LiveWritePage style="margin: 10px" />
     <LiveList style="margin: 20px" />
@@ -10,6 +11,7 @@
 import LiveList from "@/components/live/LiveList";
 import LiveWritePage from "@/components/live/LiveWritePage";
 import LiveSearchBtn from "@/components/live/LiveSearchBtn";
+import LoginFilter from "@/components/module/LoginFilter";
 
 export default {
   name: "Live",
@@ -17,6 +19,7 @@ export default {
     LiveList,
     LiveWritePage,
     LiveSearchBtn,
+    LoginFilter,
   },
 };
 </script>
