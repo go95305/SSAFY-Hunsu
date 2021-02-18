@@ -26,7 +26,12 @@
           >
           <v-spacer></v-spacer>
           <v-toolbar-items>
-            <v-btn text @click="createWhatWear()" class="text-subtitle-1">
+            <v-btn text @click="createWhatWear()" class="text-subtitle-1" 
+            :disabled="
+            (titleLength == 0) || 
+            (contentLength == 0) || 
+            (contentLength > 250) ||
+            (titleLength > 30)">
               완료
             </v-btn>
           </v-toolbar-items>
@@ -219,6 +224,12 @@ export default {
       "getUploadImageFiles",
       "getUid",
     ]),
+    titleLength() {
+      return this.whatwearTitle.length
+    },
+    contentLength() {
+      return this.whatwearContent.length
+    }
   },
   methods: {
     ...mapActions(["uploadImage", "getWhatwearListInfoApi"]),

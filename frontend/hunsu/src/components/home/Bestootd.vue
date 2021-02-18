@@ -1,7 +1,6 @@
 <template>
 <!-- 패션왕 -->
   <v-card class="mx-auto" color="white" flat> 
-    <v-card-title class="font-weight-regular blue-grey darken-4 white--text text-center pl-10">✨Best Dresser Of This Week✨</v-card-title>
     <v-img src="@/assets/bestpic.jpg"
     height="50%"
     >
