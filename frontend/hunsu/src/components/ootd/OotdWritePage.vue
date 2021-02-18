@@ -22,7 +22,7 @@
           <v-spacer></v-spacer>
           <v-toolbar-items>
             <!-- 작성완료 버튼 -->
-            <v-btn dark text @click="createOotd()"> Save </v-btn>
+            <v-btn dark text @click="createOotd()" :disabled="(imageLength == 0) || (ootdLength == 0) || (ootdLength > 250)"> Save </v-btn>
           </v-toolbar-items>
         </v-toolbar>
         <ImageUpload />
@@ -94,10 +94,17 @@ export default {
       ootd_hashtag_array: [],
       imageFiles: [],
       isValid: false,
+      ootdIsFilled: false,
     };
   },
   computed: {
     ...mapGetters(["getNickname", "getUploadImageUrls", "getUploadImageFiles"]),
+    imageLength() {
+      return this.getUploadImageFiles.length
+    },
+    ootdLength() {
+      return this.ootd_content.length
+    }
   },
   methods: {
     ...mapActions(["createOotdInfo", "getOotdInfoInApi", "uploadImage"]),
@@ -180,7 +187,7 @@ export default {
         this.ootd_hastag_array = [];
 
         this.isValid = false;
-        this.$router.push({ name: "OotdDetail" }).catch(() => {});
+        this.$router.push({ name: "Ootd" }).catch(() => {});
       }
     },
     fileDeleteButton(e, idx) {
