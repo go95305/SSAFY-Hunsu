@@ -49,7 +49,7 @@ public class UserService {
         User my = userRepository.findUserByNickname(myNickName);
         User user = userRepository.findUserByNickname(clickNickName);
         List<OotdLike> ootdLikeList = ootdLikeRepository.findOotdLikeByUser(user);
-        List<Ootd> ootdList = ootdRepository.findOotdByUser(user);
+        List<Ootd> ootdList = ootdRepository.findOotdByUserAndFlag(user, true);
         List<Follower> followerList = followerRepository.findFollowerByTargetIdAndFlag(user, true);
         List<Follower> followingList = followerRepository.findFollowerByMemIdAndFlag(user, true);
         Follower isActivated = followerRepository.findFollowerByMemIdAndTargetId(my, user);
@@ -177,7 +177,7 @@ public class UserService {
 
         List<Ootd> ootdList = ootdRepository.findOotdByUser(user);
         List<Wear> wearList = wearRepository.findWearByUser(user);
-        List<OotdLike> ootdLikeList = ootdLikeRepository.findOotdLikeByUser(user);
+        List<OotdLike> ootdLikeList = ootdLikeRepository.findOotdLikeByUserAndFlag(user, true);
         List<OotdReplyLike> ootdReplyLikeList = ootdReplyLikeRepository.findOotdReplyLikeByUser(user);
         List<OotdReply> ootdReplyList = ootdReplyRepository.findOotdReplyByUser(user);
         List<VoteChoice> voteChoiceList = voteChoiceRepository.findVoteChoiceByUser(user);

@@ -14,7 +14,9 @@ public interface OotdRepository extends JpaRepository<Ootd,Long> {
 
     Ootd findByIdx(Long idx);
     Ootd findOotdByIdx(Long ootd_idx);
+    Long countByFlag(Boolean flag);
     List<Ootd> findOotdByUser(User user);
-    List<Ootd> findBy(Pageable pageable);
+    List<Ootd> findOotdByUserAndFlag(User user, Boolean flag);
+    List<Ootd> findByFlag(Boolean flag, Pageable pageable);
 
 }

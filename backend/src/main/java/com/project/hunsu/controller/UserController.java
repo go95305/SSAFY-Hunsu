@@ -19,18 +19,19 @@ public class UserController {
     }
 
     @GetMapping("/user/mypage/{nickname}")
-    @ApiOperation(value = "마이페이지 (프론트 수정 필요: uri수정도)", notes = "\n\n" +
-            "Parameter\n" +
-            "- jwtToken(RequestHeader)      --수정\n" +
-            "- nickname(Path): 보고자 하는 마이페이지 대상의 닉네임      --수정\n" +
+    @ApiOperation(value = "마이페이지", notes = "Parameter\n" +
+            "- jwtToken(RequestHeader)\n" +
+            "- nickname(path): 선택된 프로필의 닉네임\n\n" +
             "Response\n" +
-            "- mypageNickname: 마이페이지의 대상 닉네임\n" +
-            "- mypage: 내 마이페이지인지 여부(true or false)\n" +
-            "- ootd_like_list(num): 좋아요 등록된 ootd의 idx 리스트\n" +
-            "-ootd_list(num): {clickNickname}가 작성한 ootd의 idx 리스트\n" +
-            "-follow: 팔로우 버튼 활성화 여부(true or false)\n" +
-            "-follower_list(String): 팔로워 닉네임 리스트\n" +
-            "-following_list(String): 팔로잉 닉네임 리스트")
+            "- myPageDetailDTO\n" +
+            "-- mypageNickname: 선택된 프로필의 닉네임\n" +
+            "-- mypage: 사용자(페이지 보는사람)의 마이페이지인지 여부\n" +
+            "-- uid: 선택된 프로필의 uid\n" +
+            "-- follow: 사용자(페이지 보는사람)의 선택된 프로필에 대한 팔로우 버튼 활성화 여부\n" +
+            "-- ootd_like_list(Long 배열): 선택된 프로필의 사용자가 좋아요 등록한 ootd의 idx(글번호) 리스트\n" +
+            "-- ootd_list(Long 배열): 선택된 프로필의 사용자가 작성한 ootd의 idx(글번호) 리스트\n" +
+            "-- follower_list(String): 팔로워 닉네임 리스트\n" +
+            "-- following_list(String): 팔로잉 닉네임 리스트\n")
     public MyPageDetailDTO mypage(@RequestHeader("X-AUTH-ACCESS") String jwtToken,  @PathVariable String nickname) {
         String myNickname=userRepository.findUserByJwtAccess(jwtToken).getNickname();
         MyPageDetailDTO myPageDetailDTO = userService.mypage(myNickname, nickname);
@@ -39,12 +40,12 @@ public class UserController {
     }
 
     @PostMapping("/user/follow")
-    @ApiOperation(value = "팔로우 추가/삭제 (프론트 수정 필요: uri수정도)", notes = "Parameter\n" +
-            "- jwtToken(RequestHeader)      --수정\n" +
-            "-nickname: 팔로우 하고자 하는 대상의 닉네임      --수정(path->requestbody)\n" +
+    @ApiOperation(value = "팔로우 추가/삭제", notes = "Parameter\n" +
+            "- jwtToken(RequestHeader)\n" +
+            "- nickname(param): 팔로우할 대상의 닉네임\n\n" +
             "Response\n" +
-            "-isActivated: 팔로우 버튼 활성화 여부(true or false)")
-    public boolean userFollowAdd(@RequestHeader("X-AUTH-ACCESS") String jwtToken, @RequestBody String nickname) {
+            "- isActivated: 사용자(페이지 보는사람)의 선택된 프로필에 대한 팔로우 버튼 활성화 여부")
+    public boolean userFollowAdd(@RequestHeader("X-AUTH-ACCESS") String jwtToken, @RequestParam String nickname) {
         String myNickname=userRepository.findUserByJwtAccess(jwtToken).getNickname();
         boolean isActivated = userService.follow(myNickname,nickname);
 
@@ -52,12 +53,13 @@ public class UserController {
     }
 
     @GetMapping("/user/mypage/profile")
-    @ApiOperation(value = "프로필 수정 페이지 (프론트 수정 필요: uri수정도)", notes = "Parameter\n" +
-            "- jwtToken(RequestHeader)      --수정\n" +
+    @ApiOperation(value = "프로필 수정 페이지", notes = "Parameter\n" +
+            "- jwtToken(RequestHeader)\n\n" +
             "Response\n" +
-            "-nickname: 수정할 페이지의 닉네임\n" +
-            "-height: 위 닉네임의 키 정보\n" +
-            "-size: 위 닉네임의 사이즈 정보")
+            "- profileDTO\n" +
+            "-- nickname: 사용자(페이지 보는사람)의 닉네임\n" +
+            "-- height: 사용자(페이지 보는사람)의 키 정보\n" +
+            "-- size: 사용자(페이지 보는사람)의 사이즈 정보\n")
     public ProfileDTO profileValue(@RequestHeader("X-AUTH-ACCESS") String jwtToken) {
         String nickname=userRepository.findUserByJwtAccess(jwtToken).getNickname();
         ProfileDTO profileDTO = userService.profileValue(nickname);
@@ -67,13 +69,17 @@ public class UserController {
 
     //입력: nickname(기존 닉네임), ProfileDTO(nickname, height, size)
     @PutMapping("/user/mypage/modify")
-    @ApiOperation(value = "프로필 수정 (프론트 수정 필요: uri수정도)", notes = "Parameter\n" +
-            "- jwtToken(RequestHeader)      --수정\n" +
-            "- profileDTO\n" +
-            "----- nickname: 수정후의 닉네임\n" +
-            "----- height: 수정후의 키\n" +
-            "----- size: 수정 후의 사이트\n" +
-            "Response(x)")
+    @ApiOperation(value = "프로필 수정", notes = "Parameter\n" +
+            "- jwtToken(RequestHeader)\n" +
+            "- RequestBody\n" +
+            "-- nickname: 변경할 닉네임\n" +
+            "-- height: 변경할 키 값\n" +
+            "-- size: 변경할 사이즈 값\n\n" +
+            "Response\n" +
+            "- profile\n" +
+            "-- nickname: 사용자(페이지 보는사람)의 변경된 닉네임\n" +
+            "-- height: 사용자(페이지 보는사람)의 변경된 키\n" +
+            "-- size: 사용자(페이지 보는사람)의 변경된 사이즈\n")
     public ProfileDTO profileModify(@RequestHeader("X-AUTH-ACCESS") String jwtToken, @RequestBody ProfileDTO profileDTO) {
         String nickname=userRepository.findUserByJwtAccess(jwtToken).getNickname();
         ProfileDTO profile = userService.profileModify(nickname, profileDTO);
@@ -83,8 +89,8 @@ public class UserController {
 
     //입력: nickname(기존 닉네임)
     @PutMapping("/user/mypage/delete")
-    @ApiOperation(value = "회원탈퇴 (프론트 수정 필요: uri수정도)", notes = "Parameter\n" +
-            "- jwtToken(RequestHeader)      --수정\n" +
+    @ApiOperation(value = "회원탈퇴", notes = "Parameter\n" +
+            "- jwtToken(RequestHeader)\n\n" +
             "Response(x)")
     public void userDel(@RequestHeader("X-AUTH-ACCESS") String jwtToken) {
         String nickname=userRepository.findUserByJwtAccess(jwtToken).getNickname();

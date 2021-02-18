@@ -26,5 +26,4 @@ public interface UserJpaRepo extends JpaRepository<User, String> {
 
     Optional<User> findUserByNickname(String nickname);
 
-
 }
