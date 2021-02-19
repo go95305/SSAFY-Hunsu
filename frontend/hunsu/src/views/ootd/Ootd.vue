@@ -70,7 +70,6 @@ export default {
         this.sort++;
       }
     });
-    console.log(this.getSearchedList);
     if (this.getSearchedList.length !== 0) {
       this.ootdList = this.getSearchedList;
       this.click = true;

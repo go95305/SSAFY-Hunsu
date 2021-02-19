@@ -329,8 +329,8 @@ export default {
     },
 
     //Delete 관련 Functions
-    deleteOotd() {
-      const result = this.deleteOotdInfo(this.getOotdInfo.ootdIdx);
+    async deleteOotd() {
+      const result = await this.deleteOotdInfo(this.getOotdInfo.ootdIdx);
       if (result) {
         this.$router.push("/ootd");
       } else {
