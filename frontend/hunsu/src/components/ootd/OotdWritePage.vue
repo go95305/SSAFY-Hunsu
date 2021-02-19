@@ -107,7 +107,12 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getNickname", "getUploadImageUrls", "getUploadImageFiles"]),
+    ...mapGetters([
+      "getNickname",
+      "getUploadImageUrls",
+      "getUploadImageFiles",
+      "getOotdInfo",
+    ]),
     imageLength() {
       return this.getUploadImageFiles.length;
     },
@@ -116,8 +121,15 @@ export default {
     },
   },
   methods: {
-    ...mapActions(["createOotdInfo", "getOotdInfoInApi", "uploadImage"]),
-    ...mapMutations(["clearUploads"]),
+    ...mapActions([
+      "createOotdInfo",
+      "getOotdInfoInApi",
+      "uploadImage",
+      "getImageList",
+      "getOotdInfoInApi",
+      "getProfileImage",
+    ]),
+    ...mapMutations(["clearUploads", "setOotdInfoImages"]),
 
     addHashtag() {
       // 해시태그 작성시 빈값이 들어가지않게 막아주기
@@ -130,7 +142,7 @@ export default {
       const index = this.ootd_hashtag_array.indexOf(hashtag);
       this.ootd_hashtag_array.splice(index, 1);
     },
-    createOotd() {
+    async createOotd() {
       // let uploadImage = this.uploadImage;
       let imageFiles = this.getUploadImageFiles;
       let clearUploads = this.clearUploads;
@@ -155,41 +167,30 @@ export default {
 
       if (this.isValid) {
         this.dialog = false;
-        this.createOotdInfo(params).then((res) => {
-          if (!res) {
-            console.log("글 작성 실패");
+        const res = await this.createOotdInfo(params);
+        if (!res) {
+          console.log("글 작성 실패");
+        } else {
+          // 이미지 업로드
+          console.log(res);
+          if (imageFiles.length !== 0) {
+            const result = await this.uploadImage({
+              key: "ootd/",
+              articleIdx: res.ootdIdx,
+            });
+            console.log(result);
+            clearUploads();
+
+            // this.$router.go(this.$router.currentRoute); // 현재 페이지 리로드
           } else {
-            // 이미지 업로드
-            if (imageFiles.length !== 0) {
-              this.uploadImage({ key: "ootd/", articleIdx: res.ootdIdx }).then(
-                () => {
-                  clearUploads();
-                }
-              );
-
-              // this.$router.go(this.$router.currentRoute); // 현재 페이지 리로드
-            } else {
-              // 이미지 업로드
-              if (imageFiles.length !== 0) {
-                this.uploadImage({
-                  key: "ootd/",
-                  articleIdx: res.ootdIdx,
-                }).then(() => {
-                  clearUploads();
-                });
-
-                // this.$router.go(this.$router.currentRoute); // 현재 페이지 리로드
-              } else {
-                console.log("file X");
-              }
-            }
+            console.log("file X");
+            // }
           }
-        });
-        // 추후 자기가 쓴 페이지로 이동하는 것 수정 요망
+        }
         this.ootd_hastag_array = [];
 
         this.isValid = false;
-        this.$router.push({ name: "Ootd" }).catch(() => {});
+        this.goToOotdDetail(res);
       }
     },
     fileDeleteButton(e) {
@@ -197,6 +198,22 @@ export default {
       this.imageFiles = this.imageFIles.filter(
         (data, idx) => idx !== targetIdx
       );
+    },
+    async goToOotdDetail(ootd) {
+      // 디테일로 이동
+      await this.getOotdInfoInApi({
+        ootdIdx: ootd.ootdIdx,
+      });
+      const res = await this.getImageList({ prefix: "ootd/" + ootd.ootdIdx });
+      this.setOotdInfoImages(res);
+      const ootdInfo = this.getOotdInfo;
+
+      await this.getProfileImage({
+        uid: ootdInfo.uid,
+        target: "target",
+      });
+      window.scrollTo({ top: "0", behavior: "smooth" });
+      this.$router.push({ name: "OotdDetail" });
     },
   },
 };
