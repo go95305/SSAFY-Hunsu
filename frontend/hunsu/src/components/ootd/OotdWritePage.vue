@@ -174,11 +174,10 @@ export default {
           // 이미지 업로드
           console.log(res);
           if (imageFiles.length !== 0) {
-            const result = await this.uploadImage({
+            await this.uploadImage({
               key: "ootd/",
               articleIdx: res.ootdIdx,
             });
-            console.log(result);
             clearUploads();
 
             // this.$router.go(this.$router.currentRoute); // 현재 페이지 리로드
