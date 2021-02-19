@@ -307,21 +307,19 @@ export default {
       // 삭제 dialog 활성화
       this.deleteDialog = !this.deleteDialog;
     },
-    goToProfilePage(infoNickname) {
+    async goToProfilePage(infoNickname) {
       // 타겟 프로필 페이지로 이동
       // let root = this;
-      this.getProfileInfoInApi({
+      const result = await this.getProfileInfoInApi(
         // 타겟의 프로필 정보 가졍괴
-        myNickname: this.getNickname,
-        yourNickname: infoNickname,
-      }).then(() => {
-        this.getProfileImage({
-          // 타겟의 프로필 사진 가져오기
-          nickname: infoNickname,
-          target: "target",
-        });
-        this.$router.push({ name: "MyPage" });
+        infoNickname
+      );
+      await this.getProfileImage({
+        // 타겟의 프로필 사진 가져오기
+        uid: result.uid,
+        target: "target",
       });
+      this.$router.push({ name: "MyPage" });
     },
     goToLogin() {
       // 로그인 페이지로 이동
