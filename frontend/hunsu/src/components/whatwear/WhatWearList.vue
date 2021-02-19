@@ -53,7 +53,7 @@
       <div class="text-center">
         <v-pagination
           v-model="page"
-          :length="parseInt(getWhatwearListCount / 10) + 1"
+          :length="parseInt((getWhatwearListCount - 1) / 10) + 1"
           :total-visible="6"
           @click.native="pageWhatwear()"
         ></v-pagination>
