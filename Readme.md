@@ -4,7 +4,7 @@
 
 ---
 
-![Hunsu_7289ec50d5c844b186f3790918aae505](/uploads/d1d00032ebf25149369a30522640075f/Hunsu_7289ec50d5c844b186f3790918aae505.png)
+![Hunsu_7289ec50d5c844b186f3790918aae505](https://lab.ssafy.com/s04-webmobile2-sub3/s04p13c102/uploads/d1d00032ebf25149369a30522640075f/Hunsu_7289ec50d5c844b186f3790918aae505.png)
 
 ## 🏃‍♂️역할 분담
 
@@ -62,7 +62,7 @@
 
 > 빠르게 변화하는 패션 트렌드에  사람들과 소통할 수 있는 패션 모바일 웹사이트
 
-![Hunsu_7289ec50d5c844b186f3790918aae505_1](/uploads/29c293d25b16ea803a46cea022fb30ce/Hunsu_7289ec50d5c844b186f3790918aae505_1.png)
+![Hunsu_7289ec50d5c844b186f3790918aae505_1](https://lab.ssafy.com/s04-webmobile2-sub3/s04p13c102/uploads/29c293d25b16ea803a46cea022fb30ce/Hunsu_7289ec50d5c844b186f3790918aae505_1.png)
 
 - **소통을 위한 공간 ( 실 채 훈 )**
 - **공유를 위한 공간 ( Ootd )**
@@ -78,7 +78,7 @@
 
 ---
 
-![기술스택](/uploads/68c410023a6f6306ac3a10ac637cc8a0/기술스택.png)
+![기술스택](https://lab.ssafy.com/s04-webmobile2-sub3/s04p13c102/uploads/68c410023a6f6306ac3a10ac637cc8a0/%EA%B8%B0%EC%88%A0%EC%8A%A4%ED%83%9D.png)
 
 **프론트엔드**
 
@@ -110,7 +110,7 @@
 
 ---
 
-![erd](/uploads/4a96405b7a97b2628476d19c9732d7e4/erd.png)
+![erd](https://lab.ssafy.com/s04-webmobile2-sub3/s04p13c102/uploads/4a96405b7a97b2628476d19c9732d7e4/erd.png)
 
 **[ ERD 파일 첨부 ]**
 
@@ -120,7 +120,7 @@
 
 ---
 
-![2](/uploads/46af90a12368d77f6db063f595a159fe/2.png)
+![2](https://lab.ssafy.com/s04-webmobile2-sub3/s04p13c102/uploads/46af90a12368d77f6db063f595a159fe/2.png)
 
 ## 🌟 주요기능
 
@@ -191,7 +191,7 @@
 
     **[ Hunsu ] 의 인증 프로세스**
 
-    ![인증서버](/uploads/17183acc5f04d6030de68614077d11d8/인증서버.png)
+    ![인증서버](https://lab.ssafy.com/s04-webmobile2-sub3/s04p13c102/uploads/17183acc5f04d6030de68614077d11d8/%EC%9D%B8%EC%A6%9D%EC%84%9C%EB%B2%84.png)
 
 ## 🎬 페이지 정보
 
@@ -199,35 +199,35 @@
 
 ### 1. 메인 화면
 
-![메인1](/uploads/9c92c91cd2b5dc68ad357372ecd3ebbd/메인1.PNG)
+![메인1](https://lab.ssafy.com/s04-webmobile2-sub3/s04p13c102/uploads/9c92c91cd2b5dc68ad357372ecd3ebbd/%EB%A9%94%EC%9D%B81.PNG)
 
 - OOtd에서 가장 많은 좋아요를 받은 게시물을 홈화면에 배치
 
 ### 2. OOTD
 
-![ootd1](/uploads/57a508d78445f7b769b09cf18de52467/ootd1.PNG)
+![ootd1](https://lab.ssafy.com/s04-webmobile2-sub3/s04p13c102/uploads/57a508d78445f7b769b09cf18de52467/ootd1.PNG)
 
 - 이미지 업로드 기능
 
-![ootd2](/uploads/378556da5cc8f632afc7f9f3b914b330/ootd2.PNG)
+![ootd2](https://lab.ssafy.com/s04-webmobile2-sub3/s04p13c102/uploads/378556da5cc8f632afc7f9f3b914b330/ootd2.PNG)
 
 - 댓글, 대댓글 및 좋아요 기능
 
 ### 3. 뭘입을까?
 
-![뭘입을까1](/uploads/70693982a7c1b3de98791625e5ef7cd6/뭘입을까1.png)
+![뭘입을까1](https://lab.ssafy.com/s04-webmobile2-sub3/s04p13c102/uploads/70693982a7c1b3de98791625e5ef7cd6/%EB%AD%98%EC%9E%85%EC%9D%84%EA%B9%8C1.png)
 
 - 이미지 업로드 기능, 투표기능을 활용한
 
         게시물 작성
 
-![뭘입을까2](/uploads/6c16727f19b717aeebb7a5c66a3810a4/뭘입을까2.png)
+![뭘입을까2](https://lab.ssafy.com/s04-webmobile2-sub3/s04p13c102/uploads/6c16727f19b717aeebb7a5c66a3810a4/%EB%AD%98%EC%9E%85%EC%9D%84%EA%B9%8C2.png)
 
 - 댓글, 대댓글 및 좋아요 기능
 
 ### 4. 실채훈 ( 실시간 채팅 훈수 )
 
-![실채훈](/uploads/0925c89273721f45a379479e6c06670f/실채훈.PNG)
+![실채훈](https://lab.ssafy.com/s04-webmobile2-sub3/s04p13c102/uploads/0925c89273721f45a379479e6c06670f/%EC%8B%A4%EC%B1%84%ED%9B%88.PNG)
 
 - 이미지 업로드 기능
 - 실시간 채팅기능
@@ -235,7 +235,7 @@
 
 ### 5. 마이 페이지
 
-![마이페이지](/uploads/83ce65062f38e7d58a4c741b787b152b/마이페이지.PNG)
+![마이페이지](https://lab.ssafy.com/s04-webmobile2-sub3/s04p13c102/uploads/83ce65062f38e7d58a4c741b787b152b/%EB%A7%88%EC%9D%B4%ED%8E%98%EC%9D%B4%EC%A7%80.PNG)
 
 - 팔로워, 팔로잉 확인가능
 - 내가 올린 OOTD게시물 전체 확인 가능
